@@ -1,13 +1,9 @@
 from django.db import models
-from django.contrib import auth
+from django.contrib.auth.models import User as AuthUser
 
-from api.models.address import Address
-from api.models.membership import Membership
+from api.models.member import Member
 
 
-class User(auth.get_user_model()):
-    membership = models.OneToOneField(
-        to=Membership, to_field=Membership.number, on_delete=models.CASCADE
-    )
-    address = models.OneToOneField(to=Address, on_delete=models.CASCADE)
+class User(AuthUser):
+    member = models.OneToOneField(Member, on_delete=models.CASCADE)
 
