@@ -10,6 +10,9 @@ from api import views
 
 
 router = routers.DefaultRouter()
+router.register(
+    r'user', views.UserViewSet, basename='user'
+)
 
 urlpatterns = [
     path('', include(router.urls)),
