@@ -132,3 +132,4 @@ dmypy.json
 ../backend/.idea/
 .idea
 */.idea/*
+.DS_Store

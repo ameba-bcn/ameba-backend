@@ -13,3 +13,7 @@ class User(AbstractUser):
     # Attributes
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
+
+    # def save(self, *args, **kwargs):
+    #     self.set_password(self.password)
+    #     return super().save(*args, **kwargs)
