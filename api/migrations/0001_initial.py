@@ -8,24 +8,29 @@ from django.db import models, migrations
 logger = logging.getLogger(__name__)
 
 
+user_groups = {
+    'visitor': {
+        'permissions': []
+    },
+    'web_user': {
+        'permissions': []
+    },
+    'member': {
+        'permissions': []
+    },
+    'supporter_member': {
+        'permissions': []
+    }
+}
+
+
 def add_group_permissions():
-    # Standard user
-    group, created = Group.objects.get_or_create(name='standard_user')
-    if created:
-        # group.permissions.add(can_read_campaign)
-        logger.info('read_only_user Group created')
-
-    # Member user
-    group, created = Group.objects.get_or_create(name='member_user')
-    if created:
-        # group.permissions.add(can_edit_users)
-        logger.info('standard_user Group created')
-
-    # Admin user
-    group, created = Group.objects.get_or_create(name='admin_user')
-    if created:
-        # group.permissions.add(can_edit_campaign, can_edit_users)
-        logger.info('admin_user Group created')
+    for user_group_name in user_groups:
+        group, created = Group.objects.get_or_create(name=user_group_name)
+        if created:
+            for permission in user_groups[user_group_name]['permissions']:
+                group.permissions.add(permission)
+                logger.info(f'{user_group_name} Group created')
 
 
 class Migration(migrations.Migration):
