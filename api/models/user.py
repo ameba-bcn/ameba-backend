@@ -1,13 +1,19 @@
 from django.db import models
-from django.contrib import auth
-
-from api.models.address import Address
-from api.models.membership import Membership
+from django.contrib.auth.models import AbstractUser
+from django.utils.translation import ugettext_lazy as _
 
 
-class User(auth.get_user_model()):
-    membership = models.OneToOneField(
-        to=Membership, to_field=Membership.number, on_delete=models.CASCADE
-    )
-    address = models.OneToOneField(to=Address, on_delete=models.CASCADE)
+class User(AbstractUser):
+    # Fields
+    first_name = None
+    last_name = None
+    username = models.CharField(_('name'), max_length=150)
+    email = models.EmailField(_('email'), unique=True)
 
+    # Attributes
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
+
+    # def save(self, *args, **kwargs):
+    #     self.set_password(self.password)
+    #     return super().save(*args, **kwargs)

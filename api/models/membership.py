@@ -1,7 +1,10 @@
 from django.db import models
+from django.utils import timezone
+
+
+DEFAULT_DURATION = timezone.timedelta(365)
 
 
 class Membership(models.Model):
-    number = models.IntegerField(primary_key=True)
     created = models.DateTimeField(auto_now_add=True)
-    expires = models.DateTimeField()
+    expires = models.DateTimeField(default=timezone.now() + DEFAULT_DURATION)
