@@ -29,8 +29,11 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
-# Application definition
+# Auth User
+AUTH_USER_MODEL = 'api.User'
 
+
+# Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -38,7 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework_simplejwt.token_blacklist'
+    'rest_framework',
+    'rest_framework_simplejwt.token_blacklist',
+
+    'api'
 ]
 
 MIDDLEWARE = [

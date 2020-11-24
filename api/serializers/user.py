@@ -1,14 +1,24 @@
 from django.contrib.auth import get_user_model
-from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
-from rest_framework.reverse import reverse
 
-
+# Get current user model
 User = get_user_model()
 
 
-class UserLoginSerializer(serializers.Serializer):
+class UserSerializer(serializers.ModelSerializer):
+    member = serializers.PrimaryKeyRelatedField(read_only=True)
+    is_active = serializers.BooleanField(required=False)
+    date_joined = serializers.DateTimeField(required=False)
 
-    def validate_password(self, value):
-        user = self.context['request'].user
-        validate_password(password=value, user=user)
+    class Meta:
+        model = User
+        extra_kwargs = {'password': {'write_only': True}}
+        fields = [
+            'username', 'password', 'email', 'member', 'is_active', 'date_joined'
+        ]
+
+    def create(self, validated_data):
+        user = User(**validated_data)
+        user.set_password(validated_data['password'])
+        user.save()
+        return user
