@@ -11,8 +11,7 @@ class UserAdmin(admin.ModelAdmin):
         'password',
         'is_active',
         'is_staff',
-        'date_joined',
-        'member'
+        'date_joined'
     )
     list_display_links = ('email', 'username')
 
