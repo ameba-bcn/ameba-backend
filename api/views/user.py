@@ -12,10 +12,11 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
 
-    def retrieve(self, request, *args, **kwargs):
-        if type(kwargs.get('pk')) is str and kwargs.get('pk') == 'current':
-            instance = request.user
-            serializer = self.get_serializer(instance)
-            return Response(serializer.data)
+    def get_object(self):
+        if self._is_current_user(self.kwargs.get('pk')):
+            self.kwargs['pk'] = self.request.user.pk
+        return super().get_object()
 
-        return super().retrieve(request, *args, **kwargs)
+    @staticmethod
+    def _is_current_user(pk):
+        return type(pk) is str and pk == 'current'
