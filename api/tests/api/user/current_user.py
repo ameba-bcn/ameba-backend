@@ -11,25 +11,41 @@ class UserTest(APITestCase):
     endpoint = '/api/users/current/'
 
     def _get_current_user(self, token):
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer {}'.format(token))
-        return self.client.get(self.endpoint)
+        return self._get_user('current', token)
 
     def _partial_update_current_user(self, token, props):
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer {}'.format(token))
-        return self.client.patch(self.endpoint, data=props)
+        return self._partial_update_user('current', token, props)
 
     def _update_current_user(self, token, props):
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer {}'.format(token))
-        return self.client.put(self.endpoint, data=props)
+        return self._update_user('current', token, props)
 
     def _delete_current_user(self, token):
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer {}'.format(token))
-        return self.client.delete(self.endpoint)
+        return self._delete_user('current', token)
 
     def _list_users(self, token):
         self.client.credentials(HTTP_AUTHORIZATION='Bearer {}'.format(token))
         endpoint = '/api/users/'
         return self.client.get(endpoint)
+
+    def _update_user(self, pk, token, props):
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer {}'.format(token))
+        endpoint = '/api/users/{pk}/'.format(pk=pk)
+        return self.client.put(endpoint, data=props)
+
+    def _get_user(self, pk, token):
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer {}'.format(token))
+        endpoint = '/api/users/{pk}/'.format(pk=pk)
+        return self.client.get(endpoint)
+
+    def _delete_user(self, pk, token):
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer {}'.format(token))
+        endpoint = '/api/users/{pk}/'.format(pk=pk)
+        return self.client.delete(endpoint)
+
+    def _partial_update_user(self, pk, token, props):
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer {}'.format(token))
+        endpoint = '/api/users/{pk}/'.format(pk=pk)
+        return self.client.patch(endpoint, data=props)
 
     @staticmethod
     def _insert_user(props):
@@ -221,3 +237,67 @@ class UserTest(APITestCase):
         self.assertIs(type(resp_data), ReturnList)
         self.assertEqual(len(response.data), 1)
         self._check_is_user(expected_user_props, resp_data)
+
+    def test_current_user_can_not_delete_other_user(self):
+        user_a_props = {
+            'username': 'Ameba User',
+            'password': 'MyPassword',
+            'email': 'amebauser1@ameba.cat',
+            'is_active': True
+        }
+        current_user_props = {
+            'username': 'Current User',
+            'password': 'MyPassword',
+            'email': 'currentuser@ameba.cat',
+            'is_active': True
+        }
+        user_a, access_token_a = self._insert_user(user_a_props)
+        cur_user, access_token = self._insert_user(current_user_props)
+        response = self._delete_user(pk=user_a.pk, token=access_token)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_current_user_can_not_patch_other_user(self):
+        user_a_props = {
+            'username': 'Ameba User',
+            'password': 'MyPassword',
+            'email': 'amebauser1@ameba.cat',
+            'is_active': True
+        }
+        current_user_props = {
+            'username': 'Current User',
+            'password': 'MyPassword',
+            'email': 'currentuser@ameba.cat',
+            'is_active': True
+        }
+
+        update_props = {
+            'username': 'New Currrent User'
+        }
+
+        user_a, access_token_a = self._insert_user(user_a_props)
+        cur_user, access_token = self._insert_user(current_user_props)
+        response = self._partial_update_user(
+            user_a.pk, access_token, update_props
+        )
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def current_user_can_not_update_other_user(self):
+        user_a_props = {
+            'username': 'Ameba User',
+            'password': 'MyPassword',
+            'email': 'amebauser1@ameba.cat',
+            'is_active': True
+        }
+        current_user_props = {
+            'username': 'Current User',
+            'password': 'MyPassword',
+            'email': 'currentuser@ameba.cat',
+            'is_active': True
+        }
+
+        user_a, access_token_a = self._insert_user(user_a_props)
+        cur_user, access_token = self._insert_user(current_user_props)
+        response = self._update_user(
+            user_a.pk, access_token, current_user_props
+        )
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
