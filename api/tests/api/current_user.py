@@ -1,69 +1,24 @@
 from django.test import tag
-from rest_framework.test import APITestCase
 from rest_framework import status
-from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.utils.serializer_helpers import ReturnList
 
 from api.models import User
+from api.tests.api.user import BaseUserTest
 
 
-class UserTest(APITestCase):
-    endpoint = '/api/users/current/'
+class CurrentUserTest(BaseUserTest):
 
     def _get_current_user(self, token):
-        return self._get_user('current', token)
+        return self._get('current', token)
 
     def _partial_update_current_user(self, token, props):
-        return self._partial_update_user('current', token, props)
+        return self._partial_update('current', token, props)
 
     def _update_current_user(self, token, props):
-        return self._update_user('current', token, props)
+        return self._update('current', token, props)
 
     def _delete_current_user(self, token):
-        return self._delete_user('current', token)
-
-    def _list_users(self, token):
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer {}'.format(token))
-        endpoint = '/api/users/'
-        return self.client.get(endpoint)
-
-    def _update_user(self, pk, token, props):
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer {}'.format(token))
-        endpoint = '/api/users/{pk}/'.format(pk=pk)
-        return self.client.put(endpoint, data=props)
-
-    def _get_user(self, pk, token):
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer {}'.format(token))
-        endpoint = '/api/users/{pk}/'.format(pk=pk)
-        return self.client.get(endpoint)
-
-    def _delete_user(self, pk, token):
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer {}'.format(token))
-        endpoint = '/api/users/{pk}/'.format(pk=pk)
-        return self.client.delete(endpoint)
-
-    def _partial_update_user(self, pk, token, props):
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer {}'.format(token))
-        endpoint = '/api/users/{pk}/'.format(pk=pk)
-        return self.client.patch(endpoint, data=props)
-
-    @staticmethod
-    def _insert_user(props):
-        user = User.objects.create_user(**props)
-        refresh = RefreshToken.for_user(user)
-        return user, refresh.access_token
-
-    def _check_is_user(self, expected, response_data):
-        self.assertIn('username', response_data)
-        self.assertIn('email', response_data)
-        self.assertIn('is_active', response_data)
-        self.assertIn('date_joined', response_data)
-        self.assertIn('member', response_data)
-
-        self.assertEqual(response_data['username'], expected['username'])
-        self.assertEqual(response_data['email'], expected['email'])
-        self.assertIs(response_data['is_active'], expected['is_active'])
-        self.assertIs(response_data['member'], expected['member'])
+        return self._delete('current', token)
 
     @tag("current_user")
     def test_update_current_user(self):
@@ -81,15 +36,12 @@ class UserTest(APITestCase):
             'member': None
         }
 
-        user = User(**user_props)
-        user.save()
-        refresh = RefreshToken.for_user(user)
-
+        user, access_token = self._insert_user(user_props)
         new_props = {
             'username': 'Juanito DJ'
         }
 
-        response = self._partial_update_current_user(refresh.access_token, new_props)
+        response = self._partial_update_current_user(access_token, new_props)
         resp_data = dict(response.data)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -178,11 +130,9 @@ class UserTest(APITestCase):
             'is_active': True
         }
 
-        user = User(**user_props)
-        user.save()
+        user, access_token = self._insert_user(user_props)
 
-        refresh = RefreshToken.for_user(user)
-        response = self._delete_current_user(refresh.access_token)
+        response = self._delete_current_user(access_token)
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(User.objects.filter(email=user.email).exists())
@@ -231,7 +181,7 @@ class UserTest(APITestCase):
 
         self._insert_user(user_a_props)
         cur_user, access_token = self._insert_user(current_user_props)
-        response = self._list_users(access_token)
+        response = self._list(access_token)
         resp_data = response.data
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIs(type(resp_data), ReturnList)
@@ -253,7 +203,7 @@ class UserTest(APITestCase):
         }
         user_a, access_token_a = self._insert_user(user_a_props)
         cur_user, access_token = self._insert_user(current_user_props)
-        response = self._delete_user(pk=user_a.pk, token=access_token)
+        response = self._delete(pk=user_a.pk, token=access_token)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_current_user_can_not_patch_other_user(self):
@@ -276,12 +226,12 @@ class UserTest(APITestCase):
 
         user_a, access_token_a = self._insert_user(user_a_props)
         cur_user, access_token = self._insert_user(current_user_props)
-        response = self._partial_update_user(
+        response = self._partial_update(
             user_a.pk, access_token, update_props
         )
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    def current_user_can_not_update_other_user(self):
+    def test_current_user_can_not_update_other_user(self):
         user_a_props = {
             'username': 'Ameba User',
             'password': 'MyPassword',
@@ -297,7 +247,7 @@ class UserTest(APITestCase):
 
         user_a, access_token_a = self._insert_user(user_a_props)
         cur_user, access_token = self._insert_user(current_user_props)
-        response = self._update_user(
+        response = self._update(
             user_a.pk, access_token, current_user_props
         )
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
