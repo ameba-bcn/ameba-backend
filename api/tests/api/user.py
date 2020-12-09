@@ -140,3 +140,47 @@ class UserTest(BaseUserTest):
         self.assertEqual(resp_data['email'], expected['email'])
         self.assertIs(resp_data['is_active'], expected['is_active'])
         self.assertIs(resp_data['member'], expected['member'])
+
+    @tag("current_user")
+    def test_get_user_not_authenticated(self):
+        user_props = {
+            'username': 'Ameba User',
+            'password': 'MyPassword',
+            'email': 'amebauser1@ameba.cat',
+            'is_active': True
+        }
+        user, access_token = self._insert_user(user_props)
+        response = self._get(pk=user.pk, token='')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    @tag("current_user")
+    def test_delete_user_not_authenticated(self):
+        user_props = {
+            'username': 'Ameba User',
+            'password': 'MyPassword',
+            'email': 'amebauser1@ameba.cat',
+            'is_active': True
+        }
+        user, access_token = self._insert_user(user_props)
+        response = self._delete(pk=user.pk, token=None)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    @tag("current_user")
+    def test_update_user_not_authenticated(self):
+        user_props = {
+            'username': 'Ameba User',
+            'password': 'MyPassword',
+            'email': 'amebauser1@ameba.cat',
+            'is_active': True
+        }
+        update_props = {
+            'username': 'Other username',
+            'password': 'OtherPassword',
+            'email': 'othermail@ameba.cat',
+            'is_active': True
+        }
+        user, access_token = self._insert_user(user_props)
+        response = self._update(pk=user.pk, token=None, props=update_props)
+        self.assertEqual(
+            response.status_code, status.HTTP_401_UNAUTHORIZED
+        )
