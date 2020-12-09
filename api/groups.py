@@ -4,9 +4,12 @@ from api import models
 from api.permissions import ADD, VIEW, DELETE, CHANGE, get_or_create_permission
 
 DEFAULT_GROUP = 'web_user'
+MEMBER_GROUP = 'ameba_member'
+EDITOR_GROUP = 'ameba_editor'
+ADMIN_GROUP = 'ameba_admin'
 
 GROUPS = {
-    'web_user': {
+    DEFAULT_GROUP: {
         'parent': None,
         'models': {
             'user': {
@@ -15,13 +18,13 @@ GROUPS = {
             },
         }
     },
-    'ameba_member': {
+    MEMBER_GROUP: {
         'parent': 'web_user'
     },
-    'ameba_editor': {
+    EDITOR_GROUP: {
         'parent': 'ameba_member'
     },
-    'ameba_admin': {
+    ADMIN_GROUP: {
         'parent': 'ameba_editor'
     }
 }

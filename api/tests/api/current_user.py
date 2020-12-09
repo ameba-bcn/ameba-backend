@@ -67,7 +67,6 @@ class CurrentUserTest(BaseUserTest):
         }
 
         user, access = self._insert_user(user_props)
-        old_pass = user.password
 
         new_props = {'password': 'MyNewPassword'}
         response = self._partial_update_current_user(access, new_props)
