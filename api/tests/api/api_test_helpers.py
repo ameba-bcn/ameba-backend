@@ -6,7 +6,10 @@ class BaseTest(APITestCase):
     LIST_ENDPOINT = '/'
 
     def _authenticate(self, token):
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer {}'.format(token))
+        if token:
+            self.client.credentials(
+                HTTP_AUTHORIZATION='Bearer {}'.format(token)
+            )
 
     def _update(self, pk, token, props):
         self._authenticate(token)
