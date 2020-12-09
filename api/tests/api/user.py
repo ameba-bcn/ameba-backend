@@ -5,7 +5,7 @@ from django.test import tag
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from api.models import User
+from api.models import User, Member
 from api.tests.api import api_test_helpers
 
 
@@ -101,3 +101,42 @@ class UserTest(BaseUserTest):
         user = User.objects.get(email=user_props['email'])
         self.assertTrue(user.check_password(user_props['password']))
         self.assertTrue(user._is_password_hashed())
+
+    def test_create_user_matching_member_returns_member(self):
+        member_data = {
+            'number':  1,
+            'email':  'amebauser1@ameba.cat',
+            'first_name': 'Amen',
+            'last_name': 'Bauser',
+            'phone_number': '1238746'
+        }
+        member = Member.objects.create(**member_data)
+
+        user_props = {
+            'username': 'AmebaUser',
+            'password': 'MyPassword',
+            'email': 'amebauser1@ameba.cat'
+        }
+
+        expected = {
+            'username': user_props.get('username'),
+            'email': user_props.get('email'),
+            'is_active': False,
+            'date_joined': None,
+            'member': 1
+        }
+
+        resp_data = dict(self._create(user_props).data)
+
+        self.assertEqual(len(expected), len(resp_data))
+
+        self.assertIn('username', resp_data)
+        self.assertIn('email', resp_data)
+        self.assertIn('is_active', resp_data)
+        self.assertIn('date_joined', resp_data)
+        self.assertIn('member', resp_data)
+
+        self.assertEqual(resp_data['username'], expected['username'])
+        self.assertEqual(resp_data['email'], expected['email'])
+        self.assertIs(resp_data['is_active'], expected['is_active'])
+        self.assertIs(resp_data['member'], expected['member'])
