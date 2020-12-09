@@ -7,7 +7,6 @@ from api import models
 from api.groups import DEFAULT_GROUP
 
 
-@receiver(signal=post_migrate)
 def populate_models(sender, **kwargs):
     create_group_permissions()
 
