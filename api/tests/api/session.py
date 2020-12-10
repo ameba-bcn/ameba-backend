@@ -1,4 +1,5 @@
 from rest_framework import status
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from api.tests.api import api_test_helpers
 from api import models
@@ -10,6 +11,18 @@ class TestSessions(api_test_helpers.BaseTest):
     def login(self, email, password):
         props = {'email': email, 'password': password}
         return self._create(props)
+
+    def delete(self, token=None):
+        if token:
+            self.client.credentials(
+                HTTP_AUTHORIZATION='Bearer {}'.format(token)
+            )
+        return self.client.delete(self.LIST_ENDPOINT)
+
+    @staticmethod
+    def get_token(user):
+        refresh = RefreshToken.for_user(user)
+        return refresh.access_token
 
     def create_user(self, email, password):
         username = email.split('@')[0]
@@ -40,6 +53,11 @@ class TestSessions(api_test_helpers.BaseTest):
         }
         response = self.login(**wrong_cred)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(
+            response.data['detail'],
+            'No active account found with the given credentials'
+        )
+        self.assertEqual(list(response.data.keys()), ['detail'])
 
     def test_wrong_email_user_login_does_not_give_info(self):
         user_attrs = {
@@ -52,4 +70,42 @@ class TestSessions(api_test_helpers.BaseTest):
             'password': 'mypassword'
         }
         response = self.login(**wrong_cred)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(
+            response.data['detail'],
+            'No active account found with the given credentials'
+        )
+        self.assertEqual(list(response.data.keys()), ['detail'])
+
+    def test_delete_token_authenticated(self):
+        user_attrs = {
+            'email': 'user@ameba.cat',
+            'password': 'mypassword'
+        }
+        user = self.create_user(**user_attrs)
+        response = self.login(**user_attrs)
+        access_token = self.get_token(user)
+        response = self.delete(access_token)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_delete_token_unauthenticated(self):
+        user_attrs = {
+            'email': 'user@ameba.cat',
+            'password': 'mypassword'
+        }
+        self.create_user(**user_attrs)
+        response = self.login(**user_attrs)
+        response = self.delete()
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_deleted_token_does_not_work_anymore(self):
+        user_attrs = {
+            'email': 'user@ameba.cat',
+            'password': 'mypassword'
+        }
+        user = self.create_user(**user_attrs)
+        response = self.login(**user_attrs)
+        access_token = self.get_token(user)
+        self.delete(access_token)
+        response = self.delete()
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
