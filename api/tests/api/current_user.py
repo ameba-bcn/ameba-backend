@@ -67,7 +67,6 @@ class CurrentUserTest(BaseUserTest):
         }
 
         user, access = self._insert_user(user_props)
-        old_pass = user.password
 
         new_props = {'password': 'MyNewPassword'}
         response = self._partial_update_current_user(access, new_props)
@@ -138,7 +137,7 @@ class CurrentUserTest(BaseUserTest):
         self.assertFalse(User.objects.filter(email=user.email).exists())
 
     @tag("current_user")
-    def test_current_user_doesnt_accept_update(self):
+    def test_current_user_can_update(self):
         user_props = {
             'username': 'Ameba User',
             'password': 'MyPassword',
@@ -179,14 +178,15 @@ class CurrentUserTest(BaseUserTest):
             'is_active': True
         }
 
-        self._insert_user(user_a_props)
+        other, other_token = self._insert_user(user_a_props)
         cur_user, access_token = self._insert_user(current_user_props)
-        response = self._list(access_token)
+        response = self._get_current_user(access_token)
         resp_data = response.data
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIs(type(resp_data), ReturnList)
-        self.assertEqual(len(response.data), 1)
         self._check_is_user(expected_user_props, resp_data)
+
+        other_response = self._get(other.pk, access_token)
+        self.assertEqual(other_response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_current_user_can_not_delete_other_user(self):
         user_a_props = {
@@ -204,7 +204,7 @@ class CurrentUserTest(BaseUserTest):
         user_a, access_token_a = self._insert_user(user_a_props)
         cur_user, access_token = self._insert_user(current_user_props)
         response = self._delete(pk=user_a.pk, token=access_token)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_current_user_can_not_patch_other_user(self):
         user_a_props = {
@@ -229,7 +229,7 @@ class CurrentUserTest(BaseUserTest):
         response = self._partial_update(
             user_a.pk, access_token, update_props
         )
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_current_user_can_not_update_other_user(self):
         user_a_props = {
@@ -250,4 +250,4 @@ class CurrentUserTest(BaseUserTest):
         response = self._update(
             user_a.pk, access_token, current_user_props
         )
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

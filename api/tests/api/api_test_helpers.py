@@ -6,11 +6,10 @@ class BaseTest(APITestCase):
     LIST_ENDPOINT = '/'
 
     def _authenticate(self, token):
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer {}'.format(token))
-
-    def _list(self, token):
-        self._authenticate(token)
-        return self.client.get(self.LIST_ENDPOINT)
+        if token:
+            self.client.credentials(
+                HTTP_AUTHORIZATION='Bearer {}'.format(token)
+            )
 
     def _update(self, pk, token, props):
         self._authenticate(token)
@@ -26,7 +25,8 @@ class BaseTest(APITestCase):
 
     def _partial_update(self, pk, token, props):
         self._authenticate(token)
-        return self.client.patch(self.SINGLE_ENDPOINT.format(pk=pk), data=props)
+        return self.client.patch(self.SINGLE_ENDPOINT.format(pk=pk),
+                                 data=props)
 
     def _create(self, props):
         return self.client.post(self.LIST_ENDPOINT, props)
