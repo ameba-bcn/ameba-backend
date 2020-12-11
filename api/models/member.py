@@ -35,3 +35,6 @@ class Member(models.Model):
             pass
 
         super().save(*args, **kwargs)
+
+    def is_user(self):
+        return self.user is not None
