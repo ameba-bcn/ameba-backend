@@ -3,10 +3,9 @@ from api.serializers import DeleteTokenSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import response, status, permissions
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework import mixins
 
 
-class SessionView(TokenObtainPairView, mixins.DestroyModelMixin):
+class SessionView(TokenObtainPairView):
 
     def get_serializer_class(self):
         if self.request.method == 'DELETE':
