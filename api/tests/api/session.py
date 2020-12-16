@@ -12,18 +12,17 @@ class TestSessions(api_test_helpers.BaseTest):
         props = {'email': email, 'password': password}
         return self._create(props)
 
-    def delete(self, token=None):
-        if token:
-            self.client.credentials(
-                HTTP_AUTHORIZATION='Bearer {}'.format(token)
-            )
-        return self.client.delete(self.LIST_ENDPOINT)
+    def delete(self, token='', attrs=None):
+        self.client.credentials(
+            HTTP_AUTHORIZATION='Bearer {}'.format(token)
+        )
+        return self.client.delete(self.LIST_ENDPOINT, data=attrs)
 
     @staticmethod
     def get_token(user):
-        refresh = RefreshToken.for_user(user)
-        return refresh.access_token
+        return RefreshToken.for_user(user)
 
+    @staticmethod
     def create_user(self, email, password):
         username = email.split('@')[0]
         props = {'email': email, 'password': password, 'username': username}
@@ -84,18 +83,21 @@ class TestSessions(api_test_helpers.BaseTest):
         }
         user = self.create_user(**user_attrs)
         response = self.login(**user_attrs)
-        access_token = self.get_token(user)
-        response = self.delete(access_token)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        token = self.get_token(user)
+        attrs = {'refresh': str(token)}
+        response = self.delete(token.access_token, attrs=attrs)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_delete_token_unauthenticated(self):
         user_attrs = {
             'email': 'user@ameba.cat',
             'password': 'mypassword'
         }
-        self.create_user(**user_attrs)
+        user = self.create_user(**user_attrs)
+        token = self.get_token(user)
+        attrs = {'refresh': str(token)}
         response = self.login(**user_attrs)
-        response = self.delete()
+        response = self.delete(attrs={'refresh': str(token)})
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_deleted_token_does_not_work_anymore(self):
@@ -105,7 +107,10 @@ class TestSessions(api_test_helpers.BaseTest):
         }
         user = self.create_user(**user_attrs)
         response = self.login(**user_attrs)
-        access_token = self.get_token(user)
-        self.delete(access_token)
-        response = self.delete()
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        token = self.get_token(user)
+        attrs = {'refresh': str(token)}
+        self.delete(token.access_token, attrs=attrs)
+        response = self.delete(token.access_token, attrs=attrs)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
