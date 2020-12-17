@@ -13,6 +13,6 @@ router.register(
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('token/', views.SessionView.as_view(), name='token_obtain_pair'),
+    path('token/', views.TokenView.as_view(), name='token_view'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
