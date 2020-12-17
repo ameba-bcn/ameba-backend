@@ -1,4 +1,4 @@
-# ameba-site backend v0.1
+# ameba-site backend v0.2
 
 ## REST-API
 

@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
 
-    'api'
+    'drf_yasg',
+    'api.apps.ApiConfig'
 ]
 
 MIDDLEWARE = [
@@ -134,6 +135,9 @@ STATIC_ROOT = 'static/'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONOpenAPIRenderer',
     )
 }
 
