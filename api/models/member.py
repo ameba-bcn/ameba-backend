@@ -13,7 +13,8 @@ class Member(models.Model):
     number = models.IntegerField(primary_key=True)
     memberships = models.ManyToManyField(Membership, blank=True)
     user = models.OneToOneField(
-        to=User, on_delete=models.CASCADE, related_name='member', blank=True
+        to=User, on_delete=models.CASCADE, related_name='member',
+        blank=True, null=True
     )
     email = models.EmailField()
     address = models.ForeignKey(
@@ -34,3 +35,6 @@ class Member(models.Model):
             pass
 
         super().save(*args, **kwargs)
+
+    def is_user(self):
+        return self.user is not None
