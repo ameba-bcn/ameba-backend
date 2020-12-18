@@ -10,7 +10,7 @@ User = get_user_model()
 
 
 class Member(models.Model):
-    number = models.IntegerField(primary_key=True)
+    member = models.IntegerField(primary_key=True)
     memberships = models.ManyToManyField(Membership, blank=True)
     user = models.OneToOneField(
         to=User, on_delete=models.CASCADE, related_name='member',
@@ -33,7 +33,6 @@ class Member(models.Model):
             self.user = user
         except exceptions.ObjectDoesNotExist:
             pass
-
         super().save(*args, **kwargs)
 
     def is_user(self):
