@@ -114,3 +114,35 @@ class TestArtist(BaseTest):
                     },
                     response.data['current_answers']
                 )
+
+    def test_create_artist_not_allowed(self):
+        attrs = {
+            'name': f'artist',
+            'biography': f'bio ' * 200,
+            'contact': f'contact',
+            'image': ImageFile(
+                open('api/tests/fixtures/media/artist-image.jpg', 'rb')
+            ),
+            'email': f'email-@ameba.cat'
+        }
+        response = self._create(attrs)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_delete_artist_not_allowed(self):
+        artist_id = models.Artist.objects.all()[0].id
+        response = self._delete(pk=artist_id, token='')
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_updete_artist_not_allowed(self):
+        artist_id = models.Artist.objects.all()[0].id
+        attrs = {
+            'name': f'artist',
+            'biography': f'bio ' * 200,
+            'contact': f'contact',
+            'image': ImageFile(
+                open('api/tests/fixtures/media/artist-image.jpg', 'rb')
+            ),
+            'email': f'email-@ameba.cat'
+        }
+        response = self._update(pk=artist_id, props=attrs, token='')
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
