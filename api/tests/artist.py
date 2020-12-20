@@ -133,7 +133,7 @@ class TestArtist(BaseTest):
         response = self._delete(pk=artist_id, token='')
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
-    def test_updete_artist_not_allowed(self):
+    def test_update_artist_not_allowed(self):
         artist_id = models.Artist.objects.all()[0].id
         attrs = {
             'name': f'artist',
