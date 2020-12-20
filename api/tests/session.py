@@ -1,11 +1,11 @@
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from api.tests.api import api_test_helpers
+from api.tests import _helpers
 from api import models
 
 
-class TestSessions(api_test_helpers.BaseTest):
+class TestSessions(_helpers.BaseTest):
     LIST_ENDPOINT = '/api/token/'
 
     def login(self, email, password):

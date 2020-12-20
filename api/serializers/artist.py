@@ -21,11 +21,12 @@ class AnswersSerializers(serializers.ModelSerializer):
 
 
 class ArtistDetailSerializer(serializers.ModelSerializer):
-    answers = AnswersSerializers(many=True, read_only=True)
+    current_answers = AnswersSerializers(many=True, read_only=True)
 
     class Meta:
         model = Artist
-        fields = ['id', 'artistic_name', 'biography', 'created', 'image', 'answers']
+        fields = ['id', 'artistic_name', 'biography', 'created', 'image',
+                  'current_answers']
         depth = 1
 
 

@@ -21,6 +21,10 @@ class Artist(models.Model):
     def bio_preview(self):
         return self.biography[:BIO_PREVIEW]
 
+    @property
+    def current_answers(self):
+        return self.answers.filter(is_active=True)
+
 
 class Question(models.Model):
     question = models.TextField(max_length=200)
