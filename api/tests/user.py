@@ -6,10 +6,10 @@ from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from api.models import User, Member
-from api.tests.api import api_test_helpers
+from api.tests import _helpers
 
 
-class BaseUserTest(api_test_helpers.BaseTest):
+class BaseUserTest(_helpers.BaseTest):
     SINGLE_ENDPOINT = '/api/users/{pk}/'
     LIST_ENDPOINT = '/api/users/'
 

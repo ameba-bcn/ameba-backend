@@ -1,9 +1,8 @@
 from django.test import tag
 from rest_framework import status
-from rest_framework.utils.serializer_helpers import ReturnList
 
 from api.models import User
-from api.tests.api.user import BaseUserTest
+from api.tests.user import BaseUserTest
 
 
 class CurrentUserTest(BaseUserTest):
