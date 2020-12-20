@@ -10,7 +10,7 @@ User = get_user_model()
 
 
 class Member(models.Model):
-    member = models.IntegerField(primary_key=True)
+    number = models.IntegerField(primary_key=True)
     memberships = models.ManyToManyField(Membership, blank=True)
     user = models.OneToOneField(
         to=User, on_delete=models.CASCADE, related_name='member',

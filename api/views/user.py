@@ -13,7 +13,6 @@ User = get_user_model()
 class UserViewSet(
     mixins.CreateModelMixin,
     mixins.RetrieveModelMixin,
-    mixins.DestroyModelMixin,
     mixins.UpdateModelMixin,
     viewsets.GenericViewSet
 ):

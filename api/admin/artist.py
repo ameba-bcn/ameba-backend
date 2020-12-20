@@ -35,9 +35,9 @@ class ChoiceInline(admin.TabularInline):
 
 class ArtistAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None, {'fields': ['artistic_name', 'biography', 'image',
+        (None, {'fields': ['name', 'biography', 'image',
                            'thumbnail_preview']}),
-        ('Contact info', {'fields': ['contact_name', 'email']})
+        ('Contact info', {'fields': ['contact', 'email']})
     ]
     readonly_fields = ('thumbnail_preview', )
     inlines = [ChoiceInline]

@@ -47,9 +47,9 @@ class TestArtist(BaseTest):
     def create_artists(self):
         for artist_num in range(10):
             artist = models.Artist.objects.create(
-                artistic_name=f'artist_{artist_num}',
+                name=f'artist_{artist_num}',
                 biography=f'bio-{artist_num}' * 200,
-                contact_name=f'contact-{artist_num}',
+                contact=f'contact-{artist_num}',
                 image=ImageFile(
                     open('api/tests/fixtures/media/artist-image.jpg', 'rb')
                 ),
@@ -69,7 +69,7 @@ class TestArtist(BaseTest):
         artist_data = response.data[0]
         list_artist_data = {
             'id': int,
-            'artistic_name': str,
+            'name': str,
             'bio_preview': str,
             'created': str,
             'image': str
@@ -98,7 +98,7 @@ class TestArtist(BaseTest):
         artist = models.Artist.objects.get(id=pk)
         response = self._get(pk=pk, token='')
         self.assertEqual(artist.id, response.data['id'])
-        self.assertEqual(artist.name, response.data['artistic_name'])
+        self.assertEqual(artist.name, response.data['name'])
         self.assertEqual(artist.biography, response.data['biography'])
         self.assertEqual(artist.created, parser.parse(response.data['created']))
         self.assertIn(artist.image.url, response.data['image'])
