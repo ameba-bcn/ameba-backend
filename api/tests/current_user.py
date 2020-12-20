@@ -132,8 +132,7 @@ class CurrentUserTest(BaseUserTest):
 
         response = self._delete_current_user(access_token)
 
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertFalse(User.objects.filter(email=user.email).exists())
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
     @tag("current_user")
     def test_current_user_can_update(self):
@@ -203,7 +202,7 @@ class CurrentUserTest(BaseUserTest):
         user_a, access_token_a = self._insert_user(user_a_props)
         cur_user, access_token = self._insert_user(current_user_props)
         response = self._delete(pk=user_a.pk, token=access_token)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def test_current_user_can_not_patch_other_user(self):
         user_a_props = {

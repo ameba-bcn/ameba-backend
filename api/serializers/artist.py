@@ -25,7 +25,7 @@ class ArtistDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Artist
-        fields = ['id', 'artistic_name', 'biography', 'created', 'image',
+        fields = ['id', 'name', 'biography', 'created', 'image',
                   'current_answers']
         depth = 1
 
@@ -34,4 +34,4 @@ class ArtistListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Artist
-        fields = ['id', 'artistic_name', 'bio_preview', 'created', 'image']
+        fields = ['id', 'name', 'bio_preview', 'created', 'image']
