@@ -98,7 +98,7 @@ class TestArtist(BaseTest):
         artist = models.Artist.objects.get(id=pk)
         response = self._get(pk=pk, token='')
         self.assertEqual(artist.id, response.data['id'])
-        self.assertEqual(artist.artistic_name, response.data['artistic_name'])
+        self.assertEqual(artist.name, response.data['artistic_name'])
         self.assertEqual(artist.biography, response.data['biography'])
         self.assertEqual(artist.created, parser.parse(response.data['created']))
         self.assertIn(artist.image.url, response.data['image'])

@@ -6,8 +6,8 @@ BIO_PREVIEW = 160
 
 
 class Artist(models.Model):
-    artistic_name = models.CharField(max_length=55)
-    contact_name = models.CharField(max_length=55)
+    name = models.CharField(max_length=55)
+    contact = models.CharField(max_length=55)
     biography = models.TextField(max_length=2000)
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
@@ -15,7 +15,7 @@ class Artist(models.Model):
     email = models.EmailField()
 
     def __str__(self):
-        return f'{self.artistic_name}'
+        return f'{self.name}'
 
     @property
     def bio_preview(self):
@@ -50,4 +50,4 @@ class Answer(models.Model):
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return f'{self.artist.artistic_name} - {self.question.question} '
+        return f'{self.artist.name} - {self.question.question} '
