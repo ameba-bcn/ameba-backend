@@ -30,6 +30,7 @@ class ArtistDetailSerializer(serializers.ModelSerializer):
 
 
 class ArtistListSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Artist
-        fields = ['id', 'artistic_name', 'biography', 'created', 'image']
+        fields = ['id', 'artistic_name', 'bio_preview', 'created', 'image']

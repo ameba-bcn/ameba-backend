@@ -2,6 +2,9 @@ from django.db import models
 from django.utils.translation import gettext as _
 
 
+BIO_PREVIEW = 160
+
+
 class Artist(models.Model):
     artistic_name = models.CharField(max_length=55)
     contact_name = models.CharField(max_length=55)
@@ -13,6 +16,10 @@ class Artist(models.Model):
 
     def __str__(self):
         return f'{self.artistic_name}'
+
+    @property
+    def bio_preview(self):
+        return self.biography[:BIO_PREVIEW]
 
 
 class Question(models.Model):
