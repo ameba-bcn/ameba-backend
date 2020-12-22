@@ -1,11 +1,11 @@
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from api.tests.api import api_test_helpers
+from api.tests import _helpers
 from api import models
 
 
-class TestSessions(api_test_helpers.BaseTest):
+class TestSessions(_helpers.BaseTest):
     LIST_ENDPOINT = '/api/token/'
 
     def login(self, email, password):
@@ -23,7 +23,7 @@ class TestSessions(api_test_helpers.BaseTest):
         return RefreshToken.for_user(user)
 
     @staticmethod
-    def create_user(self, email, password):
+    def create_user(email, password):
         username = email.split('@')[0]
         props = {'email': email, 'password': password, 'username': username}
         user = models.User.objects.create(**props)
@@ -107,7 +107,7 @@ class TestSessions(api_test_helpers.BaseTest):
         }
         user = self.create_user(**user_attrs)
         response = self.login(**user_attrs)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         token = self.get_token(user)
         attrs = {'refresh': str(token)}
