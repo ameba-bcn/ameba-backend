@@ -1,2 +1,2 @@
 from api.admin.user import UserAdmin
-# from api.admin.member import MemberAdmin
+from api.admin.artist import ArtistAdmin
