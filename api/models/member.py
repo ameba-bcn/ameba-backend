@@ -33,7 +33,6 @@ class Member(models.Model):
             self.user = user
         except exceptions.ObjectDoesNotExist:
             pass
-
         super().save(*args, **kwargs)
 
     def is_user(self):

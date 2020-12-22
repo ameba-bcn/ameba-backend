@@ -6,11 +6,11 @@ from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from api.models import User, Member
-from api.tests.api import api_test_helpers
+from api.tests import _helpers
 
 
-class BaseUserTest(api_test_helpers.BaseTest):
-    SINGLE_ENDPOINT = '/api/users/{pk}/'
+class BaseUserTest(_helpers.BaseTest):
+    DETAIL_ENDPOINT = '/api/users/{pk}/'
     LIST_ENDPOINT = '/api/users/'
 
     @staticmethod
@@ -151,18 +151,6 @@ class UserTest(BaseUserTest):
         }
         user, access_token = self._insert_user(user_props)
         response = self._get(pk=user.pk, token='')
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-    @tag("current_user")
-    def test_delete_user_not_authenticated(self):
-        user_props = {
-            'username': 'Ameba User',
-            'password': 'MyPassword',
-            'email': 'amebauser1@ameba.cat',
-            'is_active': True
-        }
-        user, access_token = self._insert_user(user_props)
-        response = self._delete(pk=user.pk, token=None)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     @tag("current_user")

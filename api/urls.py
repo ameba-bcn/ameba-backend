@@ -10,6 +10,9 @@ router = routers.DefaultRouter()
 router.register(
     r'users', views.UserViewSet, basename='user'
 )
+router.register(
+    r'artists', views.ArtistViewSet, basename='artist'
+)
 
 urlpatterns = [
     path('', include(router.urls)),
