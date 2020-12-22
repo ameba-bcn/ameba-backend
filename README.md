@@ -1,6 +1,26 @@
-# ameba-site backend v0.2
+# ameba-site backend v0.3
 
 ## REST-API
+
+### Admin panel
+Documentación SWAGGER de la API:
+```
+localshot:8000/api/docs
+```
+
+### Admin panel
+```
+localhost:8000/admin
+```
+Para acceder al admin panel hay que tener un usuario admin. Para ello, desde
+ django:
+```
+python manage.py createsuperuser
+```
+o desde docker:
+```
+docker-compose run --rm backend python manage.py createsuperuser
+```
 
 ### Authentication
 El método de authenticación es json-web-token (JWT) implementado por: 
