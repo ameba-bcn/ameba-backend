@@ -1,0 +1,545 @@
+
+[
+  {
+    "model": "api.question",
+    "pk": 1,
+    "fields": {
+      "question": "Quines són les teves influències?"
+    }
+  },
+  {
+    "model": "api.question",
+    "pk": 2,
+    "fields": {
+      "question": "Com veus l’escena electrònica a Barcelona?"
+    }
+  },
+    {
+    "model": "api.question",
+    "pk": 3,
+    "fields": {
+      "question": "Quins elements són indispensables en la teva música?"
+    }
+  },
+    {
+    "model": "api.question",
+    "pk": 4,
+    "fields": {
+      "question": "Un disc que sempre portes en la teva maleta?"
+    }
+  },
+    {
+    "model": "api.question",
+    "pk": 5,
+    "fields": {
+      "question": "Quins són els teus segells de referència?"
+    }
+  },
+
+
+  {
+    "model": "api.artist",
+    "pk": 1,
+    "fields": {
+      "name": "Lucient",
+      "contact": "Mario G.",
+      "biography": "Mario G. Quelart porta ja uns quants anys mostrant el seu talent i «savoir faire» pels principals clubs i festivals del territori nacional. Ho fa sempre amb el nom de Lucient, o gairebé sempre, ja que de vegades s’ajunta amb Albert Salines (aka Wooky) amb el duet C.E.E. Shepherds. Lucient forma part de la família del segell Lapsus i del club LAUT de Barcelona, on és resident, i on s’ha posat a prova a si mateix amb dues maratonianes sessions de 12 hores non-stop, detall que indica per si sol el seu amplíssim coneixement de la música de ball de totes les èpoques i la seguretat amb la qual exerceix el seu ofici darrere dels plats. En Mario també dirigeix i presenta el programa «Synesthésiques«, a l’emissora local Dublab.es, i recentment ha estrenat el programa «Voyager» a C/C Radio. Entre les seves producción trobem remixes per artistas com la Museless i temes propis com el que trobem al recopilatori «Barca Is Not Barcelona», editat al segell d’Olde Gods, Minor Planets. Està treballant en el seu primer EP, que es preveu per algun moment del 2021.",
+      "image": "media/artists/demo/lucient.jpg",
+      "email": ""
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 1,
+    "fields": {
+      "artist": 1,
+      "question": 1,
+      "is_active": true,
+      "answer": "Les meves influències són moltes i molt variades. Vinc del rock i el Pop, abans de punxar electrònica vaig estar molts anys punxant «indie» i fins i tot vaig tocar en alguna banda, però també m’encanta la música negra, soul, funk, disco, afrobeat… També sóc un gran amant de la IDM i l’electrònica més experimental i quan no estic enfocat a una pista de ball els sons més balearics o fins i tot l’ambient o el jazz són dels discos que més escolto."
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 2,
+    "fields": {
+      "artist": 1,
+      "question": 2,
+      "is_active": true,
+      "answer": "Crec que l’escena electrònica de Barcelona viu un dels seus millors moments, bons artistes, varietat d’estils, un fotimer de botigues de discos especialitzades, clubs i festivals molt interessants (fora dels grans i habituals monstres de sempre, que també són importants). Fins i tot, crec que hi ha més col·laboracionisme que mai. El temps dirà i la perspectiva em donarà o no la raó, però si sabem treure suc de la situació de l’escena actual, en uns anys podem ser un referent més important dintre de l’escena electrònica global."
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 3,
+    "fields": {
+      "artist": 1,
+      "question": 3,
+      "is_active": true,
+      "answer": "Em costa molt posar-li nom, ja que moltes vegades trio música que aparentment no té res a veure entre si, però que tenen aquell nosequè que em fa encendre una alarma dins el meu cap i em fa posar aquell disc a la maleta. Crec que un element bastant habitual en la música que punxo és que ajuden al viatge, ja sigui mental o físic."
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 4,
+    "fields": {
+      "artist": 1,
+      "question": 4,
+      "is_active": true,
+      "answer": "Crec que un dels discs que més he punxat al llarg de la meva carrera és el Ne Noya (Daphni Mix) – Cos Ber Zam, que va publicar el mateix Daphni al seu segell, Jiaolong ara farà uns 10 anys."
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 5,
+    "fields": {
+      "artist": 1,
+      "question": 5,
+      "is_active": true,
+      "answer": "Segur que me’n deixo alguns, però sens dubte hi ha de ser Music From Memory, Whities (Que ara ha canviat el nom pel de AD 93), Antinote, Dark Entries, Early Sounds Recordings, Hivern, L.I.E.S., Livity Sound, Lobster Theremin o Craigie Knowes."
+    }
+  },
+
+  {
+    "model": "api.artist",
+    "pk": 2,
+    "fields": {
+      "name": "Telexketch",
+      "contact": "Telexketch",
+      "biography": "Telexketch és un dels djs de Barcelona amb major recorregut i reconeixement de tota l’escena. Adicte als clubs de ball des de principis dels 90, decideix fer el salt a les cabines ja que com clubber s’avorreix en les pistes de ball recarregades de mínimal insubstancial. Eclecticisme a l’hora de mesclar, la seva atenció i facilitat per a llegir la pista li permet canviar d’una dècada a una altra mantenint el feeling i emoció en els seus sets. La seva maleta té cabuda per al millor so disco dels anys 70, italodisco, spacedisco, hi-nrg, nudisco, chicago, deep, discohouse, italohouse, hiphouse, pianohouse, breaks, 90’s, electro, detroit, french touch i el que s’intervingui … Des dels anys 70 fins a l’actualitat… A més de reconèixer-se un col·leccionista empedreït de discos de vinil i realitzar dj sets assíduament, Telexketch porta un temps treballant en edits de temes oblidats dins dels gèneres disc, italo i house. Telexketch ha actuat en multitud de sales de la seva ciutat a més de diversos clubs de la península.",
+      "image": "media/artists/demo/telexketch.jpg",
+      "email": ""
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 6,
+    "fields": {
+      "artist": 2,
+      "question": 1,
+      "is_active": true,
+      "answer": "Les meves influències són vàries:-Als anys 80 quan era petit era impossible escapar del ItaloDisco mes cheesy, sonava a qualsevol radiofórmula, recordo escoltar Miko Misison, Savage, Ken Lazlo, els Max Mix, de fet el Max Mix 4 va ser el primer cassette que vaig comprar amb 11 anys a l’any ’86. És normal tenint en compte que a Barcelona, Sabadell… Van néixer productors inclús un corrent dins l’italo catalogada com a Sabadell Sound o Paella Disco. A finals del 80’s vaig descobrir l’Acid House,l’UK House i les caixes de ritmes, quasi de primera mà. Eren una colla de skaters, de la primera onada de skaters a la ciutat comtal, molt jovenets no passaven dels 13 i 14 anys, però tenien uns col·legues d’un barri proper que ja havien acabat la mili i tal… Baixaven al nostre barri a patinar, ens ensenyaven alguns trucs d’skate, ells estaven molt al corrent de què passava a Europa en termes musicals, a vegades portaven caixes de ritmes, ens gravàvem VHS de l’MTV Anglesa que els enviaven algun col·lega que tenien a Londres, etc etc etc. Ja amb la majoria d’edat complerta després d’un pas efímer pels temples de la denominada makina, parlo de l’any ’93 més o menys vaig descobrir el que deien Trance i Hardtrance en les excursions mensuals a La Sala del Cel de Girona, crec que allò va canviar la meva perspectiva del que era sortir de festa o/i anar de clubbing.-Posteriorment ja va ser el Cyberian, Nitsa, Movidisco, Fellini, La Terrrazza, etc… amb l’eclecticisme musical i el multi-etiquetisme dels anys 90 dins l’electrònica i gràcies a aquests clubs, que vam apostar de manera ferma pel clubbing va canviar l’enfocament musical a la ciutat de tota una generació i les venidores."
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 7,
+    "fields": {
+      "artist": 2,
+      "question": 2,
+      "is_active": true,
+      "answer": "Això va per èpoques i no té fi, no obstant faré una petita llista. Un d’ells seria sense dubte Megatone Records de Patrick Cowley, tinc una pila d’aquest Hi-Nrg. Altres de l’època Disco serien Malligator del Cerrone, Coast to Coast, Fantasy, Importe/12, Unidisc, Matra, West End, Prelude, Goody Music….Dins de l’Italodisco, per exemple: Best Records, Baby Records, Il Discotto, DiscoMagic, Memory Records, Sensation Records, House of Music, ZYX. Bonzai Records, no tinc massa però reconec que hi ha temazos de trance molt rescatables avui en dia. Que seria de nosaltres sense els segells de referència dins del House com FFRR, Dancemania, Jack Trax, Dj International Records, Hot Mix… Roule i Crydamoure dels Daft Punk, PWL, Junior Boys Own, Wall of Sound, R&S, Ninja Tune, Minifunk, Yellow Productions, Rephlex, Warp… Dels més actuals m’agraden molt Bordello A Parigi, Rush Hours, Running Back, Skylax, Clone, Moustache Records, Viewlexx, Red Laser Records, Dark Entries, Permanet Vacation, Disco Segretta, Spa In Disco, Nang Records, Hivern, Aspecto Humano, i com no Italo Moderni que ha començat bastant a tope dins la nova escena ItaloDisco a BCN."
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 8,
+    "fields": {
+      "artist": 2,
+      "question": 3,
+      "is_active": true,
+      "answer": "Doncs no sabria dir, un bon sinte, un ritme amb groovy, una bona caixa… Però per ser sincer crec que el dia d’avui no trobo res indispensable, hi ha coses Lo-Fi que m’agraden, hi ha música electrònica feta totalment amb instruments orgànics, a la fi, si sona bé i em transmet quelcom doncs ja m’agrada ;)"
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 9,
+    "fields": {
+      "artist": 2,
+      "question": 4,
+      "is_active": true,
+      "answer": "Hi ha escena, i tant, cada cop creix més, però passa alguna cosa que no sé que és. M’agradaria dir que trobo una escena meravellosa amb el fotimer d’artistes bons que tenim, les condicions de la ciutat (temps, garitos i botigues de discos per metre quadrat, etc…) les associacions com la vostra, i sobretot el públic. Als clubs cada vegada programen més locals, no només per obrir la nit, sinó per tancar i per oferir el seu projecte durant tota la nit, això és un indicatiu de què hi ha escena a més a més de ser una de les coses més importants en la creació d’una escena local. Han nascut noves botigues de discos que crec que és una altra cosa bàsica, llocs de dia on la gent es pugui barrejar, relacionar-se amb altres artistes, chequejar, compartir i comprar música. El cas és que no trobo una internacionalització de l’escena Barcelonina com si passa a Amsterdam per exemple. És veritat que ha crescut i tenim artistes que fan tours per tot arreu però encara és un % molt minúscul comparat amb altres indrets. Quan miro la programació del Dekmantel és un clar exemple del que estic dient un alt % d’artistes són d’Amsterdam i sinó d´Holanda, copen les millors hores, bé, crec que a Dekmantel no hi ha un slot dolent… hehehe Això que estic dient, no sé si només està passant a Amsterdam actualment, és possible que encara tenim aquell mantra al cap del que és de fora és millor. Una cosa «bona» del COVID-19, és que en línies generals crec que estem valorant molt més el producte local, de proximitat, ens estem tornant més solidaris, més humans, ens estem preocupant dels nostres, veïns, amics, família, de la gent que tenim a prop, i potser és el detonant que feia falta… o potser necessitem la creació d’una promotora/booker local per moure el talent local que tenim per tot arreu, heu pensat a fer aquest pas? Crec que seria molt bona «Ameba Booking» Hehehhe"
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 10,
+    "fields": {
+      "artist": 2,
+      "question": 5,
+      "is_active": true,
+      "answer": "Abans portava sempre el Phyllis Nelson – I Like You (extended version) de l’any ‘85, una barreja de Hi–nrg, Disco que jo catalogaria dins del Protohouse. De fet el vaig descobrir a principis dels 2000’s per tres bandes, mitjançant el meu amic Felix, per mediació d’en D.A.R.Y.L (el primer nick name de Dj de John Talabot) que es va jartar de punxar-lo a la sala Neon del Nitsa, i juraria que a un dels sets de l’I-F a l’Intergalactic FM. Al cap de poc temps ja el vaig trobar, i dir que el tinc desgastat de treure-li suc. No obstant això, actualment no tinc un disc enclaustrat a la maleta ;)"
+    }
+  },
+
+
+
+  {
+    "model": "api.artist",
+    "pk": 3,
+    "fields": {
+      "name": "Phran",
+      "contact": "Phran",
+      "biography": "Phran és un veneçolà de naixement que porta anys ja vivint i agitant l’underground barceloní amb els seus múltiples projectes. Aquests dos últims anys han estat per a ell un moment molt important, ja que s’ha embarcat en quatre aventures que, de moment, han començat amb molt bon peu: People You May Know, duo d’improvisacions, jams de house i experimentacions analògiques al costat de Ylia; Dos Ritmos, que li ha unit a Lucca Lozano amb la recerca de la perfecta simbiosi entre percussions llatines ancestrals i ritmes trencats electrònics fets per a la pista de ball; IVAN, projecte compartit al costat d’Ivy Barkakati; i Latino Body, programa de ràdio i B2B sota el seu altre àlies DJ Phidias acompanyat de Sano. Tots ells demostren de la seva gran capacitat d’associació i la permeabilitat del seu discurs. Els discos publicats amb aquests respectius projectes (“One Hand Clap”, en Hooded Records, “Antrophony”, en el segell berlinès Klasse Wrecks, i el seu autopublicat «Delicius Fantasy») són tres excel·lents releases que s’afegeixen a una discografia encara curta però suculenta i repleta d’idees, amb diversos EPs en solitari i compartits (3 EP’s a Klasse Wrecks, «Impulse», junt amb Ivy Barkakati en Rhythm Control Barcelona, i «Latent Effect», en Best Effort). Aquest últim any l’hem pogut veure a diversos festivals locals com Sónar amb el projecte Phran, MIRA amb el projecte People You May Know, Manrusonica amb el projecte IVAN o Parkfest amb el projecte Latino Body i Phran.",
+      "image": "media/artists/demo/phran.jpg",
+      "email": ""
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 11,
+    "fields": {
+      "artist": 3,
+      "question": 1,
+      "is_active": true,
+      "answer": "En aquest moment: Els albiraments d’Ovnis en el barri del Poble Nou, Lost Tracks, Zauberstab Zine, Vico C, Lisa M i Omar S."
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 12,
+    "fields": {
+      "artist": 3,
+      "question": 2,
+      "is_active": true,
+      "answer": "Com a migrant veneçolà assentat en Barna des de 2011, veig amb admiració la quantitat de bons artistes, productors i DJs que hi ha a la ciutat, també amb connexions per tota la península. Sempre hi ha algun altre DJ, artista o segell que un no tenia en el radar i resulta ser boníssim. La meva manera d’entendre l’art i el meu treball ha canviat aprenent de tanta gent fent coses interessants en l’escena local. Potser l’escena ha depès molt del turisme i aquesta sigui una oportunitat per a fer les coses d’una altra manera."
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 13,
+    "fields": {
+      "artist": 3,
+      "question": 3,
+      "is_active": true,
+      "answer": "La internet, una Drum Machine i un Delay."
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 14,
+    "fields": {
+      "artist": 3,
+      "question": 4,
+      "is_active": true,
+      "answer": "Com a migrant veneçolà assentat en Barna des de 2011, veig amb admiració la quantitat de bons artistes, productors i DJs que hi ha a la ciutat, també amb connexions per tota la península. Sempre hi ha algun altre DJ, artista o segell que un no tenia en el radar i resulta ser boníssim. La meva manera d’entendre l’art i el meu treball ha canviat aprenent de tanta gent fent coses interessants en l’escena local. Potser l’escena ha depès molt del turisme i aquesta sigui una oportunitat per a fer les coses d’una altra manera."
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 15,
+    "fields": {
+      "artist": 3,
+      "question": 5,
+      "is_active": true,
+      "answer": "Algun de Rhythm & Sound"
+    }
+  },
+
+
+
+  {
+    "model": "api.artist",
+    "pk": 4,
+    "fields": {
+      "name": "Omega III",
+      "contact": "",
+      "biography": "Omega III és un DJ i grafiter barceloní nascut i criat en Sheffield, va començar a interessar-se per la música electrònica a principis dels 90 amb l’aparició de Warp Records i el moviment Bleep, sorgit en el nord del Regne Unit. Actiu en tots els aspectes del club/graff des que es va mudar a la capital catalana a mitjans del 2000, la seva última aventura és el programa mensual Wave 131, en Dublab.es. En la universitat va començar a col·laborar amb el DJ i productor berlinès Luca Lozano i contribueix periòdicament amb mescles per als seus segells Klasse Wrecks i Grafiti Tapes, llançant les ja clàssiques «Fantasy FM: The Lost Tape», al costat de Lozano, i «Grafiti Tapes 7», al costat de Plom.",
+      "image": "media/artists/demo/omega3.png",
+      "email": ""
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 16,
+    "fields": {
+      "artist": 4,
+      "question": 1,
+      "is_active": true,
+      "answer": "La cultura de rave dels inicis dels 90, sobretot en el nord d’Anglaterra. Els estils que van sonar aleshores: de Britcore a bleep, breakbeat i jungle, IDM i techno. Ens agrada l’estètica DIY al nivell visual, ambient de festa informal i lliure, una producció que valora molt els greus i tota la cultura de soundsystems que ve de Jamaica en els seus inicis. No pensem que la cultura i els valors d’aquesta època estan morts, encara es pot apreciar el moviment en altres formes avui en dia."
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 17,
+    "fields": {
+      "artist": 4,
+      "question": 2,
+      "is_active": true,
+      "answer": "Avui en dia hi ha massa segells de qualitat per nomenar aquí, però quan anem de compres, sempre estem buscant coses velles de Warp, Network, 10, Production House, XL, Suburban Base, Movin‘ Shadow, Chill, MoWax i Chill. Al nivell regional, Hivern i Lapsus són dos segells que mereixen tot el reconeixement que han rebut. Representen molt bé el producte nacional."
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 18,
+    "fields": {
+      "artist": 4,
+      "question": 3,
+      "is_active": true,
+      "answer": "La majoria de la nostra música està en vinils, però cada cop més la combinem amb nova música que arriba d’amics com a promo. Ens agrada punxar a velocitats ràpides i amb confiança quan punxem en directe, aleshores els temes que seleccionem són prou simples i expressius. Ens agrada pensar que cada sessió és una banda sonora d’una pel·lícula, una instal·lació, un viatge, aleshores és sempre diferent."
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 19,
+    "fields": {
+      "artist": 4,
+      "question": 4,
+      "is_active": true,
+      "answer": "Pots trobar des de macro-esdeveniments amb música molt bona a propostes petites i innovadores, festivals d’altíssim nivell i ràdios amb molt bona programació cada dia. Realment ens falta temps per anar a tot el que ens interessa veure. Que falta? – Més espais informals i permissius, on apreciar la música a l’aire lliure. – Bars on es pugui punxar. – Ganes del públic per sortir del circuit habitual."
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 20,
+    "fields": {
+      "artist": 4,
+      "question": 5,
+      "is_active": true,
+      "answer": "Unique 3 – The Theme. Com explica el Matt Anniss en el seu llibre Join The Future, és possiblement el primer tema de bleep & bass que va editar, una combinació de subgreus del mític Rob Gordon (co-fundador de Warp) amb l’estètica del grup de breakdance, Unique 3. Quan va sortir, diuen que Virgin Records, que va editar el disc, va rebre unes quantes cartes de discoteques perquè el tema va rebentar els altaveus."
+    }
+  },
+
+
+
+  {
+    "model": "api.artist",
+    "pk": 5,
+    "fields": {
+      "name": "Harvey Touch",
+      "contact": "Harvey Touch",
+      "biography": "Sota el nom de Harvey Touch s’amaga el projecte en solitari del productor càntabre establert a Barcelona Javi Toca. Després de diversos anys explorant diferents gèneres, en 2017 la seva carrera comença amb Opal, Changes (EELF) i Warm By Your Side (Houseum), on demostra el seu gust pels samplejos. Els dos últims temes criden l’atenció de la comunitat de Soundcloud i Youtube, la qual cosa porta a l’artista a començar amb les actuacions en directe (ARTeNOU, Razzmatazz, Garage 442) i a presentar DJ sets carregats de house percussiu i ritmes exòtics. Després d’un any de silenci, Harvey Touch arranca de nou el passat 2019 amb l’EP Astral Patterns editat dins del segell libanès Feedasoul, mostrant tres talls més contundents, amb un cert matís espiritual, i que va fer de pont amb el seu àlbum, Archipiélago, un treball més rítmic, introspectiu i oníric. Recentment ha editat en el segell valencià theBasement Discos amb Poca Broma EP, un treball que beu amor per la música dels 70 i la transforma en quatre produccions originals que desborden calidesa i elegància. Els seus coneguts edits posen també a l’artista com un digger de primer nivell, amb autèntiques delícies per a qualsevol DJ.",
+      "image": "media/artists/demo/harvey_touch.jpg",
+      "email": ""
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 21,
+    "fields": {
+      "artist": 5,
+      "question": 1,
+      "is_active": true,
+      "answer": "Moltes i molt variades: jazz, house, techno, hip hop, disc, ambient, new age, balearic…"
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 22,
+    "fields": {
+      "artist": 5,
+      "question": 2,
+      "is_active": true,
+      "answer": "No crec que existeixi ja una escena com a tal. Dins de la ciutat ara s’emporta l’individualisme, o com a molt petits col·lectius que funcionen i es mouen bé en el seu entorn (p. ej Mainline).El costat bo és que ara mateix l’escena es considera a nivell global. Jo demà puc parlar amb un promotor o un productor o un DJ de Dublín, Berlín o Líban, i crear una xarxa molt més extensa del que haguéssim imaginat fa 10 anys."
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 23,
+    "fields": {
+      "artist": 5,
+      "question": 3,
+      "is_active": true,
+      "answer": "Ableton. Alguna planta i una il·luminació adequada."
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 24,
+    "fields": {
+      "artist": 5,
+      "question": 4,
+      "is_active": true,
+      "answer": "Oyabun de Folamour, o alguna cosa de Four Tet.\n\n"
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 25,
+    "fields": {
+      "artist": 5,
+      "question": 5,
+      "is_active": true,
+      "answer": "Coastal Haze, TheBasement Discos, Blaq Numbers, Get Together, Shall Not Fade i Periodica Rècords."
+    }
+  },
+
+
+
+  {
+    "model": "api.artist",
+    "pk": 6,
+    "fields": {
+      "name": "Lowprofile",
+      "contact": "Lowprofile",
+      "biography": "Funcionalitat, emoció i intensitat. Aquests són els tres eixos que defineixen la visió de Lowprofile en la música. El Dj de Barcelona, i membre fundador de LowKeyMoves, és conegut per tenir una sensibilitat especial a l’hora de moure’s entre moods i gèneres. Amb una precisió i una classe poc freqüents de trobar, la seva paleta sonora va des dels ritmes més incisius de les darreres innovacions de la música de ball, fins al Hip Hop, l’R&B i més enllà. Amb les seves arrels plantades a la música electrònica britànica i nord-americana, i als sons urbans de les darreres dècades, Lowprofile també mira cap a Amèrica del Sud, Àfrica o Jamaica per a celebrar la música global amb els ulls sempre centrats en la pista de ball.\n\n",
+      "image": "media/artists/demo/lowprofile.jpg",
+      "email": ""
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 26,
+    "fields": {
+      "artist": 6,
+      "question": 1,
+      "is_active": true,
+      "answer": "El UK Funky de principis finals del 00’s-principis dels 10’s, el dancehall dels 00’s, la nova música de club que està sorgint a NY i voltants, el Grime, el Bmore, l’R&B, el Rap de la Bay Area, i en general qualsevol gènere musical concebit amb el club a la ment."
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 27,
+    "fields": {
+      "artist": 6,
+      "question": 2,
+      "is_active": true,
+      "answer": "Els que més impacte han tingut sobre mi, sense cap dubte són Night Slugs i Sound Pellegrino."
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 28,
+    "fields": {
+      "artist": 6,
+      "question": 3,
+      "is_active": true,
+      "answer": "Com a Dj, busco música fixant-me sempre en l’impacte que pot tenir en el soundsystem d’un club. Per a mi, això vol dir tracks amb estructures funcionals i directes, dosis d’emoció ben mesurades i, sobre tot, intensitat."
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 29,
+    "fields": {
+      "artist": 6,
+      "question": 4,
+      "is_active": true,
+      "answer": "Més variada i inclusiva que mai. No hagués cregut fa 10 anys que podríem arribar fins a aquest punt. Esperem que una vegada passi tot això segueixi progressant com ho estava fent <3 Encara no has escoltat a Lowprofile? Aquí et deixem amb el seu podcast per Central Magazine, un viatge a través de gran part del seu rang musical quan es tracta de Djing!"
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 30,
+    "fields": {
+      "artist": 6,
+      "question": 5,
+      "is_active": true,
+      "answer": "Aquest no n’ha sortit mai"
+    }
+  },
+
+
+  {
+    "model": "api.artist",
+    "pk": 7,
+    "fields": {
+      "name": "Virginie",
+      "contact": "Lowprofile",
+      "biography": "Col·leccionista de vinils des de petitona, Virginie va començar la seva feina com a discjòquei professional en 1999. Eclèctica per naturalesa, és coneguda per combinar música negra amb electrònica i hip-hop. Virginie ha visitat diferents ciutats arreu del món, des de Veneçuela a Finlàndia, passant per Nova York, França, Madrid, Bilbao, Itàlia o Barcelona. Darrere dels plats, la seva selecció musical captiva el públic allà on va, aquí a Barcelona ho hem pogut comprovar en el Cruïlla Fest, SoundEat!, Brunch in the City, Brunch Electronik, DGTL Barcelona o Primavera Sound on VIR (el seu altre aka) va presentar el seu nou projecte Shakti Aliance, juntament amb Troya Modet.Actualment té diversos projectes en mà, com ser Booker de la C/C Ràdio, dedicada a discjòqueis i productors. Hem aprofitat aquests dies d’aturada per fer cinc cèntims amb ella i que ens parli una mica de les seves influències.",
+      "image": "media/artists/demo/virginie.jpg",
+      "email": ""
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 31,
+    "fields": {
+      "artist": 7,
+      "question": 1,
+      "is_active": true,
+      "answer": "Ciutats com New York, Chicago, Detroit, California… Artistes com Kenny Dope, Ron Trent, Spinna, Andrés, Omar S, Kerry Chandler, Theo Parrish, Dam-Funk, Moodymann, Kai Alce, Madlib, J Dilla, Sade ,Erykah Badu, Amp Fiddler, Jill Scott, Marvin Gaye, Gil Scott Heron, Minnie Riperton… Uff i molts més!!!"
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 32,
+    "fields": {
+      "artist": 7,
+      "question": 2,
+      "is_active": true,
+      "answer": "Nervous Records, Strictly Rhythm, King Groove, BBE, Stones Throw, P.P.U, Motown, Underground Resistance, Ibadan, Dance Mania…"
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 33,
+    "fields": {
+      "artist": 7,
+      "question": 3,
+      "is_active": true,
+      "answer": "Veu, groove, bass lines, keyboards i synth sounds.\n\n"
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 34,
+    "fields": {
+      "artist": 7,
+      "question": 4,
+      "is_active": true,
+      "answer": "Ara de moment s’ha acabat! Quan torni serà totalment diferent… I esperem que vagi a millor!"
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 35,
+    "fields": {
+      "artist": 7,
+      "question": 5,
+      "is_active": true,
+      "answer": "Shahara-Ja – I’m an Arabian Knight (Egyptian Lover mix)\n\n"
+    }
+  },
+
+
+  {
+    "model": "api.artist",
+    "pk": 8,
+    "fields": {
+      "name": "Dj Bruce Lee",
+      "contact": "",
+      "biography": "",
+      "image": "media/artists/demo/dj_bruce_lee.jpg",
+      "email": ""
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 36,
+    "fields": {
+      "artist": 8,
+      "question": 1,
+      "is_active": true,
+      "answer": "Grups com Dire Straits o Mano Negra… Estils com el Reggae, Detroit Techno / House / Electro, Chicago House, NY House, NY Disco, UK Techno, NY Techno… O artistes com Ben Sims, Dave Clarke, Surgeon, Mark Broom, James Ruskin, DJ Assault, DJ Funk, Claude Young, Jeff Mills, etc…"
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 37,
+    "fields": {
+      "artist": 8,
+      "question": 2,
+      "is_active": true,
+      "answer": "Dance Mania, Tresor, Hardgroove, Theory, Dynamic Tension, Ostgut Ton…"
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 38,
+    "fields": {
+      "artist": 8,
+      "question": 3,
+      "is_active": true,
+      "answer": "Groove i hipnotisme."
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 39,
+    "fields": {
+      "artist": 8,
+      "question": 4,
+      "is_active": true,
+      "answer": "Millor que fa uns anys. Els clubs grans (i festivals o grans esdeveniments) des de fa uns anys donen més oportunitats a gent local que abans, encara que queda molt per fer. També veig una comercialització en l’escena però això és una cosa global. Estem a anys llum de llocs com Berlín però crec que no ens podem queixar tal i com està el percal."
+    }
+  },
+  {
+    "model": "api.answer",
+    "pk": 40,
+    "fields": {
+      "artist": 8,
+      "question": 5,
+      "is_active": true,
+      "answer": "Últimament el Head Front Panel 004."
+    }
+  }
+]
