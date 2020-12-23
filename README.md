@@ -2,6 +2,20 @@
 
 ## REST-API
 
+### Ejecutar RestApi
+Para poner en marcha la API, ejecutar al menos una vez:
+```
+python manage.py migrate
+python manage.py collectstatic
+python manage.py runserver
+```
+
+### Demo data
+Dataset inicial con datos reales:
+```
+python manage.py loaddata demo.json
+```
+
 ### Authentication
 El método de authenticación es json-web-token (JWT) implementado por: 
 [DRF-SimpleJWT](https://django-rest-framework-simplejwt.readthedocs.io/en/latest/)
