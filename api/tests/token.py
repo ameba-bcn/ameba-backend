@@ -1,5 +1,6 @@
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.test import tag
 
 from api.tests import _helpers
 from api import models
@@ -29,6 +30,7 @@ class TestSessions(_helpers.BaseTest):
         user = models.User.objects.create(**props)
         return user
 
+    @tag("token")
     def test_user_login(self):
         user_attrs = {
             'email': 'user@ameba.cat',
@@ -40,6 +42,7 @@ class TestSessions(_helpers.BaseTest):
         self.assertIn('access', response.data)
         self.assertIn('refresh', response.data)
 
+    @tag("token")
     def test_wrong_password_user_login(self):
         user_attrs = {
             'email': 'user@ameba.cat',
@@ -58,6 +61,7 @@ class TestSessions(_helpers.BaseTest):
         )
         self.assertEqual(list(response.data.keys()), ['detail'])
 
+    @tag("token")
     def test_wrong_email_user_login_does_not_give_info(self):
         user_attrs = {
             'email': 'user@ameba.cat',
@@ -76,6 +80,7 @@ class TestSessions(_helpers.BaseTest):
         )
         self.assertEqual(list(response.data.keys()), ['detail'])
 
+    @tag("token")
     def test_delete_token_authenticated(self):
         user_attrs = {
             'email': 'user@ameba.cat',
@@ -88,6 +93,7 @@ class TestSessions(_helpers.BaseTest):
         response = self.delete(token.access_token, attrs=attrs)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
+    @tag("token")
     def test_delete_token_unauthenticated(self):
         user_attrs = {
             'email': 'user@ameba.cat',
@@ -100,6 +106,7 @@ class TestSessions(_helpers.BaseTest):
         response = self.delete(attrs={'refresh': str(token)})
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
+    @tag("token")
     def test_deleted_token_does_not_work_anymore(self):
         user_attrs = {
             'email': 'user@ameba.cat',

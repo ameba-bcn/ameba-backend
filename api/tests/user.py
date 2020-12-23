@@ -45,6 +45,7 @@ class UserTest(BaseUserTest):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(User.objects.filter(email=user_props['email']).exists())
 
+    @tag("user")
     def test_create_not_member_user_returns_expected(self):
         user_props = {
             'username': 'Ameba User',
@@ -75,6 +76,7 @@ class UserTest(BaseUserTest):
         self.assertIs(resp_data['is_active'], expected['is_active'])
         self.assertIs(resp_data['member'], expected['member'])
 
+    @tag("user")
     def test_create_user_writes_proper_datetime(self):
         user_props = {
             'username': 'Ameba User',
@@ -89,6 +91,7 @@ class UserTest(BaseUserTest):
         date_joined = user.date_joined.replace(tzinfo=utc)
         self.assertLess(date_joined,  max_datetime)
 
+    @tag("user")
     def test_create_user_hashes_password(self):
         user_props = {
             'username': 'Ameba User',
@@ -102,6 +105,7 @@ class UserTest(BaseUserTest):
         self.assertTrue(user.check_password(user_props['password']))
         self.assertTrue(user._is_password_hashed())
 
+    @tag("user")
     def test_create_user_matching_member_returns_member(self):
         member_data = {
             'number':  1,
@@ -141,7 +145,7 @@ class UserTest(BaseUserTest):
         self.assertIs(resp_data['is_active'], expected['is_active'])
         self.assertIs(resp_data['member'], expected['member'])
 
-    @tag("current_user")
+    @tag("user")
     def test_get_user_not_authenticated(self):
         user_props = {
             'username': 'Ameba User',
@@ -153,7 +157,7 @@ class UserTest(BaseUserTest):
         response = self._get(pk=user.pk, token='')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    @tag("current_user")
+    @tag("user")
     def test_update_user_not_authenticated(self):
         user_props = {
             'username': 'Ameba User',
