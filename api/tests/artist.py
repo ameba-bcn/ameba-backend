@@ -3,6 +3,7 @@ from django.core.files.images import ImageFile
 from rest_framework import status
 from rest_framework.utils.serializer_helpers import ReturnList
 from dateutil import parser
+from django.test import tag
 
 from api import models
 from api.models.artist import BIO_PREVIEW
@@ -57,6 +58,7 @@ class TestArtist(BaseTest):
             )
             self.create_answers(artist)
 
+    @tag("artist")
     def test_get_list_no_auth(self):
         response = self._list(token='')
         total_artists = models.Artist.objects.all()
@@ -64,6 +66,7 @@ class TestArtist(BaseTest):
         self.assertIsInstance(response.data, ReturnList)
         self.assertEqual(len(response.data), len(total_artists))
 
+    @tag("artist")
     def test_get_list_artist_data(self):
         response = self._list(token='')
         artist_data = response.data[0]
@@ -78,24 +81,28 @@ class TestArtist(BaseTest):
             self.assertIn(key, artist_data)
             self.assertIs(type(artist_data[key]), list_artist_data[key])
 
+    @tag("artist")
     def test_get_list_artist_valid_image_url(self):
         response = self._list(token='')
         image_url = response.data[0]['image']
         self.assertTrue(valid_url(image_url))
 
+    @tag("artist")
     def test_get_list_artist_valid_dates(self):
         response = self._list(token='')
         created = response.data[0]['created']
         self.assertTrue(valid_date(created))
 
+    @tag("artist")
     def test_get_list_artist_bio_preview_length(self):
         response = self._list(token='')
         bio_preview = response.data[0]['bio_preview']
         self.assertEqual(len(bio_preview), BIO_PREVIEW)
 
+    @tag("artist")
     def test_get_artist(self):
-        pk = 1
-        artist = models.Artist.objects.get(id=pk)
+        artist = models.Artist.objects.all()[0]
+        pk = artist.pk
         response = self._get(pk=pk, token='')
         self.assertEqual(artist.id, response.data['id'])
         self.assertEqual(artist.name, response.data['name'])
@@ -115,6 +122,7 @@ class TestArtist(BaseTest):
                     response.data['current_answers']
                 )
 
+    @tag("artist")
     def test_create_artist_not_allowed(self):
         attrs = {
             'name': f'artist',
@@ -128,11 +136,13 @@ class TestArtist(BaseTest):
         response = self._create(attrs)
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
+    @tag("artist")
     def test_delete_artist_not_allowed(self):
         artist_id = models.Artist.objects.all()[0].id
         response = self._delete(pk=artist_id, token='')
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
+    @tag("artist")
     def test_update_artist_not_allowed(self):
         artist_id = models.Artist.objects.all()[0].id
         attrs = {

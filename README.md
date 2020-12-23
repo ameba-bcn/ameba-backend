@@ -1,8 +1,34 @@
-# ameba-site backend v0.3
+# ameba-site backend v0.4
+
+### Release notes
+- Documentación en /api/docs/
+- Demo data con loaddata demo.json (comando abajo y en devops)
+- Tests
+- login/logout
+- support-your-locals
 
 ## REST-API
 
-### Admin panel
+### Ejecutar tests
+```
+python manage.py test
+```
+
+### Ejecutar RestApi
+Para poner en marcha la API, ejecutar al menos una vez:
+```
+python manage.py migrate
+python manage.py collectstatic
+python manage.py runserver
+```
+
+### Demo data
+Dataset inicial con datos reales:
+```
+python manage.py loaddata demo.json
+```
+
+### Documentación
 Documentación SWAGGER de la API:
 ```
 localshot:8000/api/docs
