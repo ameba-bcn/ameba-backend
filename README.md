@@ -1,8 +1,22 @@
-# ameba-site backend v0.3
+# ameba-site backend v0.2
 
 ## REST-API
 
-### Admin panel
+### Ejecutar RestApi
+Para poner en marcha la API, ejecutar al menos una vez:
+```
+python manage.py migrate
+python manage.py collectstatic
+python manage.py runserver
+```
+
+### Demo data
+Dataset inicial con datos reales:
+```
+python manage.py loaddata demo.json
+```
+
+### Documentación
 Documentación SWAGGER de la API:
 ```
 localshot:8000/api/docs

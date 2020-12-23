@@ -9,14 +9,14 @@ class ArtistQuestionsInLineFormSet(BaseInlineFormSet):
     def __init__(self, *args, **kwargs):
         kwargs['initial'] = [
             {'question': question_id} for question_id in
-            Question.objects.filter(is_default=True)
+            self.get_default_questions()
         ]
         super(ArtistQuestionsInLineFormSet, self).__init__(*args, **kwargs)
 
     @staticmethod
     def get_default_questions():
         try:
-            return Question.objects.filter(is_default=True)
+            return list(Question.objects.filter(is_default=True))
         except Exception as err:
             return []
 
