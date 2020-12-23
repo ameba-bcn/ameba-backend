@@ -1,7 +1,6 @@
 from django.test import tag
 from rest_framework import status
 
-from api.models import User
 from api.tests.user import BaseUserTest
 
 
@@ -57,6 +56,7 @@ class CurrentUserTest(BaseUserTest):
         self.assertIs(resp_data['is_active'], expected['is_active'])
         self.assertIs(resp_data['member'], expected['member'])
 
+    @tag("current_user")
     def test_updated_password_is_hashed(self):
         user_props = {
             'username': 'Ameba User',
@@ -74,6 +74,7 @@ class CurrentUserTest(BaseUserTest):
         self.assertFalse(user.check_password(user_props['password']))
         self.assertTrue(user.check_password(new_props['password']))
 
+    @tag("current_user")
     def test_updated_duplicated_email_raises_exception(self):
         user_a_props = {
             'username': 'Ameba User',
@@ -186,6 +187,7 @@ class CurrentUserTest(BaseUserTest):
         other_response = self._get(other.pk, access_token)
         self.assertEqual(other_response.status_code, status.HTTP_403_FORBIDDEN)
 
+    @tag("current_user")
     def test_current_user_can_not_delete_other_user(self):
         user_a_props = {
             'username': 'Ameba User',
@@ -204,6 +206,7 @@ class CurrentUserTest(BaseUserTest):
         response = self._delete(pk=user_a.pk, token=access_token)
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
+    @tag("current_user")
     def test_current_user_can_not_patch_other_user(self):
         user_a_props = {
             'username': 'Ameba User',
@@ -229,6 +232,7 @@ class CurrentUserTest(BaseUserTest):
         )
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+    @tag("current_user")
     def test_current_user_can_not_update_other_user(self):
         user_a_props = {
             'username': 'Ameba User',
