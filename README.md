@@ -1,6 +1,18 @@
-# ameba-site backend v0.2
+# ameba-site backend v0.4
+
+### Release notes
+- Documentación en /api/docs/
+- Demo data con loaddata demo.json (comando abajo y en devops)
+- Tests
+- login/logout
+- support-your-locals
 
 ## REST-API
+
+### Ejecutar tests
+```
+python manage.py test
+```
 
 ### Ejecutar RestApi
 Para poner en marcha la API, ejecutar al menos una vez:
