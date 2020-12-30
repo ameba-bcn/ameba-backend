@@ -4,35 +4,40 @@
     "model": "api.question",
     "pk": 1,
     "fields": {
-      "question": "Quines són les teves influències?"
+      "question": "Quines són les teves influències?",
+      "is_default":  true
     }
   },
   {
     "model": "api.question",
     "pk": 2,
     "fields": {
-      "question": "Com veus l’escena electrònica a Barcelona?"
+      "question": "Com veus l’escena electrònica a Barcelona?",
+      "is_default":  true
     }
   },
     {
     "model": "api.question",
     "pk": 3,
     "fields": {
-      "question": "Quins elements són indispensables en la teva música?"
+      "question": "Quins elements són indispensables en la teva música?",
+      "is_default":  true
     }
   },
     {
     "model": "api.question",
     "pk": 4,
     "fields": {
-      "question": "Un disc que sempre portes en la teva maleta?"
+      "question": "Un disc que sempre portes en la teva maleta?",
+      "is_default":  true
     }
   },
     {
     "model": "api.question",
     "pk": 5,
     "fields": {
-      "question": "Quins són els teus segells de referència?"
+      "question": "Quins són els teus segells de referència?",
+      "is_default":  true
     }
   },
 
@@ -296,8 +301,6 @@
       "answer": "Unique 3 – The Theme. Com explica el Matt Anniss en el seu llibre Join The Future, és possiblement el primer tema de bleep & bass que va editar, una combinació de subgreus del mític Rob Gordon (co-fundador de Warp) amb l’estètica del grup de breakdance, Unique 3. Quan va sortir, diuen que Virgin Records, que va editar el disc, va rebre unes quantes cartes de discoteques perquè el tema va rebentar els altaveus."
     }
   },
-
-
 
   {
     "model": "api.artist",
