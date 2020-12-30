@@ -3,7 +3,7 @@ from django.db.models import Sum
 
 
 class Item(models.Model):
-    name = models.CharField(max_length='25', unique=True)
+    name = models.CharField(max_length=25, unique=True)
     description = models.TextField(max_length=1000)
     price = models.DecimalField(max_digits=8, decimal_places=2)
     stock = models.IntegerField()
@@ -14,28 +14,28 @@ class Item(models.Model):
         else:
             return self.stock
 
-
-class ItemTags(models.Model):
-    item = models.ForeignKey(
-        to='Item', related_name='tags', on_delete=models.DO_NOTHING
-    )
-    name = models.CharField('25')
+    def __str__(self):
+        return self.name
 
 
 class ItemImage(models.Model):
-    item = models.ForeignKey('Item', on_delete=models.DO_NOTHING)
+    item = models.ForeignKey(to=Item, on_delete=models.DO_NOTHING,
+                             related_name='images')
     image = models.ImageField()
-    active = models.BooleanField()
+    active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.image.name
 
 
 class ItemVariant(models.Model):
-    category = models.CharField(max_length='25')
-    name = models.CharField(max_length='25')
+    name = models.CharField(max_length=25)
     item = models.ForeignKey(
-        to='Item', on_delete=models.DO_NOTHING, related_name='variants'
+        to=Item, on_delete=models.DO_NOTHING, related_name='variants'
     )
     stock = models.IntegerField()
     description = models.TextField(max_length=1000, blank=True)
+    image = models.ImageField(blank=True)
 
     def get_description(self):
         if self.description:
@@ -43,11 +43,5 @@ class ItemVariant(models.Model):
         else:
             return self.item.description
 
-
-class ItemVariantImage(models.Model):
-    item_variant = models.ForeignKey(
-        to='ItemVariant', on_delete=models.DO_NOTHING, related_name='pictures'
-    )
-    image = models.ImageField()
-    active = models.BooleanField()
-
+    def __str__(self):
+        return self.name
