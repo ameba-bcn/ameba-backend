@@ -737,6 +737,15 @@
       "image": "items/demo/carnet-500x501.png",
       "active": true
     }
+  },
+  {
+    "model": "api.user",
+    "pk": 1,
+    "fields": {
+      "user_name": "Chiquito",
+      "email": "chiquito@ameba.cat",
+      "password": "ameba12345"
+    }
   }
 ]
 
