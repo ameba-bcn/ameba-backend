@@ -1,8 +1,16 @@
 from django.contrib import admin
-from api.models import Item, ItemVariant, ItemImage
+from api.models import Item, ItemVariant, ItemImage, Discount
 from django.forms.models import BaseInlineFormSet
 from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
+
+
+class DiscountChoiceInLine(admin.TabularInline):
+    model = Discount.items.through
+    extra = 0
+    verbose_name = 'Discount'
+    formset = BaseInlineFormSet
+    fk_name = 'item'
 
 
 class VariantChoiceInline(admin.TabularInline):
@@ -41,10 +49,13 @@ class ImageChoiceInLine(admin.TabularInline):
 
 class ItemAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None, {'fields': ['name', 'description', 'price', 'stock']})
+        (None, {'fields': ['name', 'type', 'description', 'price', 'stock',
+                           'date', 'is_expired', 'created', 'updated']})
     ]
-    inlines = [ImageChoiceInLine, VariantChoiceInline]
+    inlines = [ImageChoiceInLine, VariantChoiceInline, DiscountChoiceInLine]
+    readonly_fields = ['created', 'updated']
     list_display = ['name', 'price', 'stock', 'description', 'preview']
+    list_filter = ['type', 'is_expired']
 
     def preview(self, obj):
         img_tag = '<img src="{}" width="75" height="75" style="margin:10px" />'
