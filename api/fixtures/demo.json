@@ -571,7 +571,8 @@
       "price": 30.0,
       "stock": 10,
       "type": "article",
-      "image": "items/demo/ameba-5-anys-woo-commerce-500x469.jpg"
+      "created": "2020-03-06 12:05:01.000001Z",
+      "updated": "2020-03-06 12:05:01.000001Z"
     }
   },
   {
@@ -583,7 +584,8 @@
       "price": 30.0,
       "stock": 2,
       "type": "article",
-      "image": "items/demo/ameba-old-woo-commerce-500x469.jpg"
+      "created": "2020-03-06 12:05:01.000001Z",
+      "updated": "2020-03-06 12:05:01.000001Z"
     }
   },
   {
@@ -595,7 +597,8 @@
       "price": 30.0,
       "stock": 5,
       "type": "article",
-      "image": "items/demo/ameba-new-woo-commerce-500x469.jpg"
+      "created": "2020-03-06 12:05:01.000001Z",
+      "updated": "2020-03-06 12:05:01.000001Z"
     }
   },
   {
@@ -607,7 +610,8 @@
       "price": 30.0,
       "stock": 3,
       "type": "article",
-      "image": "items/demo/ameba-modular-0-woo-commerce-500x469.jpg"
+      "created": "2020-03-06 12:05:01.000001Z",
+      "updated": "2020-03-06 12:05:01.000001Z"
     }
   },
   {
@@ -619,7 +623,8 @@
       "price": 30.0,
       "stock": 0,
       "type": "article",
-      "image": "items/demo/ameba-modular-0-woo-commerce-500x469.jpg"
+      "created": "2020-03-06 12:05:01.000001Z",
+      "updated": "2020-03-06 12:05:01.000001Z"
     }
   },
   {
@@ -631,7 +636,8 @@
       "price": 30.0,
       "stock": 12,
       "type": "article",
-      "image": "items/demo/notonearth-002-tote-modular-ok-500x500.jpg"
+      "created": "2020-03-06 12:05:01.000001Z",
+      "updated": "2020-03-06 12:05:01.000001Z"
     }
   },
   {
@@ -643,7 +649,8 @@
       "price": 30.0,
       "stock": 12,
       "type": "article",
-      "image": "items/demo/notonearth-002-tote-vinil-500x500.jpg"
+      "created": "2020-03-06 12:05:01.000001Z",
+      "updated": "2020-03-06 12:05:01.000001Z"
     }
   },
   {
@@ -655,7 +662,80 @@
       "price": 30.0,
       "stock": 12,
       "type": "subscription",
-      "image": "items/demo/carnet-500x501.png"
+      "created": "2020-03-06 12:05:01.000001Z",
+      "updated": "2020-03-06 12:05:01.000001Z"
+    }
+  },
+  {
+    "model": "api.itemimage",
+    "pk": 1,
+    "fields": {
+      "item": 1,
+      "image": "items/demo/ameba-5-anys-woo-commerce-500x469.jpg",
+      "active": true
+    }
+  },
+  {
+    "model": "api.itemimage",
+    "pk": 2,
+    "fields": {
+      "item": 2,
+      "image": "items/demo/ameba-old-woo-commerce-500x469.jpg",
+      "active": true
+    }
+  },
+  {
+    "model": "api.itemimage",
+    "pk": 3,
+    "fields": {
+      "item": 3,
+      "image": "items/demo/ameba-new-woo-commerce-500x469.jpg",
+      "active": true
+    }
+  },
+  {
+    "model": "api.itemimage",
+    "pk": 4,
+    "fields": {
+      "item": 4,
+      "image": "items/demo/ameba-modular-0-woo-commerce-500x469.jpg",
+      "active": true
+    }
+  },
+  {
+    "model": "api.itemimage",
+    "pk": 5,
+    "fields": {
+      "item": 5,
+      "image": "items/demo/ameba-modular-0-woo-commerce-500x469.jpg",
+      "active": true
+    }
+  },
+  {
+    "model": "api.itemimage",
+    "pk": 6,
+    "fields": {
+      "item": 6,
+      "image": "items/demo/notonearth-002-tote-modular-ok-500x500.jpg",
+      "active": true
+    }
+  },
+  {
+    "model": "api.itemimage",
+    "pk": 7,
+    "fields": {
+      "item": 7,
+      "image": "items/demo/notonearth-002-tote-vinil-500x500.jpg",
+      "active": true
+    }
+  },
+  {
+    "model": "api.itemimage",
+    "pk": 8,
+    "fields": {
+      "item": 8,
+      "image": "items/demo/carnet-500x501.png",
+      "active": true
     }
   }
 ]
