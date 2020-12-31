@@ -7,17 +7,54 @@ from django.db import models
 
 MAX_CODE_GEN_RETRIES = 10
 
+class DiscountUsage(models.Model):
+    user = models.ForeignKey('User', on_delete=models.DO_NOTHING)
+    discount = models.ForeignKey('Discount', on_delete=models.DO_NOTHING)
+    created = models.DateTimeField(auto_now_add=True)
+
 
 class Discount(models.Model):
     name = models.CharField(max_length=25)
-    value = models.IntegerField()
+    value = models.IntegerField(verbose_name='Value (%)')
     items = models.ManyToManyField(to='Item', related_name='discounts')
     groups = models.ManyToManyField(to='auth.Group')
     need_code = models.BooleanField()
     number_of_uses = models.IntegerField()
+    usages = models.ManyToManyField(
+        to='User',
+        through='DiscountUsage',
+        related_name='used_discounts'
+    )
 
     def __str__(self):
         return f'{self.name} ({self.value}%)'
+
+    def check_user_applies(self, user, code=None):
+        if not self.need_code or self.user_match_code(user, code):
+            if self.user_match_groups(user) and self.user_match_usages(user):
+                return True
+        return False
+
+    @staticmethod
+    def user_match_code(user, code):
+        if code and DiscountCode.objects.filter(code=code).exists():
+            code_obj = DiscountCode.objects.get(code=code)
+            return code_obj.validate_user(user)
+        return False
+
+    def user_match_groups(self, user):
+        for user_group in user.groups.all():
+            if user_group in self.groups.all():
+                return True
+        return False
+
+    def remaining_usages(self, user):
+        return self.number_of_uses - self.usages.filter(user=user).count()
+
+    def user_match_usages(self, user):
+        if self.remaining_usages(user) > 0:
+            return True
+        return False
 
 
 class DiscountCode(models.Model):
@@ -61,3 +98,22 @@ class DiscountCode(models.Model):
         if self.pk is None and self.code is None:
             self.code = self.get_unique_random_code()
         return super().save(*args, **kwargs)
+
+    def is_user_eligible(self, user):
+        return not self.is_personal or self.user == user
+
+    def validate_user(self, user):
+        return not self.get_is_expired() and self.is_user_eligible(user)
+
+
+def get_discount(user, item):
+    """ Discount logic for a given item and user
+    :param user: models.User
+    :param item: models.Item
+    :return: models.Discount
+    """
+    discounts = [0]
+    for discount in item.discounts.all():
+        if discount.check_user_applies(user):
+            discounts.append(discount.value)
+    return max(discounts)
