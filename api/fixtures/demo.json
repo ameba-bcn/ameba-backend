@@ -742,9 +742,105 @@
     "model": "api.user",
     "pk": 1,
     "fields": {
-      "user_name": "Chiquito",
+      "username": "Chiquito",
       "email": "chiquito@ameba.cat",
-      "password": "ameba12345"
+      "password": "ameba12345",
+      "groups": [2],
+      "is_active": true
+    }
+  },
+    {
+    "model": "api.user",
+    "pk": 2,
+    "fields": {
+      "username": "Michael Jackson",
+      "email": "mjack@ameba.cat",
+      "password": "ameba12345",
+      "groups": [1],
+      "is_active": true
+    }
+  },
+  {
+    "model": "api.user",
+    "pk": 3,
+    "fields": {
+      "username": "Amy Wine",
+      "email": "amywine@ameba.cat",
+      "password": "ameba12345",
+      "groups": [1, 2],
+      "is_active": true
+    }
+  },
+  {
+    "model": "api.user",
+    "pk": 4,
+    "fields": {
+      "username": "sergi",
+      "email": "sergi@ameba.cat",
+      "password": "ameba12345",
+      "groups": [1, 2, 3, 4],
+      "is_active": true
+    }
+  },
+  {
+    "model": "api.user",
+    "pk": 5,
+    "fields": {
+      "username": "Marc",
+      "email": "marc@ameba.cat",
+      "password": "ameba12345",
+      "groups": [1, 2, 3, 4],
+      "is_active": true
+    }
+  },
+  {
+    "model": "api.user",
+    "pk": 6,
+    "fields": {
+      "username": "Hector",
+      "email": "hector@ameba.cat",
+      "password": "ameba12345",
+      "groups": [1, 2, 3, 4],
+      "is_active": true,
+      "is_superuser": true,
+      "is_staff": true
+    }
+  },
+  {
+    "model": "api.user",
+    "pk": 7,
+    "fields": {
+      "username": "Joni",
+      "email": "joni@ameba.cat",
+      "password": "ameba12345",
+      "groups": [1, 2, 3, 4],
+      "is_active": true,
+      "is_superuser": true,
+      "is_staff": true
+    }
+  },
+  {
+    "model": "api.discount",
+    "pk": 1,
+    "fields": {
+      "name":  "Descompte soci",
+      "value": 20,
+      "items":  [1, 2, 3, 4, 5, 6, 7],
+      "groups": [2],
+      "need_code":  false,
+      "number_of_uses": -1
+    }
+  },
+  {
+    "model": "api.discount",
+    "pk": 2,
+    "fields": {
+      "name": "Descompte aniversari",
+      "value": 10,
+      "items": [1, 2, 3, 4, 5, 6, 7],
+      "groups": [1, 2, 3, 4],
+      "need_code": true,
+      "number_of_uses": -1
     }
   }
 ]

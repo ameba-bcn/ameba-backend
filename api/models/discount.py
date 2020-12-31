@@ -7,6 +7,7 @@ from django.db import models
 
 MAX_CODE_GEN_RETRIES = 10
 
+
 class DiscountUsage(models.Model):
     user = models.ForeignKey('User', on_delete=models.DO_NOTHING)
     discount = models.ForeignKey('Discount', on_delete=models.DO_NOTHING)
