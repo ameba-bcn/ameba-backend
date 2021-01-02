@@ -65,6 +65,9 @@ class ItemAdmin(admin.ModelAdmin):
         )
         return mark_safe(preview.format(images=images))
 
+    def get_queryset(self, request):
+        return Item.objects.all().exclude(type='event')
+
     preview.short_description = _('Preview')
     preview.allow_tags = True
 
