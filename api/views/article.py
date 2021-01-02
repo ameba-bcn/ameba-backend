@@ -3,10 +3,10 @@ from api.models import Item
 from api.views.base import BaseReadOnlyViewSet
 
 
-class ItemViewSet(BaseReadOnlyViewSet):
+class ArticleViewSet(BaseReadOnlyViewSet):
     list_serializer = ItemListSerializer
     detail_serializer = ItemDetailSerializer
     model = Item
 
     def get_queryset(self):
-        return Item.objects.filter(is_expired=False)
+        return Item.objects.filter(is_expired=False, type='article')
