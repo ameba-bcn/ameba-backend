@@ -1,9 +1,23 @@
+import shutil
+import os
+
 from rest_framework.test import APITestCase
+
+
+MEDIA_TEST_DIR = [
+    'media/artists/api',
+    'media/items/api',
+]
 
 
 class BaseTest(APITestCase):
     DETAIL_ENDPOINT = '/{pk}/'
     LIST_ENDPOINT = '/'
+
+    def tearDown(self):
+        for directory in MEDIA_TEST_DIR:
+            if os.path.isdir(directory):
+                shutil.rmtree(directory)
 
     def _authenticate(self, token):
         if token:
