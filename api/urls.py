@@ -13,6 +13,10 @@ router.register(
 router.register(
     r'artists', views.ArtistViewSet, basename='artist'
 )
+router.register(
+    r'articles', views.ArticleViewSet, basename='article'
+)
+
 
 urlpatterns = [
     path('', include(router.urls)),
