@@ -6,6 +6,7 @@ from django.db import models
 
 
 MAX_CODE_GEN_RETRIES = 10
+FOREVER = -1
 
 
 class DiscountUsage(models.Model):
@@ -53,7 +54,10 @@ class Discount(models.Model):
         return self.number_of_uses - self.usages.filter(id=user.id).count()
 
     def user_match_usages(self, user):
-        if self.remaining_usages(user) > 0:
+        if (
+            self.remaining_usages(user) > 0
+            or self.remaining_usages(user) == FOREVER
+        ):
             return True
         return False
 
