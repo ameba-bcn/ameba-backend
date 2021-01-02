@@ -53,7 +53,7 @@ class Item(models.Model):
 class ItemImage(models.Model):
     item = models.ForeignKey(to=Item, on_delete=models.DO_NOTHING,
                              related_name='images')
-    image = models.ImageField()
+    image = models.ImageField(upload_to='items')
     active = models.BooleanField(default=True)
 
     @property
@@ -71,7 +71,7 @@ class ItemVariant(models.Model):
     )
     stock = models.IntegerField()
     description = models.TextField(max_length=1000, blank=True)
-    image = models.ImageField(blank=True)
+    image = models.ImageField(blank=True, upload_to='items')
 
     def get_description(self):
         if self.description:
