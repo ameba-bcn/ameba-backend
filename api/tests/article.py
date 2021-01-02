@@ -1,5 +1,4 @@
-from datetime import datetime
-
+from django.utils import timezone
 from django.core.files.images import ImageFile
 from rest_framework import status
 from django.test import tag
@@ -51,7 +50,7 @@ class ItemMethods(ModelMethods):
 
     @staticmethod
     def get_date(num):
-        return datetime.now()
+        return timezone.now()
 
 
 class ItemVariantMethods(ModelMethods):
@@ -162,7 +161,7 @@ class TestItem(BaseTest):
             'price': 25,
             'stock': 10,
             'type': 'article',
-            'date': datetime.now(),
+            'date': timezone.now(),
             'is_expired': False,
         }
         expired_item_data = dict(item_data)
@@ -185,7 +184,7 @@ class TestItem(BaseTest):
             'price': 25,
             'stock': 10,
             'type': 'article',
-            'date': datetime.now(),
+            'date': timezone.now(),
             'is_expired': True,
         }
         expired_item = Item.objects.create(**expired_item_data)
@@ -212,7 +211,7 @@ class TestItem(BaseTest):
             'price': 100,
             'stock': 10,
             'type': 'article',
-            'date': datetime.now(),
+            'date': timezone.now(),
             'is_expired': False
         }
         item = Item.objects.create(**item_data)
@@ -247,7 +246,7 @@ class TestItem(BaseTest):
             'price': 100,
             'stock': 10,
             'type': 'article',
-            'date': datetime.now(),
+            'date': timezone.now(),
             'is_expired': False
         }
         item = Item.objects.create(**item_data)
@@ -281,7 +280,7 @@ class TestItem(BaseTest):
             'price': 100,
             'stock': 10,
             'type': 'article',
-            'date': datetime.now(),
+            'date': timezone.now(),
             'is_expired': False
         }
         item = Item.objects.create(**item_data)
@@ -321,7 +320,7 @@ class TestItem(BaseTest):
             'price': 100,
             'stock': 10,
             'type': 'article',
-            'date': datetime.now(),
+            'date': timezone.now(),
             'is_expired': False
         }
         item = Item.objects.create(**item_data)
@@ -371,7 +370,7 @@ class TestItem(BaseTest):
             'price': 100,
             'stock': 10,
             'type': 'article',
-            'date': datetime.now(),
+            'date': timezone.now(),
             'is_expired': False
         }
         item = Item.objects.create(**item_data)
@@ -415,7 +414,7 @@ class TestItem(BaseTest):
             'price': 100,
             'stock': 10,
             'type': 'article',
-            'date': datetime.now(),
+            'date': timezone.now(),
             'is_expired': False
         }
         item = Item.objects.create(**item_data)
@@ -443,6 +442,6 @@ class TestItem(BaseTest):
         self.assertIn(article.id, article_ids)
 
     def test_get_item_not_article_is_not_found(self):
-        subscription = Item.objects.filter(type='subscription')[0]
+        subscription = Item.objects.filter(type='event')[0]
         response = self._get(pk=subscription.id, token=None)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
