@@ -34,3 +34,25 @@ class BaseTest(APITestCase):
     def _list(self, token):
         self._authenticate(token)
         return self.client.get(self.LIST_ENDPOINT)
+
+
+def iter_iter(iterable):
+    if type(iterable) is list:
+        return enumerate(iterable)
+    elif type(iterable) is dict:
+        return iterable.items()
+
+
+def check_structure(data, structure):
+    if type(structure) not in (dict, list):
+        if not type(data) is structure:
+            return False
+        else:
+            return True
+    else:
+        for key, value in iter_iter(structure):
+            if not data:
+                continue
+            if not check_structure(data[key], structure[key]):
+                return False
+    return True

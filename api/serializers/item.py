@@ -15,7 +15,12 @@ class VariantSerializer(serializers.ModelSerializer):
 
 
 class ItemDetailSerializer(serializers.ModelSerializer):
+    images = serializers.SerializerMethodField()
     variants = VariantSerializer(many=True)
+
+    def get_images(self, item):
+        request = self.context.get('request')
+        return [request.build_absolute_uri(im.url) for im in item.images.all()]
 
     class Meta:
         model = Item
@@ -28,12 +33,12 @@ class ItemListSerializer(serializers.ModelSerializer):
     images = serializers.SerializerMethodField()
     discount = serializers.SerializerMethodField()
 
-    def get_image_list(self, item):
+    def get_images(self, item):
         request = self.context.get('request')
         return [request.build_absolute_uri(im.url) for im in item.images.all()]
 
-    @staticmethod
-    def get_discount(user, item):
+    def get_discount(self, item):
+        user = self.context.get('request').user
         return get_discount(user, item)
 
     class Meta:

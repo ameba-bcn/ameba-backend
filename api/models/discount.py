@@ -50,7 +50,7 @@ class Discount(models.Model):
         return False
 
     def remaining_usages(self, user):
-        return self.number_of_uses - self.usages.filter(user=user).count()
+        return self.number_of_uses - self.usages.filter(id=user.id).count()
 
     def user_match_usages(self, user):
         if self.remaining_usages(user) > 0:
