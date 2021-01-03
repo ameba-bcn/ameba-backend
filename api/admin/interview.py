@@ -1,5 +1,5 @@
 from django.contrib import admin
-from api.models import Interview, Answer, Question
+from api.models import Interview, Answer, Question, Artist
 from django.forms.models import BaseInlineFormSet
 from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
@@ -35,9 +35,8 @@ class ChoiceInline(admin.TabularInline):
 
 class ArtistAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None, {'fields': ['name', 'biography', 'image',
+        (None, {'fields': ['title', 'artist', 'introduction', 'image',
                            'thumbnail_preview']}),
-        ('Contact info', {'fields': ['contact', 'email']})
     ]
     readonly_fields = ('thumbnail_preview', )
     inlines = [ChoiceInline]
@@ -62,3 +61,4 @@ class QuestionAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Question, QuestionAdmin)
+admin.site.register(Artist)
