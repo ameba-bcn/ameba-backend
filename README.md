@@ -1,6 +1,15 @@
-# ameba-site backend v0.4
+# ameba-site backend v0.5
 
 ### Release notes
+#### 0.5
+- Implementada la botiga:
+    - /api/articles/
+    - /api/articles/{pk}
+- Renamed artist to interviews
+- Admin panel mejorado
+- +Testcases
+
+#### 0.4
 - Documentación en /api/docs/
 - Demo data con loaddata demo.json (comando abajo y en devops)
 - Tests

@@ -16,7 +16,7 @@ class UserAdmin(admin.ModelAdmin):
     list_display_links = ('email', 'username')
 
     def group_display(self, obj):
-        return ", ".join(group.name for group in obj.groups.all())
+        return ", ".join(group.title for group in obj.groups.all())
 
 
 admin.site.register(User, UserAdmin)
