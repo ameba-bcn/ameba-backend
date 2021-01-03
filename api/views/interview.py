@@ -6,14 +6,14 @@ from api import serializers
 from api import models
 
 
-class ArtistViewSet(
+class InterviewViewSet(
     mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet
 ):
-    serializer_class = serializers.ArtistListSerializer
+    serializer_class = serializers.InterviewListSerializer
     permission_classes = (drf_permissions.AllowAny, )
-    queryset = models.Artist.objects.all()
+    queryset = models.Interview.objects.all()
 
     def get_serializer_class(self):
         if self.action == 'retrieve':
-            self.serializer_class = serializers.ArtistDetailSerializer
+            self.serializer_class = serializers.InterviewDetailSerializer
         return super().get_serializer_class()
