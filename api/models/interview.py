@@ -6,6 +6,7 @@ INTRO_PREVIEW = 160
 
 
 class Interview(models.Model):
+    artist = models.ForeignKey(to='Artist', on_delete=models.DO_NOTHING)
     title = models.CharField(max_length=55)
     introduction = models.TextField(max_length=2000)
     updated = models.DateTimeField(auto_now=True)

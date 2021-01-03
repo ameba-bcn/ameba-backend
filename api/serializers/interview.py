@@ -20,17 +20,19 @@ class AnswersSerializers(serializers.ModelSerializer):
 
 
 class InterviewDetailSerializer(serializers.ModelSerializer):
+    artist = serializers.SlugRelatedField(slug_field='name', read_only=True)
     current_answers = AnswersSerializers(many=True, read_only=True)
 
     class Meta:
         model = Interview
-        fields = ['id', 'title', 'introduction', 'created', 'image',
+        fields = ['id', 'artist', 'title', 'introduction', 'created', 'image',
                   'current_answers']
         depth = 1
 
 
 class InterviewListSerializer(serializers.ModelSerializer):
+    artist = serializers.SlugRelatedField(slug_field='name', read_only=True)
 
     class Meta:
         model = Interview
-        fields = ['id', 'title', 'intro_preview', 'created', 'image']
+        fields = ['id', 'artist', 'title', 'intro_preview', 'created', 'image']
