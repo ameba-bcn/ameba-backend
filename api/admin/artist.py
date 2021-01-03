@@ -1,5 +1,5 @@
 from django.contrib import admin
-from api.models import Artist, Answer, Question
+from api.models import Interview, Answer, Question
 from django.forms.models import BaseInlineFormSet
 from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
@@ -53,7 +53,7 @@ class ArtistAdmin(admin.ModelAdmin):
     thumbnail_preview.allow_tags = True
 
 
-admin.site.register(Artist, ArtistAdmin)
+admin.site.register(Interview, ArtistAdmin)
 
 
 class QuestionAdmin(admin.ModelAdmin):

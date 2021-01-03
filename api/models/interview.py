@@ -2,24 +2,22 @@ from django.db import models
 from django.utils.translation import gettext as _
 
 
-BIO_PREVIEW = 160
+INTRO_PREVIEW = 160
 
 
-class Artist(models.Model):
-    name = models.CharField(max_length=55)
-    contact = models.CharField(max_length=55, blank=True)
-    biography = models.TextField(max_length=2000)
+class Interview(models.Model):
+    title = models.CharField(max_length=55)
+    introduction = models.TextField(max_length=2000)
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
-    image = models.ImageField(upload_to='artists')
-    email = models.EmailField(blank=True, null=True)
+    image = models.ImageField(upload_to='interviews')
 
     def __str__(self):
-        return f'{self.name}'
+        return f'{self.title}'
 
     @property
-    def bio_preview(self):
-        return self.biography[:BIO_PREVIEW]
+    def intro_preview(self):
+        return self.introduction[:INTRO_PREVIEW]
 
     @property
     def current_answers(self):
@@ -35,11 +33,11 @@ class Question(models.Model):
 
 
 class Answer(models.Model):
-    artist = models.ForeignKey(
-        'Artist',
+    interview = models.ForeignKey(
+        'api.Interview',
         on_delete=models.DO_NOTHING,
         related_name='answers',
-        verbose_name=_('artist')
+        verbose_name=_('interview')
     )
     answer = models.TextField(max_length=1000, verbose_name=_('answer'))
     question = models.ForeignKey(
@@ -50,4 +48,4 @@ class Answer(models.Model):
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return f'{self.artist.name} - {self.question.question} '
+        return f'{self.interview.title} - {self.question.question} '
