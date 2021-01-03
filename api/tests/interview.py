@@ -47,8 +47,13 @@ class TestInterview(BaseTest):
 
     def create_interviews(self):
         for interview_num in range(10):
+            artist = models.Artist.objects.create(
+                name=f'Artist {interview_num}',
+                biography=f'Biography for the artist Artit {interview_num}'
+            )
             interview = models.Interview.objects.create(
                 title=f'interview_{interview_num}',
+                artist=artist,
                 introduction=f'bio-{interview_num}' * 200,
                 image=ImageFile(
                     open('api/tests/fixtures/media/interview-image.jpg', 'rb')
@@ -70,8 +75,8 @@ class TestInterview(BaseTest):
         interview_data = response.data[0]
         list_interview_data = {
             'id': int,
+            'artist': str,
             'title': str,
-            'intro_preview': str,
             'intro_preview': str,
             'created': str,
             'image': str
@@ -104,6 +109,7 @@ class TestInterview(BaseTest):
         pk = interview.pk
         response = self._get(pk=pk, token='')
         self.assertEqual(interview.id, response.data['id'])
+        self.assertEqual(interview.artist.name, response.data['artist'])
         self.assertEqual(interview.title, response.data['title'])
         self.assertEqual(interview.introduction, response.data['introduction'])
         self.assertEqual(interview.created, parser.parse(response.data['created']))
@@ -123,8 +129,10 @@ class TestInterview(BaseTest):
 
     @tag("interview")
     def test_create_interview_not_allowed(self):
+        artist = models.Artist.objects.create(name='Artist', biography='Bio')
         attrs = {
             'title': f'interview',
+            'artist': artist.id,
             'introduction': f'bio ' * 200,
             'image': ImageFile(
                 open('api/tests/fixtures/media/interview-image.jpg', 'rb')
@@ -141,9 +149,11 @@ class TestInterview(BaseTest):
 
     @tag("interview")
     def test_update_interview_not_allowed(self):
+        artist = models.Artist.objects.create(name='Artist', biography='Bio')
         interview_id = models.Interview.objects.all()[0].id
         attrs = {
             'title': f'interview',
+            'artist': artist.id,
             'introduction': f'bio ' * 200,
             'image': ImageFile(
                 open('api/tests/fixtures/media/interview-image.jpg', 'rb')
