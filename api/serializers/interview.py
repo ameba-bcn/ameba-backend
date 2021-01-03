@@ -1,7 +1,6 @@
-from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from api.models import Artist, Answer, Question
+from api.models import Interview, Answer, Question
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -20,18 +19,20 @@ class AnswersSerializers(serializers.ModelSerializer):
         fields = ['question', 'answer']
 
 
-class ArtistDetailSerializer(serializers.ModelSerializer):
+class InterviewDetailSerializer(serializers.ModelSerializer):
+    artist = serializers.SlugRelatedField(slug_field='name', read_only=True)
     current_answers = AnswersSerializers(many=True, read_only=True)
 
     class Meta:
-        model = Artist
-        fields = ['id', 'name', 'biography', 'created', 'image',
+        model = Interview
+        fields = ['id', 'artist', 'title', 'introduction', 'created', 'image',
                   'current_answers']
         depth = 1
 
 
-class ArtistListSerializer(serializers.ModelSerializer):
+class InterviewListSerializer(serializers.ModelSerializer):
+    artist = serializers.SlugRelatedField(slug_field='name', read_only=True)
 
     class Meta:
-        model = Artist
-        fields = ['id', 'name', 'bio_preview', 'created', 'image']
+        model = Interview
+        fields = ['id', 'artist', 'title', 'intro_preview', 'created', 'image']

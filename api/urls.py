@@ -11,7 +11,7 @@ router.register(
     r'users', views.UserViewSet, basename='user'
 )
 router.register(
-    r'artists', views.ArtistViewSet, basename='artist'
+    r'interviews', views.InterviewViewSet, basename='interview'
 )
 router.register(
     r'articles', views.ArticleViewSet, basename='article'
