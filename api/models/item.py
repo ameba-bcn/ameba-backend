@@ -49,6 +49,18 @@ class Item(models.Model):
     def __str__(self):
         return self.name
 
+    def get_discount(self, user):
+        """ Discount logic for a given item and user
+        :param user: models.User
+        :param item: models.Item
+        :return: models.Discount
+        """
+        discounts = [0]
+        for discount in self.discounts.all():
+            if discount.check_user_applies(user):
+                discounts.append(discount.value)
+        return max(discounts)
+
 
 class ItemImage(models.Model):
     item = models.ForeignKey(to=Item, on_delete=models.DO_NOTHING,

@@ -109,16 +109,3 @@ class DiscountCode(models.Model):
 
     def validate_user(self, user):
         return not self.get_is_expired() and self.is_user_eligible(user)
-
-
-def get_discount(user, item):
-    """ Discount logic for a given item and user
-    :param user: models.User
-    :param item: models.Item
-    :return: models.Discount
-    """
-    discounts = [0]
-    for discount in item.discounts.all():
-        if discount.check_user_applies(user):
-            discounts.append(discount.value)
-    return max(discounts)

@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
 from api.models import Item, ItemVariant
-from api.models.discount import get_discount
 
 
 class VariantSerializer(serializers.ModelSerializer):
@@ -25,7 +24,7 @@ class ItemDetailSerializer(serializers.ModelSerializer):
 
     def get_discount(self, item):
         user = self.context.get('request').user
-        return get_discount(user, item)
+        return item.get_discount(user)
 
     class Meta:
         model = Item
@@ -44,7 +43,7 @@ class ItemListSerializer(serializers.ModelSerializer):
 
     def get_discount(self, item):
         user = self.context.get('request').user
-        return get_discount(user, item)
+        return item.get_discount(user)
 
     class Meta:
         model = Item
