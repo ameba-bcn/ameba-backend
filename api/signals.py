@@ -23,3 +23,8 @@ def add_user_groups(sender, instance, created, **kwargs):
 def on_new_member(sender, instance, created, **kwargs):
     if created and instance.is_user():
         instance.user.groups.add(Group.objects.get(name=MEMBER_GROUP))
+
+
+@receiver(post_save, sender=models.CartItems)
+def on_new_cart_item(sender, instance, created, **kwargs):
+    instance.compute_discounts()
