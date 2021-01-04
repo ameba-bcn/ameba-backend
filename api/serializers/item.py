@@ -24,7 +24,7 @@ class ItemDetailSerializer(serializers.ModelSerializer):
 
     def get_discount(self, item):
         user = self.context.get('request').user
-        return item.get_discount(user)
+        return item.get_max_discount_value(user)
 
     class Meta:
         model = Item
@@ -43,7 +43,7 @@ class ItemListSerializer(serializers.ModelSerializer):
 
     def get_discount(self, item):
         user = self.context.get('request').user
-        return item.get_discount(user)
+        return item.get_max_discount_value(user)
 
     class Meta:
         model = Item
