@@ -4,6 +4,23 @@ from django.forms.models import BaseInlineFormSet
 from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
 
+from api.models import Interview
+from django import forms
+from django.forms import ModelForm
+from trumbowyg.widgets import TrumbowygWidget
+from api.models import Interview
+
+
+class InterviewAdminForm(ModelForm):
+    introduction = forms.CharField(widget=TrumbowygWidget)
+
+    class Meta:
+        model = Interview
+        fields = ['introduction']
+        widgets = {
+            'text': TrumbowygWidget(),
+        }
+
 
 class ArtistQuestionsInLineFormSet(BaseInlineFormSet):
     def __init__(self, *args, **kwargs):
@@ -33,7 +50,8 @@ class ChoiceInline(admin.TabularInline):
     fields = ('question', 'answer', 'is_active')
 
 
-class ArtistAdmin(admin.ModelAdmin):
+class InterviewAdmin(admin.ModelAdmin):
+    form = InterviewAdminForm
     fieldsets = [
         (None, {'fields': ['title', 'artist', 'introduction', 'image',
                            'thumbnail_preview']}),
@@ -52,7 +70,7 @@ class ArtistAdmin(admin.ModelAdmin):
     thumbnail_preview.allow_tags = True
 
 
-admin.site.register(Interview, ArtistAdmin)
+admin.site.register(Interview, InterviewAdmin)
 
 
 class QuestionAdmin(admin.ModelAdmin):
