@@ -49,17 +49,22 @@ class Item(models.Model):
     def __str__(self):
         return self.name
 
-    def get_discount(self, user):
-        """ Discount logic for a given item and user
+    def get_max_discount_value(self, user):
+        """ Get max discount value among valid discounts for given user
         :param user: models.User
-        :param item: models.Item
-        :return: models.Discount
+        :return: Integer with max of the applicable discounts for given user
         """
-        discounts = [0]
+        return max(map(lambda x: x.value, self.get_valid_discounts(user)))
+
+    def get_valid_discounts(self, user):
+        """
+        Get valid discounts for given user.
+        :param user: models.User
+        :return: Generator
+        """
         for discount in self.discounts.all():
             if discount.check_user_applies(user):
-                discounts.append(discount.value)
-        return max(discounts)
+                yield discount
 
 
 class ItemImage(models.Model):
