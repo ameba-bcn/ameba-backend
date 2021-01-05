@@ -8,7 +8,7 @@ class CartSerializer(ModelSerializer):
 
     class Meta:
         model = Cart
-        fields = ['user', 'items']
+        fields = ['hash', 'user', 'items']
 
     def get_user(self):
         request = self.context.get('request')

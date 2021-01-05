@@ -38,6 +38,8 @@ class Discount(models.Model):
         return False
 
     def remaining_usages(self, user):
+        if self.number_of_uses == -1:
+            return 9999
         return self.number_of_uses - self.usages.filter(id=user.id).count()
 
     @staticmethod
