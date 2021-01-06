@@ -25,7 +25,7 @@ class CartItemTabular(admin.TabularInline):
     @staticmethod
     def subtotal(obj):
         price = float(obj.item.price)
-        fraction = 1. - float(obj.discount.value) / 100.
+        fraction = 1. - float(obj.discount_value.value) / 100.
         return f'{price * fraction}€'
 
     price.short_description = _('Price')
@@ -40,7 +40,7 @@ class CartAdmin(admin.ModelAdmin):
         (None, {'fields': ['hash', 'user', 'total']})
     ]
     inlines = (CartItemTabular, )
-    readonly_fields = ['total', 'cart_items']
+    readonly_fields = ['hash', 'total', 'cart_items']
 
 
 admin.site.register(Cart, CartAdmin)
