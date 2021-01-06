@@ -16,6 +16,9 @@ router.register(
 router.register(
     r'articles', views.ArticleViewSet, basename='article'
 )
+router.register(
+    r'carts', views.CartViewSet, basename='cart'
+)
 
 
 urlpatterns = [
