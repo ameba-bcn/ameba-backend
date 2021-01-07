@@ -4,19 +4,19 @@ from api.models import Item, ItemVariant
 
 
 class VariantSerializer(serializers.ModelSerializer):
+    image = serializers.SlugRelatedField(slug_field='url', read_only=True)
+
     class Meta:
         model = ItemVariant
         fields = ['name', 'stock', 'description', 'image']
 
 
 class ItemDetailSerializer(serializers.ModelSerializer):
-    images = serializers.SerializerMethodField()
+    images = serializers.SlugRelatedField(
+        many=True, read_only=True, slug_field='url'
+    )
     discount = serializers.SerializerMethodField()
     variants = VariantSerializer(many=True)
-
-    def get_images(self, item):
-        request = self.context.get('request')
-        return [request.build_absolute_uri(im.url) for im in item.images.all()]
 
     def get_discount(self, item):
         user = self.context.get('request').user
