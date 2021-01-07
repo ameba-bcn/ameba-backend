@@ -1,7 +1,7 @@
 from rest_framework.serializers import ModelSerializer, \
     SerializerMethodField, Serializer, PrimaryKeyRelatedField, SlugRelatedField
 
-from api.models import Cart, Item, User
+from api.models import Cart, Item
 
 
 class CartItemSerializer(Serializer):
