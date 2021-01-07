@@ -35,12 +35,12 @@ class CartItemTabular(admin.TabularInline):
 class CartAdmin(admin.ModelAdmin):
     search_fields = ('user', )
     list_display_links = ('user',)
-    list_display = ('user', 'hash')
+    list_display = ('user', 'id')
     fieldsets = [
-        (None, {'fields': ['hash', 'user', 'total']})
+        (None, {'fields': ['id', 'user', 'total']})
     ]
     inlines = (CartItemTabular, )
-    readonly_fields = ['hash', 'total', 'cart_items']
+    readonly_fields = ['id', 'total', 'cart_items']
 
 
 admin.site.register(Cart, CartAdmin)

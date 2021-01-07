@@ -1,10 +1,10 @@
 from rest_framework.serializers import ModelSerializer, \
-    SerializerMethodField, Serializer, SlugRelatedField
+    SerializerMethodField, Serializer, PrimaryKeyRelatedField, SlugRelatedField
 
-from api.models import Cart
+from api.models import Cart, Item, User
 
 
-class CartItem(Serializer):
+class CartItemSerializer(Serializer):
     id = SerializerMethodField()
     name = SerializerMethodField()
     discount_value = SerializerMethodField()
@@ -44,49 +44,64 @@ class CartItem(Serializer):
 
     @staticmethod
     def get_subtotal(cart_item):
-        fraction = float(1. - float(cart_item['discount'].value) / 100.)
+        if discount := cart_item['discount']:
+            discount_value = discount.value
+        else:
+            discount_value = 0
+        fraction = float(1. - discount_value / 100.)
         price = float(cart_item['item'].price)
         return f"{'%.2f' % (price * fraction)}€"
 
 
-class CartDetailSerializer(ModelSerializer):
-    user = SerializerMethodField()
-    cart_items = CartItem(many=True)
+class CartSerializer(ModelSerializer):
+    cart_items = CartItemSerializer(many=True, read_only=True)
     count = SerializerMethodField()
+    items = SlugRelatedField(
+        many=True, write_only=True, queryset=Item.objects.all(),
+        slug_field='id'
+    )
 
     class Meta:
         model = Cart
-        fields = ('hash', 'user', 'total', 'cart_items', 'count')
-        read_only_fields = ('user', 'hash', 'total', 'cart_items', 'count')
+        fields = ('id', 'user', 'total', 'count', 'cart_items', 'items')
+        read_only_fields = ('user', 'id', 'total', 'count', 'cart_items')
 
-    def get_user(self, cart):
+    def _get_user(self):
         request = self.context.get('request')
         if request.user.is_authenticated:
-            return str(request.user)
+            return request.user
 
     @staticmethod
     def get_count(cart):
         return cart.items.all().count()
 
-
-class CartWriteSerializer(ModelSerializer):
-    user = SerializerMethodField()
-
-    class Meta:
-        model = Cart
-        fields = ('hash', 'user', 'items')
-        read_only_fields = ('hash', )
-
-    def get_user(self, cart):
-        request = self.context.get('request')
-        if request.user.is_authenticated:
-            return str(request.user)
-
-    def validate_items(self, items):
-        return items
-
-    def validate(self, attrs):
-        return super().validate(attrs)
-
     def create(self, validated_data):
-        return super().create(validated_data)
+        cart = Cart.objects.create()
+        return self.update(cart, validated_data)
+
+    def update(self, instance, validated_data):
+        self._resolve_user(instance)
+        if 'items' in validated_data:
+            instance.items.clear()
+            self._add_cart_items(instance, validated_data['items'])
+        instance.save()
+        return instance
+
+    def _resolve_user(self, instance):
+        user = self._get_user()
+        if user and not instance.user:
+            instance.user = user
+            self._remove_existing_user_cart(user)
+        return instance
+
+    @staticmethod
+    def _add_cart_items(instance, items):
+        for item in items:
+            instance.items.through.objects.create(cart=instance, item=item)
+
+    @staticmethod
+    def _remove_existing_user_cart(user):
+        if Cart.objects.filter(user=user).exists():
+            old_cart = Cart.objects.get(user=user)
+            old_cart.items.clear()
+            old_cart.delete()

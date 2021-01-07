@@ -1,18 +1,10 @@
-import hashlib
 import time
+import uuid
 
 from django.db.models import (
-    DO_NOTHING, Model, ForeignKey, ManyToManyField, CharField, OneToOneField
+    DO_NOTHING, Model, ForeignKey, ManyToManyField, CharField, OneToOneField,
+    UUIDField, DateTimeField
 )
-
-
-def _create_hash():
-    """ This function generate 10 character long hash
-    :return: str
-    """
-    hsh = hashlib.sha1()
-    hsh.update(str(time.time()).encode('utf-8'))
-    return hsh.hexdigest()[:20]
 
 
 class CartItems(Model):
@@ -29,9 +21,11 @@ class CartItems(Model):
 
 
 class Cart(Model):
-    hash = CharField(max_length=20, default=_create_hash, unique=True)
+    id = UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = OneToOneField(to='User', on_delete=DO_NOTHING, blank=True,null=True)
     items = ManyToManyField(to='Item', through='CartItems')
+    created = DateTimeField(auto_now_add=True)
+    updated = DateTimeField(auto_now=True)
 
     @property
     def total(self):
