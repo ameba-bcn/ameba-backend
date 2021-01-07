@@ -8,10 +8,6 @@ class VariantSerializer(serializers.ModelSerializer):
         model = ItemVariant
         fields = ['name', 'stock', 'description', 'image']
 
-    def get_image(self, variant):
-        request = self.context.get('request')
-        return request.build_absolute_uri(variant.image.url)
-
 
 class ItemDetailSerializer(serializers.ModelSerializer):
     images = serializers.SerializerMethodField()
@@ -34,12 +30,9 @@ class ItemDetailSerializer(serializers.ModelSerializer):
 
 
 class ItemListSerializer(serializers.ModelSerializer):
-    images = serializers.SerializerMethodField()
+    images = serializers.SlugRelatedField(many=True, read_only=True,
+                                          slug_field='url')
     discount = serializers.SerializerMethodField()
-
-    def get_images(self, item):
-        request = self.context.get('request')
-        return [request.build_absolute_uri(im.url) for im in item.images.all()]
 
     def get_discount(self, item):
         user = self.context.get('request').user

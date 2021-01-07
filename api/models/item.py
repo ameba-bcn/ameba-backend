@@ -54,7 +54,8 @@ class Item(models.Model):
         :param user: models.User
         :return: Integer with max of the applicable discounts for given user
         """
-        return max(map(lambda x: x.value, self.get_valid_discounts(user)))
+        if user.is_authenticated:
+            return max(map(lambda x: x.value, self.get_valid_discounts(user)))
 
     def get_valid_discounts(self, user):
         """
