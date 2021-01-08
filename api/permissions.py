@@ -38,3 +38,13 @@ def get_or_create_permission(name, codename, model):
         content_type=content_type
     )
     return permission[0]
+
+
+class CartPermission(permissions.IsAuthenticated):
+    def has_permission(self, request, view):
+        return True
+
+    def has_object_permission(self, request, view, obj):
+        if not obj.user or request.user == obj.user:
+            return True
+        return False

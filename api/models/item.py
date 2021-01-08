@@ -49,6 +49,27 @@ class Item(models.Model):
     def __str__(self):
         return self.name
 
+    def get_max_discount_value(self, user):
+        """ Get max discount value among valid discounts for given user
+        :param user: models.User
+        :return: Integer with max of the applicable discounts for given user
+        """
+        vd = list(map(lambda x: x.value, self.get_valid_discounts(user)))
+        # Has valid discounts
+        if vd:
+            return max(vd)
+        return 0
+
+    def get_valid_discounts(self, user):
+        """
+        Get valid discounts for given user.
+        :param user: models.User
+        :return: Generator
+        """
+        for discount in self.discounts.all():
+            if discount.check_user_applies(user):
+                yield discount
+
 
 class ItemImage(models.Model):
     item = models.ForeignKey(to=Item, on_delete=models.DO_NOTHING,
