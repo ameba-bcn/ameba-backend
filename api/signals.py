@@ -1,5 +1,5 @@
 from api.groups import create_group_permissions
-from django.db.models.signals import post_save, post_migrate, pre_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.contrib.auth.models import Group
 
