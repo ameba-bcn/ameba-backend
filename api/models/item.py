@@ -58,6 +58,7 @@ class Item(models.Model):
         # Has valid discounts
         if vd:
             return max(vd)
+        return 0
 
     def get_valid_discounts(self, user):
         """
