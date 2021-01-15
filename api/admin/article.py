@@ -50,10 +50,10 @@ class ImageChoiceInLine(admin.TabularInline):
 class ItemAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {'fields': ['name', 'description', 'price', 'stock',
-                           'date', 'created', 'updated']})
+                           'created', 'updated', 'event']})
     ]
     inlines = [ImageChoiceInLine, VariantChoiceInline, DiscountChoiceInLine]
-    readonly_fields = ['created', 'updated']
+    readonly_fields = ['created', 'updated', 'event']
     list_display = ['name', 'price', 'stock', 'description', 'preview']
 
     def preview(self, obj):
@@ -65,7 +65,7 @@ class ItemAdmin(admin.ModelAdmin):
         return mark_safe(preview.format(images=images))
 
     def get_queryset(self, request):
-        return Item.objects.filter(is_event=False)
+        return Item.objects.filter(event=None)
 
     preview.short_description = _('Preview')
     preview.allow_tags = True
