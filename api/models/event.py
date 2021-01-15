@@ -3,7 +3,7 @@ from datetime import timedelta
 from django.utils import timezone
 from django.db.models import (
     Model, CharField, DateTimeField, ForeignKey, DO_NOTHING, ManyToManyField,
-    BooleanField, TextField
+    BooleanField, TextField, ImageField
 )
 
 
@@ -14,8 +14,10 @@ EXPIRE_BEFORE_EVENT = timedelta(hours=EXPIRE_HOURS_BEFORE_EVENT)
 class Event(Model):
     datetime = DateTimeField()
     address = CharField(max_length=255)
-    attendees = ManyToManyField(to='User', related_name='events')
-    interested = ManyToManyField(to='User', related_name='remind_events')
+    image = ImageField(upload_to='events')
+    attendees = ManyToManyField(to='User', related_name='events', blank=True)
+    interested = ManyToManyField(to='User', related_name='remind_events',
+                                 blank=True)
     created = DateTimeField(auto_now_add=True)
     updated = DateTimeField(auto_now=True)
     is_closed = BooleanField()

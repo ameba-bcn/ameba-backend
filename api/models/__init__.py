@@ -10,4 +10,4 @@ from api.models.item import Item, ItemImage, ItemVariant
 from api.models.discount import Discount
 from api.models.artist import Artist
 from api.models.cart import Cart, CartItems
-from api.models.events import Event
+from api.models.event import Event
