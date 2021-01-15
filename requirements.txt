@@ -7,3 +7,5 @@ Pillow
 python-dateutil
 git+https://github.com/jon-alamo/django-fs-trumbowyg.git@dev
 PyYAML
+django-location-field==2.1.0
+geopy

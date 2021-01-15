@@ -9,4 +9,4 @@ class ArticleViewSet(BaseReadOnlyViewSet):
     model = Item
 
     def get_queryset(self):
-        return Item.objects.filter(is_expired=False).exclude(type='event')
+        return Item.objects.filter(is_event=False).exclude(type='event')
