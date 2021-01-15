@@ -9,6 +9,7 @@ class DiscountChoiceInLine(admin.TabularInline):
     model = Discount.items.through
     extra = 0
     verbose_name = 'Discount'
+    verbose_name_plural = 'Discounts'
     formset = BaseInlineFormSet
     fk_name = 'item'
 
