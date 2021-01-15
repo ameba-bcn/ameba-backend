@@ -49,13 +49,12 @@ class ImageChoiceInLine(admin.TabularInline):
 
 class ItemAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None, {'fields': ['name', 'type', 'description', 'price', 'stock',
-                           'date', 'is_expired', 'created', 'updated']})
+        (None, {'fields': ['name', 'description', 'price', 'stock',
+                           'date', 'created', 'updated']})
     ]
     inlines = [ImageChoiceInLine, VariantChoiceInline, DiscountChoiceInLine]
     readonly_fields = ['created', 'updated']
     list_display = ['name', 'price', 'stock', 'description', 'preview']
-    list_filter = ['type', 'is_expired']
 
     def preview(self, obj):
         img_tag = '<img src="{}" width="75" height="75" style="margin:10px" />'
@@ -66,7 +65,7 @@ class ItemAdmin(admin.ModelAdmin):
         return mark_safe(preview.format(images=images))
 
     def get_queryset(self, request):
-        return Item.objects.all().exclude(type='event')
+        return Item.objects.filter(is_event=False)
 
     preview.short_description = _('Preview')
     preview.allow_tags = True
