@@ -24,13 +24,14 @@ class Item(models.Model):
     description = models.TextField(max_length=1000)
     price = models.DecimalField(max_digits=8, decimal_places=2)
     stock = models.IntegerField()
-    date = models.DateTimeField(blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    event = models.OneToOneField(to='Event', on_delete=models.CASCADE,
+                                 null=True, blank=True, related_name='item',
+                                 verbose_name='Event data')
 
-    @property
-    def is_event(self):
-        return self.events.all().exists()
+    def get_is_event(self):
+        return self.event is not None
 
     def get_stock(self):
         if stock := self.variants.aggregate(Sum('stock'))['stock__sum'] > 0:

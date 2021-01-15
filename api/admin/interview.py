@@ -4,7 +4,6 @@ from django.forms.models import BaseInlineFormSet
 from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
 
-from api.models import Interview
 from django import forms
 from django.forms import ModelForm
 from trumbowyg.widgets import TrumbowygWidget
