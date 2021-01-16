@@ -1,5 +1,5 @@
 from django.contrib import admin
-from api.models import Interview, Answer, Question, Artist
+from api.models import Interview, Answer, Question
 from django.forms.models import BaseInlineFormSet
 from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
@@ -7,7 +7,6 @@ from django.utils.translation import gettext as _
 from django import forms
 from django.forms import ModelForm
 from trumbowyg.widgets import TrumbowygWidget
-from api.models import Interview
 
 
 class InterviewAdminForm(ModelForm):
@@ -78,4 +77,3 @@ class QuestionAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Question, QuestionAdmin)
-admin.site.register(Artist)
