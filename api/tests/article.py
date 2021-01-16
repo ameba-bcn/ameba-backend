@@ -7,7 +7,7 @@ from django.contrib.auth.models import Group
 from api.tests._helpers import BaseTest, check_structure
 from api.tests.user import BaseUserTest
 from api.models import Article, ArticleVariant, Image
-from api.models import Discount, Event
+from api.models import Discount, Item
 
 
 class ModelMethods:
@@ -130,17 +130,17 @@ class TestArticle(BaseTest):
             )
 
     @tag('item')
-    def test_expired_items_are_not_listed(self):
+    def test_inactive_items_are_not_listed(self):
         item_data = {
             'name': 'Article',
             'description': 'Description for item',
             'price': 25,
             'stock': 10,
-            'is_active': False,
+            'is_active': True,
         }
         expired_item_data = dict(item_data)
-        expired_item_data['is_active'] = True
-        expired_item_data['name'] = 'Expired Article'
+        expired_item_data['is_active'] = False
+        expired_item_data['name'] = 'Inactive Article'
         item = Article.objects.create(**item_data)
         expired_item = Article.objects.create(**expired_item_data)
 
@@ -151,13 +151,13 @@ class TestArticle(BaseTest):
         self.assertNotIn(expired_item.id, response_ids)
 
     @tag('item')
-    def test_expired_item_is_no_accessible_by_id(self):
+    def test_inactive_item_is_no_accessible_by_id(self):
         expired_item_data = {
             'name': 'Expired Article',
             'description': 'Description for item',
             'price': 25,
             'stock': 10,
-            'is_active': True,
+            'is_active': False,
         }
         expired_item = Article.objects.create(**expired_item_data)
 
@@ -177,14 +177,14 @@ class TestArticle(BaseTest):
 
         user.groups.add(ameba_user, ameba_member)
 
-        item_data = {
+        article_data = {
             'name': 'Article',
             'description': 'Description for item',
             'price': 100,
             'stock': 10,
-            'is_active': False
+            'is_active': True
         }
-        item = Article.objects.create(**item_data)
+        article = Article.objects.create(**article_data)
 
         discount_data = {
             'name': 'members',
@@ -194,9 +194,9 @@ class TestArticle(BaseTest):
         }
         discount = Discount.objects.create(**discount_data)
         discount.groups.add(ameba_member)
-        discount.articles.add(item)
+        article.discounts.add(discount)
 
-        response = self._get(pk=item.pk, token=token)
+        response = self._get(pk=article.pk, token=token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['discount'], 20)
 
@@ -210,14 +210,14 @@ class TestArticle(BaseTest):
         ameba_member = Group.objects.get(name='ameba_member')
         ameba_user = Group.objects.get(name='web_user')
         user.groups.add(ameba_user, ameba_member)
-        item_data = {
+        article_data = {
             'name': 'Article',
             'description': 'Description for item',
             'price': 100,
             'stock': 10,
-            'is_active': False
+            'is_active': True
         }
-        item = Article.objects.create(**item_data)
+        article = Article.objects.create(**article_data)
         discount_data = {
             'name': 'members',
             'value': 20,
@@ -226,9 +226,9 @@ class TestArticle(BaseTest):
         }
         discount = Discount.objects.create(**discount_data)
         discount.groups.add(ameba_member)
-        discount.articles.add(item)
+        article.discounts.add(discount)
 
-        response = self._get(pk=item.pk, token=None)
+        response = self._get(pk=article.pk, token=None)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['discount'], 0)
 
@@ -242,14 +242,14 @@ class TestArticle(BaseTest):
         ameba_member = Group.objects.get(name='ameba_member')
         ameba_user = Group.objects.get(name='web_user')
         user.groups.add(ameba_user, ameba_member)
-        item_data = {
+        article_data = {
             'name': 'Article',
             'description': 'Description for item',
             'price': 100,
             'stock': 10,
-            'is_active': False
+            'is_active': True
         }
-        item = Article.objects.create(**item_data)
+        article = Article.objects.create(**article_data)
         discount_data = {
             'name': 'members',
             'value': 20,
@@ -258,13 +258,13 @@ class TestArticle(BaseTest):
         }
         discount = Discount.objects.create(**discount_data)
         discount.groups.add(ameba_member)
-        discount.articles.add(item)
+        article.discounts.add(discount)
 
         response = self._list(token=token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         for resp_item in response.data:
-            if resp_item['id'] == item.id:
+            if resp_item['id'] == article.id:
                 self.assertEqual(resp_item['discount'], 20)
                 break
             else:
@@ -280,14 +280,14 @@ class TestArticle(BaseTest):
         ameba_member = Group.objects.get(name='ameba_member')
         ameba_user = Group.objects.get(name='web_user')
         user.groups.add(ameba_user, ameba_member)
-        item_data = {
+        article_data = {
             'name': 'Article',
             'description': 'Description for item',
             'price': 100,
             'stock': 10,
-            'is_active': False
+            'is_active': True
         }
-        item = Article.objects.create(**item_data)
+        article = Article.objects.create(**article_data)
         discount_1_data = {
             'name': 'members',
             'value': 20,
@@ -296,7 +296,7 @@ class TestArticle(BaseTest):
         }
         discount = Discount.objects.create(**discount_1_data)
         discount.groups.add(ameba_member)
-        discount.articles.add(item)
+        article.discounts.add(discount)
 
         discount_2_data = {
             'name': 'members',
@@ -304,15 +304,15 @@ class TestArticle(BaseTest):
             'need_code': False,
             'number_of_uses': -1
         }
-        discount = Discount.objects.create(**discount_2_data)
-        discount.groups.add(ameba_member)
-        discount.articles.add(item)
+        discount_2 = Discount.objects.create(**discount_2_data)
+        discount_2.groups.add(ameba_member)
+        article.discounts.add(discount_2)
 
         response = self._list(token=token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         for resp_item in response.data:
-            if resp_item['id'] == item.id:
+            if resp_item['id'] == article.id:
                 self.assertEqual(resp_item['discount'], 30)
                 break
             else:
@@ -328,14 +328,14 @@ class TestArticle(BaseTest):
         ameba_member = Group.objects.get(name='ameba_member')
         ameba_user = Group.objects.get(name='web_user')
         user.groups.add(ameba_user, ameba_member)
-        item_data = {
+        article_data = {
             'name': 'Article',
             'description': 'Description for item',
             'price': 100,
             'stock': 10,
-            'is_active': False
+            'is_active': True
         }
-        item = Article.objects.create(**item_data)
+        article = Article.objects.create(**article_data)
         discount_1_data = {
             'name': 'members',
             'value': 20,
@@ -344,7 +344,7 @@ class TestArticle(BaseTest):
         }
         discount = Discount.objects.create(**discount_1_data)
         discount.groups.add(ameba_member)
-        discount.articles.add(item)
+        article.discounts.add(discount)
 
         discount_2_data = {
             'name': 'members',
@@ -352,11 +352,11 @@ class TestArticle(BaseTest):
             'need_code': False,
             'number_of_uses': -1
         }
-        discount = Discount.objects.create(**discount_2_data)
-        discount.groups.add(ameba_member)
-        discount.articles.add(item)
+        discount_2 = Discount.objects.create(**discount_2_data)
+        discount_2.groups.add(ameba_member)
+        article.discounts.add(discount_2)
 
-        response = self._get(pk=item.pk, token=token)
+        response = self._get(pk=article.pk, token=token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['discount'], 30)
 
@@ -370,14 +370,14 @@ class TestArticle(BaseTest):
         ameba_member = Group.objects.get(name='ameba_member')
         ameba_user = Group.objects.get(name='web_user')
         user.groups.add(ameba_user, ameba_member)
-        item_data = {
+        article_data = {
             'name': 'Article',
             'description': 'Description for item',
             'price': 100,
             'stock': 10,
-            'is_active': False
+            'is_active': True
         }
-        item = Article.objects.create(**item_data)
+        article = Article.objects.create(**article_data)
         discount_1_data = {
             'name': 'members',
             'value': 20,
@@ -386,22 +386,36 @@ class TestArticle(BaseTest):
         }
         discount = Discount.objects.create(**discount_1_data)
         discount.groups.add(ameba_member)
-        discount.articles.add(item)
+        article.discounts.add(discount)
 
-        response = self._get(pk=item.pk, token=token)
+        response = self._get(pk=article.pk, token=token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['discount'], 0)
 
     def test_get_other_items_but_articles_not_listed(self):
+        item_data = {
+            'name': 'Article',
+            'description': 'Description for item',
+            'price': 100,
+            'stock': 10,
+            'is_active': True
+        }
+        item = Item.objects.create(**item_data)
         response = self._list(token=None)
-        event = Article.objects.filter(type='event')[0]
-        article = Article.objects.filter(type='article')[0]
+        article = Article.objects.filter(is_active=True)[0]
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         article_ids = [article['id'] for article in response.data]
-        self.assertNotIn(event.id, article_ids)
+        self.assertNotIn(item.id, article_ids)
         self.assertIn(article.id, article_ids)
 
     def test_get_item_not_article_is_not_found(self):
-        subscription = Article.objects.filter(type='event')[0]
-        response = self._get(pk=subscription.id, token=None)
+        item_data = {
+            'name': 'Article',
+            'description': 'Description for item',
+            'price': 100,
+            'stock': 10,
+            'is_active': True
+        }
+        item = Item.objects.create(**item_data)
+        response = self._get(pk=item.id, token=None)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

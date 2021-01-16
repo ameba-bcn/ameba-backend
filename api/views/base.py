@@ -15,6 +15,3 @@ class BaseReadOnlyViewSet(RetrieveModelMixin, ListModelMixin, GenericViewSet):
             'list': self.list_serializer
         }.get(self.action)
         return super().get_serializer_class()
-
-    def get_queryset(self):
-        return self.model.objects.all()
