@@ -18,7 +18,7 @@ class ArticleVariant(models.Model):
     item = models.ForeignKey(
         to=Article, on_delete=models.DO_NOTHING, related_name='variants'
     )
-    image = models.ManyToManyField(to='Image', blank=True)
+    images = models.ManyToManyField(to='Image', blank=True)
     stock = models.IntegerField()
     description = models.TextField(max_length=1000, blank=True)
 

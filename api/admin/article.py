@@ -54,10 +54,10 @@ class ImageChoiceInLine(admin.TabularInline):
 class ArticleAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {'fields': ['name', 'description', 'price', 'stock',
-                           'created', 'updated', 'event']})
+                           'created', 'updated']})
     ]
     inlines = [ImageChoiceInLine, VariantChoiceInline, DiscountChoiceInLine]
-    readonly_fields = ['created', 'updated', 'event']
+    readonly_fields = ['created', 'updated']
     list_display = ['name', 'price', 'stock', 'description', 'preview']
 
     def preview(self, obj):
