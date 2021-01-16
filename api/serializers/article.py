@@ -25,7 +25,7 @@ class ArticleDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Article
         fields = ['id', 'name', 'description', 'price', 'stock', 'variants',
-                  'images', 'date', 'is_expired', 'discount']
+                  'images', 'is_active', 'discount']
         depth = 1
 
 
