@@ -1,45 +1,14 @@
 from django.contrib import admin
-from django.forms.models import BaseInlineFormSet
 from django.utils.html import mark_safe
 
-from api.models import Event, Item, ItemImage
+from api.models import Event, Image
 
 
-class ItemInLine(admin.StackedInline):
-    model = Item
-    verbose_name = 'Data'
-    verbose_name_plural = "Event data"
-    insert_before = 'datetime'
-    fields = ('name', 'description', 'price', 'stock')
-
-
-class EventAdmin(admin.ModelAdmin):
-    fieldsets = [
-        (None, {'fields': ['datetime', 'address', 'image', 'preview',
-                           'attendees', 'interested', 'created', 'updated']})
-    ]
-    readonly_fields = ['created', 'updated', 'preview']
-    list_display = ['name', 'price', 'datetime', 'address',
-                    'list_attendees', 'list_interested', 'list_preview']
-    search_field = ['name']
-    inlines = (ItemInLine, )
-    change_form_template = 'admin/custom/change_form.html'
-
-    @staticmethod
-    def list_attendees(obj):
-        return obj.attendees.count()
-    list_attendees.short_description = 'Attendees'
-    list_attendees.allow_tags = True
-
-    @staticmethod
-    def list_interested(obj):
-        return obj.interested.count()
-    list_interested.short_description = 'Interested'
-    list_interested.allow_tags = True
-
-    @staticmethod
-    def price(obj):
-        return obj.item.price
+class ImagesInLine(admin.StackedInline):
+    model = Event.images.through
+    verbose_name = 'Image'
+    verbose_name_plural = "Images"
+    fields = ('image', 'preview')
 
     @staticmethod
     def preview(obj):
@@ -52,13 +21,44 @@ class EventAdmin(admin.ModelAdmin):
     preview.short_description = 'Preview'
     preview.allow_tags = True
 
+
+class EventAdmin(admin.ModelAdmin):
+    fieldsets = [
+        (None, {'fields': ['name', 'description', 'price', 'stock',
+                           'datetime', 'address', 'acquired_by', 'saved_by',
+                           'created', 'updated']})
+    ]
+    readonly_fields = ['created', 'updated']
+    list_display = ['name', 'price', 'datetime', 'address', 'list_acquired_by',
+                    'list_saved_by', 'list_preview']
+    search_fields = ['name']
+    inlines = (ImagesInLine, )
+
+    @staticmethod
+    def list_saved_by(obj):
+        return obj.saved_by.count()
+    list_saved_by.short_description = 'Saved by'
+    list_saved_by.allow_tags = True
+
+    @staticmethod
+    def list_acquired_by(obj):
+        return obj.interested.count()
+    list_acquired_by.short_description = 'Acquired by'
+    list_acquired_by.allow_tags = True
+
+    @staticmethod
+    def price(obj):
+        return obj.item.price
+
     @staticmethod
     def list_preview(obj):
-        if obj.image:
-            return mark_safe(
-                '<img src="{}" width="75" height="75" />'.format(
-                    obj.image.url
-                ))
+        img_tag = '<img src="{}" width="75" height="75" style="margin:10px" />'
+        preview = '<div>{images}</div>'
+        images = ''.join(
+            img_tag.format(image.image.url) for image in obj.images.all()
+        )
+        return mark_safe(preview.format(images=images))
+
     list_preview.short_description = 'List preview'
     list_preview.allow_tags = True
 
