@@ -4,11 +4,13 @@ from api.models import Article, ArticleVariant
 
 
 class VariantSerializer(serializers.ModelSerializer):
-    image = serializers.SlugRelatedField(slug_field='url', read_only=True)
+    images = serializers.SlugRelatedField(
+        many=True, slug_field='url', read_only=True
+    )
 
     class Meta:
         model = ArticleVariant
-        fields = ['name', 'stock', 'description', 'image']
+        fields = ['name', 'stock', 'description', 'images']
 
 
 class ArticleDetailSerializer(serializers.ModelSerializer):
