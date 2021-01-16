@@ -7,3 +7,4 @@ class ArticleViewSet(BaseReadOnlyViewSet):
     list_serializer = ArticleListSerializer
     detail_serializer = ArticleDetailSerializer
     model = Article
+    queryset = Article.objects.filter(is_active=True)
