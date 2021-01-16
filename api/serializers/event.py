@@ -18,7 +18,7 @@ class EventDetailSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'datetime', 'address', 'description',
                   'price', 'stock', 'images', 'is_active', 'discount',
                   'artists']
-        depth = 1
+        depth = 0
 
 
 class EventListSerializer(serializers.ModelSerializer):
