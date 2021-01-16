@@ -63,5 +63,4 @@ class EventAdmin(admin.ModelAdmin):
     list_preview.allow_tags = True
 
 
-
 admin.site.register(Event, EventAdmin)
