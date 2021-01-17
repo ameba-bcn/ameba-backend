@@ -19,7 +19,7 @@ ITEM_TYPES = (
 
 
 class Item(models.Model):
-    name = models.CharField(max_length=25, unique=True)
+    name = models.CharField(max_length=100, unique=True)
     description = models.TextField(max_length=1000)
     price = models.DecimalField(max_digits=8, decimal_places=2)
     stock = models.IntegerField()

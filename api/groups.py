@@ -10,6 +10,7 @@ ADMIN_GROUP = 'ameba_admin'
 
 GROUPS = {
     DEFAULT_GROUP: {
+        'pk': 1,
         'parent': None,
         'models': {
             'user': {
@@ -19,12 +20,15 @@ GROUPS = {
         }
     },
     MEMBER_GROUP: {
+        'pk': 2,
         'parent': 'web_user'
     },
     EDITOR_GROUP: {
+        'pk': 3,
         'parent': 'ameba_member'
     },
     ADMIN_GROUP: {
+        'pk': 4,
         'parent': 'ameba_editor'
     }
 }
@@ -33,7 +37,8 @@ GROUPS = {
 def get_or_create_groups(group_definition):
     groups = []
     for group_name in group_definition:
-        groups.append(Group.objects.get_or_create(name=group_name)[0])
+        pk = group_definition[group_name]['pk']
+        groups.append(Group.objects.get_or_create(pk=pk, name=group_name)[0])
     return groups
 
 

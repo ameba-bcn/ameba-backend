@@ -8,6 +8,8 @@ from django import forms
 from django.forms import ModelForm
 from trumbowyg.widgets import TrumbowygWidget
 
+from api.admin.image import get_image_preview
+
 
 class InterviewAdminForm(ModelForm):
     introduction = forms.CharField(widget=TrumbowygWidget)
@@ -56,6 +58,7 @@ class InterviewAdmin(admin.ModelAdmin):
     ]
     readonly_fields = ('thumbnail_preview', )
     inlines = [ChoiceInline]
+    list_display = ('title', 'artist', 'list_preview', )
 
     def thumbnail_preview(self, obj):
         if obj.image:
@@ -66,6 +69,10 @@ class InterviewAdmin(admin.ModelAdmin):
 
     thumbnail_preview.short_description = _('Preview')
     thumbnail_preview.allow_tags = True
+
+    @staticmethod
+    def list_preview(obj):
+        return get_image_preview(obj.image, 75)
 
 
 admin.site.register(Interview, InterviewAdmin)
