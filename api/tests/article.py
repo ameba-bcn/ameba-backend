@@ -6,8 +6,8 @@ from django.contrib.auth.models import Group
 
 from api.tests._helpers import BaseTest, check_structure
 from api.tests.user import BaseUserTest
-from api.models import Item, ItemVariant, ItemImage
-from api.models import Discount
+from api.models import Article, ArticleVariant, Image
+from api.models import Discount, Item
 
 
 class ModelMethods:
@@ -25,15 +25,13 @@ class ModelMethods:
         return struct
 
 
-class ItemMethods(ModelMethods):
+class ArticleMethods(ModelMethods):
     structure = {
-        'name': 'Item {num}',
+        'name': 'Article {num}',
         'description': 'Description for item {num}',
         'price': 25,
         'stock': 10,
-        'type': None,
-        'date': None,
-        'is_expired': None,
+        'is_active': None
     }
 
     @staticmethod
@@ -41,11 +39,7 @@ class ItemMethods(ModelMethods):
         return num
 
     @staticmethod
-    def get_type(num):
-        return ['article', 'subscription', 'event'][num % 3]
-
-    @staticmethod
-    def get_is_expired(num):
+    def get_is_active(num):
         return num % 4 == 0
 
     @staticmethod
@@ -53,42 +47,20 @@ class ItemMethods(ModelMethods):
         return timezone.now()
 
 
-class ItemVariantMethods(ModelMethods):
+class ArticleVariantMethods(ModelMethods):
     structure = {
-        'name': 'Item variant {num}',
+        'name': 'Article variant {num}',
         'item': None,
         'stock': None,
-        'description': 'Item variant {num} description',
-        'image': None
+        'description': 'Article variant {num} description'
     }
-
-    @staticmethod
-    def get_image(num):
-        return ImageFile(
-            open('api/tests/fixtures/media/item-image.jpg', 'rb')
-        )
 
     @staticmethod
     def get_stock(num):
         return num
 
 
-class ItemImagesMethods(ModelMethods):
-    structure = {
-        'image': None,
-        'active': None
-    }
-
-    @staticmethod
-    def get_image(num):
-        return ItemVariantMethods.get_image(num)
-
-    @staticmethod
-    def get_active(num):
-        return [True, False][num % 5 == 0]
-
-
-class TestItem(BaseTest):
+class TestArticle(BaseTest):
     DETAIL_ENDPOINT = '/api/articles/{pk}/'
     LIST_ENDPOINT = '/api/articles/'
 
@@ -98,18 +70,23 @@ class TestItem(BaseTest):
     @staticmethod
     def populate_data():
         for i in range(1, 20):
-            item_data = ItemMethods.get_structure(num=i)
-            item = Item.objects.create(**item_data)
+            item_data = ArticleMethods.get_structure(num=i)
+            item = Article.objects.create(**item_data)
 
             for i in range(i % 4):
-                item_variant_data = ItemVariantMethods.get_structure(i)
-                item_variant_data['item'] = item
-                ItemVariant.objects.create(**item_variant_data)
+                item.images.add(Image.objects.create(image=ImageFile(
+                        open('api/tests/fixtures/media/item-image.jpg', 'rb')
+                    )))
 
-            for i in range(i % 6):
-                item_image_data = ItemImagesMethods.get_structure(num=i)
-                item_image_data['item'] = item
-                ItemImage.objects.create(**item_image_data)
+            for i in range(i % 4):
+                item_variant_data = ArticleVariantMethods.get_structure(i)
+                item_variant_data['item'] = item
+                av = ArticleVariant.objects.create(**item_variant_data)
+
+                for i in range(i):
+                    av.images.add(Image.objects.create(image=ImageFile(
+                        open('api/tests/fixtures/media/item-image.jpg', 'rb')
+                    )))
 
     @tag('item')
     def test_item_list_has_proper_structure(self):
@@ -138,11 +115,10 @@ class TestItem(BaseTest):
                 'name': str,
                 'stock': int,
                 'description': str,
-                'image': str
+                'images': [str]
             }],
             'images': [str],
-            'date': str,
-            'is_expired': bool,
+            'is_active': bool,
         }
         items = self._list(token=None).data
         for item in items:
@@ -154,21 +130,19 @@ class TestItem(BaseTest):
             )
 
     @tag('item')
-    def test_expired_items_are_not_listed(self):
+    def test_inactive_items_are_not_listed(self):
         item_data = {
-            'name': 'Item',
+            'name': 'Article',
             'description': 'Description for item',
             'price': 25,
             'stock': 10,
-            'type': 'article',
-            'date': timezone.now(),
-            'is_expired': False,
+            'is_active': True,
         }
         expired_item_data = dict(item_data)
-        expired_item_data['is_expired'] = True
-        expired_item_data['name'] = 'Expired Item'
-        item = Item.objects.create(**item_data)
-        expired_item = Item.objects.create(**expired_item_data)
+        expired_item_data['is_active'] = False
+        expired_item_data['name'] = 'Inactive Article'
+        item = Article.objects.create(**item_data)
+        expired_item = Article.objects.create(**expired_item_data)
 
         response = self._list(token=None)
         response_ids = [response_item['id'] for response_item in response.data]
@@ -177,17 +151,15 @@ class TestItem(BaseTest):
         self.assertNotIn(expired_item.id, response_ids)
 
     @tag('item')
-    def test_expired_item_is_no_accessible_by_id(self):
+    def test_inactive_item_is_no_accessible_by_id(self):
         expired_item_data = {
-            'name': 'Expired Item',
+            'name': 'Expired Article',
             'description': 'Description for item',
             'price': 25,
             'stock': 10,
-            'type': 'article',
-            'date': timezone.now(),
-            'is_expired': True,
+            'is_active': False,
         }
-        expired_item = Item.objects.create(**expired_item_data)
+        expired_item = Article.objects.create(**expired_item_data)
 
         response = self._get(pk=expired_item.id, token=None)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
@@ -205,16 +177,14 @@ class TestItem(BaseTest):
 
         user.groups.add(ameba_user, ameba_member)
 
-        item_data = {
-            'name': 'Item',
+        article_data = {
+            'name': 'Article',
             'description': 'Description for item',
             'price': 100,
             'stock': 10,
-            'type': 'article',
-            'date': timezone.now(),
-            'is_expired': False
+            'is_active': True
         }
-        item = Item.objects.create(**item_data)
+        article = Article.objects.create(**article_data)
 
         discount_data = {
             'name': 'members',
@@ -224,9 +194,9 @@ class TestItem(BaseTest):
         }
         discount = Discount.objects.create(**discount_data)
         discount.groups.add(ameba_member)
-        discount.items.add(item)
+        article.discounts.add(discount)
 
-        response = self._get(pk=item.pk, token=token)
+        response = self._get(pk=article.pk, token=token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['discount'], 20)
 
@@ -240,16 +210,14 @@ class TestItem(BaseTest):
         ameba_member = Group.objects.get(name='ameba_member')
         ameba_user = Group.objects.get(name='web_user')
         user.groups.add(ameba_user, ameba_member)
-        item_data = {
-            'name': 'Item',
+        article_data = {
+            'name': 'Article',
             'description': 'Description for item',
             'price': 100,
             'stock': 10,
-            'type': 'article',
-            'date': timezone.now(),
-            'is_expired': False
+            'is_active': True
         }
-        item = Item.objects.create(**item_data)
+        article = Article.objects.create(**article_data)
         discount_data = {
             'name': 'members',
             'value': 20,
@@ -258,9 +226,9 @@ class TestItem(BaseTest):
         }
         discount = Discount.objects.create(**discount_data)
         discount.groups.add(ameba_member)
-        discount.items.add(item)
+        article.discounts.add(discount)
 
-        response = self._get(pk=item.pk, token=None)
+        response = self._get(pk=article.pk, token=None)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['discount'], 0)
 
@@ -274,16 +242,14 @@ class TestItem(BaseTest):
         ameba_member = Group.objects.get(name='ameba_member')
         ameba_user = Group.objects.get(name='web_user')
         user.groups.add(ameba_user, ameba_member)
-        item_data = {
-            'name': 'Item',
+        article_data = {
+            'name': 'Article',
             'description': 'Description for item',
             'price': 100,
             'stock': 10,
-            'type': 'article',
-            'date': timezone.now(),
-            'is_expired': False
+            'is_active': True
         }
-        item = Item.objects.create(**item_data)
+        article = Article.objects.create(**article_data)
         discount_data = {
             'name': 'members',
             'value': 20,
@@ -292,13 +258,13 @@ class TestItem(BaseTest):
         }
         discount = Discount.objects.create(**discount_data)
         discount.groups.add(ameba_member)
-        discount.items.add(item)
+        article.discounts.add(discount)
 
         response = self._list(token=token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         for resp_item in response.data:
-            if resp_item['id'] == item.id:
+            if resp_item['id'] == article.id:
                 self.assertEqual(resp_item['discount'], 20)
                 break
             else:
@@ -314,16 +280,14 @@ class TestItem(BaseTest):
         ameba_member = Group.objects.get(name='ameba_member')
         ameba_user = Group.objects.get(name='web_user')
         user.groups.add(ameba_user, ameba_member)
-        item_data = {
-            'name': 'Item',
+        article_data = {
+            'name': 'Article',
             'description': 'Description for item',
             'price': 100,
             'stock': 10,
-            'type': 'article',
-            'date': timezone.now(),
-            'is_expired': False
+            'is_active': True
         }
-        item = Item.objects.create(**item_data)
+        article = Article.objects.create(**article_data)
         discount_1_data = {
             'name': 'members',
             'value': 20,
@@ -332,7 +296,7 @@ class TestItem(BaseTest):
         }
         discount = Discount.objects.create(**discount_1_data)
         discount.groups.add(ameba_member)
-        discount.items.add(item)
+        article.discounts.add(discount)
 
         discount_2_data = {
             'name': 'members',
@@ -340,15 +304,15 @@ class TestItem(BaseTest):
             'need_code': False,
             'number_of_uses': -1
         }
-        discount = Discount.objects.create(**discount_2_data)
-        discount.groups.add(ameba_member)
-        discount.items.add(item)
+        discount_2 = Discount.objects.create(**discount_2_data)
+        discount_2.groups.add(ameba_member)
+        article.discounts.add(discount_2)
 
         response = self._list(token=token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         for resp_item in response.data:
-            if resp_item['id'] == item.id:
+            if resp_item['id'] == article.id:
                 self.assertEqual(resp_item['discount'], 30)
                 break
             else:
@@ -364,16 +328,14 @@ class TestItem(BaseTest):
         ameba_member = Group.objects.get(name='ameba_member')
         ameba_user = Group.objects.get(name='web_user')
         user.groups.add(ameba_user, ameba_member)
-        item_data = {
-            'name': 'Item',
+        article_data = {
+            'name': 'Article',
             'description': 'Description for item',
             'price': 100,
             'stock': 10,
-            'type': 'article',
-            'date': timezone.now(),
-            'is_expired': False
+            'is_active': True
         }
-        item = Item.objects.create(**item_data)
+        article = Article.objects.create(**article_data)
         discount_1_data = {
             'name': 'members',
             'value': 20,
@@ -382,7 +344,7 @@ class TestItem(BaseTest):
         }
         discount = Discount.objects.create(**discount_1_data)
         discount.groups.add(ameba_member)
-        discount.items.add(item)
+        article.discounts.add(discount)
 
         discount_2_data = {
             'name': 'members',
@@ -390,11 +352,11 @@ class TestItem(BaseTest):
             'need_code': False,
             'number_of_uses': -1
         }
-        discount = Discount.objects.create(**discount_2_data)
-        discount.groups.add(ameba_member)
-        discount.items.add(item)
+        discount_2 = Discount.objects.create(**discount_2_data)
+        discount_2.groups.add(ameba_member)
+        article.discounts.add(discount_2)
 
-        response = self._get(pk=item.pk, token=token)
+        response = self._get(pk=article.pk, token=token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['discount'], 30)
 
@@ -408,16 +370,14 @@ class TestItem(BaseTest):
         ameba_member = Group.objects.get(name='ameba_member')
         ameba_user = Group.objects.get(name='web_user')
         user.groups.add(ameba_user, ameba_member)
-        item_data = {
-            'name': 'Item',
+        article_data = {
+            'name': 'Article',
             'description': 'Description for item',
             'price': 100,
             'stock': 10,
-            'type': 'article',
-            'date': timezone.now(),
-            'is_expired': False
+            'is_active': True
         }
-        item = Item.objects.create(**item_data)
+        article = Article.objects.create(**article_data)
         discount_1_data = {
             'name': 'members',
             'value': 20,
@@ -426,22 +386,36 @@ class TestItem(BaseTest):
         }
         discount = Discount.objects.create(**discount_1_data)
         discount.groups.add(ameba_member)
-        discount.items.add(item)
+        article.discounts.add(discount)
 
-        response = self._get(pk=item.pk, token=token)
+        response = self._get(pk=article.pk, token=token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['discount'], 0)
 
     def test_get_other_items_but_articles_not_listed(self):
+        item_data = {
+            'name': 'Article',
+            'description': 'Description for item',
+            'price': 100,
+            'stock': 10,
+            'is_active': True
+        }
+        item = Item.objects.create(**item_data)
         response = self._list(token=None)
-        event = Item.objects.filter(type='event')[0]
-        article = Item.objects.filter(type='article')[0]
+        article = Article.objects.filter(is_active=True)[0]
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         article_ids = [article['id'] for article in response.data]
-        self.assertNotIn(event.id, article_ids)
+        self.assertNotIn(item.id, article_ids)
         self.assertIn(article.id, article_ids)
 
     def test_get_item_not_article_is_not_found(self):
-        subscription = Item.objects.filter(type='event')[0]
-        response = self._get(pk=subscription.id, token=None)
+        item_data = {
+            'name': 'Article',
+            'description': 'Description for item',
+            'price': 100,
+            'stock': 10,
+            'is_active': True
+        }
+        item = Item.objects.create(**item_data)
+        response = self._get(pk=item.id, token=None)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

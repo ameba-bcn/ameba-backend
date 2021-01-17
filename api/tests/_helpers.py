@@ -29,11 +29,11 @@ class BaseTest(APITestCase):
         self._authenticate(token)
         return self.client.put(self.DETAIL_ENDPOINT.format(pk=pk), data=props)
 
-    def _get(self, pk, token):
+    def _get(self, pk, token=None):
         self._authenticate(token)
         return self.client.get(self.DETAIL_ENDPOINT.format(pk=pk))
 
-    def _delete(self, pk, token):
+    def _delete(self, pk, token=None):
         self._authenticate(token)
         return self.client.delete(self.DETAIL_ENDPOINT.format(pk=pk))
 
@@ -42,10 +42,11 @@ class BaseTest(APITestCase):
         return self.client.patch(self.DETAIL_ENDPOINT.format(pk=pk),
                                  data=props)
 
-    def _create(self, props):
+    def _create(self, props, token=None):
+        self._authenticate(token)
         return self.client.post(self.LIST_ENDPOINT, props)
 
-    def _list(self, token):
+    def _list(self, token=None):
         self._authenticate(token)
         return self.client.get(self.LIST_ENDPOINT)
 

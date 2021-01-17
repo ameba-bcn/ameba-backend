@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'api.apps.ApiConfig',
     'trumbowyg',
+    'location_field.apps.DefaultConfig'
 ]
 
 MIDDLEWARE = [
@@ -172,3 +173,11 @@ SIMPLE_JWT = {
 
 MEDIA_ROOT = 'media/'
 MEDIA_URL = 'media/'
+
+
+LOCATION_FIELD = {
+    'map.provider': 'openstreetmap',
+    'search.provider': 'google',
+    'provider.openstreetmap.max_zoom': 18,
+}
+
