@@ -872,7 +872,7 @@
     "fields": {
       "username": "Web User",
       "email": "web_user@ameba.cat",
-      "password": "ameba12345",
+      "password": "pbkdf2_sha256$216000$dEbwg03QZtrm$C//iV3WoT/t3RuCWZ6wx8SpDIoH/aEa+YxDdjORg0Vs=",
       "groups": [1],
       "is_active": true
     }
@@ -883,7 +883,7 @@
     "fields": {
       "username": "Ameba Member",
       "email": "ameba_member@ameba.cat",
-      "password": "ameba12345",
+      "password": "pbkdf2_sha256$216000$zwNQp18wsfuS$KYLisAbZ0bvQA8JfTMMv8R4xRccSsGwZC5t4EkH0A/0=",
       "groups": [2],
       "is_active": true
     }
@@ -894,7 +894,7 @@
     "fields": {
       "username": "Web Ameba Member",
       "email": "web_ameba_member@ameba.cat",
-      "password": "ameba12345",
+      "password": "pbkdf2_sha256$216000$xVOq3YVAe59d$HCuXaivdjrfJzImNUVSDmLpxmwt+GSw+CvovHOdMSl0=",
       "groups": [1, 2],
       "is_active": true
     }
@@ -905,7 +905,7 @@
     "fields": {
       "username": "Ameba Editor",
       "email": "ameba_editor@ameba.cat",
-      "password": "ameba12345",
+      "password": "pbkdf2_sha256$216000$3vjqkraArlW3$QWbAynPqM2h88TmcED4ndnWLRG1cOkK0YbUuXiGtqns=",
       "groups": [3],
       "is_active": true
     }
@@ -916,7 +916,7 @@
     "fields": {
       "username": "Ameba Admin",
       "email": "ameba_admin@ameba.cat",
-      "password": "ameba12345",
+      "password": "pbkdf2_sha256$216000$lz79hcC9iarq$RlsLDnvZhriumEVktGe2mWi6a96NZ5tLV4NuFYmzncQ=",
       "groups": [4],
       "is_active": true
     }
