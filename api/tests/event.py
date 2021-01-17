@@ -10,10 +10,7 @@ from api.models import Article, ArticleVariant, Image
 from api.models import Event, User, Image, Item
 
 
-class TestSavedUserEvents(BaseTest):
-    LIST_ENDPOINT = '/api/users/current/events/saved/'
-    DETAIL_ENDPOINT = '/api/users/current/events/saved/{pk}/'
-
+class BaseEventTest(BaseTest):
     def setUp(self):
         self.populate_data()
 
@@ -42,6 +39,11 @@ class TestSavedUserEvents(BaseTest):
             event.images.add(Image.objects.create(image=ImageFile(
                 open('api/tests/fixtures/media/item-image.jpg', 'rb')
             )))
+
+
+class TestSavedUserEvents(BaseEventTest):
+    LIST_ENDPOINT = '/api/users/current/events/saved/'
+    DETAIL_ENDPOINT = '/api/users/current/events/saved/{pk}/'
 
     def test_user_saved_events_list(self):
         user_data = {
@@ -171,3 +173,147 @@ class TestSavedUserEvents(BaseTest):
         event = Item.objects.create(**item_data)
         response = self._delete(pk=event.id, token=token)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+
+class TestEvents(BaseEventTest):
+    LIST_ENDPOINT = '/api/events/'
+    DETAIL_ENDPOINT = '/api/events/{pk}/'
+
+    @tag('event')
+    def test_item_list_has_proper_structure(self):
+        structure = [
+            {
+                'id': int,
+                'name': str,
+                'price': str,
+                'images': [str],
+                'discount': int,
+                'saved': bool,
+                'purchased': bool
+            }
+        ]
+
+        response = self._list(token=None)
+        self.assertTrue(check_structure(response.data, structure))
+
+    @tag('event')
+    def test_item_detail_has_proper_structure(self):
+        structure = {
+            'id': int,
+            'name': str,
+            'description': str,
+            'price': str,
+            'stock': int,
+            'saved': bool,
+            'purchased': bool,
+            'images': [str],
+            'is_active': bool,
+            'address': str,
+            'datetime': str
+        }
+        items = self._list(token=None).data
+        for item in items:
+            pk = item['id']
+            response = self._get(pk=pk, token=None)
+            self.assertTrue(
+                check_structure(response.data, structure),
+                msg=f'Error on item with pk {pk}'
+            )
+
+    @tag('event')
+    def test_event_list_not_saved_events_not_authenticated(self):
+        response = self._list(token=None)
+        for event in response.data:
+            self.assertFalse(event['saved'])
+
+    @tag('event')
+    def test_event_list_not_saved_events_authenticated_not_saved(self):
+        user_data = {
+            'username': 'manolilto',
+            'email': 'man@olito.com',
+            'password': 'ameba12345'
+        }
+        user, token = BaseUserTest._insert_user(user_data)
+        response = self._list(token=token)
+        for event in response.data:
+            self.assertFalse(event['saved'])
+
+    @tag('event')
+    def test_event_list_not_saved_events_authenticated_saved(self):
+        user_data = {
+            'username': 'manolilto',
+            'email': 'man@olito.com',
+            'password': 'ameba12345'
+        }
+        user, token = BaseUserTest._insert_user(user_data)
+        event_obj = Event.objects.all()[0]
+        event_obj.saved_by.add(user)
+        response = self._list(token=token)
+        for event in response.data:
+            if event['id'] == event_obj.id:
+                self.assertTrue(event['saved'])
+            else:
+                self.assertFalse(event['saved'])
+
+    @tag('event')
+    def test_event_list_not_saved_events_not_authenticated_saved(self):
+        user_data = {
+            'username': 'manolilto',
+            'email': 'man@olito.com',
+            'password': 'ameba12345'
+        }
+        user, token = BaseUserTest._insert_user(user_data)
+        event_obj = Event.objects.all()[0]
+        event_obj.saved_by.add(user)
+        response = self._list(token=None)
+        for event in response.data:
+            self.assertFalse(event['saved'])
+
+    @tag('event')
+    def test_event_list_not_purchased_events_not_authenticated(self):
+        response = self._list(token=None)
+        for event in response.data:
+            self.assertFalse(event['saved'])
+
+    @tag('event')
+    def test_event_list_not_purchased_events_authenticated_not_saved(self):
+        user_data = {
+            'username': 'manolilto',
+            'email': 'man@olito.com',
+            'password': 'ameba12345'
+        }
+        user, token = BaseUserTest._insert_user(user_data)
+        response = self._list(token=token)
+        for event in response.data:
+            self.assertFalse(event['purchased'])
+
+    @tag('event')
+    def test_event_list_not_purchased_events_authenticated_saved(self):
+        user_data = {
+            'username': 'manolilto',
+            'email': 'man@olito.com',
+            'password': 'ameba12345'
+        }
+        user, token = BaseUserTest._insert_user(user_data)
+        event_obj = Event.objects.all()[0]
+        event_obj.acquired_by.add(user)
+        response = self._list(token=token)
+        for event in response.data:
+            if event['id'] == event_obj.id:
+                self.assertTrue(event['purchased'])
+            else:
+                self.assertFalse(event['purchased'])
+
+    @tag('event')
+    def test_event_list_not_purchased_events_not_authenticated_saved(self):
+        user_data = {
+            'username': 'manolilto',
+            'email': 'man@olito.com',
+            'password': 'ameba12345'
+        }
+        user, token = BaseUserTest._insert_user(user_data)
+        event_obj = Event.objects.all()[0]
+        event_obj.acquired_by.add(user)
+        response = self._list(token=None)
+        for event in response.data:
+            self.assertFalse(event['purchased'])

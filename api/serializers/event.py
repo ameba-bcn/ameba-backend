@@ -3,37 +3,43 @@ from rest_framework import serializers
 from api.models import Event
 
 
-class EventDetailSerializer(serializers.ModelSerializer):
-    images = serializers.SlugRelatedField(
-        many=True, read_only=True, slug_field='url'
-    )
+class BaseEventSerializer(serializers.ModelSerializer):
+    images = serializers.SlugRelatedField(many=True,
+                                          read_only=True,
+                                          slug_field='url')
     discount = serializers.SerializerMethodField()
+    saved = serializers.SerializerMethodField()
+    purchased = serializers.SerializerMethodField()
 
     def get_discount(self, article):
         user = self.context.get('request').user
         return article.get_max_discount_value(user)
+
+    def get_saved(self, event):
+        user = self.context.get('request').user
+        return event.saved_by.filter(id=user.id).exists()
+
+    def get_purchased(self, event):
+        user = self.context.get('request').user
+        return event.acquired_by.filter(id=user.id).exists()
+
+
+class EventDetailSerializer(BaseEventSerializer):
 
     class Meta:
         model = Event
         fields = ['id', 'name', 'datetime', 'address', 'description',
                   'price', 'stock', 'images', 'is_active', 'discount',
-                  'artists']
+                  'artists', 'discount', 'purchased', 'saved']
         depth = 0
 
 
-class EventListSerializer(serializers.ModelSerializer):
-    images = serializers.SlugRelatedField(many=True, read_only=True,
-                                          slug_field='url')
-    discount = serializers.SerializerMethodField()
-
-    def get_discount(self, article):
-        user = self.context.get('request').user
-        return article.get_max_discount_value(user)
+class EventListSerializer(BaseEventSerializer):
 
     class Meta:
         model = Event
         fields = ['id', 'name', 'price', 'images', 'discount', 'datetime',
-                  'address']
+                  'address', 'saved', 'purchased']
 
 
 class UserSavedEventsListSerializer(serializers.ModelSerializer):
