@@ -32,28 +32,30 @@ class Discount(models.Model):
         return f'{self.name} ({self.value}%)'
 
     def check_user_applies(self, user, code=None):
-        if not self.need_code or self.user_match_code(user, code):
-            if self.user_match_groups(user) and self.user_match_usages(user):
+        if not self.need_code or self._user_match_code(user, code):
+            if self._user_match_groups(user) and self._user_match_usages(user):
                 return True
         return False
 
+    def remaining_usages(self, user):
+        if self.number_of_uses == -1:
+            return 9999
+        return self.number_of_uses - self.usages.filter(id=user.id).count()
+
     @staticmethod
-    def user_match_code(user, code):
+    def _user_match_code(user, code):
         if code and DiscountCode.objects.filter(code=code).exists():
             code_obj = DiscountCode.objects.get(code=code)
             return code_obj.validate_user(user)
         return False
 
-    def user_match_groups(self, user):
+    def _user_match_groups(self, user):
         for user_group in user.groups.all():
             if user_group in self.groups.all():
                 return True
         return False
 
-    def remaining_usages(self, user):
-        return self.number_of_uses - self.usages.filter(id=user.id).count()
-
-    def user_match_usages(self, user):
+    def _user_match_usages(self, user):
         if (
             self.remaining_usages(user) > 0
             or self.remaining_usages(user) == FOREVER
@@ -86,16 +88,9 @@ class DiscountCode(models.Model):
             self.expire()
         return self.is_expired
 
-    def get_random_code(self):
-        length = self._meta.get_field('code').max_length
-        return ''.join(
-            random.SystemRandom().choice(
-                string.ascii_uppercase + string.digits
-            ) for _ in range(length))
-
     def get_unique_random_code(self):
         for _ in range(MAX_CODE_GEN_RETRIES):
-            code = self.get_random_code()
+            code = self._get_random_code()
             if not self.objects.filter(code=code).exists():
                 return code
 
@@ -104,21 +99,15 @@ class DiscountCode(models.Model):
             self.code = self.get_unique_random_code()
         return super().save(*args, **kwargs)
 
-    def is_user_eligible(self, user):
+    def validate_user(self, user):
+        return not self.get_is_expired() and self._is_user_eligible(user)
+
+    def _is_user_eligible(self, user):
         return not self.is_personal or self.user == user
 
-    def validate_user(self, user):
-        return not self.get_is_expired() and self.is_user_eligible(user)
-
-
-def get_discount(user, item):
-    """ Discount logic for a given item and user
-    :param user: models.User
-    :param item: models.Item
-    :return: models.Discount
-    """
-    discounts = [0]
-    for discount in item.discounts.all():
-        if discount.check_user_applies(user):
-            discounts.append(discount.value)
-    return max(discounts)
+    def _get_random_code(self):
+        length = self._meta.get_field('code').max_length
+        return ''.join(
+            random.SystemRandom().choice(
+                string.ascii_uppercase + string.digits
+            ) for _ in range(length))

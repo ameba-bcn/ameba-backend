@@ -1,8 +1,25 @@
 from django.contrib import admin
-from api.models import Interview, Answer, Question, Artist
+from api.models import Interview, Answer, Question
 from django.forms.models import BaseInlineFormSet
 from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
+
+from django import forms
+from django.forms import ModelForm
+from trumbowyg.widgets import TrumbowygWidget
+
+from api.admin.image import get_image_preview
+
+
+class InterviewAdminForm(ModelForm):
+    introduction = forms.CharField(widget=TrumbowygWidget)
+
+    class Meta:
+        model = Interview
+        fields = ['introduction']
+        widgets = {
+            'text': TrumbowygWidget(),
+        }
 
 
 class ArtistQuestionsInLineFormSet(BaseInlineFormSet):
@@ -33,13 +50,15 @@ class ChoiceInline(admin.TabularInline):
     fields = ('question', 'answer', 'is_active')
 
 
-class ArtistAdmin(admin.ModelAdmin):
+class InterviewAdmin(admin.ModelAdmin):
+    form = InterviewAdminForm
     fieldsets = [
         (None, {'fields': ['title', 'artist', 'introduction', 'image',
                            'thumbnail_preview']}),
     ]
     readonly_fields = ('thumbnail_preview', )
     inlines = [ChoiceInline]
+    list_display = ('title', 'artist', 'list_preview', )
 
     def thumbnail_preview(self, obj):
         if obj.image:
@@ -51,8 +70,12 @@ class ArtistAdmin(admin.ModelAdmin):
     thumbnail_preview.short_description = _('Preview')
     thumbnail_preview.allow_tags = True
 
+    @staticmethod
+    def list_preview(obj):
+        return get_image_preview(obj.image, 75)
 
-admin.site.register(Interview, ArtistAdmin)
+
+admin.site.register(Interview, InterviewAdmin)
 
 
 class QuestionAdmin(admin.ModelAdmin):
@@ -61,4 +84,3 @@ class QuestionAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Question, QuestionAdmin)
-admin.site.register(Artist)
