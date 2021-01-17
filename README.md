@@ -1,10 +1,17 @@
-# ameba-site backend v0.5
+# ameba-site backend v0.6
 
 ### Release notes
+#### 0.6
+- Implementados eventos y saved events:
+    - /api/events/
+    - /api/events/{pk}/
+    - /api/users/current/events/saved/
+- Implementados favoritos.
+- Añadidas fixtures de eventos y admin panel.
 #### 0.5
 - Implementada la botiga:
     - /api/articles/
-    - /api/articles/{pk}
+    - /api/articles/{pk}/
 - Renamed artist to interviews
 - Admin panel mejorado
 - +Testcases

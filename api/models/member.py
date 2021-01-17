@@ -2,7 +2,6 @@ from django.core import exceptions
 from django.contrib.auth import get_user_model
 from django.db import models
 from api.models.membership import Membership
-from api.models.address import Address
 
 
 # Get current user model
@@ -17,12 +16,7 @@ class Member(models.Model):
         blank=True, null=True
     )
     email = models.EmailField()
-    address = models.ForeignKey(
-        Address,
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True
-    )
+    address = models.CharField(max_length=255, blank=True)
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
     phone_number = models.CharField(max_length=10)
