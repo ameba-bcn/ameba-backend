@@ -4,3 +4,4 @@ from api.views.interview import InterviewViewSet
 from api.views.articles import ArticleViewSet
 from api.views.cart import CartViewSet
 from api.views.event import EventViewSet
+from api.views.event import UserSavedEventsViewSet

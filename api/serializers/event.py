@@ -34,3 +34,22 @@ class EventListSerializer(serializers.ModelSerializer):
         model = Event
         fields = ['id', 'name', 'price', 'images', 'discount', 'datetime',
                   'address']
+
+
+class UserSavedEventsListSerializer(serializers.ModelSerializer):
+    event = serializers.SlugRelatedField(source='item', slug_field='id',
+                                         queryset=Event.objects.all())
+
+    class Meta:
+        model = Event.saved_by.through
+        fields = ['event']
+
+    def create(self, validated_data):
+        user = self._get_user()
+        validated_data['user'] = user
+        return super().create(validated_data)
+
+    def _get_user(self):
+        request = self.context.get('request')
+        if request.user.is_authenticated:
+            return request.user
