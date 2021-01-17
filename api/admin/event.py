@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.utils.html import mark_safe
 
-from api.models import Event, Image
+from api.models import Event
+from api.admin.article import DiscountChoiceInLine
 
 
 class ImagesInLine(admin.StackedInline):
@@ -9,6 +10,8 @@ class ImagesInLine(admin.StackedInline):
     verbose_name = 'Image'
     verbose_name_plural = "Images"
     fields = ('image', 'preview')
+    readonly_fields = ('preview', )
+    extra = 0
 
     @staticmethod
     def preview(obj):
@@ -32,7 +35,7 @@ class EventAdmin(admin.ModelAdmin):
     list_display = ['name', 'price', 'datetime', 'address', 'list_acquired_by',
                     'list_saved_by', 'list_preview']
     search_fields = ['name']
-    inlines = (ImagesInLine, )
+    inlines = (ImagesInLine, DiscountChoiceInLine)
 
     @staticmethod
     def list_saved_by(obj):
@@ -42,7 +45,7 @@ class EventAdmin(admin.ModelAdmin):
 
     @staticmethod
     def list_acquired_by(obj):
-        return obj.interested.count()
+        return obj.acquired_by.count()
     list_acquired_by.short_description = 'Acquired by'
     list_acquired_by.allow_tags = True
 

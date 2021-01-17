@@ -834,10 +834,10 @@
     "model": "api.user",
     "pk": 1,
     "fields": {
-      "username": "Group 2 user",
-      "email": "group_2@ameba.cat",
+      "username": "Web User",
+      "email": "web_user@ameba.cat",
       "password": "ameba12345",
-      "groups": [2],
+      "groups": [1],
       "is_active": true
     }
   },
@@ -845,10 +845,10 @@
     "model": "api.user",
     "pk": 2,
     "fields": {
-      "username": "Group 1 user",
-      "email": "group_1@ameba.cat",
+      "username": "Ameba Member",
+      "email": "ameba_member@ameba.cat",
       "password": "ameba12345",
-      "groups": [1],
+      "groups": [2],
       "is_active": true
     }
   },
@@ -856,8 +856,8 @@
     "model": "api.user",
     "pk": 3,
     "fields": {
-      "username": "Groups 1 2",
-      "email": "groups_1_2@ameba.cat",
+      "username": "Web Ameba Member",
+      "email": "web_ameba_member@ameba.cat",
       "password": "ameba12345",
       "groups": [1, 2],
       "is_active": true
@@ -867,35 +867,23 @@
     "model": "api.user",
     "pk": 4,
     "fields": {
-      "username": "All groups",
-      "email": "all_groups@ameba.cat",
+      "username": "Ameba Editor",
+      "email": "ameba_editor@ameba.cat",
       "password": "ameba12345",
-      "groups": [1, 2, 3, 4],
+      "groups": [3],
       "is_active": true
     }
   },
   {
-    "model": "api.discount",
-    "pk": 1,
+    "model": "api.user",
+    "pk": 5,
     "fields": {
-      "name":  "Descompte soci",
-      "value": 20,
-      "items":  [1, 2, 3, 4, 5, 6, 7],
-      "groups": [2],
-      "need_code":  false,
-      "number_of_uses": -1
-    }
-  },
-  {
-    "model": "api.discount",
-    "pk": 2,
-    "fields": {
-      "name": "Descompte aniversari",
-      "value": 10,
-      "items": [1, 2, 3, 4, 5, 6, 7],
-      "groups": [1, 2, 3, 4],
-      "need_code": true,
-      "number_of_uses": -1
+      "username": "Ameba Admin",
+      "email": "ameba_admin@ameba.cat",
+      "password": "ameba12345",
+      "groups": [4],
+      "is_active": true
     }
   }
 ]
+

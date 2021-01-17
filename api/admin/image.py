@@ -12,6 +12,8 @@ def get_image_preview(image, size=150):
 class ImageAdmin(admin.ModelAdmin):
     fields = ('image', 'preview')
     readonly_fields = ['preview', ]
+    list_display = ('image', 'list_preview', )
+    search_fields = ('image', )
 
     @staticmethod
     def preview(obj):
