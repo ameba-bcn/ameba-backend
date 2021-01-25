@@ -26,7 +26,7 @@ class CartItemSerializer(Serializer):
     @staticmethod
     def get_discount_value(cart_item):
         if cart_item['discount']:
-            return f"{cart_item['discount'].value}%"
+            return f"{cart_item['discount'].value}"
         return ''
 
     @staticmethod
