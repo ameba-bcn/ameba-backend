@@ -13,3 +13,4 @@ from api.models.article import Article, ArticleVariant
 from api.models.discount import Discount
 from api.models.cart import Cart, CartItems
 from api.models.event import Event
+from api.models.subscription import Subscription
