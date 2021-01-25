@@ -27,6 +27,10 @@ class Cart(Model):
     created = DateTimeField(auto_now_add=True)
     updated = DateTimeField(auto_now=True)
 
+    def delete(self, using=None, keep_parents=False):
+        self.items.clear()
+        return super().delete(using, keep_parents)
+
     @property
     def total(self):
         total = 0
