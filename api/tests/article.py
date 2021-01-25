@@ -96,7 +96,7 @@ class TestArticle(BaseTest):
                 'name': str,
                 'price': str,
                 'images': [str],
-                'discount': int
+                'discount': str
             }
         ]
 
@@ -198,7 +198,7 @@ class TestArticle(BaseTest):
 
         response = self._get(pk=article.pk, token=token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['discount'], 20)
+        self.assertEqual(response.data['discount'], "20")
 
     def test_no_discount_applied_if_not_authenticated(self):
         user_data = {
@@ -230,7 +230,7 @@ class TestArticle(BaseTest):
 
         response = self._get(pk=article.pk, token=None)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['discount'], 0)
+        self.assertEqual(response.data['discount'], "")
 
     def test_discount_applied_in_list_for_auth_user(self):
         user_data = {
@@ -265,10 +265,10 @@ class TestArticle(BaseTest):
 
         for resp_item in response.data:
             if resp_item['id'] == article.id:
-                self.assertEqual(resp_item['discount'], 20)
+                self.assertEqual(resp_item['discount'], "20")
                 break
             else:
-                self.assertEqual(resp_item['discount'], 0)
+                self.assertEqual(resp_item['discount'], "")
 
     def test_max_discount_is_applied_in_list_when_multiple(self):
         user_data = {
@@ -313,10 +313,10 @@ class TestArticle(BaseTest):
 
         for resp_item in response.data:
             if resp_item['id'] == article.id:
-                self.assertEqual(resp_item['discount'], 30)
+                self.assertEqual(resp_item['discount'], "30")
                 break
             else:
-                self.assertEqual(resp_item['discount'], 0)
+                self.assertEqual(resp_item['discount'], "")
 
     def test_max_discount_is_applied_in_detail_when_multiple(self):
         user_data = {
@@ -358,7 +358,7 @@ class TestArticle(BaseTest):
 
         response = self._get(pk=article.pk, token=token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['discount'], 30)
+        self.assertEqual(response.data['discount'], "30")
 
     def test_discount_not_applies_if_no_remaining_usages(self):
         user_data = {
@@ -390,7 +390,7 @@ class TestArticle(BaseTest):
 
         response = self._get(pk=article.pk, token=token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['discount'], 0)
+        self.assertEqual(response.data['discount'], "")
 
     def test_get_other_items_but_articles_not_listed(self):
         item_data = {
