@@ -24,7 +24,7 @@ class ArticleDetailSerializer(serializers.ModelSerializer):
         user = self.context.get('request').user
         discount_value = article.get_max_discount_value(user)
         if discount_value:
-            return f"{discount_value}%"
+            return f"{discount_value}"
         return ""
 
     class Meta:
@@ -43,7 +43,7 @@ class ArticleListSerializer(serializers.ModelSerializer):
         user = self.context.get('request').user
         discount_value = article.get_max_discount_value(user)
         if discount_value:
-            return f"{discount_value}%"
+            return f"{discount_value}"
         return ""
 
     class Meta:
