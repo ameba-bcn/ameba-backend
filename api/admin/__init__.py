@@ -6,3 +6,4 @@ from api.admin.cart import CartAdmin
 from api.admin.event import EventAdmin
 from api.admin.image import ImageAdmin
 from api.admin.artist import ArtistAdmin
+from api.admin.subscription import SubscriptionAdmin
