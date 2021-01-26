@@ -14,6 +14,9 @@ router.register(r'events', views.EventViewSet, basename='event')
 router.register(r'carts', views.CartViewSet, basename='cart')
 router.register(r'users/current/events/saved', views.UserSavedEventsViewSet,
                 basename='user_saved_events')
+router.register(r'subscriptions', views.SubscriptionViewSet,
+                basename='subscription')
+
 
 urlpatterns = [
     path('', include(router.urls)),
