@@ -810,7 +810,7 @@
     "fields": {
       "name": "Professional",
       "description": "Ameba soci professional",
-      "price": 30.0,
+      "price": 15.0,
       "stock": -1,
       "images": [8],
       "created": "2020-03-06 12:05:01.000001Z",
@@ -823,7 +823,7 @@
     "fields": {
       "name": "Subscriptor",
       "description": "Ameba soci subscriptor",
-      "price": 30.0,
+      "price": 5.0,
       "stock": -1,
       "images": [14],
       "created": "2020-03-06 12:05:01.000001Z",
