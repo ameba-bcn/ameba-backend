@@ -8,16 +8,17 @@ from api import models
 
 class TestSessions(_helpers.BaseTest):
     LIST_ENDPOINT = '/api/token/'
+    DETAIL_ENDPOINT = '/api/token/{id}/'
 
     def login(self, email, password):
         props = {'email': email, 'password': password}
         return self._create(props)
 
-    def delete(self, token='', attrs=None):
+    def delete(self, pk, token=''):
         self.client.credentials(
             HTTP_AUTHORIZATION='Bearer {}'.format(token)
         )
-        return self.client.delete(self.LIST_ENDPOINT, data=attrs)
+        return self.client.delete(self.DETAIL_ENDPOINT.format(id=pk))
 
     @staticmethod
     def get_token(user):
@@ -87,10 +88,9 @@ class TestSessions(_helpers.BaseTest):
             'password': 'mypassword'
         }
         user = self.create_user(**user_attrs)
-        response = self.login(**user_attrs)
+        self.login(**user_attrs)
         token = self.get_token(user)
-        attrs = {'refresh': str(token)}
-        response = self.delete(token.access_token, attrs=attrs)
+        response = self.delete(token, token.access_token)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     @tag("token")
@@ -101,9 +101,8 @@ class TestSessions(_helpers.BaseTest):
         }
         user = self.create_user(**user_attrs)
         token = self.get_token(user)
-        attrs = {'refresh': str(token)}
-        response = self.login(**user_attrs)
-        response = self.delete(attrs={'refresh': str(token)})
+        self.login(**user_attrs)
+        response = self.delete(pk=token)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     @tag("token")
@@ -117,7 +116,6 @@ class TestSessions(_helpers.BaseTest):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         token = self.get_token(user)
-        attrs = {'refresh': str(token)}
-        self.delete(token.access_token, attrs=attrs)
-        response = self.delete(token.access_token, attrs=attrs)
+        self.delete(token, token.access_token)
+        response = self.delete(token, token.access_token)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

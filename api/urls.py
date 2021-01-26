@@ -20,6 +20,7 @@ router.register(r'subscriptions', views.SubscriptionViewSet,
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('token/<token>/', views.TokenView.as_view(), name='token_view'),
     path('token/', views.TokenView.as_view(), name='token_view'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
