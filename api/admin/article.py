@@ -1,5 +1,5 @@
 from django.contrib import admin
-from api.models import Article, ArticleVariant, Image, Discount
+from api.models import Article, ArticleSize, Image, Discount
 from django.forms.models import BaseInlineFormSet
 from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
@@ -14,24 +14,12 @@ class DiscountChoiceInLine(admin.TabularInline):
     fk_name = 'item'
 
 
-class VariantChoiceInline(admin.TabularInline):
-    model = ArticleVariant
+class SizeChoiceInline(admin.TabularInline):
+    model = ArticleSize
     extra = 0
-    verbose_name = 'Variant'
+    verbose_name = 'Size'
     formset = BaseInlineFormSet
-    fields = ('name', 'stock', 'description', 'images', 'preview')
-    readonly_fields = ('preview', )
-
-    def preview(self, obj):
-        img_tag = '<img src="{}" width="75" height="75" style="margin:10px" />'
-        preview = '<div>{images}</div>'
-        images = ''.join(
-            img_tag.format(image.image.url) for image in obj.images.all()
-        )
-        return mark_safe(preview.format(images=images))
-
-    preview.short_description = _('Preview')
-    preview.allow_tags = True
+    fields = ('size', 'genre', 'stock')
 
 
 class ImageChoiceInLine(admin.TabularInline):
@@ -56,7 +44,7 @@ class ArticleAdmin(admin.ModelAdmin):
         (None, {'fields': ['name', 'description', 'price', 'stock',
                            'created', 'updated']})
     ]
-    inlines = [ImageChoiceInLine, VariantChoiceInline, DiscountChoiceInLine]
+    inlines = [ImageChoiceInLine, SizeChoiceInline, DiscountChoiceInLine]
     readonly_fields = ['created', 'updated']
     list_display = ['name', 'price', 'stock', 'description', 'preview']
 
