@@ -24,8 +24,9 @@ class TokenView(TokenObtainPairView):
         return super().get_permissions()
 
     @swagger_auto_schema(request_body=DeleteTokenSerializer)
-    def delete(self, request, *args, **kwargs):
-        serializer = self.get_serializer(request.user, data=request.data)
+    def delete(self, request, token, **kwargs):
+        data = {'refresh': token}
+        serializer = self.get_serializer(request.user, data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return response.Response(status=status.HTTP_204_NO_CONTENT)
