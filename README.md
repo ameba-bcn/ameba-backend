@@ -1,6 +1,17 @@
 # ameba-site backend v0.6
 
 ### Release notes
+
+#### 0.7
+- Current tag para acceder al carro del usuario
+    - (GET,PATCH) /api/carts/current/
+- Cambio de Article.variants a Article.sizes 
+- Subscriptions(Item):
+    - (GET) /api/subscriptions/
+    - (GET) /api/subscriptions/<id>/
+- Implementado nuevo logout:
+    - (DELETE) /api/token/<refresh-token>/
+
 #### 0.6
 - Implementados eventos y saved events:
     - /api/events/
