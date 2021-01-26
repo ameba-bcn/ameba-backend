@@ -6,8 +6,8 @@ from django.contrib.auth.models import Group
 
 from api.tests._helpers import BaseTest, check_structure
 from api.tests.user import BaseUserTest
-from api.models import Article, ArticleVariant, Image
-from api.models import Discount, Item
+from api.models import Article, ArticleSize, Image, Item
+from api.models import Discount
 
 
 class ModelMethods:
@@ -28,7 +28,7 @@ class ModelMethods:
 class ArticleMethods(ModelMethods):
     structure = {
         'name': 'Article {num}',
-        'description': 'Description for item {num}',
+        'description': 'Description for article {num}',
         'price': 25,
         'stock': 10,
         'is_active': None
@@ -47,17 +47,20 @@ class ArticleMethods(ModelMethods):
         return timezone.now()
 
 
-class ArticleVariantMethods(ModelMethods):
+class ArticleSizeMethods(ModelMethods):
     structure = {
-        'name': 'Article variant {num}',
-        'item': None,
-        'stock': None,
-        'description': 'Article variant {num} description'
+        'size': '{num}',
+        'genre': None,
+        'stock': None
     }
 
     @staticmethod
     def get_stock(num):
         return num
+
+    @staticmethod
+    def get_genre(num):
+        return ['unisex', 'women', 'men'][num % 3]
 
 
 class TestArticle(BaseTest):
@@ -70,26 +73,21 @@ class TestArticle(BaseTest):
     @staticmethod
     def populate_data():
         for i in range(1, 20):
-            item_data = ArticleMethods.get_structure(num=i)
-            item = Article.objects.create(**item_data)
+            article_data = ArticleMethods.get_structure(num=i)
+            article = Article.objects.create(**article_data)
 
             for i in range(i % 4):
-                item.images.add(Image.objects.create(image=ImageFile(
+                article.images.add(Image.objects.create(image=ImageFile(
                         open('api/tests/fixtures/media/item-image.jpg', 'rb')
                     )))
 
             for i in range(i % 4):
-                item_variant_data = ArticleVariantMethods.get_structure(i)
-                item_variant_data['item'] = item
-                av = ArticleVariant.objects.create(**item_variant_data)
+                article_size_data = ArticleSizeMethods.get_structure(i)
+                article_size_data['article'] = article
+                av = ArticleSize.objects.create(**article_size_data)
 
-                for i in range(i):
-                    av.images.add(Image.objects.create(image=ImageFile(
-                        open('api/tests/fixtures/media/item-image.jpg', 'rb')
-                    )))
-
-    @tag('item')
-    def test_item_list_has_proper_structure(self):
+    @tag('article')
+    def test_article_list_has_proper_structure(self):
         structure = [
             {
                 'id': int,
@@ -103,65 +101,64 @@ class TestArticle(BaseTest):
         response = self._list(token=None)
         self.assertTrue(check_structure(response.data, structure))
 
-    @tag('item')
-    def test_item_detail_has_proper_structure(self):
+    @tag('article')
+    def test_article_detail_has_proper_structure(self):
         structure = {
             'id': int,
             'name': str,
             'description': str,
             'price': str,
             'stock': int,
-            'variants': [{
-                'name': str,
-                'stock': int,
-                'description': str,
-                'images': [str]
+            'sizes': [{
+                'size': str,
+                'genre': int,
+                'stock': int
             }],
             'images': [str],
             'is_active': bool,
         }
-        items = self._list(token=None).data
-        for item in items:
-            pk = item['id']
+        articles = self._list(token=None).data
+        for article in articles:
+            pk = article['id']
             response = self._get(pk=pk, token=None)
             self.assertTrue(
                 check_structure(response.data, structure),
-                msg=f'Error on item with pk {pk}'
+                msg=f'Error on article with pk {pk}'
             )
 
-    @tag('item')
-    def test_inactive_items_are_not_listed(self):
-        item_data = {
+    @tag('article')
+    def test_inactive_articles_are_not_listed(self):
+        article_data = {
             'name': 'Article',
-            'description': 'Description for item',
+            'description': 'Description for article',
             'price': 25,
             'stock': 10,
             'is_active': True,
         }
-        expired_item_data = dict(item_data)
-        expired_item_data['is_active'] = False
-        expired_item_data['name'] = 'Inactive Article'
-        item = Article.objects.create(**item_data)
-        expired_item = Article.objects.create(**expired_item_data)
+        expired_article_data = dict(article_data)
+        expired_article_data['is_active'] = False
+        expired_article_data['name'] = 'Inactive Article'
+        article = Article.objects.create(**article_data)
+        expired_article = Article.objects.create(**expired_article_data)
 
         response = self._list(token=None)
-        response_ids = [response_item['id'] for response_item in response.data]
+        response_ids = [response_article['id'] for response_article in response.data]
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn(item.id, response_ids)
-        self.assertNotIn(expired_item.id, response_ids)
+        self.assertIn(article.id, response_ids)
+        self.assertNotIn(expired_article.id, response_ids)
 
-    @tag('item')
-    def test_inactive_item_is_no_accessible_by_id(self):
-        expired_item_data = {
+    @tag('article')
+    def test_inactive_article_is_no_accessible_by_id(self):
+        expired_article_data = {
             'name': 'Expired Article',
-            'description': 'Description for item',
+            'description': 'Description for article',
             'price': 25,
             'stock': 10,
             'is_active': False,
         }
-        expired_item = Article.objects.create(**expired_item_data)
+        expired_article = Article.objects.create(**expired_article_data)
 
-        response = self._get(pk=expired_item.id, token=None)
+        response = self._get(pk=expired_article.id, token=None)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_group_discount_applied_in_detail_view_authenticated(self):
@@ -179,7 +176,7 @@ class TestArticle(BaseTest):
 
         article_data = {
             'name': 'Article',
-            'description': 'Description for item',
+            'description': 'Description for article',
             'price': 100,
             'stock': 10,
             'is_active': True
@@ -212,7 +209,7 @@ class TestArticle(BaseTest):
         user.groups.add(ameba_user, ameba_member)
         article_data = {
             'name': 'Article',
-            'description': 'Description for item',
+            'description': 'Description for article',
             'price': 100,
             'stock': 10,
             'is_active': True
@@ -244,7 +241,7 @@ class TestArticle(BaseTest):
         user.groups.add(ameba_user, ameba_member)
         article_data = {
             'name': 'Article',
-            'description': 'Description for item',
+            'description': 'Description for article',
             'price': 100,
             'stock': 10,
             'is_active': True
@@ -263,12 +260,12 @@ class TestArticle(BaseTest):
         response = self._list(token=token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        for resp_item in response.data:
-            if resp_item['id'] == article.id:
-                self.assertEqual(resp_item['discount'], "20")
+        for resp_article in response.data:
+            if resp_article['id'] == article.id:
+                self.assertEqual(resp_article['discount'], "20")
                 break
             else:
-                self.assertEqual(resp_item['discount'], "")
+                self.assertEqual(resp_article['discount'], "")
 
     def test_max_discount_is_applied_in_list_when_multiple(self):
         user_data = {
@@ -282,7 +279,7 @@ class TestArticle(BaseTest):
         user.groups.add(ameba_user, ameba_member)
         article_data = {
             'name': 'Article',
-            'description': 'Description for item',
+            'description': 'Description for article',
             'price': 100,
             'stock': 10,
             'is_active': True
@@ -311,12 +308,12 @@ class TestArticle(BaseTest):
         response = self._list(token=token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        for resp_item in response.data:
-            if resp_item['id'] == article.id:
-                self.assertEqual(resp_item['discount'], "30")
+        for resp_article in response.data:
+            if resp_article['id'] == article.id:
+                self.assertEqual(resp_article['discount'], "30")
                 break
             else:
-                self.assertEqual(resp_item['discount'], "")
+                self.assertEqual(resp_article['discount'], "")
 
     def test_max_discount_is_applied_in_detail_when_multiple(self):
         user_data = {
@@ -330,7 +327,7 @@ class TestArticle(BaseTest):
         user.groups.add(ameba_user, ameba_member)
         article_data = {
             'name': 'Article',
-            'description': 'Description for item',
+            'description': 'Description for article',
             'price': 100,
             'stock': 10,
             'is_active': True
@@ -372,7 +369,7 @@ class TestArticle(BaseTest):
         user.groups.add(ameba_user, ameba_member)
         article_data = {
             'name': 'Article',
-            'description': 'Description for item',
+            'description': 'Description for article',
             'price': 100,
             'stock': 10,
             'is_active': True
