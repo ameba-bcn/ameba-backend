@@ -1,16 +1,13 @@
 from rest_framework import serializers
 
-from api.models import Article, ArticleVariant
+from api.models import Article, ArticleSize
 
 
-class VariantSerializer(serializers.ModelSerializer):
-    images = serializers.SlugRelatedField(
-        many=True, slug_field='url', read_only=True
-    )
+class SizesSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = ArticleVariant
-        fields = ['name', 'stock', 'description', 'images']
+        model = ArticleSize
+        fields = ['size', 'genre', 'stock']
 
 
 class ArticleDetailSerializer(serializers.ModelSerializer):
@@ -18,7 +15,7 @@ class ArticleDetailSerializer(serializers.ModelSerializer):
         many=True, read_only=True, slug_field='url'
     )
     discount = serializers.SerializerMethodField()
-    variants = VariantSerializer(many=True)
+    sizes = SizesSerializer(many=True)
 
     def get_discount(self, article):
         user = self.context.get('request').user
@@ -29,7 +26,7 @@ class ArticleDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Article
-        fields = ['id', 'name', 'description', 'price', 'stock', 'variants',
+        fields = ['id', 'name', 'description', 'price', 'stock', 'sizes',
                   'images', 'is_active', 'discount']
         depth = 1
 
