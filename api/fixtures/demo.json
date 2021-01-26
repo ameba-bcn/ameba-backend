@@ -704,6 +704,14 @@
       "image": "items/demo/ameba-alicia-carrera-workshop-01-1024x1024.png"
     }
   },
+    {
+    "model": "api.image",
+    "pk": 14,
+    "fields": {
+      "image": "items/demo/carnet-subscriptor-500x501.png"
+    }
+  },
+
 
   {
     "model": "api.item",
@@ -800,11 +808,24 @@
     "model": "api.item",
     "pk": 8,
     "fields": {
-      "name": "Fes-te soci",
-      "description": "Ameba soci",
+      "name": "Professional",
+      "description": "Ameba soci professional",
       "price": 30.0,
-      "stock": 12,
+      "stock": -1,
       "images": [8],
+      "created": "2020-03-06 12:05:01.000001Z",
+      "updated": "2020-03-06 12:05:01.000001Z"
+    }
+  },
+  {
+    "model": "api.item",
+    "pk": 14,
+    "fields": {
+      "name": "Subscriptor",
+      "description": "Ameba soci subscriptor",
+      "price": 30.0,
+      "stock": -1,
+      "images": [14],
       "created": "2020-03-06 12:05:01.000001Z",
       "updated": "2020-03-06 12:05:01.000001Z"
     }
@@ -860,10 +881,19 @@
     }
   },
   {
-    "model": "api.article",
+    "model": "api.subscription",
     "pk": 8,
     "fields": {
-      "item_ptr_id": 8
+      "item_ptr_id": 8,
+      "benefits": "Benefits del soci professional."
+    }
+  },
+  {
+    "model": "api.subscription",
+    "pk": 14,
+    "fields": {
+      "item_ptr_id": 14,
+      "benefits": "Benefits del soci subscriptor."
     }
   },
   {
