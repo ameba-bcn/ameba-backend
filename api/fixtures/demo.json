@@ -673,45 +673,45 @@
     "model": "api.image",
     "pk": 9,
     "fields": {
-      "image": "items/demo/parkfest19.png"
+      "image": "items/demo/carnet-subscriptor-500x501.png"
     }
   },
+
   {
     "model": "api.image",
     "pk": 10,
     "fields": {
-      "image": "items/demo/65851320_1042781555915081_1846433318455738368_n.jpg"
+      "image": "items/demo/parkfest19.png"
     }
   },
   {
     "model": "api.image",
     "pk": 11,
     "fields": {
-      "image": "items/demo/67213754_2229994557108707_7569289137988042752_n.jpg"
+      "image": "items/demo/65851320_1042781555915081_1846433318455738368_n.jpg"
     }
   },
   {
     "model": "api.image",
     "pk": 12,
     "fields": {
-      "image": "items/demo/67616229_2274077669367062_2054933820100050944_n.jpg"
+      "image": "items/demo/67213754_2229994557108707_7569289137988042752_n.jpg"
     }
   },
   {
     "model": "api.image",
     "pk": 13,
     "fields": {
-      "image": "items/demo/ameba-alicia-carrera-workshop-01-1024x1024.png"
+      "image": "items/demo/67616229_2274077669367062_2054933820100050944_n.jpg"
     }
   },
-    {
+  {
     "model": "api.image",
     "pk": 14,
     "fields": {
-      "image": "items/demo/carnet-subscriptor-500x501.png"
+      "image": "items/demo/ameba-alicia-carrera-workshop-01-1024x1024.png"
     }
   },
-
 
   {
     "model": "api.item",
@@ -819,13 +819,13 @@
   },
   {
     "model": "api.item",
-    "pk": 14,
+    "pk": 9,
     "fields": {
       "name": "Subscriptor",
       "description": "Ameba soci subscriptor",
       "price": 5.0,
       "stock": -1,
-      "images": [14],
+      "images": [9],
       "created": "2020-03-06 12:05:01.000001Z",
       "updated": "2020-03-06 12:05:01.000001Z"
     }
@@ -889,10 +889,10 @@
     }
   },
   {
-    "model": "api.subscription",
-    "pk": 14,
+    "model":   "api.subscription",
+    "pk": 9,
     "fields": {
-      "item_ptr_id": 14,
+      "item_ptr_id": 9,
       "benefits": "Benefits del soci subscriptor."
     }
   },
@@ -955,7 +955,7 @@
 
 {
   "model": "api.item",
-  "pk": 9,
+  "pk": 10,
   "fields": {
     "name": "AMEBA Parcfest 2019",
     "description": "El 29 de juny torna l’Ameba Parkfest en la seva cinquena edició al Parc de l’Espanya Industrial. Tota una jornada de música electrònica.",
@@ -964,24 +964,6 @@
     "is_active": true,
     "created": "2021-01-17T22:47:06.208Z",
     "updated": "2021-01-17T22:58:06.099Z",
-    "images": [
-      9
-    ],
-    "acquired_by": [],
-    "saved_by": []
-  }
-},
-{
-  "model": "api.item",
-  "pk": 10,
-  "fields": {
-    "name": "El Rouge presens AMEBA DJ's",
-    "description": "Doors open 21h. Per a aquesta ocasió comptarem amb Bill Baggins (Dublab/Rhythm Control) i Noir Renoir (L'Electra). Mandanga de la bona per a dinar i sopar.",
-    "price": "0.00",
-    "stock": 20,
-    "is_active": true,
-    "created": "2021-01-17T22:51:57.342Z",
-    "updated": "2021-01-17T22:57:57.630Z",
     "images": [
       10
     ],
@@ -993,13 +975,13 @@
   "model": "api.item",
   "pk": 11,
   "fields": {
-    "name": "AMEBA Prismática 2019",
-    "description": "Seguim!! El proper dissabte que ve 13 de Juliol i un any més tenim el plaer de formar part de la programació de les festes del Raval! En aquesta ocasió ens mudem a la Plaça Joan Coromines amb activitats per a tota la família: taller de grafiti amb Montana Colors, exhibicions de breakdance i les ja èpiques subhastes de Discos Edison’s.",
-    "price": "6.00",
-    "stock": -1,
+    "name": "El Rouge presens AMEBA DJ's",
+    "description": "Doors open 21h. Per a aquesta ocasió comptarem amb Bill Baggins (Dublab/Rhythm Control) i Noir Renoir (L'Electra). Mandanga de la bona per a dinar i sopar.",
+    "price": "0.00",
+    "stock": 20,
     "is_active": true,
-    "created": "2021-01-17T22:55:46.540Z",
-    "updated": "2021-01-17T22:55:46.540Z",
+    "created": "2021-01-17T22:51:57.342Z",
+    "updated": "2021-01-17T22:57:57.630Z",
     "images": [
       11
     ],
@@ -1011,13 +993,13 @@
   "model": "api.item",
   "pk": 12,
   "fields": {
-    "name": "Ameba als Clubs (Razzmatazz): Vise – Not on Earth – Ameba DJS",
-    "description": "El proper dissabte dia 10 tornem a la sala Lolita de Razzmatazz amb un nova nit d’Ameba als Clubs. En aquesta ocasió comptarem amb els directes dels socis barcelonins VISE i Not On Earth. Propostes que tenen els sons electrònics com a punt de partida però sense deixar de buscar l’equilibri entre l’orgànic i el sintètic. Completen la nit el set de Bill Baggins i el B2B de Noir Renoir i Bob Ventura.",
-    "price": "0.00",
+    "name": "AMEBA Prismática 2019",
+    "description": "Seguim!! El proper dissabte que ve 13 de Juliol i un any més tenim el plaer de formar part de la programació de les festes del Raval! En aquesta ocasió ens mudem a la Plaça Joan Coromines amb activitats per a tota la família: taller de grafiti amb Montana Colors, exhibicions de breakdance i les ja èpiques subhastes de Discos Edison’s.",
+    "price": "6.00",
     "stock": -1,
     "is_active": true,
-    "created": "2021-01-17T23:01:26.820Z",
-    "updated": "2021-01-17T23:01:26.820Z",
+    "created": "2021-01-17T22:55:46.540Z",
+    "updated": "2021-01-17T22:55:46.540Z",
     "images": [
       12
     ],
@@ -1029,6 +1011,24 @@
   "model": "api.item",
   "pk": 13,
   "fields": {
+    "name": "Ameba als Clubs (Razzmatazz): Vise – Not on Earth – Ameba DJS",
+    "description": "El proper dissabte dia 10 tornem a la sala Lolita de Razzmatazz amb un nova nit d’Ameba als Clubs. En aquesta ocasió comptarem amb els directes dels socis barcelonins VISE i Not On Earth. Propostes que tenen els sons electrònics com a punt de partida però sense deixar de buscar l’equilibri entre l’orgànic i el sintètic. Completen la nit el set de Bill Baggins i el B2B de Noir Renoir i Bob Ventura.",
+    "price": "0.00",
+    "stock": -1,
+    "is_active": true,
+    "created": "2021-01-17T23:01:26.820Z",
+    "updated": "2021-01-17T23:01:26.820Z",
+    "images": [
+      13
+    ],
+    "acquired_by": [],
+    "saved_by": []
+  }
+},
+{
+  "model": "api.item",
+  "pk": 14,
+  "fields": {
     "name": "Autoedició i distribució musical by Alicia Carrera",
     "description": "Tornem de vacances amb un nou taller de la mà d’Alicia Carrera, ex-label manager d’Hivern Discs, dj i moltes coses més, on ens explicarà com funciona la distribució d’una producció musical, com generar una identitat artística, de quines plataformes disposem i com operen.",
     "price": "15.00",
@@ -1037,7 +1037,7 @@
     "created": "2021-01-17T23:04:00.274Z",
     "updated": "2021-01-17T23:09:41.794Z",
     "images": [
-      13
+      14
     ],
     "acquired_by": [],
     "saved_by": []
@@ -1047,8 +1047,9 @@
 
 {
   "model": "api.event",
-  "pk": 9,
+  "pk": 10,
   "fields": {
+    "item_ptr_id": 10,
     "datetime": "2019-06-19T13:00:00Z",
     "address": "Parc de l'Espanya Industrial",
     "artists": []
@@ -1056,8 +1057,9 @@
 },
 {
   "model": "api.event",
-  "pk": 10,
+  "pk": 11,
   "fields": {
+    "item_ptr_id": 11,
     "datetime": "2019-07-11T18:00:00Z",
     "address": "Carrer del Poeta Cabanyes, 21, 08004 Barcelona",
     "artists": []
@@ -1065,8 +1067,9 @@
 },
 {
   "model": "api.event",
-  "pk": 11,
+  "pk": 12,
   "fields": {
+    "item_ptr_id": 12,
     "datetime": "2019-07-13T20:00:00Z",
     "address": "Plaça Joan Coromines, Barcelona",
     "artists": []
@@ -1074,8 +1077,9 @@
 },
 {
   "model": "api.event",
-  "pk": 12,
+  "pk": 13,
   "fields": {
+    "item_ptr_id": 13,
     "datetime": "2019-08-10T00:00:00Z",
     "address": "RAZZMATAZZ, Carrer dels Almogàvers, 122, 08018 Barcelona",
     "artists": []
@@ -1083,8 +1087,9 @@
 },
   {
     "model": "api.event",
-    "pk": 13,
+    "pk": 14,
     "fields": {
+      "item_ptr_id": 14,
       "datetime": "2019-10-25T18:30:00Z",
       "address": "Centre Cultural Albareda - C/ Albareda 22",
       "artists": []
