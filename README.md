@@ -19,6 +19,7 @@
     - /api/users/current/events/saved/
 - Implementados favoritos.
 - Añadidas fixtures de eventos y admin panel.
+
 #### 0.5
 - Implementada la botiga:
     - /api/articles/
