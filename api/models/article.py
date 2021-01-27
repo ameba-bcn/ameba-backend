@@ -12,11 +12,15 @@ GENRE_CHOICES = (
 
 class Article(Item):
 
-    def get_stock(self):
-        if stock := self.sizes.aggregate(Sum('stock'))['stock__sum'] > 0:
-            return stock
-        else:
-            return self.stock
+    @property
+    def total_stock(self):
+        if self.sizes.all().exists():
+            return self.sizes.aggregate(Sum('stock'))['stock__sum']
+        return self.stock
+
+    @property
+    def has_stock(self):
+        return bool(self.total_stock)
 
 
 class ArticleSize(models.Model):
