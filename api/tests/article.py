@@ -85,6 +85,7 @@ class TestArticle(BaseTest):
                 article_size_data = ArticleSizeMethods.get_structure(i)
                 article_size_data['article'] = article
                 av = ArticleSize.objects.create(**article_size_data)
+                article.sizes.add(av)
 
     @tag('article')
     def test_article_list_has_proper_structure(self):
@@ -416,3 +417,57 @@ class TestArticle(BaseTest):
         item = Item.objects.create(**item_data)
         response = self._get(pk=item.id, token=None)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_stock_is_article_stock_if_there_is_no_sizes(self):
+        article = Article.objects.create(**{
+            'name': 'Article',
+            'description': 'Description for article',
+            'price': 25,
+            'stock': 5
+        })
+
+        response = self._get(pk=article.id)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['stock'], 5)
+
+    def test_stock_is_computed_from_sizes_if_there_are_sizes(self):
+        article = Article.objects.create(**{
+            'name': 'Article',
+            'description': 'Description for article',
+            'price': 25,
+            'stock': 5
+        })
+        stocks = [2, 4, 6]
+        for stock in stocks:
+            size = ArticleSize.objects.create(**{
+                'size': 'm',
+                'genre': 'men',
+                'stock': stock,
+                'article': article
+            })
+            article.sizes.add(size)
+
+        response = self._get(pk=article.id)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['stock'], sum(stocks))
+
+    def test_stock_is_zero_if_computed_from_sizes_is_zero(self):
+        article = Article.objects.create(**{
+            'name': 'Article',
+            'description': 'Description for article',
+            'price': 25,
+            'stock': 5
+        })
+        stocks = [0, 0, 0]
+        for stock in stocks:
+            size = ArticleSize.objects.create(**{
+                'size': 'm',
+                'genre': 'men',
+                'stock': stock,
+                'article': article
+            })
+            article.sizes.add(size)
+
+        response = self._get(pk=article.id)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['stock'], sum(stocks))
