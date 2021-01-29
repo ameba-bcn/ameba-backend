@@ -36,14 +36,14 @@ class Question(models.Model):
 class Answer(models.Model):
     interview = models.ForeignKey(
         'api.Interview',
-        on_delete=models.DO_NOTHING,
+        on_delete=models.CASCADE,
         related_name='answers',
         verbose_name=_('interview')
     )
     answer = models.TextField(max_length=1000, verbose_name=_('answer'))
     question = models.ForeignKey(
         to='Question',
-        on_delete=models.DO_NOTHING,
+        on_delete=models.CASCADE,
         verbose_name=_('question')
     )
     is_active = models.BooleanField(default=True)
