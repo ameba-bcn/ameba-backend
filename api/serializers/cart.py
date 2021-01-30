@@ -63,7 +63,8 @@ class CartSerializer(ModelSerializer):
 
     class Meta:
         model = Cart
-        fields = ('id', 'user', 'total', 'count', 'cart_items', 'items')
+        fields = ('id', 'user', 'total', 'count', 'cart_items', 'items',
+                  'discount_code')
         read_only_fields = ('user', 'id', 'total', 'count', 'cart_items')
 
     def _get_user(self):
@@ -84,6 +85,8 @@ class CartSerializer(ModelSerializer):
         if 'items' in validated_data:
             instance.items.clear()
             self._add_cart_items(instance, validated_data['items'])
+        if 'discount_code' in validated_data:
+            instance.discount_code = validated_data.get('discount_code')
         instance.save()
         return instance
 
