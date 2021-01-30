@@ -27,7 +27,7 @@ class ArticleSize(models.Model):
     size = models.CharField(max_length=3)
     genre = models.CharField(max_length=6, choices=GENRE_CHOICES, blank=True)
     article = models.ForeignKey(
-        to=Article, on_delete=models.DO_NOTHING, related_name='sizes'
+        to=Article, on_delete=models.CASCADE, related_name='sizes'
     )
     stock = models.IntegerField()
 

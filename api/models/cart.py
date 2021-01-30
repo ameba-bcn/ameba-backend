@@ -2,14 +2,14 @@ import time
 import uuid
 
 from django.db.models import (
-    DO_NOTHING, Model, ForeignKey, ManyToManyField, CharField, OneToOneField,
-    UUIDField, DateTimeField
+    Model, ForeignKey, ManyToManyField, CharField, OneToOneField,
+    UUIDField, DateTimeField, SET_NULL, CASCADE
 )
 
 
 class CartItems(Model):
-    item = ForeignKey(to='Item', on_delete=DO_NOTHING)
-    cart = ForeignKey(to='Cart', on_delete=DO_NOTHING)
+    item = ForeignKey(to='Item', on_delete=CASCADE)
+    cart = ForeignKey(to='Cart', on_delete=CASCADE)
 
     @property
     def discount(self):
@@ -22,10 +22,12 @@ class CartItems(Model):
 
 class Cart(Model):
     id = UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = OneToOneField(to='User', on_delete=DO_NOTHING, blank=True,null=True)
+    user = OneToOneField(to='User', on_delete=CASCADE, blank=True, null=True)
     items = ManyToManyField(to='Item', through='CartItems')
     created = DateTimeField(auto_now_add=True)
     updated = DateTimeField(auto_now=True)
+    discount_code = ForeignKey(to='DiscountCode', on_delete=SET_NULL,
+                               blank=True, null=True)
 
     def delete(self, using=None, keep_parents=False):
         self.items.clear()
@@ -34,7 +36,7 @@ class Cart(Model):
     @property
     def total(self):
         total = 0
-        for cart_item in self.cart_items:
+        for cart_item in self.compute_discounts():
             if discount := cart_item['discount']:
                 fraction = 1 - discount.value / 100.
             else:
@@ -75,7 +77,7 @@ class Cart(Model):
 
     def discounts_by_value_desc(self, item):
         if self.user:
-            valid_dis = item.get_valid_discounts(self.user)
+            valid_dis = item.get_valid_discounts(self.user, self.discount_code)
             return sorted(valid_dis, key=lambda x: x.value, reverse=True)
         return []
 
