@@ -52,9 +52,8 @@ class Discount(models.Model):
 
     @staticmethod
     def _user_match_code(user, code):
-        if code and DiscountCode.objects.filter(code=code).exists():
-            code_obj = DiscountCode.objects.get(code=code)
-            return code_obj.validate_user(user)
+        if code:
+            return code.validate_user(user)
         return False
 
     def _user_match_groups(self, user):
@@ -73,7 +72,8 @@ class Discount(models.Model):
 
 
 class DiscountCode(models.Model):
-    code = models.CharField(max_length=6, default=get_random_code, unique=True)
+    code = models.CharField(max_length=6, default=get_random_code,
+                            primary_key=True)
     user = models.ForeignKey(to='User', on_delete=models.CASCADE,
                              blank=True)
     discount = models.ForeignKey(to='Discount',
@@ -82,6 +82,14 @@ class DiscountCode(models.Model):
     created = models.DateField(auto_now_add=True)
     days_period = models.IntegerField(default=30, blank=True)
     is_expired = models.BooleanField(default=False)
+
+    def __str__(self):
+        return '{code} ({discount})'.format(code=self.code,
+                                            discount=self.discount)
+
+    @property
+    def expired(self):
+        return self.get_is_expired()
 
     @property
     def is_personal(self):

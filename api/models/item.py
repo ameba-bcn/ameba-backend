@@ -54,6 +54,10 @@ class Item(models.Model):
         :return: Generator
         """
         for discount in self.discounts.all():
-            if discount.check_user_applies(user, code):
-                yield discount
+            if (
+                (discount.need_code and code and discount == code.discount)
+                or not discount.need_code
+            ):
+                if discount.check_user_applies(user, code):
+                    yield discount
 
