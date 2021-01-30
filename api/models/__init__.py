@@ -10,7 +10,7 @@ from api.models.membership import Membership
 from api.models.artist import Artist
 from api.models.interview import Interview, Answer, Question
 from api.models.article import Article, ArticleSize
-from api.models.discount import Discount
+from api.models.discount import Discount, DiscountCode
 from api.models.cart import Cart, CartItems
 from api.models.event import Event
 from api.models.subscription import Subscription

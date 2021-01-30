@@ -37,7 +37,7 @@ class CartAdmin(admin.ModelAdmin):
     list_display_links = ('user',)
     list_display = ('user', 'id')
     fieldsets = [
-        (None, {'fields': ['id', 'user', 'total']})
+        (None, {'fields': ['id', 'user', 'total', 'discount_code']})
     ]
     inlines = (CartItemTabular, )
     readonly_fields = ['id', 'total', 'cart_items']
