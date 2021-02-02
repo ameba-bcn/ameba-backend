@@ -7,12 +7,11 @@ User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
     member = serializers.PrimaryKeyRelatedField(read_only=True)
-    is_active = serializers.BooleanField(required=False)
     date_joined = serializers.DateTimeField(required=False)
 
     class Meta:
         model = User
         extra_kwargs = {'password': {'write_only': True}}
         fields = [
-            'username', 'password', 'email', 'member', 'is_active', 'date_joined'
+            'username', 'password', 'email', 'member', 'date_joined'
         ]

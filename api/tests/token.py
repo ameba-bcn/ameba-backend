@@ -28,6 +28,7 @@ class TestSessions(_helpers.BaseTest):
         username = email.split('@')[0]
         props = {'email': email, 'password': password, 'username': username}
         user = models.User.objects.create(**props)
+        user.activate()
         return user
 
     @tag("token")

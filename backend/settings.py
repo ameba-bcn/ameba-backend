@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
-
+from envs import env
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -144,8 +144,8 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
     'UPDATE_LAST_LOGIN': False,
@@ -181,3 +181,18 @@ LOCATION_FIELD = {
     'provider.openstreetmap.max_zoom': 18,
 }
 
+# EMAIL CONFIG
+
+ACTIVATION_URL = 'activate/{token}/'
+EMAIL_BACKEND = env(
+    'EMAIL_BACKEND',
+    'django.core.mail.backends.smtp.EmailBackend',
+    var_type='string'
+)
+DEFAULT_FROM_EMAIL = 'noreply@ameba.cat'
+EMAIL_HOST = env("EMAIL_HOST", '', var_type='string')
+EMAIL_HOST_USER = env("EMAIL_HOST_USER", '', var_type='string')
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", '', var_type='string')
+EMAIL_PORT = env("EMAIL_PORT", 465, var_type='integer')
+EMAIL_USE_SSL = env("EMAIL_USE_SSL", True, var_type='boolean')
+PROFILE_VERSION = 8
