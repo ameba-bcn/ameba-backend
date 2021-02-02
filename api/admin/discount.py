@@ -1,5 +1,5 @@
 from django.contrib import admin
-from api.models import Discount
+from api.models import Discount, DiscountCode
 
 
 class DiscountAdmin(admin.ModelAdmin):
@@ -11,3 +11,11 @@ class DiscountAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Discount, DiscountAdmin)
+
+
+class DiscountCodeAdmin(admin.ModelAdmin):
+    fields = ['code', 'user', 'discount', 'days_period', 'is_expired']
+    readonly_fields = ['is_expired']
+
+
+admin.site.register(DiscountCode, DiscountCodeAdmin)

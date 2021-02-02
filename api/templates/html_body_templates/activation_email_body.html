@@ -1,0 +1,16 @@
+{% load i18n %}{% autoescape off %}
+<h1>
+    {% blocktrans %}Bienvenido a AMEBA!{% endblocktrans %} {{ site_name }}.
+</h1>
+<p>
+{% trans "Por favor, accede a " %}
+<a href="{{ protocol }}://{{ domain }}/{{ url }}">este</a>
+{% trans " link para activar tu cuenta:" %}
+</p>
+<p>
+{% trans "Gracias!" %}
+</p>
+<p>
+{% blocktrans %}AMEBA{% endblocktrans %}
+</p>
+{% endautoescape %}
