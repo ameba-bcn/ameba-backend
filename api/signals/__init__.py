@@ -5,6 +5,7 @@ from django.contrib.auth.models import Group
 
 from api import models
 from api.groups import DEFAULT_GROUP, MEMBER_GROUP
+from api.signals.emails import user_registered
 
 
 def populate_models(sender, **kwargs):

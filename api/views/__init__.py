@@ -6,3 +6,4 @@ from api.views.cart import CartViewSet
 from api.views.event import EventViewSet
 from api.views.event import UserSavedEventsViewSet
 from api.views.subscription import SubscriptionViewSet
+from api.views.activation import my_view
