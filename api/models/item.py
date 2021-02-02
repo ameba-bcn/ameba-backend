@@ -35,24 +35,29 @@ class Item(models.Model):
     def __str__(self):
         return self.name
 
-    def get_max_discount_value(self, user):
+    def get_max_discount_value(self, user, code=None):
         """ Get max discount value among valid discounts for given user
         :param user: models.User
         :return: Integer with max of the applicable discounts for given user
         """
-        vd = list(map(lambda x: x.value, self.get_valid_discounts(user)))
+        vd = list(map(lambda x: x.value, self.get_valid_discounts(user, code)))
         # Has valid discounts
         if vd:
             return max(vd)
         return 0
 
-    def get_valid_discounts(self, user):
+    def get_valid_discounts(self, user, code=None):
         """
         Get valid discounts for given user.
         :param user: models.User
+        :param code: models.DiscountCode id
         :return: Generator
         """
         for discount in self.discounts.all():
-            if discount.check_user_applies(user):
-                yield discount
+            if (
+                (discount.need_code and code and discount == code.discount)
+                or not discount.need_code
+            ):
+                if discount.check_user_applies(user, code):
+                    yield discount
 
