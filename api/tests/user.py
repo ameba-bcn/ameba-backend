@@ -16,19 +16,18 @@ class BaseUserTest(_helpers.BaseTest):
     @staticmethod
     def _insert_user(props):
         user = User.objects.create_user(**props)
+        user.activate()
         refresh = RefreshToken.for_user(user)
         return user, refresh.access_token
 
     def _check_is_user(self, expected, response_data):
         self.assertIn('username', response_data)
         self.assertIn('email', response_data)
-        self.assertIn('is_active', response_data)
         self.assertIn('date_joined', response_data)
         self.assertIn('member', response_data)
 
         self.assertEqual(response_data['username'], expected['username'])
         self.assertEqual(response_data['email'], expected['email'])
-        self.assertIs(response_data['is_active'], expected['is_active'])
         self.assertIs(response_data['member'], expected['member'])
 
 
@@ -56,7 +55,6 @@ class UserTest(BaseUserTest):
         expected = {
             'username': user_props.get('username'),
             'email': user_props.get('email'),
-            'is_active': False,
             'date_joined': None,
             'member': None
         }
@@ -67,13 +65,11 @@ class UserTest(BaseUserTest):
 
         self.assertIn('username', resp_data)
         self.assertIn('email', resp_data)
-        self.assertIn('is_active', resp_data)
         self.assertIn('date_joined', resp_data)
         self.assertIn('member', resp_data)
 
         self.assertEqual(resp_data['username'], expected['username'])
         self.assertEqual(resp_data['email'], expected['email'])
-        self.assertIs(resp_data['is_active'], expected['is_active'])
         self.assertIs(resp_data['member'], expected['member'])
 
     @tag("user")
@@ -125,7 +121,6 @@ class UserTest(BaseUserTest):
         expected = {
             'username': user_props.get('username'),
             'email': user_props.get('email'),
-            'is_active': False,
             'date_joined': None,
             'member': 1
         }
@@ -136,13 +131,11 @@ class UserTest(BaseUserTest):
 
         self.assertIn('username', resp_data)
         self.assertIn('email', resp_data)
-        self.assertIn('is_active', resp_data)
         self.assertIn('date_joined', resp_data)
         self.assertIn('member', resp_data)
 
         self.assertEqual(resp_data['username'], expected['username'])
         self.assertEqual(resp_data['email'], expected['email'])
-        self.assertIs(resp_data['is_active'], expected['is_active'])
         self.assertIs(resp_data['member'], expected['member'])
 
     @tag("user")
@@ -176,3 +169,14 @@ class UserTest(BaseUserTest):
         self.assertEqual(
             response.status_code, status.HTTP_401_UNAUTHORIZED
         )
+
+    def test_post_new_user_with_is_active_have_no_effect(self):
+        user_props = {
+            'username': 'Ameba User',
+            'password': 'MyPassword',
+            'email': 'new_not_active_user@ameba.cat',
+            # 'is_active': True
+        }
+        self._create(user_props)
+        user = User.objects.get(email='new_not_active_user@ameba.cat')
+        self.assertFalse(user.is_active)

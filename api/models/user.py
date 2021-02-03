@@ -13,7 +13,7 @@ class User(AbstractUser):
     last_name = None
     username = models.CharField(_('name'), max_length=150)
     email = models.EmailField(_('email'), unique=True)
-
+    is_active = models.BooleanField(_('active'), default=False)
     # Attributes
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
@@ -34,3 +34,7 @@ class User(AbstractUser):
 
     def is_member(self):
         return api_models.Member.objects.filter(user=self.id).exists()
+
+    def activate(self):
+        self.is_active = True
+        self.save()

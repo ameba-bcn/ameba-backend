@@ -23,13 +23,11 @@ class CurrentUserTest(BaseUserTest):
         user_props = {
             'username': 'Ameba User',
             'password': 'MyPassword',
-            'email': 'amebauser1@ameba.cat',
-            'is_active': True
+            'email': 'amebauser1@ameba.cat'
         }
         expected = {
             'username': user_props.get('username'),
             'email': user_props.get('email'),
-            'is_active': True,
             'date_joined': None,
             'member': None
         }
@@ -47,13 +45,11 @@ class CurrentUserTest(BaseUserTest):
 
         self.assertIn('username', resp_data)
         self.assertIn('email', resp_data)
-        self.assertIn('is_active', resp_data)
         self.assertIn('date_joined', resp_data)
         self.assertIn('member', resp_data)
 
         self.assertEqual(resp_data['username'], new_props['username'])
         self.assertEqual(resp_data['email'], expected['email'])
-        self.assertIs(resp_data['is_active'], expected['is_active'])
         self.assertIs(resp_data['member'], expected['member'])
 
     @tag("current_user")
@@ -102,13 +98,11 @@ class CurrentUserTest(BaseUserTest):
         user_props = {
             'username': 'Ameba User',
             'password': 'MyPassword',
-            'email': 'amebauser1@ameba.cat',
-            'is_active': True
+            'email': 'amebauser1@ameba.cat'
         }
         expected = {
             'username': user_props.get('username'),
             'email': user_props.get('email'),
-            'is_active': True,
             'date_joined': None,
             'member': None
         }
@@ -161,20 +155,17 @@ class CurrentUserTest(BaseUserTest):
         user_a_props = {
             'username': 'Ameba User',
             'password': 'MyPassword',
-            'email': 'amebauser1@ameba.cat',
-            'is_active': True
+            'email': 'amebauser1@ameba.cat'
         }
         current_user_props = {
             'username': 'Current User',
             'password': 'MyPassword',
-            'email': 'currentuser@ameba.cat',
-            'is_active': True
+            'email': 'currentuser@ameba.cat'
         }
         expected_user_props = {
             'username': 'Current User',
             'member': None,
-            'email': 'currentuser@ameba.cat',
-            'is_active': True
+            'email': 'currentuser@ameba.cat'
         }
 
         other, other_token = self._insert_user(user_a_props)
@@ -192,14 +183,12 @@ class CurrentUserTest(BaseUserTest):
         user_a_props = {
             'username': 'Ameba User',
             'password': 'MyPassword',
-            'email': 'amebauser1@ameba.cat',
-            'is_active': True
+            'email': 'amebauser1@ameba.cat'
         }
         current_user_props = {
             'username': 'Current User',
             'password': 'MyPassword',
-            'email': 'currentuser@ameba.cat',
-            'is_active': True
+            'email': 'currentuser@ameba.cat'
         }
         user_a, access_token_a = self._insert_user(user_a_props)
         cur_user, access_token = self._insert_user(current_user_props)
@@ -211,14 +200,12 @@ class CurrentUserTest(BaseUserTest):
         user_a_props = {
             'username': 'Ameba User',
             'password': 'MyPassword',
-            'email': 'amebauser1@ameba.cat',
-            'is_active': True
+            'email': 'amebauser1@ameba.cat'
         }
         current_user_props = {
             'username': 'Current User',
             'password': 'MyPassword',
-            'email': 'currentuser@ameba.cat',
-            'is_active': True
+            'email': 'currentuser@ameba.cat'
         }
 
         update_props = {
@@ -237,14 +224,12 @@ class CurrentUserTest(BaseUserTest):
         user_a_props = {
             'username': 'Ameba User',
             'password': 'MyPassword',
-            'email': 'amebauser1@ameba.cat',
-            'is_active': True
+            'email': 'amebauser1@ameba.cat'
         }
         current_user_props = {
             'username': 'Current User',
             'password': 'MyPassword',
-            'email': 'currentuser@ameba.cat',
-            'is_active': True
+            'email': 'currentuser@ameba.cat'
         }
 
         user_a, access_token_a = self._insert_user(user_a_props)
