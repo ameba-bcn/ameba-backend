@@ -14,7 +14,7 @@ class CartItems(Model):
     @property
     def discount(self):
         if discount := list(filter(
-            lambda x: x['cart_item'] == self, self.cart.compute_discounts()
+            lambda x: x['cart_item'] == self, self.cart.get_cart_items_with_discounts()
         )):
             return discount[0]['discount']
         return 0
@@ -35,20 +35,24 @@ class Cart(Model):
 
     @property
     def total(self):
-        total = 0
-        for cart_item in self.compute_discounts():
+        return f'{self.amount} €'
+
+    @property
+    def amount(self):
+        amount = 0
+        for cart_item in self.get_cart_items_with_discounts():
             if discount := cart_item['discount']:
-                fraction = 1 - discount.value / 100.
+                fraction = 1. - discount.value / 100.
             else:
                 fraction = 1.
-            total += float(cart_item['item'].price) * fraction
-        return f'{total} €'
+            amount += float(cart_item['item'].price) * fraction
+        return amount
 
     @property
     def cart_items(self):
-        return self.compute_discounts()
+        return self.get_cart_items_with_discounts()
 
-    def compute_discounts(self):
+    def get_cart_items_with_discounts(self):
         cart_discounts = []
         discounts = []
         cart_items_by_price = self.cart_items_by_price_desc()
@@ -87,3 +91,9 @@ class Cart(Model):
 
     def get_cart_items(self):
         return self.items.through.objects.filter(cart=self)
+
+    def checkout(self):
+        pass
+
+    def is_empty(self):
+        return self.get_cart_items().exist()
