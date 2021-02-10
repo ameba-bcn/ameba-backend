@@ -58,7 +58,7 @@ class CartSerializer(ModelSerializer):
     count = SerializerMethodField()
     items = SlugRelatedField(
         many=True, write_only=True, queryset=Item.objects.all(),
-        slug_field='id'
+        slug_field='id', required=False
     )
 
     class Meta:
@@ -108,3 +108,24 @@ class CartSerializer(ModelSerializer):
             old_cart = Cart.objects.get(user=user)
             old_cart.items.clear()
             old_cart.delete()
+
+
+class CartItemSummarySerializer(CartItemSerializer):
+    id = None
+    preview = None
+
+
+class CartSummarySerializer(CartSerializer):
+    cart_items = CartItemSummarySerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Cart
+        fields = ('id', 'user', 'amount', 'total', 'cart_items')
+
+    @property
+    def username(self):
+        return self.instance.user.username
+
+    @property
+    def email(self):
+        return self.instance.user.email
