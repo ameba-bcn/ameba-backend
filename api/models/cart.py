@@ -92,8 +92,5 @@ class Cart(Model):
     def get_cart_items(self):
         return self.items.through.objects.filter(cart=self)
 
-    def checkout(self):
-        pass
-
     def is_empty(self):
-        return self.get_cart_items().exist()
+        return not self.get_cart_items().exists()
