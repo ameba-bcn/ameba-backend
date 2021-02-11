@@ -35,17 +35,19 @@ urlpatterns = [
 
 
 if settings.DEBUG:
+    from api.docs.schema_generator import CustomOpenAPISchemaGenerator
     schema_view = get_schema_view(
-       openapi.Info(
-          title="Ameba API Spec",
-          default_version='v1',
-          description="",
-          terms_of_service="https://www.google.com/policies/terms/",
-          contact=openapi.Contact(email="jonrivala@gmail.com"),
-          license=openapi.License(name="BSD License"),
-       ),
-       public=True,
-       permission_classes=(permissions.AllowAny,),
+        openapi.Info(
+            title="Ameba API Spec",
+            default_version='v1',
+            description="",
+            terms_of_service="https://www.google.com/policies/terms/",
+            contact=openapi.Contact(email="jonrivala@gmail.com"),
+            license=openapi.License(name="BSD License"),
+        ),
+        public=True,
+        permission_classes=(permissions.AllowAny,),
+        generator_class=CustomOpenAPISchemaGenerator
     )
 
     urlpatterns = urlpatterns + [
