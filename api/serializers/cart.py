@@ -115,17 +115,30 @@ class CartItemSummarySerializer(CartItemSerializer):
     preview = None
 
 
-class CartSummarySerializer(CartSerializer):
+class CartCheckoutSerializer(CartSerializer):
     cart_items = CartItemSummarySerializer(many=True, read_only=True)
+    email = SerializerMethodField()
+    checkout = SerializerMethodField()
 
     class Meta:
         model = Cart
-        fields = ('id', 'user', 'amount', 'total', 'cart_items')
+        fields = ('user', 'email', 'total', 'amount', 'cart_items',
+                  'checkout')
 
     @property
     def username(self):
         return self.instance.user.username
 
-    @property
-    def email(self):
-        return self.instance.user.email
+    @staticmethod
+    def get_email(instance):
+        return instance.user.email
+
+    @staticmethod
+    def get_checkout(instance):
+        return {
+            "payment_intent": {
+                "id": instance.checkout_details["payment_intent"]["id"],
+                "client_secret": instance.checkout_details["payment_intent"][
+                    "client_secret"],
+            }
+        }

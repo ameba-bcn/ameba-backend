@@ -7,9 +7,10 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 
 from api.permissions import CartPermission
-from api.serializers import CartSerializer, CheckoutSerializer
-from api.models import Cart, Checkout
+from api.serializers import CartSerializer, CartCheckoutSerializer
+from api.models import Cart
 from api.exceptions import CartIsEmpty
+from api.stripe import get_create_update_payment_intent
 
 CURRENT_KEY = 'current'
 
@@ -23,7 +24,7 @@ class CartViewSet(
 
     def get_serializer_class(self):
         if self.action == 'checkout':
-            self.serializer_class = CheckoutSerializer
+            self.serializer_class = CartCheckoutSerializer
         return super().get_serializer_class()
 
     def get_object(self):
@@ -55,8 +56,6 @@ class CartViewSet(
     @action(detail=True, methods=['GET'])
     def checkout(self, request, *args, **kwargs):
         cart = self.get_object()
-        if cart.is_empty():
-            raise CartIsEmpty
-        checkout, created = Checkout.objects.get_or_create(cart=cart)
+        cart.checkout()
         serializer_class = self.get_serializer_class()
-        return Response(serializer_class(checkout).data)
+        return Response(serializer_class(cart).data)

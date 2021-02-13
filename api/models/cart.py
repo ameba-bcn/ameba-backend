@@ -1,10 +1,12 @@
-import time
 import uuid
 
 from django.db.models import (
-    Model, ForeignKey, ManyToManyField, CharField, OneToOneField,
+    Model, ForeignKey, ManyToManyField, JSONField, OneToOneField,
     UUIDField, DateTimeField, SET_NULL, CASCADE
 )
+
+from api.stripe import get_create_update_payment_intent
+from api.exceptions import CartIsEmpty
 
 
 class CartItems(Model):
@@ -28,6 +30,7 @@ class Cart(Model):
     updated = DateTimeField(auto_now=True)
     discount_code = ForeignKey(to='DiscountCode', on_delete=SET_NULL,
                                blank=True, null=True)
+    checkout_details = JSONField(blank=True, null=True)
 
     def delete(self, using=None, keep_parents=False):
         self.items.clear()
@@ -35,7 +38,7 @@ class Cart(Model):
 
     @property
     def total(self):
-        return f'{self.amount} €'
+        return '{:.2f} €'.format(self.amount / 100.)
 
     @property
     def amount(self):
@@ -45,8 +48,8 @@ class Cart(Model):
                 fraction = 1. - discount.value / 100.
             else:
                 fraction = 1.
-            amount += float(cart_item['item'].price) * fraction
-        return amount
+            amount += cart_item['item'].amount * fraction
+        return int(amount)
 
     @property
     def cart_items(self):
@@ -94,3 +97,17 @@ class Cart(Model):
 
     def is_empty(self):
         return not self.get_cart_items().exists()
+
+    def checkout(self):
+        if self.is_empty():
+            raise CartIsEmpty
+
+        payment_intent = get_create_update_payment_intent(
+            amount=self.amount,
+            idempotency_key=self.id,
+            checkout_details=self.checkout_details
+        )
+        self.checkout_details = {
+            "payment_intent": payment_intent
+        }
+        self.save()
