@@ -32,6 +32,13 @@ class Item(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
+    @property
+    def amount(self):
+        """ Returns price in lower EUR currency unit (cents)
+        :return: Integer with price in EUR cents
+        """
+        return int(float(self.price) * 100)
+
     def __str__(self):
         return self.name
 
