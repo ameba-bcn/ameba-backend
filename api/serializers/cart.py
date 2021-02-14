@@ -136,9 +136,6 @@ class CartCheckoutSerializer(CartSerializer):
     @staticmethod
     def get_checkout(instance):
         return {
-            "payment_intent": {
-                "id": instance.checkout_details["payment_intent"]["id"],
-                "client_secret": instance.checkout_details["payment_intent"][
-                    "client_secret"],
-            }
+            "client_secret": instance.checkout_details["payment_intent"][
+                    "client_secret"]
         }

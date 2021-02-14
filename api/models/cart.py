@@ -5,8 +5,9 @@ from django.db.models import (
     UUIDField, DateTimeField, SET_NULL, CASCADE
 )
 
-from api.stripe import get_create_update_payment_intent
-from api.exceptions import CartIsEmpty
+from api.stripe import get_create_update_payment_intent, get_payment_intent
+from api.exceptions import CartIsEmpty, PaymentIsNotSucceed
+from api.models import Payment
 
 
 class CartItems(Model):
@@ -111,3 +112,14 @@ class Cart(Model):
             "payment_intent": payment_intent
         }
         self.save()
+
+    def process_payment(self):
+        payment_intent = get_payment_intent(
+            checkout_details=self.checkout_details
+        )
+        if payment_intent.status == 'succeeded':
+            Payment.objects.create_payment(
+                cart=self, payment_intent=payment_intent
+            )
+        else:
+            raise PaymentIsNotSucceed

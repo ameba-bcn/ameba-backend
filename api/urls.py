@@ -2,6 +2,7 @@ from django.urls import path
 from django.conf.urls import include
 from rest_framework import routers
 from rest_framework_simplejwt.views import TokenRefreshView
+from django.views.generic import TemplateView
 
 from api import views
 
@@ -27,4 +28,6 @@ urlpatterns = [
     path('', include(router.urls)),
     path('token/', views.TokenView.as_view(), name='token_view'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('carts/<cart_id>/checkout/client/', TemplateView.as_view(
+        template_name="stripe.html")),
 ]

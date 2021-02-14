@@ -1,6 +1,8 @@
 from django.conf import settings
 import stripe
 
+from api.exceptions import WrongPaymentIntent
+
 # Authenticate stripe
 stripe.api_key = settings.STRIPE_SECRET
 
@@ -29,3 +31,12 @@ def get_create_update_payment_intent(amount, idempotency_key, checkout_details):
             amount=amount, idempotency_key=str(idempotency_key)
         )
     return checkout_details
+
+
+def get_payment_intent(checkout_details):
+    if checkout_details and checkout_details["payment_intent"]["id"]:
+        pid = checkout_details["payment_intent"]["id"]
+        payment_intent = stripe.PaymentIntent.retrieve(id=pid)
+        return payment_intent
+    else:
+        raise WrongPaymentIntent
