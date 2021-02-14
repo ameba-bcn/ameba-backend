@@ -1,6 +1,6 @@
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import (
-    RetrieveModelMixin, CreateModelMixin, UpdateModelMixin
+    RetrieveModelMixin, CreateModelMixin, UpdateModelMixin, DestroyModelMixin
 )
 from rest_framework.exceptions import NotAuthenticated
 from rest_framework.response import Response
@@ -16,7 +16,8 @@ CURRENT_KEY = 'current'
 
 
 class CartViewSet(
-    GenericViewSet, RetrieveModelMixin, CreateModelMixin, UpdateModelMixin
+    GenericViewSet, RetrieveModelMixin, CreateModelMixin, UpdateModelMixin,
+    DestroyModelMixin
 ):
     permission_classes = (CartPermission, )
     serializer_class = CartSerializer
@@ -59,3 +60,6 @@ class CartViewSet(
         cart.checkout()
         serializer_class = self.get_serializer_class()
         return Response(serializer_class(cart).data)
+
+    def destroy(self, request, *args, **kwargs):
+        cart = self.get_object()
