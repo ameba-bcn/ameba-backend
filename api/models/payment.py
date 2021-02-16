@@ -11,7 +11,6 @@ class PaymentManager(models.Manager):
         cart_record = CartSerializer(instance=cart).data
         payment = Payment(
             user=user,
-            amount=cart.amount,
             cart_record=cart_record,
             details=dict(payment_intent)
         )

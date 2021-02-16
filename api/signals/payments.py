@@ -26,7 +26,7 @@ def sync_payment_intent(sender, cart, request, **kwargs):
     except InvalidRequestError as StripeError:
         raise StripeSyncError(
             detail=StripeError.user_message,
-            code=StripeError.code
+            code=f'stripe_error_{StripeError.code}'
         )
 
 
