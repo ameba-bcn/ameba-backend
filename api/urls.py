@@ -28,6 +28,6 @@ urlpatterns = [
     path('', include(router.urls)),
     path('token/', views.TokenView.as_view(), name='token_view'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('carts/<cart_id>/checkout/client/', TemplateView.as_view(
+    path('carts/current/checkout/client/', TemplateView.as_view(
         template_name="stripe.html")),
 ]

@@ -19,7 +19,6 @@ def create_payment_intent(amount, idempotency_key):
     return stripe.PaymentIntent.create(
         amount=amount,
         currency=CURRENCY,
-        requires_confirmation=True,
         payment_method_types=PAYMENT_METHOD_TYPES,
         idempotency_key=idempotency_key
     )
