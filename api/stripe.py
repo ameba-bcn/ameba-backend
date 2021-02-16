@@ -1,5 +1,6 @@
 from django.conf import settings
 import stripe
+from stripe.error import InvalidRequestError
 
 from api.exceptions import WrongPaymentIntent
 
@@ -8,6 +9,10 @@ stripe.api_key = settings.STRIPE_SECRET
 
 CURRENCY = 'eur'
 PAYMENT_METHOD_TYPES = ['card']
+
+
+class IntentStatus:
+    SUCCESS = 'succeeded'
 
 
 def create_payment_intent(amount, idempotency_key):

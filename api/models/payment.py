@@ -21,9 +21,27 @@ class PaymentManager(models.Manager):
 
 class Payment(models.Model):
     user = models.ForeignKey('User', on_delete=models.CASCADE)
-    amount = models.IntegerField()
     cart_record = models.JSONField()
-    details = models.JSONField(blank=True, null=True)
+    details = models.JSONField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
     objects = PaymentManager()
+
+    @property
+    def amount(self):
+        return self.details['amount']
+
+    @property
+    def status(self):
+        return self.details['status']
+
+    @property
+    def total(self):
+        return "{:.2f} €".format(self.amount/100.)
+
+    def __str__(self):
+        return f"Payment(" \
+                    f"user='{self.user}', " \
+                    f"total='{self.total}', " \
+                    f"status'={self.status}" \
+               f")"

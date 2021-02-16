@@ -18,3 +18,16 @@ class PaymentIsNotSucceed(APIException):
     status_code = HTTP_400_BAD_REQUEST
     default_detail = 'Payment is not succeeded.'
     default_code = 'payment_not_succeeded'
+
+
+class PaymentAlreadySucceeded(APIException):
+    status_code = HTTP_400_BAD_REQUEST
+    default_detail = 'Payment already processed and success. This cart can ' \
+                     'not be used anymore, delete it before continue shopping.'
+    default_code = 'payment_already_succeeded'
+
+
+class StripeSyncError(APIException):
+    status_code = HTTP_400_BAD_REQUEST
+    default_detail = 'Stripe sync error.'
+    default_code = 'stripe_sync_error'
