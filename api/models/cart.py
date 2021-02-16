@@ -5,10 +5,6 @@ from django.db.models import (
     UUIDField, DateTimeField, SET_NULL, CASCADE
 )
 
-from api.stripe import get_create_update_payment_intent, get_payment_intent
-from api.exceptions import CartIsEmpty, PaymentIsNotSucceed
-from api.models import Payment
-
 
 class CartItems(Model):
     item = ForeignKey(to='Item', on_delete=CASCADE)
@@ -98,28 +94,3 @@ class Cart(Model):
 
     def is_empty(self):
         return not self.get_cart_items().exists()
-
-    def checkout(self):
-        if self.is_empty():
-            raise CartIsEmpty
-
-        payment_intent = get_create_update_payment_intent(
-            amount=self.amount,
-            idempotency_key=self.id,
-            checkout_details=self.checkout_details
-        )
-        self.checkout_details = {
-            "payment_intent": payment_intent
-        }
-        self.save()
-
-    def process_payment(self):
-        payment_intent = get_payment_intent(
-            checkout_details=self.checkout_details
-        )
-        if payment_intent.status == 'succeeded':
-            Payment.objects.create_payment(
-                cart=self, payment_intent=payment_intent
-            )
-        else:
-            raise PaymentIsNotSucceed

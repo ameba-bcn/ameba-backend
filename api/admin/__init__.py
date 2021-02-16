@@ -7,3 +7,4 @@ from api.admin.event import EventAdmin
 from api.admin.image import ImageAdmin
 from api.admin.artist import ArtistAdmin
 from api.admin.subscription import SubscriptionAdmin
+from api.admin.payment import PaymentAdmin

@@ -10,7 +10,7 @@ from api.permissions import CartPermission
 from api.serializers import CartSerializer, CartCheckoutSerializer
 from api.models import Cart
 from api.exceptions import CartIsEmpty
-from api.stripe import get_create_update_payment_intent
+from api.signals import cart_checkout
 
 CURRENT_KEY = 'current'
 
@@ -57,9 +57,8 @@ class CartViewSet(
     @action(detail=True, methods=['GET'])
     def checkout(self, request, *args, **kwargs):
         cart = self.get_object()
-        cart.checkout()
+        if cart.is_empty():
+            raise CartIsEmpty
+        cart_checkout.send(sender=self, cart=cart, request=self.request)
         serializer_class = self.get_serializer_class()
         return Response(serializer_class(cart).data)
-
-    def destroy(self, request, *args, **kwargs):
-        cart = self.get_object()
