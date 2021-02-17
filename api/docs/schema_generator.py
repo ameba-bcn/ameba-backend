@@ -12,7 +12,7 @@ class CustomOpenAPISchemaGenerator(OpenAPISchemaGenerator):
         swagger.tags = [
             {
                 "name": "carts",
-                "description": carts.__doc__
+                "description": carts.CartsDocs.common
             },
         ]
 
