@@ -1,7 +1,7 @@
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import (
-    RetrieveModelMixin, CreateModelMixin, UpdateModelMixin, DestroyModelMixin
+    RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin
 )
 from rest_framework.exceptions import NotAuthenticated
 from rest_framework.response import Response
@@ -14,12 +14,11 @@ from api.exceptions import CartIsEmpty
 from api.signals import cart_checkout
 from api.docs.carts import CartsDocs
 
-CURRENT_KEY = 'current'
+CURRENT_LABEL = 'current'
 
 
-class CartViewSet(
-    GenericViewSet, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin
-):
+class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
+                  DestroyModelMixin):
     permission_classes = (CartPermission, )
     serializer_class = CartSerializer
     queryset = Cart.objects.all()
@@ -34,7 +33,7 @@ class CartViewSet(
         raise MethodNotAllowed
 
     def get_object(self):
-        if self._is_current_user_cart(self.kwargs.get('pk')):
+        if self._is_current_label_id(self.kwargs.get('pk')):
             current = self._get_current_user_cart(self.request.user)
             self.kwargs['pk'] = current.pk
         cart = super().get_object()
@@ -50,8 +49,8 @@ class CartViewSet(
             cart.save()
 
     @staticmethod
-    def _is_current_user_cart(pk):
-        return type(pk) is str and pk == CURRENT_KEY
+    def _is_current_label_id(pk):
+        return type(pk) is str and pk == CURRENT_LABEL
 
     @staticmethod
     def _get_current_user_cart(user):

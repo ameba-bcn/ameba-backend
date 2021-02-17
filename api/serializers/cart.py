@@ -91,6 +91,11 @@ class CartSerializer(ModelSerializer):
         return instance
 
     def _resolve_user(self, instance):
+        """ Checks whether the user request is authenticated and whether the
+        instance has already a user. If the request is authenticated but the
+        cart is not still associated to any user, previous authenticated user's
+        cart will be removed and this one  will be assigned.
+        """
         user = self._get_user()
         if user and not instance.user:
             instance.user = user
