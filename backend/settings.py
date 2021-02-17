@@ -196,3 +196,21 @@ EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", '', var_type='string')
 EMAIL_PORT = env("EMAIL_PORT", 465, var_type='integer')
 EMAIL_USE_SSL = env("EMAIL_USE_SSL", True, var_type='boolean')
 PROFILE_VERSION = 8
+
+
+# STRIPE
+STRIPE_TEST_SECRET_KEY = (
+    "sk_test_51IGkXjHRg08Ncmk70pYqW"
+    "gCE2CR5F02DL1MSRpXq7kC7DUEXOLv"
+    "x14qNX1oOe3J4aqKecKWkom8fbAEQQ"
+    "RWR3vfp00AOrsyzRW"
+)
+STRIPE_TEST_PUBLIC_KEY = (
+    "pk_test_51IGkXjHRg08Ncmk7fPlbb"
+    "9DfTF5f7ckXBKiR4g01euLgXs04Cqm"
+    "gBPOQuqQfOhc6aj9mzsYE1oiQ3TFjH"
+    "H9Hv3Mj00GNyG9sep"
+)
+
+STRIPE_SECRET = env("STRIPE_SECRET", STRIPE_TEST_SECRET_KEY, var_type='string')
+STRIPE_PUBLIC = env("STRIPE_PUBLIC", STRIPE_TEST_PUBLIC_KEY, var_type='string')
