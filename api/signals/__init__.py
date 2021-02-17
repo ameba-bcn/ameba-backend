@@ -6,11 +6,12 @@ from django.contrib.auth.models import Group
 from api import models
 from api.groups import DEFAULT_GROUP, MEMBER_GROUP
 from api.signals.emails import user_registered
-from api.signals.payments import cart_checkout
-from api.signals.user import on_new_user
+from api.signals.payments import cart_checkout, cart_deletion
+from api.signals.user import pre_save_user
 
 
 def populate_models(sender, **kwargs):
+    print('Populate groups and permissions.')
     create_group_permissions()
 
 

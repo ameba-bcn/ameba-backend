@@ -6,8 +6,8 @@ from api.models import Subscription
 
 class SubscriptionAdmin(BaseItemAdmin):
     fieldsets = [
-        (None, {'fields': ['name', 'description', 'benefits', 'price', 'stock',
-                           'created', 'updated']})
+        (None, {'fields': ['id', 'name', 'description', 'benefits', 'price',
+                           'stock', 'created', 'updated']})
     ]
 
 

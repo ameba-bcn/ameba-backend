@@ -1,7 +1,11 @@
 from django.contrib.auth.models import Group
+from rest_framework_simplejwt.token_blacklist.models import OutstandingToken, BlacklistedToken
 
 from api import models
-from api.permissions import ADD, VIEW, DELETE, CHANGE, get_or_create_permission
+from api.permissions import (
+    ADD, VIEW, DELETE, CHANGE, get_or_create_permission, DELETE_ANY, VIEW_ANY,
+    CHANGE_ANY
+)
 
 DEFAULT_GROUP = 'web_user'
 MEMBER_GROUP = 'ameba_member'
@@ -21,15 +25,25 @@ GROUPS = {
     },
     MEMBER_GROUP: {
         'pk': 2,
-        'parent': 'web_user'
+        'parent': DEFAULT_GROUP
     },
     EDITOR_GROUP: {
         'pk': 3,
-        'parent': 'ameba_member'
+        'parent': MEMBER_GROUP
     },
     ADMIN_GROUP: {
         'pk': 4,
-        'parent': 'ameba_editor'
+        'parent': EDITOR_GROUP,
+        'models': {
+            'outstanding_tokens': {
+                'model': OutstandingToken,
+                'permissions': [ADD, VIEW, DELETE, CHANGE]
+            },
+            'blacklisted_tokens': {
+                'model': BlacklistedToken,
+                'permissions': [ADD, VIEW_ANY, DELETE_ANY, CHANGE_ANY]
+            },
+        }
     }
 }
 

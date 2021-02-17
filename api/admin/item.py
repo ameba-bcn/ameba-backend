@@ -33,11 +33,11 @@ class ImageChoiceInLine(admin.TabularInline):
 
 class BaseItemAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None, {'fields': ['name', 'description', 'price', 'stock',
+        (None, {'fields': ['id', 'name', 'description', 'price', 'stock',
                            'created', 'updated']})
     ]
     inlines = [ImageChoiceInLine, DiscountChoiceInLine]
-    readonly_fields = ['created', 'updated']
+    readonly_fields = ['id', 'created', 'updated']
     list_display = ['name', 'price', 'stock', 'description', 'preview']
 
     def preview(self, obj):

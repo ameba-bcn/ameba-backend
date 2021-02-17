@@ -11,7 +11,7 @@ from api.permissions import CartPermission
 from api.serializers import CartSerializer, CartCheckoutSerializer
 from api.models import Cart
 from api.exceptions import CartIsEmpty
-from api.signals import cart_checkout
+from api.signals import cart_checkout, cart_deletion
 from api.docs.carts import CartsDocs
 
 CURRENT_LABEL = 'current'
@@ -30,7 +30,9 @@ class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
 
     @swagger_auto_schema(auto_schema=None)
     def update(self, request, *args, **kwargs):
-        raise MethodNotAllowed
+        if request.method == 'PUT':
+            raise MethodNotAllowed(request.method)
+        return super().update(request, *args, **kwargs)
 
     def get_object(self):
         if self._is_current_label_id(self.kwargs.get('pk')):
@@ -62,6 +64,8 @@ class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
         return super().partial_update(request, *args, **kwargs)
 
     def destroy(self, request, *args, **kwargs):
+        cart = self.get_object()
+        cart_deletion.send(sender=self, cart=cart, request=self.request)
         return super().destroy(request, *args, **kwargs)
 
     def retrieve(self, request, *args, **kwargs):
