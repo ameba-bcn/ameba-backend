@@ -31,3 +31,9 @@ class StripeSyncError(APIException):
     status_code = HTTP_400_BAD_REQUEST
     default_detail = 'Stripe sync error.'
     default_code = 'stripe_sync_error'
+
+
+class CartCheckoutNotProcessed(APIException):
+    status_code = HTTP_400_BAD_REQUEST
+    default_detail = 'Cart has bot been processed.'
+    default_code = 'cart_not_processed'

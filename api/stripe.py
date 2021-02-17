@@ -2,7 +2,7 @@ from django.conf import settings
 import stripe
 from stripe.error import InvalidRequestError
 
-from api.exceptions import WrongPaymentIntent
+from api.exceptions import WrongPaymentIntent, CartCheckoutNotProcessed
 
 # Authenticate stripe
 stripe.api_key = settings.STRIPE_SECRET
@@ -42,5 +42,7 @@ def get_payment_intent(checkout_details):
         pid = checkout_details["payment_intent"]["id"]
         payment_intent = stripe.PaymentIntent.retrieve(id=pid)
         return payment_intent
+    elif not checkout_details or "payment_intent" not in checkout_details:
+        raise CartCheckoutNotProcessed
     else:
         raise WrongPaymentIntent
