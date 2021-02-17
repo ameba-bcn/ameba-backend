@@ -30,7 +30,9 @@ class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
 
     @swagger_auto_schema(auto_schema=None)
     def update(self, request, *args, **kwargs):
-        raise MethodNotAllowed
+        if request.method == 'PUT':
+            raise MethodNotAllowed(request.method)
+        return super().update(request, *args, **kwargs)
 
     def get_object(self):
         if self._is_current_label_id(self.kwargs.get('pk')):
