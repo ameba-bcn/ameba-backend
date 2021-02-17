@@ -7,6 +7,7 @@ from api import models
 from api.groups import DEFAULT_GROUP, MEMBER_GROUP
 from api.signals.emails import user_registered
 from api.signals.payments import cart_checkout
+from api.signals.user import on_new_user
 
 
 def populate_models(sender, **kwargs):
