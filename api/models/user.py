@@ -38,3 +38,7 @@ class User(AbstractUser):
     def activate(self):
         self.is_active = True
         self.save()
+
+    @property
+    def membership(self):
+        return [m for m in self.memberships.filter(is_active=True)]
