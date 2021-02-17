@@ -2,6 +2,11 @@
 
 ### Release notes
 
+#### 0.8
+- Pasarela de pagos implementada.
+- Fixed: createsuperuser creaba usuarios inactivos.
+- Documentación de carrtito de la compra en /api/docs/
+
 #### 0.7
 - Current tag para acceder al carro del usuario
     - (GET,PATCH) /api/carts/current/

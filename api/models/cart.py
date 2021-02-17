@@ -1,8 +1,7 @@
-import time
 import uuid
 
 from django.db.models import (
-    Model, ForeignKey, ManyToManyField, CharField, OneToOneField,
+    Model, ForeignKey, ManyToManyField, JSONField, OneToOneField,
     UUIDField, DateTimeField, SET_NULL, CASCADE
 )
 
@@ -14,7 +13,7 @@ class CartItems(Model):
     @property
     def discount(self):
         if discount := list(filter(
-            lambda x: x['cart_item'] == self, self.cart.compute_discounts()
+            lambda x: x['cart_item'] == self, self.cart.get_cart_items_with_discounts()
         )):
             return discount[0]['discount']
         return 0
@@ -28,6 +27,7 @@ class Cart(Model):
     updated = DateTimeField(auto_now=True)
     discount_code = ForeignKey(to='DiscountCode', on_delete=SET_NULL,
                                blank=True, null=True)
+    checkout_details = JSONField(blank=True, null=True)
 
     def delete(self, using=None, keep_parents=False):
         self.items.clear()
@@ -35,20 +35,24 @@ class Cart(Model):
 
     @property
     def total(self):
-        total = 0
-        for cart_item in self.compute_discounts():
+        return '{:.2f} €'.format(self.amount / 100.)
+
+    @property
+    def amount(self):
+        amount = 0
+        for cart_item in self.get_cart_items_with_discounts():
             if discount := cart_item['discount']:
-                fraction = 1 - discount.value / 100.
+                fraction = 1. - discount.value / 100.
             else:
                 fraction = 1.
-            total += float(cart_item['item'].price) * fraction
-        return f'{total} €'
+            amount += cart_item['item'].amount * fraction
+        return int(amount)
 
     @property
     def cart_items(self):
-        return self.compute_discounts()
+        return self.get_cart_items_with_discounts()
 
-    def compute_discounts(self):
+    def get_cart_items_with_discounts(self):
         cart_discounts = []
         discounts = []
         cart_items_by_price = self.cart_items_by_price_desc()
@@ -87,3 +91,6 @@ class Cart(Model):
 
     def get_cart_items(self):
         return self.items.through.objects.filter(cart=self)
+
+    def is_empty(self):
+        return not self.get_cart_items().exists()
