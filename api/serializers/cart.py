@@ -58,7 +58,7 @@ class CartSerializer(ModelSerializer):
     count = SerializerMethodField()
     items = SlugRelatedField(
         many=True, write_only=True, queryset=Item.objects.all(),
-        slug_field='id'
+        slug_field='id', required=False
     )
 
     class Meta:
@@ -91,6 +91,11 @@ class CartSerializer(ModelSerializer):
         return instance
 
     def _resolve_user(self, instance):
+        """ Checks whether the user request is authenticated and whether the
+        instance has already a user. If the request is authenticated but the
+        cart is not still associated to any user, previous authenticated user's
+        cart will be removed and this one  will be assigned.
+        """
         user = self._get_user()
         if user and not instance.user:
             instance.user = user
@@ -108,3 +113,34 @@ class CartSerializer(ModelSerializer):
             old_cart = Cart.objects.get(user=user)
             old_cart.items.clear()
             old_cart.delete()
+
+
+class CartItemSummarySerializer(CartItemSerializer):
+    id = None
+    preview = None
+
+
+class CartCheckoutSerializer(CartSerializer):
+    cart_items = CartItemSummarySerializer(many=True, read_only=True)
+    email = SerializerMethodField()
+    checkout = SerializerMethodField()
+
+    class Meta:
+        model = Cart
+        fields = ('user', 'email', 'total', 'amount', 'cart_items',
+                  'checkout')
+
+    @property
+    def username(self):
+        return self.instance.user.username
+
+    @staticmethod
+    def get_email(instance):
+        return instance.user.email
+
+    @staticmethod
+    def get_checkout(instance):
+        return {
+            "client_secret": instance.checkout_details["payment_intent"][
+                    "client_secret"]
+        }
