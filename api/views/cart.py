@@ -1,7 +1,7 @@
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import (
-    RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin
+    RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, CreateModelMixin
 )
 from rest_framework.exceptions import NotAuthenticated
 from rest_framework.response import Response
@@ -18,7 +18,7 @@ CURRENT_LABEL = 'current'
 
 
 class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
-                  DestroyModelMixin):
+                  DestroyModelMixin, CreateModelMixin):
     permission_classes = (CartPermission, )
     serializer_class = CartSerializer
     queryset = Cart.objects.all()
