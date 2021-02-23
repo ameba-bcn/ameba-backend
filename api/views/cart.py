@@ -48,8 +48,10 @@ class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
     def resolve_user(self, cart):
         user = self.request.user
         if user.is_authenticated and cart.user != self.request.user:
-            if user.cart:
+            try:
                 user.cart.delete()
+            except Cart.DoesNotExist:
+                pass
             cart.user = self.request.user
             cart.save()
 

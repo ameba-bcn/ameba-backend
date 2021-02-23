@@ -33,7 +33,7 @@ class CartFlowTests(BaseTest):
 
     @staticmethod
     def check_ownership(cart, user):
-        cart = cart.refresh_from_db()
+        cart.refresh_from_db()
         return cart.user == user
 
     def test_get_no_auth_no_owned_id_cart_returns_200(self):
@@ -72,7 +72,19 @@ class CartFlowTests(BaseTest):
         self.assertTrue(self.check_ownership(cart, user))
 
     def test_get_auth_no_owned_current_cart_returns_200_and_get_ownership(self):
-        assert False
+        user = self.get_user()
+        token = self.get_token(user)
+
+        response = self._get(pk='current', token=token.access_token)
+
+        def get_user_cart():
+            return user.cart
+
+        self.assertRaises(expected_exception=Cart.DoesNotExist(),
+                          callable=get_user_cart)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        user.refresh_from_db()
+        self.assertTrue(user.cart)
 
     def test_get_auth_owned_id_cart_returns_200(self):
         assert False
