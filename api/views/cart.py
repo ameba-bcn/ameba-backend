@@ -23,6 +23,9 @@ class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
     serializer_class = CartSerializer
     queryset = Cart.objects.all()
 
+    def get_permissions(self):
+        return super().get_permissions()
+
     def get_serializer_class(self):
         if self.action == 'checkout':
             self.serializer_class = CartCheckoutSerializer
