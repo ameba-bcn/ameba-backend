@@ -27,10 +27,10 @@ class BaseCartTest(BaseTest):
     def get_token(user):
         return RefreshToken.for_user(user)
 
-    @staticmethod
-    def get_cart(user=None, items=None):
+    def get_cart(self, user=None, items=None):
         cart = Cart.objects.create(user=user)
         if items:
+            self.create_items(items)
             cart.items.set(items)
         return cart
 
@@ -38,6 +38,19 @@ class BaseCartTest(BaseTest):
     def check_ownership(cart, user):
         cart.refresh_from_db()
         return cart.user == user
+
+    @staticmethod
+    def create_items(items):
+        if items:
+            for item in items:
+                cart_data = dict(
+                    id=item,
+                    name=f'item_{item}',
+                    description=f'This is the item {item}',
+                    price=item * 10,
+                    stock=item,
+                )
+                Item.objects.create(**cart_data)
 
 
 class TestGetCart(BaseCartTest):
@@ -55,7 +68,7 @@ class TestGetCart(BaseCartTest):
             "discount_code": None
         }
 
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, response_struct)
 
     def test_get_no_auth_no_owned_current_cart_returns_401(self):
@@ -74,7 +87,7 @@ class TestGetCart(BaseCartTest):
         cart = self.get_cart()
         response = self._get(pk=cart.id, token=token.access_token)
 
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(self.check_ownership(cart, user))
 
     def test_get_auth_no_owned_current_cart_returns_200_and_get_ownership(self):
@@ -84,7 +97,7 @@ class TestGetCart(BaseCartTest):
         token = self.get_token(user)
         response = self._get(pk='current', token=token.access_token)
 
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         user.refresh_from_db()
         self.assertTrue(user.cart)
@@ -95,7 +108,7 @@ class TestGetCart(BaseCartTest):
         cart = self.get_cart(user)
 
         response = self._get(pk=cart.id, token=token.access_token)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_auth_owned_others_id_cart_returns_401(self):
         user = self.get_user()
@@ -112,7 +125,7 @@ class TestGetCart(BaseCartTest):
         cart = self.get_cart(user)
 
         response = self._get(pk='current', token=token.access_token)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['id'], str(cart.id))
 
 
@@ -120,23 +133,11 @@ class TestPostCarts(BaseCartTest):
     DETAIL_ENDPOINT = '/api/carts/{pk}/'
     LIST_ENDPOINT = '/api/carts/'
 
-    def _create_items(self, items):
-        if items:
-            for item in items:
-                cart_data = dict(
-                    id=item,
-                    name=f'item_{item}',
-                    description=f'This is the item {item}',
-                    price=item * 10,
-                    stock=item,
-                )
-                Item.objects.create(**cart_data)
-
     def _get_body(self, items, other_keys):
         body = {}
         if type(items) is list:
             body['items'] = items
-            self._create_items(items)
+            self.create_items(items)
         if other_keys:
             for key in other_keys:
                 body[key] = 'whatever value'
@@ -348,3 +349,149 @@ class TestPostCarts(BaseCartTest):
             returns=status.HTTP_201_CREATED
         )
         self._execute_test(test_attrs)
+
+
+class TestPatchCart(BaseCartTest):
+
+    def _execute_test(self, current_items, new_items, auth, current_label,
+                      status_code):
+
+        self.create_items(current_items)
+        self.create_items(new_items)
+
+        request_body = None
+        if type(new_items) is list:
+            request_body = {
+                'items': new_items
+            }
+
+        token = None
+        if auth:
+            user = self.get_user()
+            token = self.get_token(user).access_token
+            cart = self.get_cart(user=user)
+        else:
+            cart = self.get_cart()
+
+        if current_items:
+            for item in current_items:
+                cart.items.add(item)
+
+        cart_id = current_label or cart.id
+        response = self._partial_update(
+            pk=cart_id, token=token, props=request_body
+        )
+
+        self.assertEqual(response.status_code, status_code)
+
+        if type(new_items) is list:
+            cart_count = len(new_items)
+        elif current_items:
+            cart_count = len(current_items)
+        else:
+            cart_count = 0
+
+        self.assertEqual(response.data['count'], cart_count)
+        self.assertEqual(response.data['id'], str(cart.id))
+
+    def test_patch_anon_existing_empty_cart_gets_updated_with_items(self):
+        current_items = []
+        new_items = [1, 2]
+        auth = False
+        current_label = False
+        status_code = status.HTTP_200_OK
+
+        self._execute_test(current_items, new_items, auth, current_label,
+                           status_code)
+
+    def test_patch_anon_existing_empty_cart_stays_empty_no_items(self):
+        current_items = []
+        new_items = None
+        auth = False
+        current_label = False
+        status_code = status.HTTP_200_OK
+
+        self._execute_test(current_items, new_items, auth, current_label,
+                           status_code)
+
+    def test_patch_anon_existing_cart_stays_equal_no_items_key(self):
+        current_items = [1, 2]
+        new_items = None
+        auth = False
+        current_label = False
+        status_code = status.HTTP_200_OK
+
+        self._execute_test(current_items, new_items, auth, current_label,
+                           status_code)
+
+    def test_path_anon_existing_cart_empty_after_sending_empty_items_list(self):
+        current_items = [1, 2]
+        new_items = []
+        auth = False
+        current_label = False
+        status_code = status.HTTP_200_OK
+
+        self._execute_test(current_items, new_items, auth, current_label,
+                           status_code)
+
+    def test_path_auth_current_label_updates_user_cart(self):
+        current_items = [1, 2]
+        new_items = []
+        auth = True
+        current_label = 'current'
+        status_code = status.HTTP_200_OK
+
+        self._execute_test(current_items, new_items, auth, current_label,
+                           status_code)
+
+    def test_path_auth_current_id_updates_user_cart(self):
+        current_items = [1, 2]
+        new_items = []
+        auth = True
+        current_label = None
+        status_code = status.HTTP_200_OK
+
+        self._execute_test(current_items, new_items, auth, current_label,
+                           status_code)
+
+    def test_path_auth_anon_cart_replaces_old_user_cart(self):
+        user = self.get_user()
+        token = self.get_token(user)
+        user_cart = self.get_cart(user)
+        cart = self.get_cart()
+
+        response = self._partial_update(
+            pk=cart.id, token=token.access_token, props={}
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        user.refresh_from_db()
+        self.assertEqual(user.cart.id, cart.id)
+        self.assertFalse(Cart.objects.filter(id=user_cart.id).exists())
+
+    def test_path_auth_current_label_creates_new_cart_for_user(self):
+        user = self.get_user()
+        token = self.get_token(user).access_token
+        body = {'items': [1, 2]}
+        self.create_items(body['items'])
+
+        response = self._partial_update('current', token, body)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['count'], len(body['items']))
+
+    def test_path_auth_others_cart_not_allowed(self):
+        user = self.get_user(1)
+        token = self.get_token(user).access_token
+
+        body = {'items': [1, 2]}
+
+        user_2 = self.get_user(2)
+        token_2 = self.get_token(user_2).access_token
+        cart_2 = self.get_cart(user=user_2, items=body.get('items'))
+
+        response = self._partial_update(cart_2.id, token, body)
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        response_2 = self._get(pk=cart_2.id, token=token_2)
+        self.assertEqual(response_2.data['count'], len(body.get('items')))
