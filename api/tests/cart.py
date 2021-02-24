@@ -1,12 +1,15 @@
+import time
+
 from api.tests._helpers import BaseTest, check_structure
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from api.models.cart import Cart
 from api.models.user import User
+from api.models import Item
 
 
-class CartFlowTests(BaseTest):
+class BaseCartTest(BaseTest):
     DETAIL_ENDPOINT = '/api/carts/{pk}/'
     LIST_ENDPOINT = '/api/carts/'
 
@@ -36,6 +39,9 @@ class CartFlowTests(BaseTest):
         cart.refresh_from_db()
         return cart.user == user
 
+
+class TestGetCart(BaseCartTest):
+
     def test_get_no_auth_no_owned_id_cart_returns_200(self):
         cart = self.get_cart()
         response = self._get(pk=cart.pk)
@@ -49,7 +55,7 @@ class CartFlowTests(BaseTest):
             "discount_code": None
         }
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data, response_struct)
 
     def test_get_no_auth_no_owned_current_cart_returns_401(self):
@@ -68,62 +74,277 @@ class CartFlowTests(BaseTest):
         cart = self.get_cart()
         response = self._get(pk=cart.id, token=token.access_token)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(self.check_ownership(cart, user))
 
     def test_get_auth_no_owned_current_cart_returns_200_and_get_ownership(self):
         user = self.get_user()
-        token = self.get_token(user)
+        self.assertIsNone(user.cart)
 
+        token = self.get_token(user)
         response = self._get(pk='current', token=token.access_token)
 
-        def get_user_cart():
-            return user.cart
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        self.assertRaises(expected_exception=Cart.DoesNotExist(),
-                          callable=get_user_cart)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
         user.refresh_from_db()
         self.assertTrue(user.cart)
 
     def test_get_auth_owned_id_cart_returns_200(self):
-        assert False
+        user = self.get_user()
+        token = self.get_token(user)
+        cart = self.get_cart(user)
+
+        response = self._get(pk=cart.id, token=token.access_token)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_get_auth_owned_others_id_cart_returns_401(self):
-        assert False
+        user = self.get_user()
+        user_2 = self.get_user(2)
+        token = self.get_token(user)
+        cart = self.get_cart(user_2)
+
+        response = self._get(pk=cart.id, token=token.access_token)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_get_auth_owned_current_cart_returns_200(self):
-        assert False
+        user = self.get_user()
+        token = self.get_token(user)
+        cart = self.get_cart(user)
 
-    def test_create_cart_no_auth(self):
-        assert False
+        response = self._get(pk='current', token=token.access_token)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['id'], str(cart.id))
 
-    def test_create_current_cart_auth(self):
-        assert False
 
-    def test_create_cart_auth_returns_current_cart(self):
-        assert False
+class TestPostCarts(BaseCartTest):
+    DETAIL_ENDPOINT = '/api/carts/{pk}/'
+    LIST_ENDPOINT = '/api/carts/'
 
-    def test_create_cart_wrong_auth_gives_401(self):
-        assert False
+    def _create_items(self, items):
+        if items:
+            for item in items:
+                cart_data = dict(
+                    id=item,
+                    name=f'item_{item}',
+                    description=f'This is the item {item}',
+                    price=item * 10,
+                    stock=item,
+                )
+                Item.objects.create(**cart_data)
 
-    def test_patch_cart_items_no_auth(self):
-        assert False
+    def _get_body(self, items, other_keys):
+        body = {}
+        if type(items) is list:
+            body['items'] = items
+            self._create_items(items)
+        if other_keys:
+            for key in other_keys:
+                body[key] = 'whatever value'
+        return body
 
-    def test_patch_cart_no_items_list_no_auth_doesnt_change_cart(self):
-        assert False
+    def _perform_request(self, auth, previous_cart, body):
+        token = None
+        cart = None
+        if auth:
+            user = self.get_user()
+            token = self.get_token(user).access_token
+            if previous_cart:
+                cart = self.get_cart(user)
+        response = self._create(props=body, token=token)
+        if cart:
+            self.assertTrue(response.data.get('id', False))
+            self.assertNotEqual(response.data.get('id', None), str(cart.id))
+        return response
 
-    def test_patch_cart_empty_items_list_no_auth_empty_cart(self):
-        assert False
+    def _check_response_body(self, items, response):
+        self.assertEqual(len(items or []), response.data['count'])
 
-    def test_patch_current_cart_auth(self):
-        assert False
+    def _execute_test(self, test_attrs):
+        body = self._get_body(test_attrs['items'], test_attrs['other_keys'])
+        response = self._perform_request(
+            auth=test_attrs['auth'],
+            previous_cart=test_attrs['previous_cart'],
+            body=body
+        )
+        self.assertEqual(response.status_code, test_attrs['returns'])
+        self._check_response_body(test_attrs['items'], response)
 
-    def test_patch_current_cart_empty_items_list_empty_cart(self):
-        assert False
+    def test_post_no_auth_no_items_returns_200(self):
+        test_attrs = dict(
+            auth=False,
+            previous_cart=False,
+            items=None,
+            other_keys=None,
+            returns=status.HTTP_201_CREATED
+        )
+        self._execute_test(test_attrs)
 
-    def test_patch_current_cart_no_items_list_doesnt_change_current_cart(self):
-        assert False
+    def test_post_no_auth_no_items_other_keys_returns_200(self):
+        test_attrs = dict(
+            auth=False,
+            previous_cart=False,
+            items=None,
+            other_keys=['my_key', 'cart', 'user'],
+            returns=status.HTTP_201_CREATED
+        )
+        self._execute_test(test_attrs)
 
-    def test_patch_id_cart_auth_sets_id_cart_as_current(self):
-        assert False
+    def test_post_no_auth_items_key_returns_200(self):
+        test_attrs = dict(
+            auth=False,
+            previous_cart=False,
+            items=[],
+            other_keys=None,
+            returns=status.HTTP_201_CREATED
+        )
+        self._execute_test(test_attrs)
+
+    def test_post_no_auth_items_key_other_keys_returns_200(self):
+        test_attrs = dict(
+            auth=False,
+            previous_cart=False,
+            items=[],
+            other_keys=['my_key', 'cart', 'user'],
+            returns=status.HTTP_201_CREATED
+        )
+        self._execute_test(test_attrs)
+
+    def test_post_no_auth_items_returns_200(self):
+        test_attrs = dict(
+            auth=False,
+            previous_cart=False,
+            items=[1, 2],
+            other_keys=None,
+            returns=status.HTTP_201_CREATED
+        )
+        self._execute_test(test_attrs)
+
+    def test_post_no_auth_items_other_keys_returns_200(self):
+        test_attrs = dict(
+            auth=False,
+            previous_cart=False,
+            items=[1, 2],
+            other_keys=['my_key', 'cart', 'user'],
+            returns=status.HTTP_201_CREATED
+        )
+        self._execute_test(test_attrs)
+
+    def test_post_auth_no_items_returns_200(self):
+        test_attrs = dict(
+            auth=True,
+            previous_cart=False,
+            items=None,
+            other_keys=None,
+            returns=status.HTTP_201_CREATED
+        )
+        self._execute_test(test_attrs)
+
+    def test_post_auth_no_items_other_keys_returns_200(self):
+        test_attrs = dict(
+            auth=True,
+            previous_cart=False,
+            items=None,
+            other_keys=['my_key', 'cart', 'user'],
+            returns=status.HTTP_201_CREATED
+        )
+        self._execute_test(test_attrs)
+
+    def test_post_auth_items_key_returns_200(self):
+        test_attrs = dict(
+            auth=True,
+            previous_cart=False,
+            items=[],
+            other_keys=None,
+            returns=status.HTTP_201_CREATED
+        )
+        self._execute_test(test_attrs)
+
+    def test_post_auth_items_key_other_keys_returns_200(self):
+        test_attrs = dict(
+            auth=True,
+            previous_cart=False,
+            items=[],
+            other_keys=['my_key', 'cart', 'user'],
+            returns=status.HTTP_201_CREATED
+        )
+        self._execute_test(test_attrs)
+
+    def test_post_auth_items_returns_200(self):
+        test_attrs = dict(
+            auth=True,
+            previous_cart=False,
+            items=[1, 2],
+            other_keys=None,
+            returns=status.HTTP_201_CREATED
+        )
+        self._execute_test(test_attrs)
+
+    def test_post_auth_items_other_keys_returns_200(self):
+        test_attrs = dict(
+            auth=True,
+            previous_cart=False,
+            items=[1, 2],
+            other_keys=['my_key', 'cart', 'user'],
+            returns=status.HTTP_201_CREATED
+        )
+        self._execute_test(test_attrs)
+
+    def test_post_auth_with_previous_cart_no_items_returns_200(self):
+        test_attrs = dict(
+            auth=True,
+            previous_cart=True,
+            items=None,
+            other_keys=None,
+            returns=status.HTTP_201_CREATED
+        )
+        self._execute_test(test_attrs)
+
+    def test_post_auth_with_previous_no_items_other_keys_returns_200(self):
+        test_attrs = dict(
+            auth=True,
+            previous_cart=True,
+            items=None,
+            other_keys=['my_key', 'cart', 'user'],
+            returns=status.HTTP_201_CREATED
+        )
+        self._execute_test(test_attrs)
+
+    def test_post_auth_with_previous_items_key_returns_200(self):
+        test_attrs = dict(
+            auth=True,
+            previous_cart=True,
+            items=[],
+            other_keys=None,
+            returns=status.HTTP_201_CREATED
+        )
+        self._execute_test(test_attrs)
+
+    def test_post_auth_with_previous_items_key_other_keys_returns_200(self):
+        test_attrs = dict(
+            auth=True,
+            previous_cart=True,
+            items=[],
+            other_keys=['my_key', 'cart', 'user'],
+            returns=status.HTTP_201_CREATED
+        )
+        self._execute_test(test_attrs)
+
+    def test_post_auth_with_previous_items_returns_200(self):
+        test_attrs = dict(
+            auth=True,
+            previous_cart=True,
+            items=[1, 2],
+            other_keys=None,
+            returns=status.HTTP_201_CREATED
+        )
+        self._execute_test(test_attrs)
+
+    def test_post_auth_with_previous_items_other_keys_returns_200(self):
+        test_attrs = dict(
+            auth=True,
+            previous_cart=True,
+            items=[1, 2],
+            other_keys=['my_key', 'cart', 'user'],
+            returns=status.HTTP_201_CREATED
+        )
+        self._execute_test(test_attrs)
