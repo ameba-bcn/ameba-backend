@@ -11,7 +11,7 @@ from api.permissions import CartPermission
 from api.serializers import CartSerializer, CartCheckoutSerializer
 from api.models import Cart
 from api.exceptions import CartIsEmpty
-from api.signals import cart_checkout
+from api.signals import cart_checkout, cart_processed
 from api.docs.carts import CartsDocs
 
 CURRENT_LABEL = 'current'
@@ -22,9 +22,6 @@ class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
     permission_classes = (CartPermission, )
     serializer_class = CartSerializer
     queryset = Cart.objects.all()
-
-    def get_permissions(self):
-        return super().get_permissions()
 
     def get_serializer_class(self):
         if self.action == 'checkout':
@@ -48,10 +45,8 @@ class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
     def resolve_user(self, cart):
         user = self.request.user
         if user.is_authenticated and cart.user != self.request.user:
-            try:
+            if user.cart:
                 user.cart.delete()
-            except Cart.DoesNotExist:
-                pass
             cart.user = self.request.user
             cart.save()
 
@@ -69,6 +64,8 @@ class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
         return super().partial_update(request, *args, **kwargs)
 
     def destroy(self, request, *args, **kwargs):
+        cart = self.get_object()
+        cart_processed.send(sender=self, cart=cart, request=self.request)
         return super().destroy(request, *args, **kwargs)
 
     def retrieve(self, request, *args, **kwargs):

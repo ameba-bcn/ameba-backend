@@ -18,6 +18,13 @@ class User(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
+    @property
+    def cart(self):
+        try:
+            return self._cart
+        except api_models.Cart.DoesNotExist:
+            return None
+
     def save(self, *args, **kwargs):
         if not self._is_password_hashed():
             self.set_password(self.password)
