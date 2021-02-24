@@ -21,7 +21,8 @@ class CartItems(Model):
 
 class Cart(Model):
     id = UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = OneToOneField(to='User', on_delete=CASCADE, blank=True, null=True)
+    user = OneToOneField(to='User', on_delete=CASCADE, blank=True,
+                         null=True, related_name='_cart')
     items = ManyToManyField(to='Item', through='CartItems')
     created = DateTimeField(auto_now_add=True)
     updated = DateTimeField(auto_now=True)
