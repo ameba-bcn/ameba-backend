@@ -1,5 +1,6 @@
 import shutil
 import os
+import json
 
 from rest_framework.test import APITestCase
 
@@ -38,9 +39,14 @@ class BaseTest(APITestCase):
         return self.client.delete(self.DETAIL_ENDPOINT.format(pk=pk))
 
     def _partial_update(self, pk, token, props):
+        if props:
+            json_obj = json.dumps(props)
+        else:
+            json_obj = json.dumps({})
+
         self._authenticate(token)
         return self.client.patch(self.DETAIL_ENDPOINT.format(pk=pk),
-                                 data=props)
+                                 data=json_obj, content_type='application/json')
 
     def _create(self, props, token=None):
         self._authenticate(token)
