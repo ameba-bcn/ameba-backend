@@ -2,6 +2,12 @@
 
 ### Release notes
 
+#### 0.9
+- Bugfixes:
+    - Problemas con el carro --> mensaje "Cart not processed"
+- Test cases para carro
+- Mejorado el flujo del carro
+
 #### 0.8
 - Pasarela de pagos implementada.
 - Fixed: createsuperuser creaba usuarios inactivos.
