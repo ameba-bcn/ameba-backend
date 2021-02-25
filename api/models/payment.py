@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import UUIDField
 
 from api.serializers.cart import CartSerializer
 
@@ -10,6 +11,7 @@ class PaymentManager(models.Manager):
         user = cart.user
         cart_record = CartSerializer(instance=cart).data
         payment = Payment(
+            id=cart.id,
             user=user,
             cart_record=cart_record,
             details=dict(payment_intent)
@@ -19,6 +21,7 @@ class PaymentManager(models.Manager):
 
 
 class Payment(models.Model):
+    id = UUIDField(primary_key=True, editable=True)
     user = models.ForeignKey('User', on_delete=models.CASCADE)
     cart_record = models.JSONField()
     details = models.JSONField()

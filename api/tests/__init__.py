@@ -5,3 +5,4 @@ from api.tests.user import *
 from api.tests.article import *
 from api.tests.event import *
 from api.tests.cart import *
+from api.tests.payments import *
