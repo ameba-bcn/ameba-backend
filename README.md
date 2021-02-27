@@ -2,6 +2,10 @@
 
 ### Release notes
 
+#### 0.10
+- Tests de proceso de pagos
+- Fix  requirements
+
 #### 0.9
 - Bugfixes:
     - Problemas con el carro --> mensaje "Cart not processed"
