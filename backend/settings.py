@@ -20,11 +20,28 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'f!e(2rsmnoiyy@+#s$&lg-m7xp3@-+8fveja$plau=ir--13f('
-
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env("DEBUG", False, var_type='boolean')
+
+
+class MissingSecretKey(Exception):
+    pass
+
+
+def raise_debug():
+    raise MissingSecretKey
+
+
+# SECURITY WARNING: keep the secret key used in production secret!
+DEV_SECRET_KEY = 'f!e(2rsmnoiyy@+#s$&lg-m7xp3@-+8fveja$plau=ir--13f('
+
+
+SECRET_KEY = env(
+    "DJANGO_SECRET",
+    DEBUG and DEV_SECRET_KEY or raise_debug(),
+    var_type='string'
+)
+
 
 ALLOWED_HOSTS = []
 
@@ -43,7 +60,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
-
     'drf_yasg',
     'api.apps.ApiConfig',
     'trumbowyg',
@@ -87,10 +103,10 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'HOST': 'db',
-        'PASSWORD': 'postgres',
-        'USER': 'postgres'
+        'NAME': env('POSTGRES_DB', 'postgres', 'string'),
+        'HOST': env('POSTGRES_HOST', 'db', 'string'),
+        'PASSWORD': env('POSTGRES_PASSWORD', 'postgres', 'string'),
+        'USER': env('POSTGRES_USER', 'postgres', 'string')
     }
 }
 
@@ -189,6 +205,7 @@ EMAIL_BACKEND = env(
     'django.core.mail.backends.smtp.EmailBackend',
     var_type='string'
 )
+
 DEFAULT_FROM_EMAIL = 'noreply@ameba.cat'
 EMAIL_HOST = env("EMAIL_HOST", '', var_type='string')
 EMAIL_HOST_USER = env("EMAIL_HOST_USER", '', var_type='string')
