@@ -35,13 +35,11 @@ def raise_debug():
 # SECURITY WARNING: keep the secret key used in production secret!
 DEV_SECRET_KEY = 'f!e(2rsmnoiyy@+#s$&lg-m7xp3@-+8fveja$plau=ir--13f('
 
-
 SECRET_KEY = env(
     "DJANGO_SECRET",
     DEBUG and DEV_SECRET_KEY or raise_debug(),
     var_type='string'
 )
-
 
 ALLOWED_HOSTS = []
 
