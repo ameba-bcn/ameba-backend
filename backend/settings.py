@@ -43,7 +43,7 @@ SECRET_KEY = env(
 )
 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['ameba.jaguarintheloop.live']
 
 
 # Auth User
