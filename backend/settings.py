@@ -43,6 +43,10 @@ SECRET_KEY = env(
 
 ALLOWED_HOSTS = []
 
+NGINX_HOST = env("NGINX_HOST", '', 'string')
+if NGINX_HOST:
+    ALLOWED_HOSTS.append('ameba.jaguarintheloop.live')
+
 
 # Auth User
 AUTH_USER_MODEL = 'api.User'
@@ -101,10 +105,10 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('POSTGRES_DB', 'postgres', 'string'),
-        'HOST': env('POSTGRES_HOST', 'db', 'string'),
-        'PASSWORD': env('POSTGRES_PASSWORD', 'postgres', 'string'),
-        'USER': env('POSTGRES_USER', 'postgres', 'string')
+        'NAME': env('POSTGRES_DB', '', 'string'),
+        'HOST': env('POSTGRES_HOST', '', 'string'),
+        'PASSWORD': env('POSTGRES_PASSWORD', '', 'string'),
+        'USER': env('POSTGRES_USER', '', 'string')
     }
 }
 
@@ -157,9 +161,12 @@ REST_FRAMEWORK = {
     )
 }
 
+ACCESS_TOKEN_LIFETIME = env('ACCESS_TOKEN_LIFETIME', 1, 'integer')
+REFRESH_TOKEN_LIFETIME = env('REFRESH_TOKEN_LIFETIME', 7, 'integer')
+
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=ACCESS_TOKEN_LIFETIME),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=REFRESH_TOKEN_LIFETIME),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
     'UPDATE_LAST_LOGIN': False,
@@ -189,14 +196,7 @@ MEDIA_ROOT = 'media/'
 MEDIA_URL = 'media/'
 
 
-LOCATION_FIELD = {
-    'map.provider': 'openstreetmap',
-    'search.provider': 'google',
-    'provider.openstreetmap.max_zoom': 18,
-}
-
 # EMAIL CONFIG
-
 ACTIVATION_URL = 'activate/{token}/'
 EMAIL_BACKEND = env(
     'EMAIL_BACKEND',
@@ -204,7 +204,7 @@ EMAIL_BACKEND = env(
     var_type='string'
 )
 
-DEFAULT_FROM_EMAIL = 'noreply@ameba.cat'
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", 'noreply@ameba.cat', 'string')
 EMAIL_HOST = env("EMAIL_HOST", '', var_type='string')
 EMAIL_HOST_USER = env("EMAIL_HOST_USER", '', var_type='string')
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", '', var_type='string')
@@ -213,19 +213,5 @@ EMAIL_USE_SSL = env("EMAIL_USE_SSL", True, var_type='boolean')
 PROFILE_VERSION = 8
 
 
-# STRIPE
-STRIPE_TEST_SECRET_KEY = (
-    "sk_test_51IGkXjHRg08Ncmk70pYqW"
-    "gCE2CR5F02DL1MSRpXq7kC7DUEXOLv"
-    "x14qNX1oOe3J4aqKecKWkom8fbAEQQ"
-    "RWR3vfp00AOrsyzRW"
-)
-STRIPE_TEST_PUBLIC_KEY = (
-    "pk_test_51IGkXjHRg08Ncmk7fPlbb"
-    "9DfTF5f7ckXBKiR4g01euLgXs04Cqm"
-    "gBPOQuqQfOhc6aj9mzsYE1oiQ3TFjH"
-    "H9Hv3Mj00GNyG9sep"
-)
-
-STRIPE_SECRET = env("STRIPE_SECRET", STRIPE_TEST_SECRET_KEY, var_type='string')
-STRIPE_PUBLIC = env("STRIPE_PUBLIC", STRIPE_TEST_PUBLIC_KEY, var_type='string')
+STRIPE_SECRET = env("STRIPE_SECRET", '', var_type='string')
+STRIPE_PUBLIC = env("STRIPE_PUBLIC", '', var_type='string')
