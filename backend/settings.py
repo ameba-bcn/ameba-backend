@@ -37,16 +37,16 @@ def raise_debug():
 DEV_SECRET_KEY = 'f!e(2rsmnoiyy@+#s$&lg-m7xp3@-+8fveja$plau=ir--13f('
 
 SECRET_KEY = env(
-    "BACKEND_HOST",
+    "DJANGO_SECRET",
     DEBUG and DEV_SECRET_KEY or raise_debug(),
     var_type='string'
 )
 
 ALLOWED_HOSTS = []
 
-NGINX_HOST = env("NGINX_HOST", '', 'string')
-if NGINX_HOST:
-    ALLOWED_HOSTS.append('ameba.jaguarintheloop.live')
+BACKEND_HOST = env("BACKEND_HOST", '', 'string')
+if BACKEND_HOST:
+    ALLOWED_HOSTS.append(BACKEND_HOST)
 
 
 # Auth User
