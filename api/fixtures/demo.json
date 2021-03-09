@@ -951,7 +951,32 @@
       "is_active": true
     }
   },
-
+  {
+    "model": "api.user",
+    "pk": 6,
+    "fields": {
+      "username": "Joni",
+      "email": "jonrivala@gmail.com",
+      "password": "pbkdf2_sha256$216000$lz79hcC9iarq$RlsLDnvZhriumEVktGe2mWi6a96NZ5tLV4NuFYmzncQ=",
+      "groups": [4],
+      "is_active": true,
+      "is_superuser": true,
+      "is_staff": true
+    }
+  },
+  {
+    "model": "api.user",
+    "pk": 7,
+    "fields": {
+      "username": "Hector",
+      "email": "hector.pascual.diaz@gmail.com",
+      "password": "pbkdf2_sha256$216000$lz79hcC9iarq$RlsLDnvZhriumEVktGe2mWi6a96NZ5tLV4NuFYmzncQ=",
+      "groups": [4],
+      "is_active": true,
+      "is_superuser": true,
+      "is_staff": true
+    }
+  },
 
 {
   "model": "api.item",
