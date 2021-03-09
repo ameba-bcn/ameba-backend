@@ -37,7 +37,7 @@ def raise_debug():
 DEV_SECRET_KEY = 'f!e(2rsmnoiyy@+#s$&lg-m7xp3@-+8fveja$plau=ir--13f('
 
 SECRET_KEY = env(
-    "DJANGO_SECRET",
+    "BACKEND_HOST",
     DEBUG and DEV_SECRET_KEY or raise_debug(),
     var_type='string'
 )
