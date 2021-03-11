@@ -213,8 +213,8 @@ DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", 'noreply@ameba.cat', 'string')
 EMAIL_HOST = env("EMAIL_HOST", '', var_type='string')
 EMAIL_HOST_USER = env("EMAIL_HOST_USER", '', var_type='string')
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", '', var_type='string')
-EMAIL_PORT = env("EMAIL_PORT", 465, var_type='integer')
-EMAIL_USE_SSL = env("EMAIL_USE_SSL", True, var_type='boolean')
+EMAIL_PORT = int(os.getenv("EMAIL_PORT") or 465)
+EMAIL_USE_SSL = bool(os.getenv("EMAIL_USE_SSL").lower() == 'true')
 PROFILE_VERSION = 8
 
 
