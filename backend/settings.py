@@ -220,11 +220,11 @@ ANYMAIL = {
 DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", 'noreply@ameba.cat', 'string')
 SERVER_EMAIL = env("SERVER_EMAIL", 'support@ameba.cat')
 
-# EMAIL_HOST = env("EMAIL_HOST", '', var_type='string')
-# EMAIL_HOST_USER = env("EMAIL_HOST_USER", '', var_type='string')
-# EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", '', var_type='string')
-# EMAIL_PORT = int(os.getenv("EMAIL_PORT") or 465)
-# EMAIL_USE_SSL = bool(os.getenv("EMAIL_USE_SSL", "").lower() == 'true')
+EMAIL_HOST = env("EMAIL_HOST", '', var_type='string')
+EMAIL_HOST_USER = env("EMAIL_HOST_USER", '', var_type='string')
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", '', var_type='string')
+EMAIL_PORT = int(os.getenv("EMAIL_PORT") or 465)
+EMAIL_USE_SSL = bool(os.getenv("EMAIL_USE_SSL", "").lower() == 'true')
 
 PROFILE_VERSION = 8
 
