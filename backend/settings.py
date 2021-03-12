@@ -69,7 +69,8 @@ INSTALLED_APPS = [
     'drf_yasg',
     'api.apps.ApiConfig',
     'trumbowyg',
-    'location_field.apps.DefaultConfig'
+    'location_field.apps.DefaultConfig',
+    'anymail',
 ]
 
 MIDDLEWARE = [
@@ -209,12 +210,22 @@ EMAIL_BACKEND = env(
     var_type='string'
 )
 
+ANYMAIL = {
+    "MAILGUN_API_KEY": os.getenv('MG_SENDING_KEY', ''),
+    "MAILGUN_SENDER_DOMAIN": os.getenv('MG_SENDER_DOMAIN', ''),
+    "MAILGUN_API_URL": os.getenv('MG_API_URL') or "https://api.mailgun.net/v3"
+}
+
+
 DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", 'noreply@ameba.cat', 'string')
-EMAIL_HOST = env("EMAIL_HOST", '', var_type='string')
-EMAIL_HOST_USER = env("EMAIL_HOST_USER", '', var_type='string')
-EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", '', var_type='string')
-EMAIL_PORT = int(os.getenv("EMAIL_PORT") or 465)
-EMAIL_USE_SSL = bool(os.getenv("EMAIL_USE_SSL").lower() == 'true')
+SERVER_EMAIL = env("SERVER_EMAIL", 'support@ameba.cat')
+
+# EMAIL_HOST = env("EMAIL_HOST", '', var_type='string')
+# EMAIL_HOST_USER = env("EMAIL_HOST_USER", '', var_type='string')
+# EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", '', var_type='string')
+# EMAIL_PORT = int(os.getenv("EMAIL_PORT") or 465)
+# EMAIL_USE_SSL = bool(os.getenv("EMAIL_USE_SSL", "").lower() == 'true')
+
 PROFILE_VERSION = 8
 
 

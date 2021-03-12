@@ -11,3 +11,4 @@ django-location-field==2.1.0
 envs==1.3
 stripe==2.55.1
 gunicorn
+django-anymail[mailgun]
