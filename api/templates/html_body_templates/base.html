@@ -1,0 +1,43 @@
+{% load inlinecss %}
+{% inlinecss "css/email.css" %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="x-apple-disable-message-reformatting">
+    <meta name="format-detection" content="telephone=no,address=no,email=no,date=no,url=no">
+    <title></title>
+</head>
+
+<body>
+
+<table class="body-wrap">
+    <tr>
+        <td class="container">
+            {% block header %}
+            {% endblock %}
+            {% block title %}
+            {% endblock %}
+            {% block sep %}
+            {% endblock %}
+            {% block content %}
+            {% endblock %}
+            {% block details %}
+            {% endblock %}
+            {% block marquee %}
+            {% endblock %}
+            {% block newsletter %}
+            {% endblock %}
+            {% block media %}
+            {% endblock %}
+            {% block marquee_2 %}
+            {% endblock %}
+        </td>
+    </tr>
+</table>
+</body>
+</html>
+{% endinlinecss %}
