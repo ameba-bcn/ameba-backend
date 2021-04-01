@@ -37,3 +37,9 @@ class CartCheckoutNotProcessed(APIException):
     status_code = HTTP_400_BAD_REQUEST
     default_detail = 'Cart has bot been processed.'
     default_code = 'cart_not_processed'
+
+
+class CartCheckoutNeedsUser(APIException):
+    status_code = HTTP_400_BAD_REQUEST
+    default_detail = 'Cart checkout needs a valid user.'
+    default_code = 'cart_checkout_needs_user'
