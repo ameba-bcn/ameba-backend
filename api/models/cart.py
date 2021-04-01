@@ -95,3 +95,6 @@ class Cart(Model):
 
     def is_empty(self):
         return not self.get_cart_items().exists()
+
+    def is_anonymous(self):
+        return not self.user

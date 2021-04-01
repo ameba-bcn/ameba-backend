@@ -495,3 +495,12 @@ class TestPatchCart(BaseCartTest):
 
         response_2 = self._get(pk=cart_2.id, token=token_2)
         self.assertEqual(response_2.data['count'], len(body.get('items')))
+
+
+class TestCartCheckout(BaseCartTest):
+    DETAIL_ENDPOINT = '/api/carts/{pk}/checkout/'
+
+    def test_not_authenticated_checkout_returns_401(self):
+        cart = self.get_cart(items=[1, 2])
+        response = self._get(pk=cart.id)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

@@ -3,6 +3,7 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import (
     RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, CreateModelMixin
 )
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import NotAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -10,7 +11,7 @@ from rest_framework.exceptions import MethodNotAllowed
 from api.permissions import CartPermission
 from api.serializers import CartSerializer, CartCheckoutSerializer
 from api.models import Cart
-from api.exceptions import CartIsEmpty
+from api.exceptions import CartIsEmpty, CartCheckoutNeedsUser
 from api.signals import cart_checkout, cart_processed
 from api.docs.carts import CartsDocs
 
@@ -27,6 +28,11 @@ class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
         if self.action == 'checkout':
             self.serializer_class = CartCheckoutSerializer
         return super().get_serializer_class()
+
+    def get_permissions(self):
+        if self.action == 'checkout':
+            self.permission_classes = (IsAuthenticated, )
+        return super().get_permissions()
 
     @swagger_auto_schema(auto_schema=None)
     def update(self, request, *args, **kwargs):
@@ -76,6 +82,8 @@ class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
         cart = self.get_object()
         if cart.is_empty():
             raise CartIsEmpty
+        if cart.is_anonymous():
+            raise CartCheckoutNeedsUser
         cart_checkout.send(sender=self, cart=cart, request=self.request)
         serializer_class = self.get_serializer_class()
         return Response(serializer_class(cart).data)
