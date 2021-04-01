@@ -8,3 +8,4 @@ from api.views.event import UserSavedEventsViewSet
 from api.views.subscription import SubscriptionViewSet
 from api.views.activation import my_view
 from api.views.version import current_version
+from api.views.templates import mail_template
