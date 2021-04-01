@@ -2,6 +2,7 @@ from rest_framework.serializers import ModelSerializer, \
     SerializerMethodField, Serializer, PrimaryKeyRelatedField, SlugRelatedField
 
 from api.models import Cart, Item
+from api.exceptions import CartCheckoutNeedsUser
 
 
 class CartItemSerializer(Serializer):
