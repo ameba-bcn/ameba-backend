@@ -1,0 +1,52 @@
+{% extends "html_body_templates/base.html" %}
+{% load i18n %}
+
+{% block header %}
+    {% include "template_blocks/header.html" %}
+{% endblock %}
+
+{% block content %}
+<td>
+    <h1>{% trans "¡GRACIAS, HEMOS RECIBIDO TU PEDIDO!" %}</h1>
+    <p>
+        {% blocktrans %}
+            Tu pedido está siendo revisado por nuestros compañeros.<br>
+            En breve recibirás un email de confirmación.
+        {% endblocktrans %}
+    </p>
+    <table class="checkout-summary">
+        <tr>
+            <th>UNIDADES</th>
+            <th>CONCEPTO</th>
+            <th>DESCRIPCIÓN</th>
+            <th>DESCUENTO</th>
+            <th>PRECIO</th>
+        </tr>
+    </table>
+</td>
+
+{% endblock %}
+
+{% block marquee %}
+    {% include "template_blocks/marquee.html" %}
+{% endblock %}
+
+
+{% block newsletter %}
+    {% include "template_blocks/newsletter.html" %}
+{% endblock %}
+
+
+{% block subscribe %}
+    {% include "template_blocks/subscribe.html" %}
+{% endblock %}
+
+
+{% block media %}
+    {% include "template_blocks/media.html" %}
+{% endblock %}
+
+
+{% block marquee_2 %}
+    {% include "template_blocks/marquee.html" %}
+{% endblock %}
