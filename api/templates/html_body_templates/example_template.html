@@ -1,0 +1,46 @@
+{% extends "html_body_templates/base.html" %}
+{% load i18n %}
+
+{% block header %}
+    {% include "template_blocks/header.html" %}
+{% endblock %}
+
+{% block content %}
+<td>
+    <h1>{% trans "¡BIENVENIDO!" %}</h1>
+    <p>
+        {% blocktrans %}
+        Eam ex integre quaeque bonorum, ea assum solet scriptorem pri, et usu nonummy accusata interpretaris. Debitis necessitatibus est no. Eu probo graeco eum, at eius choro sit, possit recusabo corrumpit vim ne. Noster diceret delicata vel id.
+        {% endblocktrans %}
+    </p>
+    <p>
+        {% blocktrans %}
+        At quaeque adversarium ius, sed at integre persius verterem. Sit summo tibique.
+        {% endblocktrans %}
+    </p>
+</td>
+{% endblock %}
+
+{% block marquee %}
+    {% include "template_blocks/marquee.html" %}
+{% endblock %}
+
+
+{% block newsletter %}
+    {% include "template_blocks/newsletter.html" %}
+{% endblock %}
+
+
+{% block subscribe %}
+    {% include "template_blocks/subscribe.html" %}
+{% endblock %}
+
+
+{% block media %}
+    {% include "template_blocks/media.html" %}
+{% endblock %}
+
+
+{% block marquee_2 %}
+    {% include "template_blocks/marquee.html" %}
+{% endblock %}
