@@ -1,0 +1,19 @@
+{% load i18n %}{% autoescape off %}
+
+{% blocktrans %}¡Hola {{ user_name }}!{% endblocktrans %}
+
+{% blocktrans %}
+    Acabas de registrarte en {{ site_name }}, la web
+    de L'Associació de Musica Electrònica de Barcelona.
+{% endblocktrans %}
+
+{% blocktrans %}
+    Por favor, haz click en el siguiente link para activar tu cuenta.
+{% endblocktrans %}
+
+{{ activation_link }}
+
+
+L'Associació de Musica Electrònica de Barcelona
+
+{% endautoescape %}
