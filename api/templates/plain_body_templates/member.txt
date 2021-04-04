@@ -1,0 +1,16 @@
+{% load i18n %}{% autoescape off %}
+
+{% blocktrans %}¡Bienvenido {{ user_name }}!{% endblocktrans %}
+
+{% blocktrans %}
+    ¡Ya eres socio de AMEBA!
+{% endblocktrans %}
+
+{% blocktrans %}
+    Entérate de todos los eventos que organizamos, aprovecha tus
+    descuentos de socio y mucho más en {{ site_name }}
+{% endblocktrans %}
+
+L'Associació de Musica Electrònica de Barcelona
+
+{% endautoescape %}

@@ -1,4 +1,4 @@
-{% extends "html_body_templates/base.html" %}
+{% extends "template_blocks/base.html" %}
 {% load i18n %}
 
 {% block header %}
@@ -7,7 +7,9 @@
 
 {% block content %}
 <td>
-    <h1>{% trans "¡GRACIAS, HEMOS RECIBIDO TU PEDIDO!" %}</h1>
+    <h1>
+        {% blocktrans %}¡GRACIAS {{ user_name|upper }}, HEMOS RECIBIDO TU PEDIDO!{% endblocktrans %}
+    </h1>
     <p>
         {% blocktrans %}
             Tu pedido está siendo revisado por nuestros compañeros.<br>

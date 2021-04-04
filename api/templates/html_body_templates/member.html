@@ -1,4 +1,4 @@
-{% extends "html_body_templates/base.html" %}
+{% extends "template_blocks/base.html" %}
 {% load i18n %}
 
 {% block header %}
@@ -7,16 +7,16 @@
 
 {% block content %}
 <td>
-    <h1>{% trans "¡BIENVENIDO!" %}</h1>
+    <h1>{% blocktrans %}¡BIENVENIDO {{ user_name|upper }}!{% endblocktrans %}</h1>
     <p>
         {% blocktrans %}
-            ¡Ya eres socio de <a href="ameba.cat">AMEBA</a>!
+            ¡Ya eres socio de AMEBA!
         {% endblocktrans %}
     </p>
     <p>
         {% blocktrans %}
             Entérate de todos los eventos que organizamos, aprovecha tus
-            descuentos de socio y mucho más en <a href="ameba.cat">ameba.cat</a>
+            descuentos de socio y mucho más en <a href="{{ site_name }}">{{ site_name }}</a>
         {% endblocktrans %}
     </p>
 </td>
