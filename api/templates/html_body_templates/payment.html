@@ -8,7 +8,7 @@
 {% block content %}
 <td>
     <h1>
-        {% blocktrans %}¡GRACIAS {{ user_name|upper }}, HEMOS RECIBIDO TU PEDIDO!{% endblocktrans %}
+        {% blocktrans with user_name=user_name|upper %}¡GRACIAS {{ user_name }}, HEMOS RECIBIDO TU PEDIDO!{% endblocktrans %}
     </h1>
     <p>
         {% blocktrans %}
@@ -18,12 +18,17 @@
     </p>
     <table class="checkout-summary">
         <tr>
-            <th>UNIDADES</th>
             <th>CONCEPTO</th>
-            <th>DESCRIPCIÓN</th>
             <th>DESCUENTO</th>
             <th>PRECIO</th>
+            <th>TOTAL</th>
         </tr>
+        {% for item in cart_record.cart_items %}
+            <td>{{ item.name }}</td>
+            <td>{{ item.discount_name }} ({{ item.discount_value }}%)</td>
+            <td>{{ item.price }}</td>
+            <td>{{ item.subtotal }}</td>
+        {% endfor %}
     </table>
 </td>
 
