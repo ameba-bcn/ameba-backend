@@ -1,0 +1,62 @@
+{% extends "template_blocks/base.html" %}
+{% load i18n %}
+
+{% block header %}
+    {% include "template_blocks/header.html" %}
+{% endblock %}
+
+{% block content %}
+<td>
+    <h1>
+        {% blocktrans with user_name=user.username|upper %}¡GRACIAS {{ user_name }}, HEMOS RECIBIDO TU PEDIDO!{% endblocktrans %}
+    </h1>
+    <p>
+        {% blocktrans %}
+            Tu pedido está siendo revisado por nuestros compañeros.<br>
+            En breve recibirás un email de confirmación.
+        {% endblocktrans %}
+    </p>
+    <table class="checkout-summary">
+        <tr>
+            <th>CONCEPTO</th>
+            <th>DESCUENTO</th>
+            <th>PRECIO</th>
+            <th>TOTAL</th>
+        </tr>
+        {% for item in cart_record.cart_items %}
+        <tr>
+            <td>{{ item.name }}</td>
+            <td>{{ item.discount_name }} ({{ item.discount_value }}%)</td>
+            <td>{{ item.price }}</td>
+            <td>{{ item.subtotal }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <h3>TOTAL: {{ cart_record.total }}</h3>
+</td>
+
+{% endblock %}
+
+{% block marquee %}
+    {% include "template_blocks/marquee.html" %}
+{% endblock %}
+
+
+{% block newsletter %}
+    {% include "template_blocks/newsletter.html" %}
+{% endblock %}
+
+
+{% block subscribe %}
+    {% include "template_blocks/subscribe.html" %}
+{% endblock %}
+
+
+{% block media %}
+    {% include "template_blocks/media.html" %}
+{% endblock %}
+
+
+{% block marquee_2 %}
+    {% include "template_blocks/marquee.html" %}
+{% endblock %}

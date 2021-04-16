@@ -88,6 +88,7 @@ class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
         serializer_class = self.get_serializer_class()
         return Response(serializer_class(cart).data)
 
+
     # Documentation
     partial_update.__doc__ = CartsDocs.partial_update
     checkout.__doc__ = CartsDocs.checkout

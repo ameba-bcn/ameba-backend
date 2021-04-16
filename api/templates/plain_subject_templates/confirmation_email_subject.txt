@@ -1,3 +1,0 @@
-{% load i18n %}{% autoescape off %}
-{% blocktrans %}Cuenta activada!{% endblocktrans %} {{ site_name }}
-{% endautoescape %}

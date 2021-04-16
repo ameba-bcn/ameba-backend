@@ -7,6 +7,7 @@ from rest_framework import permissions as drf_permissions
 from api import serializers
 from api import permissions
 from api.signals import user_registered
+from api.docs.user import UserDocs
 
 # Get current user model
 User = get_user_model()
@@ -42,3 +43,5 @@ class UserViewSet(
             user = User.objects.get(email=request.data['email'])
             user_registered.send(sender=User, user=user, request=request)
         return response
+
+    create.__doc__ = UserDocs.create

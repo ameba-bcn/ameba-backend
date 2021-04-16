@@ -71,6 +71,7 @@ INSTALLED_APPS = [
     'trumbowyg',
     'location_field.apps.DefaultConfig',
     'anymail',
+    'django_inlinecss'
 ]
 
 MIDDLEWARE = [
@@ -231,3 +232,6 @@ PROFILE_VERSION = 8
 
 STRIPE_SECRET = env("STRIPE_SECRET", '', var_type='string')
 STRIPE_PUBLIC = env("STRIPE_PUBLIC", '', var_type='string')
+
+
+ACTIVATION_EXPIRE_DAYS = 7
