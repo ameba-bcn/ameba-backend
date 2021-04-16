@@ -6,5 +6,6 @@ from api.views.cart import CartViewSet
 from api.views.event import EventViewSet
 from api.views.event import UserSavedEventsViewSet
 from api.views.subscription import SubscriptionViewSet
-from api.views.activation import my_view
+from api.views.activate import activate
 from api.views.version import current_version
+from api.views.templates import mail_template

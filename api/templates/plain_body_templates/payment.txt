@@ -1,0 +1,14 @@
+{% load i18n %}{% autoescape off %}
+
+{% blocktrans %}
+    ¡Gracias {{ user_name }}, hemos recibido tu pedido!
+{% endblocktrans %}
+
+{% blocktrans %}
+    Tu pedido está siendo revisado por nuestros compañeros.
+    En breve recibirás un email de confirmación.
+{% endblocktrans %}
+
+L'Associació de Musica Electrònica de Barcelona
+
+{% endautoescape %}

@@ -13,3 +13,4 @@ from api.serializers.event import (
 from api.serializers.subscription import (
     SubscriptionDetailSerializer, SubscriptionListSerializer
 )
+from api.serializers.activate import ActivationSerializer

@@ -23,14 +23,11 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from api import urls
-from api.views import my_view
-
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(urls)),
-    path('trumbowyg/', include('trumbowyg.urls')),
-    path('activate/<key>/', my_view, name='activation')
+    path('trumbowyg/', include('trumbowyg.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

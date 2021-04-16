@@ -1,5 +1,4 @@
 import django.utils.encoding as encoding
-import django.contrib.auth.tokens as tokens
 import django.core.mail as mail
 import django.contrib.sites.shortcuts as shortcuts
 import django.conf as conf
@@ -37,14 +36,16 @@ class UserEmailFactoryBase(object):
             conf.settings, 'DEFAULT_FROM_EMAIL', ''
         )
 
-        return cls(
+        factory_object = cls(
             from_email=from_email,
             user=user or request.user,
             domain=site.domain or 'unknown',
             site_name=site.name or 'unknown',
-            protocol='https' if request.is_secure() else 'http',
+            protocol='https',
+            user_name=user.username,
             **context
         )
+        return factory_object.create()
 
     def get_context(self):
         context = {
@@ -60,7 +61,7 @@ class UserEmailFactoryBase(object):
         return context
 
     def create(self):
-        assert self.plain_body_template or self.html_body_template
+        assert self.plain_body_template and self.html_body_template
         context = self.get_context()
         subject = loader.render_to_string(self.subject_template, context)
         subject = ''.join(subject.splitlines())
@@ -80,8 +81,38 @@ class UserEmailFactoryBase(object):
         return email_message
 
 
-class UserActivationEmailFactory(UserEmailFactoryBase):
-    subject_template = 'plain_subject_templates/activation_email_subject.txt'
-    plain_body_template = 'plain_body_templates/activation_email_body.txt'
-    html_body_template = 'html_body_templates/activation_email_body.html'
+class ActivatedAccountEmail(UserEmailFactoryBase):
+    subject_template = 'plain_subject_templates/activated.txt'
+    plain_body_template = 'plain_body_templates/activated.txt'
+    html_body_template = 'html_body_templates/activated.html'
+
+
+class NewMembershipEmail(UserEmailFactoryBase):
+    subject_template = 'plain_subject_templates/member.txt'
+    plain_body_template = 'plain_body_templates/member.txt'
+    html_body_template = 'html_body_templates/member.html'
+
+
+class PasswordChangedEmail(UserEmailFactoryBase):
+    subject_template = 'plain_subject_templates/password_changed.txt'
+    plain_body_template = 'plain_body_templates/password_changed.txt'
+    html_body_template = 'html_body_templates/password_changed.html'
+
+
+class PasswordResetRequestEmail(UserEmailFactoryBase):
+    subject_template = 'plain_subject_templates/password_reset.txt'
+    plain_body_template = 'plain_body_templates/password_reset.txt'
+    html_body_template = 'html_body_templates/password_reset.html'
+
+
+class PaymentSuccessfulEmail(UserEmailFactoryBase):
+    subject_template = 'plain_subject_templates/payment.txt'
+    plain_body_template = 'plain_body_templates/payment.txt'
+    html_body_template = 'html_body_templates/payment.html'
+
+
+class UserRegisteredEmail(UserEmailFactoryBase):
+    subject_template = 'plain_subject_templates/registered.txt'
+    plain_body_template = 'plain_body_templates/registered.txt'
+    html_body_template = 'html_body_templates/registered.html'
 

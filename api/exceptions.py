@@ -43,3 +43,15 @@ class CartCheckoutNeedsUser(APIException):
     status_code = HTTP_400_BAD_REQUEST
     default_detail = 'Cart checkout needs a valid user.'
     default_code = 'cart_checkout_needs_user'
+
+
+class ActivationTokenExpired(APIException):
+    status_code = HTTP_400_BAD_REQUEST
+    default_detail = 'Activation token has expired.'
+    default_code = 'activation_token_expired'
+
+
+class InvalidActivationToken(APIException):
+    status_code = HTTP_400_BAD_REQUEST
+    default_detail = 'Activation token is not valid.'
+    default_code = 'invalid_activation_token'
