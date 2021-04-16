@@ -1,5 +1,6 @@
 import django.dispatch
 from django.dispatch import receiver
+from django.conf import settings
 
 from api.stripe import get_payment_intent, get_create_update_payment_intent,\
     InvalidRequestError, IntentStatus
@@ -39,7 +40,7 @@ def on_cart_deleted(sender, cart, request, **kwargs):
     )
 
     # Handle email notifications here
-    if payment.status == IntentStatus.SUCCESS:
+    if payment.status == IntentStatus.SUCCESS or settings.DEBUG:
         # Send payment confirmation email
         cart_record = payment.cart_record
         user = payment.user
