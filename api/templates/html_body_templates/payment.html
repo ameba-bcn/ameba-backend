@@ -24,12 +24,15 @@
             <th>TOTAL</th>
         </tr>
         {% for item in cart_record.cart_items %}
+        <tr>
             <td>{{ item.name }}</td>
             <td>{{ item.discount_name }} ({{ item.discount_value }}%)</td>
             <td>{{ item.price }}</td>
             <td>{{ item.subtotal }}</td>
+        </tr>
         {% endfor %}
     </table>
+    <h3>TOTAL: {{ cart_record.total }}</h3>
 </td>
 
 {% endblock %}
