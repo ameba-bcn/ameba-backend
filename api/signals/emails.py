@@ -20,7 +20,9 @@ new_member = django.dispatch.Signal(providing_args=['user', 'request'])
 
 @receiver(user_registered)
 def on_user_registered(sender, user, request, **kwargs):
-    email = UserRegisteredEmail.from_request(request, user=user)
+    email = UserRegisteredEmail.from_request(
+        request, user=user, activation_token=user.get_activation_token()
+    )
     email.send()
 
 

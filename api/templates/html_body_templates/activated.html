@@ -7,7 +7,7 @@
 
 {% block content %}
 <td>
-    <h1>{% blocktrans with user_name=user_name|upper %}¡BIENVENIDO {{ user_name }}!{% endblocktrans %}</h1>
+    <h1>{% blocktrans with user_name=user.username|upper %}¡BIENVENIDO {{ user_name }}!{% endblocktrans %}</h1>
     <p>
         {% blocktrans %}
             Ya puedes usar tu cuenta en {{ site_name }}

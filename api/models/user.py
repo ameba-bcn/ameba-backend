@@ -3,8 +3,23 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth import hashers
 from django.utils.translation import ugettext_lazy as _
+from django.core import signing
+from django.conf import settings
 
 from api import models as api_models
+
+
+class InvalidActivationToken(Exception):
+    pass
+
+
+class UserManager(models.Manager):
+
+    def get_from_activation_token(self, activation_token):
+        age = settings.ACTIVATION_EXPIRE_DAYS * 24 * 60 * 60
+        user_id, is_active = signing.loads(activation_token, max_age=age)
+        user = self.get(id=user_id)
+        return user
 
 
 class User(AbstractUser):
@@ -45,3 +60,6 @@ class User(AbstractUser):
     def activate(self):
         self.is_active = True
         self.save()
+
+    def get_activation_token(self):
+        return signing.dumps((self.id, self.is_active))
