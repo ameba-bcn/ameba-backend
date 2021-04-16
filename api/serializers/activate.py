@@ -10,7 +10,7 @@ User = get_user_model()
 
 
 class ActivationSerializer(serializers.Serializer):
-    token = serializers.CharField(max_length=64)
+    token = serializers.CharField(max_length=120)
 
     @staticmethod
     def validate_token(token):
@@ -27,8 +27,8 @@ class ActivationSerializer(serializers.Serializer):
 
     @property
     def user(self):
-        return get_object_or_404(User, self.user_id)
+        return get_object_or_404(User, id=self.user_id)
 
     @property
     def user_id(self):
-        return signing.loads(self.token)[1]
+        return signing.loads(self.validated_data['token'])[1]
