@@ -32,5 +32,6 @@ urlpatterns = [
     path('carts/current/checkout/client/', TemplateView.as_view(
         template_name="stripe.html")),
     path('version/', views.current_version),
-    path('render/', views.mail_template)
+    path('render/', views.mail_template),
+    path('activate/', views.activate)
 ]
