@@ -18,7 +18,7 @@ class TestArticle(BaseTest):
 
         data = dict(token=token)
         response = self._create(props=data, token=None)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     @mock.patch.object(signing, 'loads', raises=signing.SignatureExpired)
     def test_activate_expired_token_returns_400(self, loads_mock):
