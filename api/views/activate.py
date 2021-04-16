@@ -5,7 +5,7 @@ from rest_framework import status
 from api.serializers import ActivationSerializer
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 def activate(request):
     serializer = ActivationSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
