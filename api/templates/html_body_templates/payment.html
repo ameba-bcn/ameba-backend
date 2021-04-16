@@ -8,7 +8,7 @@
 {% block content %}
 <td>
     <h1>
-        {% blocktrans with user_name=user_name|upper %}¡GRACIAS {{ user_name }}, HEMOS RECIBIDO TU PEDIDO!{% endblocktrans %}
+        {% blocktrans with user_name=user.username|upper %}¡GRACIAS {{ user_name }}, HEMOS RECIBIDO TU PEDIDO!{% endblocktrans %}
     </h1>
     <p>
         {% blocktrans %}

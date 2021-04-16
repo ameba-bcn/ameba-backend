@@ -7,7 +7,7 @@
 
 {% block content %}
 <td>
-    <h1>{% blocktrans with user_name=user_name|upper %}¡HOLA {{ user_name }}!{% endblocktrans %}</h1>
+    <h1>{% blocktrans with user_name=user.username|upper %}¡HOLA {{ user_name }}!{% endblocktrans %}</h1>
     <p>
         {% blocktrans %}
             Acabas de registrarte en <a href="{{ site_name }}">{{ site_name }}</a>, la web
@@ -16,7 +16,7 @@
     </p>
     <p>
         {% blocktrans %}
-            Por favor, haz click <a href="{{ activation_link }}">aquí</a> para
+            Por favor, haz click <a href="{{ site_name }}/activate/?token={{ activation_token }}">aquí</a> para
             activar tu cuenta.
         {% endblocktrans %}
     </p>
