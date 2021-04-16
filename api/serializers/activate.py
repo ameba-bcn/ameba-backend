@@ -10,7 +10,7 @@ User = get_user_model()
 
 
 class ActivationSerializer(serializers.Serializer):
-    token = serializers.CharField(max_length=120)
+    token = serializers.CharField(max_length=120, required=True)
 
     @staticmethod
     def validate_token(token):
