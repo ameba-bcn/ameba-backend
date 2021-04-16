@@ -17,8 +17,10 @@ class UserManager(models.Manager):
 
     def get_from_activation_token(self, activation_token):
         age = settings.ACTIVATION_EXPIRE_DAYS * 24 * 60 * 60
-        user_id, is_active = signing.loads(activation_token, max_age=age)
+        act, user_id, is_active = signing.loads(activation_token, max_age=age)
         user = self.get(id=user_id)
+        if (act, user_id, is_active) != ('activation', user.id, False):
+            raise InvalidActivationToken
         return user
 
 
@@ -62,4 +64,4 @@ class User(AbstractUser):
         self.save()
 
     def get_activation_token(self):
-        return signing.dumps((self.id, self.is_active))
+        return signing.dumps(('activation', self.id, self.is_active))
