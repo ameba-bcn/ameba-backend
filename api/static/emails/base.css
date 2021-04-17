@@ -10,8 +10,8 @@
 /* What it does: Stops Outlook from adding extra spacing to tables. */
 table,
 td {
-    mso-table-lspace: 0pt !important;
-    mso-table-rspace: 0pt !important;
+    mso-table-lspace: 0 !important;
+    mso-table-rspace: 0 !important;
 }
 
 
