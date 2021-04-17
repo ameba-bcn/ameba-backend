@@ -31,7 +31,7 @@ class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
 
     def get_permissions(self):
         if self.action == 'checkout':
-            self.permission_classes = (IsAuthenticated, )
+            self.permission_classes = (CartPermission, IsAuthenticated)
         return super().get_permissions()
 
     @swagger_auto_schema(auto_schema=None)
@@ -87,7 +87,6 @@ class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
         cart_checkout.send(sender=self, cart=cart, request=self.request)
         serializer_class = self.get_serializer_class()
         return Response(serializer_class(cart).data)
-
 
     # Documentation
     partial_update.__doc__ = CartsDocs.partial_update
