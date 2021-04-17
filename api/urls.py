@@ -29,8 +29,6 @@ urlpatterns = [
     path('token/<token>/', views.TokenView.as_view(), name='token_view'),
     path('token/', views.TokenView.as_view(), name='token_view'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('carts/current/checkout/client/', TemplateView.as_view(
-        template_name="stripe.html")),
     path('version/', views.current_version),
     path('render/', views.mail_template),
     path('activate/', views.activate)
