@@ -16,11 +16,9 @@ class ActivationSerializer(serializers.Serializer):
     def validate_token(token):
         try:
             age = settings.ACTIVATION_EXPIRE_DAYS * 24 * 60 * 60
-            act, user_id, is_active = signing.loads(token, max_age=age)
+            signing.loads(token, max_age=age)
         except signing.SignatureExpired:
             raise ActivationTokenExpired
-        except signing.BadSignature:
-            raise InvalidActivationToken
         except Exception:
             raise InvalidActivationToken
         return token
