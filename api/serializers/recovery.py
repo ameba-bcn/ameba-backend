@@ -5,7 +5,7 @@ from api.serializers import SingleUseTokenSerializer
 
 
 class RecoveryRequestSerializer(serializers.Serializer):
-    email = serializers.EmailField()
+    email = serializers.EmailField(write_only=True)
 
 
 class RecoverySerializer(SingleUseTokenSerializer):
