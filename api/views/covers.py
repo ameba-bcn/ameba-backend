@@ -1,12 +1,15 @@
+from rest_framework.viewsets import GenericViewSet
+from rest_framework.mixins import ListModelMixin
+from rest_framework.permissions import AllowAny
+
 from api.serializers import CoverSerializer
 from api.models import Cover
-from api.views.base import BaseReadOnlyViewSet
 
 
-class CoversViewSet(BaseReadOnlyViewSet):
-    list_serializer = CoverSerializer
-    detail_serializer = CoverSerializer
+class CoversViewSet(ListModelMixin, GenericViewSet):
+    serializer_class = CoverSerializer
     model = Cover
+    permission_classes = (AllowAny, )
     queryset = Cover.objects.filter(is_active=True).order_by(
         'index', '-created'
     )
