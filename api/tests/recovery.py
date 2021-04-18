@@ -13,7 +13,7 @@ User = get_user_model()
 class TestRecoveryFlow(BaseTest):
     LIST_ENDPOINT = '/api/recovery/'
 
-    @mock.patch.object(emails.PasswordResetRequestEmail, "from_request")
+    @mock.patch.object(emails.RecoveryRequestEmail, "from_request")
     def test_recovery_request(self, from_request_mock):
         user = User.objects.create(password='whatever', username='UserName',
                                    email='username@ameba.cat')
@@ -26,7 +26,7 @@ class TestRecoveryFlow(BaseTest):
         self.assertIs(type(response.data['detail']), str)
         from_request_mock.assert_called()
 
-    @mock.patch.object(emails.PasswordResetRequestEmail, "from_request")
+    @mock.patch.object(emails.RecoveryRequestEmail, "from_request")
     def test_recovery_request_non_existent_user(self, from_request_mock):
         data = dict(email='username@ameba.cat')
         response = self._list(props=data, token=None)

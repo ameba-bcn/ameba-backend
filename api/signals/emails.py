@@ -6,7 +6,7 @@ from api.email_factories import (
     UserRegisteredEmail,
     ActivatedAccountEmail,
     PasswordChangedEmail,
-    PasswordResetRequestEmail,
+    RecoveryRequestEmail,
     NewMembershipEmail,
     PaymentSuccessfulEmail
 )
@@ -39,7 +39,7 @@ def on_new_member(sender, user, request, **kwargs):
 
 @receiver(account_recovery)
 def on_account_recovery(sender, user, request, **kwargs):
-    email = PasswordResetRequestEmail.from_request(
+    email = RecoveryRequestEmail.from_request(
         request, user=user, recovery_token=user.get_recovery_token()
     )
     email.send()
