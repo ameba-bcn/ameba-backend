@@ -4,7 +4,7 @@ from django.test import tag
 
 from api.tests import _helpers
 from api import models
-
+from api.exceptions import WrongProvidedCredentials
 
 class TestSessions(_helpers.BaseTest):
     LIST_ENDPOINT = '/api/token/'
@@ -57,10 +57,6 @@ class TestSessions(_helpers.BaseTest):
         }
         response = self.login(**wrong_cred)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        self.assertEqual(
-            response.data['detail'],
-            'No active account found with the given credentials'
-        )
         self.assertEqual(list(response.data.keys()), ['detail'])
 
     @tag("token")
@@ -78,7 +74,7 @@ class TestSessions(_helpers.BaseTest):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(
             response.data['detail'],
-            'No active account found with the given credentials'
+            WrongProvidedCredentials.default_detail
         )
         self.assertEqual(list(response.data.keys()), ['detail'])
 
