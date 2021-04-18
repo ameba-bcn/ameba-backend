@@ -41,7 +41,7 @@ class UserEmailFactoryBase(object):
             user=user or request.user,
             domain=site.domain or 'unknown',
             site_name=site.name or 'unknown',
-            protocol='https',
+            protocol=request.is_secure() and 'https' or 'http',
             user_name=user.username,
             **context
         )
