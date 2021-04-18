@@ -4,14 +4,14 @@
 
 {% blocktrans %}
     Acabas de registrarte en {{ site_name }}, la web
-    de L'Associació de Musica Electrònica de Barcelona.
+de L'Associació de Musica Electrònica de Barcelona.
 {% endblocktrans %}
 
 {% blocktrans %}
-    Por favor, haz click en el siguiente link para activar tu cuenta.
+Por favor, haz click en el siguiente link para activar tu cuenta.
 {% endblocktrans %}
 
-{{ site_name }}/activate/?token={{ activation_token }}
+    {{ protocol }}://{{ site_name }}/activate/?token={{ activation_token }}
 
 
 L'Associació de Musica Electrònica de Barcelona
