@@ -10,6 +10,7 @@
 - Envío de email de activación cuando usuario no activo intenta hacer login.
 - Templates de email con diseños de Marc
 - Fuentes de media de artistas en /api/artists/ y /api/artists/<artist-id>/
+- Documentación mejorada para nuevos endpoints.
 ##### Bugfixes
 - Link de activación mal formado en email de activación
 
