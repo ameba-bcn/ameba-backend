@@ -5,8 +5,9 @@
 {% endblocktrans %}
 
 {% blocktrans %}
-    Para cambiar tu password en {{ site_name }}, click aquí:
-    {{ password_reset_link }}
+Para cambiar tu password en {{ site_name }}, click en el siguiente link:
+
+    {{ protocol }}://{{ site_name }}/recovery/?token={{ recovery_token }}
 {% endblocktrans %}
 
 L'Associació de Musica Electrònica de Barcelona

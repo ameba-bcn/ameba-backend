@@ -1,5 +1,5 @@
 from api.serializers.user import UserSerializer
-from api.serializers.token import DeleteTokenSerializer
+from api.serializers.token import DeleteTokenSerializer, SingleUseTokenSerializer
 from api.serializers.interview import (
     InterviewListSerializer, InterviewDetailSerializer
 )
@@ -14,3 +14,6 @@ from api.serializers.subscription import (
     SubscriptionDetailSerializer, SubscriptionListSerializer
 )
 from api.serializers.activate import ActivationSerializer
+from api.serializers.recovery import (
+    RecoverySerializer, RecoveryRequestSerializer
+)

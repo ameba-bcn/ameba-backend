@@ -9,3 +9,4 @@ from api.views.subscription import SubscriptionViewSet
 from api.views.activate import activate
 from api.views.version import current_version
 from api.views.templates import mail_template
+from api.views.recovery import RecoveryViewSet

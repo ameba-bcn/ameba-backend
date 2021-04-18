@@ -1,6 +1,6 @@
 from drf_yasg.generators import OpenAPISchemaGenerator
 
-from api.docs import carts
+from api.docs import carts, recovery, activate
 
 
 class CustomOpenAPISchemaGenerator(OpenAPISchemaGenerator):
@@ -14,6 +14,15 @@ class CustomOpenAPISchemaGenerator(OpenAPISchemaGenerator):
                 "name": "carts",
                 "description": carts.CartsDocs.common
             },
+            {
+                "name": "activate",
+                "description": activate.ActivateDocs.common
+            },
+            {
+                "name": "recovery",
+                "description": recovery.RecoveryDocs.common
+            },
+
         ]
 
         return swagger

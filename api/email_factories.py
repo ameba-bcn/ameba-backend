@@ -99,10 +99,10 @@ class PasswordChangedEmail(UserEmailFactoryBase):
     html_body_template = 'html_body_templates/password_changed.html'
 
 
-class PasswordResetRequestEmail(UserEmailFactoryBase):
-    subject_template = 'plain_subject_templates/password_reset.txt'
-    plain_body_template = 'plain_body_templates/password_reset.txt'
-    html_body_template = 'html_body_templates/password_reset.html'
+class RecoveryRequestEmail(UserEmailFactoryBase):
+    subject_template = 'plain_subject_templates/recovery.txt'
+    plain_body_template = 'plain_body_templates/recovery.txt'
+    html_body_template = 'html_body_templates/recovery.html'
 
 
 class PaymentSuccessfulEmail(UserEmailFactoryBase):
