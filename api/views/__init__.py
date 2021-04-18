@@ -11,3 +11,4 @@ from api.views.version import current_version
 from api.views.templates import mail_template
 from api.views.recovery import RecoveryViewSet
 from api.views.covers import CoversViewSet
+from api.views.artists import ArtistViewSet
