@@ -2,7 +2,8 @@ from rest_framework.exceptions import APIException
 from rest_framework.status import (
     HTTP_400_BAD_REQUEST,
     HTTP_500_INTERNAL_SERVER_ERROR,
-    HTTP_404_NOT_FOUND
+    HTTP_404_NOT_FOUND,
+    HTTP_401_UNAUTHORIZED
 )
 
 
@@ -65,3 +66,9 @@ class UserDoesNotExist(APIException):
     status_code = HTTP_404_NOT_FOUND
     default_detail = 'User doesn\'t exist.'
     default_code = 'user_does_not_exist'
+
+
+class WrongProvidedCredentials(APIException):
+    status_code = HTTP_401_UNAUTHORIZED
+    default_detail = 'No active account found with the given credentials. In case credentials are right but user is not active, activation link has been sent to user email.'
+    default_code = 'wrong_credentials'
