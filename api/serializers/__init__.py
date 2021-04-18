@@ -1,5 +1,5 @@
 from api.serializers.user import UserSerializer
-from api.serializers.token import DeleteTokenSerializer
+from api.serializers.token import DeleteTokenSerializer, SingleUseTokenSerializer
 from api.serializers.interview import (
     InterviewListSerializer, InterviewDetailSerializer
 )
