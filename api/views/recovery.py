@@ -1,12 +1,9 @@
-from rest_framework import generics
 from rest_framework.viewsets import GenericViewSet
-from rest_framework.response import Response
-from rest_framework import status
-from drf_yasg.utils import swagger_auto_schema
 from django.contrib.auth import get_user_model
 
 from api.serializers import RecoverySerializer, RecoveryRequestSerializer
-from api.signals.emails import account_recovery
+from api.signals.emails import account_recovery, password_changed
+from api.responses import RecoveryRequestResponse, RecoveryResponse
 
 User = get_user_model()
 
@@ -23,13 +20,9 @@ class RecoveryViewSet(GenericViewSet):
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        return Response(
-            status=status.HTTP_200_OK,
-            data={
-                'detail': f'Bienvenido {serializer.user.username}, ya puedes '
-                          f'usar tu cuenta en ameba.cat'
-            }
-        )
+        password_changed.send(sender=User, user=serializer.user,
+                              request=request)
+        return RecoveryRequestResponse(username=serializer.user.username)
 
     def list(self, request):
         serializer_class = self.get_serializer_class()
@@ -39,11 +32,4 @@ class RecoveryViewSet(GenericViewSet):
         if User.objects.filter(email=email):
             user = User.objects.get(email=email)
             account_recovery.send(sender=User, user=user, request=request)
-        return Response(
-            status=status.HTTP_200_OK,
-            data={
-                'detail': f'Si {email} se encuentra en nuestra base de datos, '
-                          f'enviaremos un link para reestablecer la '
-                          f'contraseña.'
-            }
-        )
+        return RecoveryResponse(email=email)
