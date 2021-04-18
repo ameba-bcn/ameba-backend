@@ -27,7 +27,7 @@ class SingleUseTokenSerializer(serializers.Serializer):
     age = 24 * 60 * 60
     signature = ('id', )
     salt = ''
-    token = serializers.CharField(max_length=120, required=True)
+    token = serializers.CharField(max_length=250, required=True)
 
     def validate_token(self, token):
         try:
