@@ -5,7 +5,7 @@ from api.serializers import SingleUseTokenSerializer
 
 
 class RecoveryRequestSerializer(serializers.Serializer):
-    email = serializers.EmailField(read_only=True)
+    email = serializers.EmailField()
 
 
 class RecoverySerializer(SingleUseTokenSerializer):
@@ -14,4 +14,6 @@ class RecoverySerializer(SingleUseTokenSerializer):
     signature = ('id', 'email', 'password')
 
     def perform_action(self):
-        self.user.set_password(self.password)
+        user = self.user
+        user.set_password(self.validated_data["password"])
+        user.save()

@@ -11,11 +11,10 @@ from api.email_factories import (
     PaymentSuccessfulEmail
 )
 
-from api.models import Payment
-
 user_registered = django.dispatch.Signal(providing_args=['user', 'request'])
 account_activated = django.dispatch.Signal(providing_args=['user', 'request'])
 new_member = django.dispatch.Signal(providing_args=['user', 'request'])
+account_recovery = django.dispatch.Signal(providing_args=['user', 'request'])
 
 
 @receiver(user_registered)
@@ -35,4 +34,12 @@ def on_account_activated(sender, user, request, **kwargs):
 @receiver(new_member)
 def on_new_member(sender, user, request, **kwargs):
     email = NewMembershipEmail.from_request(request, user=user)
+    email.send()
+
+
+@receiver(account_recovery)
+def on_account_recovery(sender, user, request, **kwargs):
+    email = PasswordResetRequestEmail.from_request(
+        request, user=user, recovery_token=user.get_recovery_token()
+    )
     email.send()
