@@ -1,16 +1,34 @@
 from django.contrib import admin
 from django.utils.html import mark_safe
 
-from api.models import Artist
+from api.models import Artist, ArtistMediaUrl, Image
 from api.admin.image import get_image_preview
+
+
+class MediaUrlsInLine(admin.StackedInline):
+    model = ArtistMediaUrl
+    verbose_name = 'ArtistMediaUrl'
+    verbose_name_plural = "ArtistMediaUrls"
+    fields = ('url', 'created')
+    readonly_fields = ('created', )
+    extra = 0
+
+
+class ArtistImages(admin.StackedInline):
+    model = Artist.images.through
+    verbose_name = 'ArtistImage'
+    verbose_name_plural = 'ArtistImages'
+    fields = ('image', )
+    extra = 0
 
 
 class ArtistAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None, {'fields': ['name', 'biography']})
+        (None, {'fields': ['id', 'name', 'biography']})
     ]
-    readonly_fields = ['bio_preview']
+    readonly_fields = ['id', 'bio_preview']
     list_display = ['name', 'bio_preview', 'list_preview']
+    inlines = (MediaUrlsInLine, ArtistImages)
 
     def preview(self, obj):
         preview = '<div>{images}</div>'

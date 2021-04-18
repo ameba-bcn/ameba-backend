@@ -8,7 +8,7 @@ from api.models.images import Image
 from api.models.item import Item
 from api.models.member import Member
 from api.models.membership import Membership
-from api.models.artist import Artist
+from api.models.artist import Artist, ArtistMediaUrl
 from api.models.interview import Interview, Answer, Question
 from api.models.article import Article, ArticleSize
 from api.models.discount import Discount, DiscountCode
