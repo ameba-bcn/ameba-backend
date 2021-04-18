@@ -17,3 +17,4 @@ from api.serializers.activate import ActivationSerializer
 from api.serializers.recovery import (
     RecoverySerializer, RecoveryRequestSerializer
 )
+from api.serializers.cover import CoverSerializer

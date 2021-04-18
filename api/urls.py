@@ -23,6 +23,7 @@ router.register(r'users/current/events/saved', views.UserSavedEventsViewSet,
 router.register(r'subscriptions', views.SubscriptionViewSet,
                 basename='subscription')
 router.register(r'recovery', views.RecoveryViewSet, basename='recovery')
+router.register(r'covers', views.CoversViewSet, basename='covers')
 
 urlpatterns = [
     path('', include(router.urls)),
