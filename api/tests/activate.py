@@ -2,9 +2,11 @@ from unittest import mock
 
 from rest_framework import status
 from django.core import signing
+from django.contrib.auth import get_user_model
 
 from api.tests._helpers import BaseTest
-from api.models import User
+
+User = get_user_model()
 
 
 class TestActivation(BaseTest):
@@ -60,7 +62,7 @@ class TestActivation(BaseTest):
         response = self._create(props=data, token=None)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_activate_missing_token_returns_404(self):
+    def test_activate_missing_token_returns_400(self):
         user = User.objects.create(password='whatever', username='UserName',
                                    email='username@ameba.cat')
         self.assertFalse(user.is_active)

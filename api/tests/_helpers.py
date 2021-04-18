@@ -52,9 +52,10 @@ class BaseTest(APITestCase):
         self._authenticate(token)
         return self.client.post(self.LIST_ENDPOINT, props)
 
-    def _list(self, token=None):
+    def _list(self, props=None, token=None):
+        props = props or {}
         self._authenticate(token)
-        return self.client.get(self.LIST_ENDPOINT)
+        return self.client.get(self.LIST_ENDPOINT, props)
 
 
 def iter_iter(iterable):
