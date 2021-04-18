@@ -2,6 +2,8 @@
 
 class CartsDocs:
     common = """
+# CARTS
+
 Endpoints para manipular carritos de la compra. Admiten dos formas de uso,
 una autenticada y otra sin autenticar excepto para el endpoint `/checkout/`,
 que requiere autenticación.
