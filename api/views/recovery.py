@@ -32,7 +32,7 @@ class RecoveryViewSet(GenericViewSet):
     def list(self, request):
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(data=request.query_params)
-        serializer.is_valid()
+        serializer.is_valid(raise_exception=True)
         email = serializer.validated_data['email']
         if User.objects.filter(email=email):
             user = User.objects.get(email=email)
