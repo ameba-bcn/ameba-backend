@@ -13,7 +13,7 @@ class ActivationResponse(Response):
 
 
 class RecoveryRequestResponse(ActivationResponse):
-    message = 'Bienvenido {username}, ya puedes usar tu cuenta en ameba.cat'
+    message = '¡Password cambiado!'
 
 
 class RecoveryResponse(Response):
