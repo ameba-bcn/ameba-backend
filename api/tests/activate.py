@@ -7,7 +7,7 @@ from api.tests._helpers import BaseTest
 from api.models import User
 
 
-class TestArticle(BaseTest):
+class TestActivation(BaseTest):
     LIST_ENDPOINT = '/api/activate/'
 
     def test_activate_mechanism(self):
@@ -18,10 +18,13 @@ class TestArticle(BaseTest):
 
         data = dict(token=token)
         response = self._create(props=data, token=None)
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('detail', response.data)
+        self.assertIs(type(response.data['detail']), str)
 
-    @mock.patch.object(signing, 'loads', raises=signing.SignatureExpired)
+    @mock.patch.object(signing, 'loads')
     def test_activate_expired_token_returns_400(self, loads_mock):
+        loads_mock.side_effect = signing.SignatureExpired
         user = User.objects.create(
             password='whatever',
             username='UserName',
