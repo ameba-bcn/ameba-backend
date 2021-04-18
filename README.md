@@ -1,6 +1,19 @@
-# ameba-site backend v0.6
+# ameba-site backend v0.11
 
 ### Release notes
+
+#### 0.11
+##### Features
+- Flujo de recuperación de cuenta en /api/recovery/
+- Flujo de activación de cuenta en /api/activate/
+- Visuales de portada en /api/covers/
+- Envío de email de activación cuando usuario no activo intenta hacer login.
+- Templates de email con diseños de Marc
+- Fuentes de media de artistas en /api/artists/ y /api/artists/<artist-id>/
+- Documentación mejorada para nuevos endpoints.
+##### Bugfixes
+- Link de activación mal formado en email de activación
+
 
 #### 0.10
 - Tests de proceso de pagos
