@@ -3,6 +3,7 @@
 from api.models.user import User
 
 # Then this.
+from api.models.covers import Cover
 from api.models.images import Image
 from api.models.item import Item
 from api.models.member import Member
