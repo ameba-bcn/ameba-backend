@@ -9,3 +9,4 @@ from api.tests.cart import (
 )
 from api.tests.payments import PaymentFlowTest
 from api.tests.activate import TestActivation
+from api.tests.recovery import TestRecoveryFlow

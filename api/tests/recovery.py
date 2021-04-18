@@ -43,11 +43,13 @@ class TestRecoveryFlow(BaseTest):
             email='username@ameba.cat'
         )
         self.assertFalse(user.is_active)
+        self.assertTrue(user.check_password('whatever'))
         token = user.get_recovery_token()
         data = dict(token=token, password='wh4tever')
         response = self._create(props=data, token=None)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         from_request_mock.assert_called()
+        self.assertTrue(user.check_password('wh4tever'))
 
     def test_recovery_token_twice_returns_400(self):
         user = User.objects.create(
