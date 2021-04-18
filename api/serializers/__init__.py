@@ -18,3 +18,5 @@ from api.serializers.recovery import (
     RecoverySerializer, RecoveryRequestSerializer
 )
 from api.serializers.cover import CoverSerializer
+from api.serializers.artist import ArtistSerializer, ArtistListSerializer
+

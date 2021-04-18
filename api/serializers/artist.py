@@ -1,0 +1,32 @@
+from rest_framework import serializers
+
+from api.models import Artist, ArtistMediaUrl
+
+
+class ArtistMediaUrlSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ArtistMediaUrl
+        fields = ['url']
+
+
+class ArtistSerializer(serializers.ModelSerializer):
+    media_urls = serializers.SlugRelatedField(many=True, slug_field='url',
+                                              read_only=True)
+    images = serializers.SlugRelatedField(many=True, slug_field='url',
+                                          read_only=True)
+
+    class Meta:
+        model = Artist
+        fields = ['id', 'name', 'biography', 'images', 'media_urls']
+
+
+class ArtistListSerializer(serializers.ModelSerializer):
+    media_urls = serializers.SlugRelatedField(many=True, slug_field='url',
+                                              read_only=True)
+    images = serializers.SlugRelatedField(many=True, slug_field='url',
+                                          read_only=True)
+
+    class Meta:
+        model = Artist
+        fields = ['id', 'name', 'bio_preview', 'images', 'media_urls']
