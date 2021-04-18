@@ -64,4 +64,13 @@ class User(AbstractUser):
         self.save()
 
     def get_activation_token(self):
-        return signing.dumps(('activation', self.id, self.is_active))
+        return signing.dumps(
+            (self.id, self.is_active),
+            salt=settings.ACTIVATION_SALT
+        )
+
+    def get_recovery_token(self):
+        return signing.dumps(
+            (self.id, self.email, self.password),
+            salt=settings.RECOVERY_SALT
+        )

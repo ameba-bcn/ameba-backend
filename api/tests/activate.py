@@ -2,12 +2,14 @@ from unittest import mock
 
 from rest_framework import status
 from django.core import signing
+from django.contrib.auth import get_user_model
 
 from api.tests._helpers import BaseTest
-from api.models import User
+
+User = get_user_model()
 
 
-class TestArticle(BaseTest):
+class TestActivation(BaseTest):
     LIST_ENDPOINT = '/api/activate/'
 
     def test_activate_mechanism(self):
@@ -18,10 +20,13 @@ class TestArticle(BaseTest):
 
         data = dict(token=token)
         response = self._create(props=data, token=None)
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('detail', response.data)
+        self.assertIs(type(response.data['detail']), str)
 
-    @mock.patch.object(signing, 'loads', raises=signing.SignatureExpired)
+    @mock.patch.object(signing, 'loads')
     def test_activate_expired_token_returns_400(self, loads_mock):
+        loads_mock.side_effect = signing.SignatureExpired
         user = User.objects.create(
             password='whatever',
             username='UserName',
@@ -57,7 +62,7 @@ class TestArticle(BaseTest):
         response = self._create(props=data, token=None)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_activate_missing_token_returns_404(self):
+    def test_activate_missing_token_returns_400(self):
         user = User.objects.create(password='whatever', username='UserName',
                                    email='username@ameba.cat')
         self.assertFalse(user.is_active)

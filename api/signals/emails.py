@@ -6,17 +6,16 @@ from api.email_factories import (
     UserRegisteredEmail,
     ActivatedAccountEmail,
     PasswordChangedEmail,
-    PasswordResetRequestEmail,
+    RecoveryRequestEmail,
     NewMembershipEmail,
     PaymentSuccessfulEmail
 )
 
-from api.models import Payment
-
 user_registered = django.dispatch.Signal(providing_args=['user', 'request'])
 account_activated = django.dispatch.Signal(providing_args=['user', 'request'])
 new_member = django.dispatch.Signal(providing_args=['user', 'request'])
-
+account_recovery = django.dispatch.Signal(providing_args=['user', 'request'])
+password_changed = django.dispatch.Signal(providing_args=['user', 'request'])
 
 @receiver(user_registered)
 def on_user_registered(sender, user, request, **kwargs):
@@ -35,4 +34,18 @@ def on_account_activated(sender, user, request, **kwargs):
 @receiver(new_member)
 def on_new_member(sender, user, request, **kwargs):
     email = NewMembershipEmail.from_request(request, user=user)
+    email.send()
+
+
+@receiver(account_recovery)
+def on_account_recovery(sender, user, request, **kwargs):
+    email = RecoveryRequestEmail.from_request(
+        request, user=user, recovery_token=user.get_recovery_token()
+    )
+    email.send()
+
+
+@receiver(password_changed)
+def on_password_changed(sender, user, request, **kwargs):
+    email = PasswordChangedEmail.from_request(request, user=user)
     email.send()
