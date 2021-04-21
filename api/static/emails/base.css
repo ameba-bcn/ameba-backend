@@ -167,6 +167,9 @@ a {
     border: 1px solid #1d1d1b;
 }
 
+.checkout-summary-total {
+    border: 0px solid transparent;
+}
 
 /*MARQUEE*/
 .marquee td {
