@@ -31,8 +31,13 @@
             <td>{{ item.subtotal }}</td>
         </tr>
         {% endfor %}
+        <tr>
+            <td style="border: 0 solid transparent!important;"></td>
+            <td style="border: 0 solid transparent!important;"></td>
+            <td style="font-weight: 400;">TOTAL</td>
+            <td style="font-weight: 400;">{{ cart_record.total }}</td>
+        </tr>
     </table>
-    <h3>TOTAL: {{ cart_record.total }}</h3>
 </td>
 
 {% endblock %}
