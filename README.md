@@ -2,6 +2,11 @@
 
 ### Release notes
 
+#### 0.12
+##### Features
+- Email confirmación de cuenta con tabla implementada
+#### Bugfixes
+- localhost harcoded en contenido de templates (urls rotas)
 #### 0.11
 ##### Features
 - Flujo de recuperación de cuenta en /api/recovery/
