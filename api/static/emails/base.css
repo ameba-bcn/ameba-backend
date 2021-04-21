@@ -170,7 +170,8 @@ a {
 /*MARQUEE*/
 .marquee td {
     height: 30px;
-    background-image: url("http://localhost:8000/media/icons/marquee.gif");
+    /* Property overwritten in template as inlinecss doesn't resolve relative paths and can not use variables in css. */
+    /*background-image: url("/media/icons/marquee.gif");*/
     background-position: center;
 }
 .clickable-marquee {
