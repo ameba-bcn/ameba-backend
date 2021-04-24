@@ -19,4 +19,6 @@ from api.serializers.recovery import (
 )
 from api.serializers.cover import CoverSerializer
 from api.serializers.artist import ArtistSerializer, ArtistListSerializer
-
+from api.serializers.mailing_list import (
+    DeleteSubscriberSerializer, SubscribeSerializer
+)

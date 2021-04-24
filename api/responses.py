@@ -25,3 +25,13 @@ class RecoveryResponse(Response):
             status=status.HTTP_200_OK,
             data=dict(detail=self.message.format(email=email))
         )
+
+
+class NewSubscriberResponse(Response):
+    message = 'Gracias por suscribirte a la newsletter de AMEBA.'
+
+    def __init__(self):
+        super().__init__(
+            status=status.HTTP_200_OK,
+            data=dict(detail=self.message)
+        )
