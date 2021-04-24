@@ -30,5 +30,7 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('version/', views.current_version),
     path('render/', views.mail_template),
-    path('activate/', views.activate)
+    path('activate/', views.activate),
+    path('subscribe/', views.subscribe),
+    path('mailgun_unsubscribe/', views.mailgun_unsubscribe_hook),
 ]
