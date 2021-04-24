@@ -16,3 +16,4 @@ from api.models.cart import Cart, CartItems
 from api.models.event import Event
 from api.models.subscription import Subscription
 from api.models.payment import Payment
+from api.models.mailing_list import MailingList, Subscriber
