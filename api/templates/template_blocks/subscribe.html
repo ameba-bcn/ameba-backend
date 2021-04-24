@@ -2,7 +2,7 @@
 {% load i18n %}
 
 <td>
-    <a href="">
+    <a href="{{ protocol }}://{{ site_name }}/subscribe/?email={{ user.email }}">
         <div class="button">
             {% trans "SUBCRÍBETE" %}
         </div>
