@@ -211,10 +211,15 @@ EMAIL_BACKEND = env(
     var_type='string'
 )
 
+MG_API_KEY = os.getenv('MG_SENDING_KEY', '')
+MG_SENDER_DOMAIN = os.getenv('MG_SENDER_DOMAIN', '')
+MG_API_URL = os.getenv('MG_API_URL') or "https://api.mailgun.net/v3"
+MG_AMEBA_DOMAIN = os.getenv('MG_AMEBA_DOMAIN') or 'mail-out.ameba.cat'
+
 ANYMAIL = {
-    "MAILGUN_API_KEY": os.getenv('MG_SENDING_KEY', ''),
-    "MAILGUN_SENDER_DOMAIN": os.getenv('MG_SENDER_DOMAIN', ''),
-    "MAILGUN_API_URL": os.getenv('MG_API_URL') or "https://api.mailgun.net/v3"
+    "MAILGUN_API_KEY": MG_API_KEY,
+    "MAILGUN_SENDER_DOMAIN": MG_SENDER_DOMAIN,
+    "MAILGUN_API_URL": MG_API_URL
 }
 
 
@@ -248,3 +253,6 @@ DEFAULT_MAILING_LIST = env(
     'newsletters@mail-out.ameba.cat',
     var_type='string'
 )
+
+
+STAFF_DOMAINS = ['jaguarintheloop.live', 'ameba.cat']
