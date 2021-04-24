@@ -212,6 +212,7 @@ EMAIL_BACKEND = env(
 )
 
 MG_API_KEY = os.getenv('MG_SENDING_KEY', '')
+MG_TRACKING_KEY = os.getenv('MG_TRACKING_KEY') or MG_API_KEY
 MG_SENDER_DOMAIN = os.getenv('MG_SENDER_DOMAIN', '')
 MG_API_URL = os.getenv('MG_API_URL') or "https://api.mailgun.net/v3"
 MG_AMEBA_DOMAIN = os.getenv('MG_AMEBA_DOMAIN') or 'mail-out.ameba.cat'
@@ -256,3 +257,5 @@ DEFAULT_MAILING_LIST = env(
 
 
 STAFF_DOMAINS = ['jaguarintheloop.live', 'ameba.cat']
+TEST_MAILING_LIST_PREFIXES = ['test', 'dev', 'stag', 'sand', 'debug', 'local']
+TEST_TEMPLATE = 'unsubscribe.test'
