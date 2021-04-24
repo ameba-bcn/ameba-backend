@@ -2,7 +2,8 @@ from rest_framework.exceptions import APIException
 from rest_framework.status import (
     HTTP_400_BAD_REQUEST,
     HTTP_500_INTERNAL_SERVER_ERROR,
-    HTTP_404_NOT_FOUND
+    HTTP_404_NOT_FOUND,
+    HTTP_403_FORBIDDEN
 )
 
 
@@ -65,3 +66,35 @@ class UserDoesNotExist(APIException):
     status_code = HTTP_404_NOT_FOUND
     default_detail = 'User doesn\'t exist.'
     default_code = 'user_does_not_exist'
+
+
+class InvalidWebHookSignature(APIException):
+    """ 400 """
+    status_code = HTTP_400_BAD_REQUEST
+    default_message = "Invalid signature."
+    default_code = 'invalid_signature'
+
+
+class ExpiredToken(APIException):
+    status_code = HTTP_400_BAD_REQUEST
+    default_message = 'Token has expired.'
+    default_code = 'expired_token'
+
+
+class UnknownEvent(APIException):
+    status_code = HTTP_400_BAD_REQUEST
+    default_message = 'Event unknown.'
+    default_code = 'unknown_event'
+
+
+class MissingAddress(APIException):
+    status_code = HTTP_400_BAD_REQUEST
+    default_message = 'Missing mailing list address.'
+    default_code = 'missing_mailing_address'
+
+
+class UnsubscribeForbidden(APIException):
+    status_code = HTTP_403_FORBIDDEN
+    default_message = 'Unsubscribe from regulatory list is not allowed for ' \
+                      'medical app users.'
+    default_code = 'unsubscribe_forbidden'
