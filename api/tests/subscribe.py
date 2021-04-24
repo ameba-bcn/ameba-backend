@@ -1,11 +1,10 @@
 from unittest import mock
+from django.conf import settings
 
 from rest_framework import status
-from django.core import signing
 from django.contrib.auth import get_user_model
 
 from api.tests._helpers import BaseTest
-from api.signals import emails
 from api.models import Subscriber
 
 User = get_user_model()
@@ -14,11 +13,21 @@ User = get_user_model()
 class SubscribeTest(BaseTest):
     LIST_ENDPOINT = '/api/subscribe/'
 
-    def test_subscribe_new_email(self):
+    @mock.patch('api.mailgun.add_member')
+    def test_subscribe_new_email(self, add_member_mock):
         data = dict(email='new@email.si')
         response = self._create(data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(Subscriber.objects.filter(email='new@email.si'))
+        subscriber = Subscriber.objects.get(email='new@email.si')
+        self.assertEqual(
+            subscriber.mailing_lists.first().address,
+            settings.DEFAULT_MAILING_LIST
+        )
+        add_member_mock.assert_called_with(
+            email=data['email'],
+            list_address=settings.DEFAULT_MAILING_LIST
+        )
 
     def test_subscribe_same_email(self):
         data = dict(email='new@email.si')
