@@ -33,7 +33,6 @@ def is_test_mailing_list(list_address):
 
 def is_prod_configured_list(list_address):
     return not has_test_suffixes(list_address) and list_address in [
-        settings.MG_PROD_MAILING_LIST,
         settings.DEFAULT_MAILING_LIST
     ]
 
@@ -53,7 +52,7 @@ def only_test_mailing_lists(fcn):
 
 
 def only_staff_in_test_mailing_lists(fcn):
-    def wrapper(email, list_address=PROD_MAILING_LIST):
+    def wrapper(email, list_address):
         if is_prod_configured_list(list_address) or is_staff_email(email):
             return fcn(email, list_address)
     return wrapper
@@ -104,7 +103,7 @@ def list_members():
 
 
 @only_staff_in_test_mailing_lists
-def add_member(email, list_address=PROD_MAILING_LIST):
+def add_member(email, list_address):
     data = {'address': email}
     single_async_request(
         'post',
@@ -115,14 +114,14 @@ def add_member(email, list_address=PROD_MAILING_LIST):
     )
 
 
-def remove_member(address, list_address=PROD_MAILING_LIST):
+def remove_member(address, list_address):
     endpoint = 'lists/{list}/members/{address}'.format(
         list=list_address, address=address
     )
     single_async_request('delete', endpoint=endpoint)
 
 
-def unsubscribe_member(address, list_address=PROD_MAILING_LIST):
+def unsubscribe_member(address, list_address):
     endpoint = 'lists/{list}/members/{address}'.format(
         list=list_address, address=address
     )
@@ -131,7 +130,7 @@ def unsubscribe_member(address, list_address=PROD_MAILING_LIST):
 
 
 @only_staff_in_test_mailing_lists
-def subscribe_member(address, list_address=PROD_MAILING_LIST):
+def subscribe_member(address, list_address):
     endpoint = 'lists/{list}/members/{address}'.format(
         list=list_address, address=address
     )

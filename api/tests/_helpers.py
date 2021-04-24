@@ -50,7 +50,7 @@ class BaseTest(APITestCase):
 
     def _create(self, props, token=None):
         self._authenticate(token)
-        return self.client.post(self.LIST_ENDPOINT, props)
+        return self.client.post(self.LIST_ENDPOINT, props, content_type='application/json')
 
     def _list(self, props=None, token=None):
         props = props or {}
