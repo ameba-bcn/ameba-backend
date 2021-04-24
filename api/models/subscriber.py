@@ -1,11 +1,11 @@
 from django.db import models
 from django.conf import settings
 
-from api.models import MailingList
-
 
 def default_mailing_lists():
-    return MailingList.objects.filter(address=settings.DEFAULT_MAILING_LIST)
+    return Subscriber.mailing_lists.through.objects.filter(
+        address=settings.DEFAULT_MAILING_LIST
+    )
 
 
 class Subscriber(models.Model):

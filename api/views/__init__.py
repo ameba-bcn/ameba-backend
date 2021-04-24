@@ -12,3 +12,4 @@ from api.views.templates import mail_template
 from api.views.recovery import RecoveryViewSet
 from api.views.covers import CoversViewSet
 from api.views.artists import ArtistViewSet
+from api.views.subscriber import subscribe, mailgun_unsubscribe_hook
