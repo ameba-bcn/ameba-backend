@@ -24,8 +24,10 @@ def subscribe(request):
     serialized_data = SubscribeSerializer(data=request.data)
     serialized_data.is_valid(raise_exception=True)
     subscriber, created = Subscriber.objects.get_or_create(
-        email=serialized_data.email
+        email=serialized_data.validated_data['email']
     )
-    mailing_list = MailingList.objects.get(settings.DEFAULT_MAILING_LIST)
+    mailing_list = MailingList.objects.get(
+        address=settings.DEFAULT_MAILING_LIST
+    )
     subscriber.mailing_lists.add(mailing_list)
     return NewSubscriberResponse()
