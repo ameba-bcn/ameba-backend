@@ -8,7 +8,6 @@ from django.conf import settings
 from api.exceptions import (
     InvalidWebHookSignature, ExpiredToken, UnknownEvent, MissingAddress
 )
-from api.models import MailingList
 
 EP = datetime.datetime(1970, 1, 1, 0, 0, 0)
 
