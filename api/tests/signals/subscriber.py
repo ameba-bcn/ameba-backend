@@ -1,17 +1,10 @@
 from unittest import mock
-from django.conf import settings
-
-from django.contrib.auth import get_user_model
 
 from api.tests._helpers import BaseTest
 from api.models import MailingList, Subscriber
-from api.models.mailing_list import DeletionNotAllowed
-
-User = get_user_model()
 
 
-class SubscriberSignals(BaseTest):
-    LIST_ENDPOINT = '/api/subscribe/'
+class SubscriberSignalsTest(BaseTest):
 
     @mock.patch('api.mailgun.add_member')
     def test_new_subscription_gets_synced(self, add_member_mock):
