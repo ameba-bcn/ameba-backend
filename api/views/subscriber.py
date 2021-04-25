@@ -1,6 +1,7 @@
 from django.conf import settings
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
 
 from api.serializers import DeleteSubscriberSerializer, SubscribeSerializer
 from api.models import Subscriber, MailingList
@@ -14,7 +15,10 @@ def mailgun_unsubscribe_hook(request):
     serialized_data.is_valid(raise_exception=True)
     if Subscriber.objects.filter(email=serialized_data.email):
         subscriber = Subscriber.objects.get(email=serialized_data.email)
-        subscriber.unsubscribe_from_address(serialized_data.list_address)
+        mailing_list = MailingList.objects.get(
+            address=serialized_data.list_address
+        )
+        subscriber.mailing_lists.remove(mailing_list)
     return Response()
 
 

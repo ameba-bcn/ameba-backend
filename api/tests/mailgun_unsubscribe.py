@@ -8,7 +8,7 @@ from rest_framework.test import APITestCase
 
 import datetime
 from api.tests._helpers import BaseTest
-from api.models import Subscriber
+from api.models import Subscriber, MailingList
 from api import mailgun
 
 
@@ -29,20 +29,26 @@ def get_signature():
 
 
 class ApiMailgunUnsubscriptionTest(BaseTest):
-    LIST_ENDPOINT = 'api/mailgun_unsubscribe/'
+    LIST_ENDPOINT = '/api/mailgun_unsubscribe/'
 
     @tag("unsubscribe")
     def test_existing_email_unsubscribes(self):
         email = 'patient1@jacoti.com'
-        Subscriber.objects.create(email=email)
-
+        subscriber = Subscriber.objects.create(email=email)
+        mailing_list = MailingList.objects.get(
+            address=settings.DEFAULT_MAILING_LIST
+        )
+        subscriber.mailing_lists.add(mailing_list)
         signature = get_signature()
         event_data = {
-            'recipient': email,
-            'event': 'unsubscribed'
+            "recipient": email,
+            "event": "unsubscribed",
+            "mailing-list": {
+                "address": settings.DEFAULT_MAILING_LIST
+            }
         }
-        request_body = {'signature': signature, 'event-data': event_data}
+        request_body = {"signature": signature, "event-data": event_data}
         response = self._create(props=request_body)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertFalse(Subscriber.objects.filter(email=email))
+        self.assertFalse(subscriber.mailing_lists.all())
