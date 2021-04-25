@@ -1,6 +1,6 @@
 from drf_yasg.generators import OpenAPISchemaGenerator
 
-from api.docs import carts, recovery, activate, covers
+from api.docs import carts, recovery, activate, covers, subscriber
 
 
 class CustomOpenAPISchemaGenerator(OpenAPISchemaGenerator):
@@ -25,6 +25,10 @@ class CustomOpenAPISchemaGenerator(OpenAPISchemaGenerator):
             {
                 "name": "covers",
                 "description": covers.CoversDocs.common
+            },
+            {
+                "name": "subscribe",
+                "description": subscriber.SubscriberDocs.common
             },
         ]
 

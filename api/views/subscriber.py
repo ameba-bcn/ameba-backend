@@ -1,7 +1,7 @@
 from django.conf import settings
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
+from drf_yasg.utils import swagger_auto_schema
 
 from api.serializers import DeleteSubscriberSerializer, SubscribeSerializer
 from api.models import Subscriber, MailingList
@@ -22,6 +22,7 @@ def mailgun_unsubscribe_hook(request):
     return Response()
 
 
+@swagger_auto_schema(method='post', request_body=SubscribeSerializer)
 @api_view(['POST'])
 @permission_classes([])
 def subscribe(request):
