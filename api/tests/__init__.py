@@ -14,3 +14,12 @@ from api.tests.subscribe import SubscribeTest
 from api.tests.mailgun_unsubscribe import ApiMailgunUnsubscriptionTest
 from api.tests.signals import SubscriberSignalsTest, MailgunSignalsTest
 from api.tests.mailgun import MailgunApiTest
+
+
+from unittest import mock
+
+from api import mailgun
+
+# Prevent external requests on tests
+mailgun.perform_request = mock.MagicMock()
+

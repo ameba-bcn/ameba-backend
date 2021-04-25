@@ -33,3 +33,13 @@ def on_deleted_subscription(instance, action, model, pk_set, *args, **kwargs):
             mailgun.remove_member(
                 email=email, list_address=mailing_list_address
             )
+
+
+@dispatch.receiver(signals.post_save, sender=MailingList)
+def on_new_mailing_list(instance, *args, **kwargs):
+    mailgun.post_mailing_list(list_address=instance.address)
+
+
+@dispatch.receiver(signals.pre_delete, sender=MailingList)
+def on_delete_mailing_list(instance, *args, **kwargs):
+    mailgun.delete_mailing_list(list_address=instance.address)
