@@ -3,6 +3,7 @@ from django.conf import settings
 
 from api.tests._helpers import BaseTest
 from api.models import MailingList, Subscriber, User
+from api.models.mailing_list import DeletionNotAllowed
 
 
 class MailgunSignalsTest(BaseTest):
@@ -57,7 +58,7 @@ class MailgunSignalsTest(BaseTest):
 
     @mock.patch('api.mailgun.delete_mailing_list')
     def test_del_default_list_not_allowed(self, del_mailing_list_mock):
-        mailing_list = MailingList.objects.create(
+        mailing_list = MailingList.objects.get(
             address=settings.DEFAULT_MAILING_LIST
         )
 
