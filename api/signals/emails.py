@@ -17,6 +17,7 @@ new_member = django.dispatch.Signal(providing_args=['user', 'request'])
 account_recovery = django.dispatch.Signal(providing_args=['user', 'request'])
 password_changed = django.dispatch.Signal(providing_args=['user', 'request'])
 
+
 @receiver(user_registered)
 def on_user_registered(sender, user, request, **kwargs):
     email = UserRegisteredEmail.from_request(
