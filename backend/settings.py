@@ -250,7 +250,7 @@ RECOVERY_SALT = 'rEc0VErit0kn'
 # MAILING LISTS
 DEFAULT_MAILING_LIST = env(
     'DEFAULT_MAILING_LIST',
-    'newsletters@mail-out.ameba.cat',
+    'newsletter@mail-out.ameba.cat',
     var_type='string'
 )
 
