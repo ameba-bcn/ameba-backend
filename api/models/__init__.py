@@ -3,6 +3,7 @@
 from api.models.user import User
 
 # Then this.
+from api.models.mailing_list import MailingList
 from api.models.covers import Cover
 from api.models.images import Image
 from api.models.item import Item
@@ -17,4 +18,3 @@ from api.models.event import Event
 from api.models.subscription import Subscription
 from api.models.payment import Payment
 from api.models.subscriber import Subscriber
-from api.models.mailing_list import MailingList

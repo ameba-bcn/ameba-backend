@@ -98,3 +98,9 @@ class UnsubscribeForbidden(APIException):
     default_message = 'Unsubscribe from regulatory list is not allowed for ' \
                       'medical app users.'
     default_code = 'unsubscribe_forbidden'
+
+
+class AddressDoesNotExist(APIException):
+    status_code = HTTP_400_BAD_REQUEST
+    default_message = 'List address does not exist.'
+    default_code = 'address_does_not_exist'
