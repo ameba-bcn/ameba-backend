@@ -1,18 +1,12 @@
 from unittest import mock
 from django.conf import settings
 
-from rest_framework import status
-from django.contrib.auth import get_user_model
-
 from api.tests._helpers import BaseTest
 from api.models import MailingList
 from api.models.mailing_list import DeletionNotAllowed
 
-User = get_user_model()
 
-
-class MailingListSignals(BaseTest):
-    LIST_ENDPOINT = '/api/subscribe/'
+class MailingListSignalsTest(BaseTest):
 
     @mock.patch('api.mailgun.post_mailing_list')
     def test_new_mailing_list_synchronized(self, post_mailing_list_mock):
