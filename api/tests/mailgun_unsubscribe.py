@@ -32,7 +32,8 @@ class ApiMailgunUnsubscriptionTest(BaseTest):
     LIST_ENDPOINT = '/api/mailgun_unsubscribe/'
 
     @tag("unsubscribe")
-    def test_existing_email_unsubscribes(self):
+    @mock.patch('api.mailgun.remove_member')
+    def test_existing_email_unsubscribes(self, remove_member_mock):
         email = 'patient1@jacoti.com'
         subscriber = Subscriber.objects.create(email=email)
         mailing_list = MailingList.objects.get(
@@ -52,3 +53,56 @@ class ApiMailgunUnsubscriptionTest(BaseTest):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFalse(subscriber.mailing_lists.all())
+        remove_member_mock.assert_called_with(
+            email, settings.DEFAULT_MAILING_LIST
+        )
+
+    @tag("unsubscribe")
+    @mock.patch('api.mailgun.remove_member')
+    def test_unsubscribe_from_non_existing_address(self, remove_member_mock):
+        email = 'patient1@jacoti.com'
+        subscriber = Subscriber.objects.create(email=email)
+        mailing_list = MailingList.objects.get(
+            address=settings.DEFAULT_MAILING_LIST
+        )
+        subscriber.mailing_lists.add(mailing_list)
+        signature = get_signature()
+        event_data = {
+            "recipient": email,
+            "event": "unsubscribed",
+            "mailing-list": {
+                "address": 'newlett@mail-out.ameba.cat'
+            }
+        }
+        request_body = {"signature": signature, "event-data": event_data}
+        response = self._create(props=request_body)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertTrue(subscriber.mailing_lists.all())
+        remove_member_mock.assert_not_called()
+
+    @tag("unsubscribe")
+    @mock.patch('api.mailgun.remove_member')
+    def test_unsubscribe_other_event_dont_unsubscribe(
+        self, remove_member_mock
+    ):
+        email = 'patient1@jacoti.com'
+        subscriber = Subscriber.objects.create(email=email)
+        mailing_list = MailingList.objects.get(
+            address=settings.DEFAULT_MAILING_LIST
+        )
+        subscriber.mailing_lists.add(mailing_list)
+        signature = get_signature()
+        event_data = {
+            "recipient": email,
+            "event": "other_event",
+            "mailing-list": {
+                "address": settings.DEFAULT_MAILING_LIST
+            }
+        }
+        request_body = {"signature": signature, "event-data": event_data}
+        response = self._create(props=request_body)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertTrue(subscriber.mailing_lists.all())
+        remove_member_mock.assert_not_called()

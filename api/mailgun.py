@@ -114,16 +114,16 @@ def add_member(email, list_address):
     )
 
 
-def remove_member(address, list_address):
+def remove_member(email, list_address):
     endpoint = 'lists/{list}/members/{address}'.format(
-        list=list_address, address=address
+        list=list_address, address=email
     )
     single_async_request('delete', endpoint=endpoint)
 
 
-def unsubscribe_member(address, list_address):
+def unsubscribe_member(email, list_address):
     endpoint = 'lists/{list}/members/{address}'.format(
-        list=list_address, address=address
+        list=list_address, address=email
     )
     data = {'subscribed': 'no'}
     single_async_request('put', endpoint=endpoint, attributes=data)
