@@ -50,3 +50,4 @@ def on_account_recovery(sender, user, request, **kwargs):
 def on_password_changed(sender, user, request, **kwargs):
     email = PasswordChangedEmail.from_request(request, user=user)
     email.send()
+
