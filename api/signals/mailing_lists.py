@@ -7,7 +7,9 @@ from api.models import MailingList, Subscriber
 
 
 def create_mailing_lists():
-    MailingList.objects.get_or_create(address=settings.DEFAULT_MAILING_LIST)
+    MailingList.objects.get_or_create(
+        address=settings.DEFAULT_MAILING_LIST, is_test=False
+    )
 
 
 @dispatch.receiver(signals.m2m_changed,sender=Subscriber.mailing_lists.through)
@@ -34,12 +36,14 @@ def on_deleted_subscription(instance, action, model, pk_set, *args, **kwargs):
             mailing_list = model.objects.get(pk=mailing_list_id)
             mailing_list_address = mailing_list.address
             email = subscriber.email
-            mailgun.remove_member(email, mailing_list_address)
+            mailgun.remove_member(
+                email=email, list_address=mailing_list_address
+            )
 
 
 @dispatch.receiver(signals.post_save, sender=MailingList)
 def on_new_mailing_list(instance, *args, **kwargs):
-    mailgun.post_mailing_list(address=instance.address)
+    mailgun.post_mailing_list(list_address=instance.address)
 
 
 @dispatch.receiver(signals.pre_delete, sender=MailingList)

@@ -5,6 +5,8 @@ import logging
 from django.conf import settings
 from rest_framework.status import HTTP_400_BAD_REQUEST
 
+from api.models import MailingList
+
 API_URL = settings.MG_API_URL
 VALID_PREFIXES = settings.TEST_MAILING_LIST_PREFIXES
 PROD_MAILING_LIST = settings.DEFAULT_MAILING_LIST
@@ -20,41 +22,15 @@ NOT_MG_CONFIGURED_MSG = 'Mailgun configuration not found.'
 logger = logging.getLogger(__name__)
 
 
-def has_test_suffixes(list_address):
-    for test_suffixes in settings.TEST_MAILING_LIST_PREFIXES:
-        if test_suffixes in list_address:
-            return True
-    return False
-
-
 def is_test_mailing_list(list_address):
-    return has_test_suffixes(list_address)
-
-
-def is_prod_configured_list(list_address):
-    return not has_test_suffixes(list_address) and list_address in [
-        settings.DEFAULT_MAILING_LIST
-    ]
-
-
-def is_staff_email(email):
-    for domain in settings.STAFF_DOMAINS:
-        if email.endswith(domain):
-            return True
-    return False
+    mailing_list = MailingList.objects.get(address=list_address)
+    return mailing_list.is_test
 
 
 def only_test_mailing_lists(fcn):
     def wrapper(list_address: str):
         if is_test_mailing_list(list_address):
             return fcn(list_address)
-    return wrapper
-
-
-def only_staff_in_test_mailing_lists(fcn):
-    def wrapper(email, list_address):
-        if is_prod_configured_list(list_address) or is_staff_email(email):
-            return fcn(email, list_address)
     return wrapper
 
 
@@ -102,7 +78,6 @@ def list_members():
     return perform_request('get', 'lists/pages')
 
 
-@only_staff_in_test_mailing_lists
 def add_member(email, list_address):
     data = {'address': email}
     single_async_request(
@@ -129,7 +104,6 @@ def unsubscribe_member(email, list_address):
     single_async_request('put', endpoint=endpoint, attributes=data)
 
 
-@only_staff_in_test_mailing_lists
 def subscribe_member(address, list_address):
     endpoint = 'lists/{list}/members/{address}'.format(
         list=list_address, address=address
@@ -138,8 +112,8 @@ def subscribe_member(address, list_address):
     single_async_request('put', endpoint=endpoint, attributes=data)
 
 
-def post_mailing_list(address, description=None):
-    attributes = dict(address=address)
+def post_mailing_list(list_address, description=None):
+    attributes = dict(address=list_address)
     if description:
         attributes['description'] = description
     method = 'post'
@@ -148,10 +122,9 @@ def post_mailing_list(address, description=None):
     return response
 
 
-@only_test_mailing_lists
-def delete_mailing_list(mailing_list):
+def delete_mailing_list(list_address):
     method = 'delete'
-    endpoint = 'lists/{address}'.format(address=mailing_list)
+    endpoint = 'lists/{address}'.format(address=list_address)
     response = perform_request(method, endpoint)
     return response
 
