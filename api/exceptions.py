@@ -101,7 +101,14 @@ class UnsubscribeForbidden(APIException):
     default_code = 'unsubscribe_forbidden'
 
 
+<<<<<<< HEAD
 class WrongProvidedCredentials(APIException):
     status_code = HTTP_401_UNAUTHORIZED
     default_detail = 'No active account found with the given credentials. In case credentials are right but user is not active, activation link has been sent to user email.'
     default_code = 'wrong_credentials'
+=======
+class AddressDoesNotExist(APIException):
+    status_code = HTTP_400_BAD_REQUEST
+    default_message = 'List address does not exist.'
+    default_code = 'address_does_not_exist'
+>>>>>>> da15903... tests/mailgun_unsubscribe.py: tested mailgun webhook

@@ -6,8 +6,9 @@ import rest_framework.serializers as serializers
 from django.conf import settings
 
 from api.exceptions import (
-    InvalidWebHookSignature, ExpiredToken, UnknownEvent, MissingAddress
+    InvalidWebHookSignature, AddressDoesNotExist, UnknownEvent, MissingAddress
 )
+from api.models import MailingList
 
 EP = datetime.datetime(1970, 1, 1, 0, 0, 0)
 
@@ -34,13 +35,6 @@ class MailgunSignatureSerializer(serializers.Serializer):
         else:
             raise InvalidWebHookSignature
 
-    @staticmethod
-    def validate_timestamp(timestamp):
-        local_timestamp = (datetime.datetime.utcnow() - EP).total_seconds()
-        if abs(local_timestamp - timestamp) > settings.MG_TOKEN_EXPIRE_TIME:
-            raise ExpiredToken
-        return timestamp
-
 
 class MailgunEventDataSerializer(serializers.Serializer):
     recipient = serializers.EmailField()
@@ -57,6 +51,8 @@ class MailgunEventDataSerializer(serializers.Serializer):
     def validate_mailing_list(mailing_list):
         if 'address' not in mailing_list:
             raise MissingAddress
+        elif not MailingList.objects.filter(address=mailing_list.get('address')):
+            raise AddressDoesNotExist
         return mailing_list
 
     def to_internal_value(self, data):
