@@ -232,7 +232,6 @@ EMAIL_HOST_USER = env("EMAIL_HOST_USER", '', var_type='string')
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", '', var_type='string')
 EMAIL_PORT = int(os.getenv("EMAIL_PORT") or 465)
 EMAIL_USE_SSL = bool(os.getenv("EMAIL_USE_SSL", "").lower() == 'true')
-
 PROFILE_VERSION = 8
 
 
