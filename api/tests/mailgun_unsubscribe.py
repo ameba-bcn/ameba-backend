@@ -54,7 +54,7 @@ class ApiMailgunUnsubscriptionTest(BaseTest):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFalse(subscriber.mailing_lists.all())
         remove_member_mock.assert_called_with(
-            email, settings.DEFAULT_MAILING_LIST
+            email=email, list_address=settings.DEFAULT_MAILING_LIST
         )
 
     @tag("unsubscribe")
