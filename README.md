@@ -1,6 +1,13 @@
-# ameba-site backend v0.11
+# ameba-site backend v0.13
 
 ### Release notes
+
+#### 0.13
+##### Features
+- `/api/subscribe/` endpoint para subscripciones de email
+- Funcionalidad "SUBSCRIBE" en emails apuntando a `/subscribe/?email=<email` (frontend)
+- Signals de subscripción al registrar usuario, sincronización con MAILGUN
+- Admin panel para mailing lists y subscribers
 
 #### 0.12
 ##### Features
