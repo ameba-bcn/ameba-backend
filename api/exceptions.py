@@ -3,7 +3,8 @@ from rest_framework.status import (
     HTTP_400_BAD_REQUEST,
     HTTP_500_INTERNAL_SERVER_ERROR,
     HTTP_404_NOT_FOUND,
-    HTTP_401_UNAUTHORIZED
+    HTTP_401_UNAUTHORIZED,
+    HTTP_403_FORBIDDEN
 )
 
 
@@ -68,7 +69,45 @@ class UserDoesNotExist(APIException):
     default_code = 'user_does_not_exist'
 
 
+class InvalidWebHookSignature(APIException):
+    """ 400 """
+    status_code = HTTP_400_BAD_REQUEST
+    default_message = "Invalid signature."
+    default_code = 'invalid_signature'
+
+
+class ExpiredToken(APIException):
+    status_code = HTTP_400_BAD_REQUEST
+    default_message = 'Token has expired.'
+    default_code = 'expired_token'
+
+
+class UnknownEvent(APIException):
+    status_code = HTTP_400_BAD_REQUEST
+    default_message = 'Event unknown.'
+    default_code = 'unknown_event'
+
+
+class MissingAddress(APIException):
+    status_code = HTTP_400_BAD_REQUEST
+    default_message = 'Missing mailing list address.'
+    default_code = 'missing_mailing_address'
+
+
+class UnsubscribeForbidden(APIException):
+    status_code = HTTP_403_FORBIDDEN
+    default_message = 'Unsubscribe from regulatory list is not allowed for ' \
+                      'medical app users.'
+    default_code = 'unsubscribe_forbidden'
+
+
 class WrongProvidedCredentials(APIException):
     status_code = HTTP_401_UNAUTHORIZED
     default_detail = 'No active account found with the given credentials. In case credentials are right but user is not active, activation link has been sent to user email.'
     default_code = 'wrong_credentials'
+
+
+class AddressDoesNotExist(APIException):
+    status_code = HTTP_400_BAD_REQUEST
+    default_message = 'List address does not exist.'
+    default_code = 'address_does_not_exist'

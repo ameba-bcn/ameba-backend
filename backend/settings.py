@@ -211,10 +211,16 @@ EMAIL_BACKEND = env(
     var_type='string'
 )
 
+MG_API_KEY = os.getenv('MG_SENDING_KEY', '')
+MG_TRACKING_KEY = os.getenv('MG_TRACKING_KEY') or MG_API_KEY
+MG_SENDER_DOMAIN = os.getenv('MG_SENDER_DOMAIN', '')
+MG_API_URL = os.getenv('MG_API_URL') or "https://api.mailgun.net/v3"
+MG_AMEBA_DOMAIN = os.getenv('MG_AMEBA_DOMAIN') or 'mail-out.ameba.cat'
+
 ANYMAIL = {
-    "MAILGUN_API_KEY": os.getenv('MG_SENDING_KEY', ''),
-    "MAILGUN_SENDER_DOMAIN": os.getenv('MG_SENDER_DOMAIN', ''),
-    "MAILGUN_API_URL": os.getenv('MG_API_URL') or "https://api.mailgun.net/v3"
+    "MAILGUN_API_KEY": MG_API_KEY,
+    "MAILGUN_SENDER_DOMAIN": MG_SENDER_DOMAIN,
+    "MAILGUN_API_URL": MG_API_URL
 }
 
 
@@ -226,7 +232,6 @@ EMAIL_HOST_USER = env("EMAIL_HOST_USER", '', var_type='string')
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", '', var_type='string')
 EMAIL_PORT = int(os.getenv("EMAIL_PORT") or 465)
 EMAIL_USE_SSL = bool(os.getenv("EMAIL_USE_SSL", "").lower() == 'true')
-
 PROFILE_VERSION = 8
 
 
@@ -240,3 +245,16 @@ ACTIVATION_SALT = 'aCtiV4TiONtoKeN'
 
 RECOVERY_EXPIRE_DAYS = .5
 RECOVERY_SALT = 'rEc0VErit0kn'
+
+
+# MAILING LISTS
+DEFAULT_MAILING_LIST = env(
+    'DEFAULT_MAILING_LIST',
+    'newsletter@mail-out.ameba.cat',
+    var_type='string'
+)
+
+
+STAFF_DOMAINS = ['jaguarintheloop.live', 'ameba.cat']
+TEST_MAILING_LIST_PREFIXES = ['test', 'dev', 'stag', 'sand', 'debug', 'local']
+TEST_TEMPLATE = 'unsubscribe.test'

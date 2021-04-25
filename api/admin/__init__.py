@@ -9,3 +9,5 @@ from api.admin.artist import ArtistAdmin
 from api.admin.subscription import SubscriptionAdmin
 from api.admin.payment import PaymentAdmin
 from api.admin.cover import CoverAdmin
+from api.admin.mailing_list import MailingListAdmin
+from api.admin.subscriber import SubscriberAdmin

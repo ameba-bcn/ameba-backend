@@ -48,9 +48,9 @@ class BaseTest(APITestCase):
         return self.client.patch(self.DETAIL_ENDPOINT.format(pk=pk),
                                  data=json_obj, content_type='application/json')
 
-    def _create(self, props, token=None):
+    def _create(self, props, token=None, format='json'):
         self._authenticate(token)
-        return self.client.post(self.LIST_ENDPOINT, props)
+        return self.client.post(self.LIST_ENDPOINT, props, format=format)
 
     def _list(self, props=None, token=None):
         props = props or {}

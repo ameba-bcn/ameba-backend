@@ -138,7 +138,7 @@ class TestInterview(BaseTest):
                 open('api/tests/fixtures/media/interview-image.jpg', 'rb')
             )
         }
-        response = self._create(attrs)
+        response = self._create(attrs, format=None)
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
     @tag("interview")
