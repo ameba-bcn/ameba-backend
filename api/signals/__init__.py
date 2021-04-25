@@ -8,10 +8,14 @@ from api.groups import DEFAULT_GROUP, MEMBER_GROUP
 from api.signals.emails import user_registered
 from api.signals.payments import cart_checkout, cart_processed
 from api.signals.user import on_new_user
+from api.signals.mailing_lists import create_mailing_lists
+from api.signals.subscriber import on_new_user, on_deleted_user
+from api.signals.mailgun import on_deleted_subscription, on_new_subscription
 
 
 def populate_models(sender, **kwargs):
     create_group_permissions()
+    create_mailing_lists()
 
 
 @receiver(post_save, sender=models.User)
