@@ -1,14 +1,14 @@
 from rest_framework import serializers
 from django.db.models import Sum
 
-from api.models import Article, ArticleSize
+from api.models import Article, ArticleAttribute
 
 
-class SizesSerializer(serializers.ModelSerializer):
+class AttributesSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = ArticleSize
-        fields = ['size', 'genre', 'stock']
+        model = ArticleAttribute
+        fields = ['attribute', 'value']
 
 
 class ArticleDetailSerializer(serializers.ModelSerializer):
@@ -17,7 +17,7 @@ class ArticleDetailSerializer(serializers.ModelSerializer):
     )
     discount = serializers.SerializerMethodField()
     stock = serializers.IntegerField(source='total_stock')
-    sizes = SizesSerializer(many=True)
+    attributes = AttributesSerializer(many=True)
 
     def get_discount(self, article) -> str:
         user = self.context.get('request').user
@@ -28,7 +28,7 @@ class ArticleDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Article
-        fields = ['id', 'name', 'description', 'price', 'stock', 'sizes',
+        fields = ['id', 'name', 'description', 'price', 'stock', 'attributes',
                   'images', 'is_active', 'discount']
         depth = 1
 
