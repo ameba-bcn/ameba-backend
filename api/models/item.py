@@ -68,3 +68,8 @@ class Item(models.Model):
                 if discount.check_user_applies(user, code):
                     yield discount
 
+    def get_description(self):
+        if self.description:
+            return self.description
+        else:
+            return self.family.description

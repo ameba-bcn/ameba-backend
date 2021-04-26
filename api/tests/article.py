@@ -85,7 +85,7 @@ class TestArticle(BaseTest):
                 article_size_data = ArticleSizeMethods.get_structure(i)
                 article_size_data['article'] = article
                 av = ArticleSize.objects.create(**article_size_data)
-                article.sizes.add(av)
+                article.attributes.add(av)
 
     @tag('article')
     def test_article_list_has_proper_structure(self):
@@ -445,7 +445,7 @@ class TestArticle(BaseTest):
                 'stock': stock,
                 'article': article
             })
-            article.sizes.add(size)
+            article.attributes.add(size)
 
         response = self._get(pk=article.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -466,7 +466,7 @@ class TestArticle(BaseTest):
                 'stock': stock,
                 'article': article
             })
-            article.sizes.add(size)
+            article.attributes.add(size)
 
         response = self._get(pk=article.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)

@@ -1,5 +1,7 @@
 from django.contrib import admin
-from api.models import Article, ArticleSize, Image, Discount
+from api.models import (
+    Article, ArticleAttribute, Discount, ArticleFamily, ArticleAttributeType
+)
 from django.forms.models import BaseInlineFormSet
 from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
@@ -14,12 +16,12 @@ class DiscountChoiceInLine(admin.TabularInline):
     fk_name = 'item'
 
 
-class SizeChoiceInline(admin.TabularInline):
-    model = ArticleSize
+class AttributesInLine(admin.TabularInline):
+    model = Article.attributes.through
     extra = 0
-    verbose_name = 'Size'
+    verbose_name = 'Attribute'
     formset = BaseInlineFormSet
-    fields = ('size', 'genre', 'stock')
+    # fields = ('attribute', 'value')
 
 
 class ImageChoiceInLine(admin.TabularInline):
@@ -41,12 +43,16 @@ class ImageChoiceInLine(admin.TabularInline):
 
 class ArticleAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None, {'fields': ['name', 'description', 'price', 'stock',
+        (None, {'fields': ['article_name', 'family', 'description', 'price', 'stock',
                            'created', 'updated']})
     ]
-    inlines = [ImageChoiceInLine, SizeChoiceInline, DiscountChoiceInLine]
-    readonly_fields = ['created', 'updated']
-    list_display = ['name', 'price', 'stock', 'description', 'preview']
+    inlines = [ImageChoiceInLine, AttributesInLine, DiscountChoiceInLine]
+    readonly_fields = ['article_name', 'created', 'updated']
+    list_display = ['article_name', 'price', 'stock', 'description', 'preview']
+
+    @staticmethod
+    def article_name(obj):
+        return obj.__str__()
 
     def preview(self, obj):
         img_tag = '<img src="{}" width="75" height="75" style="margin:10px" />'
@@ -62,3 +68,26 @@ class ArticleAdmin(admin.ModelAdmin):
 
 admin.site.register(Article, ArticleAdmin)
 
+
+class ArticleFamilyAdmin(admin.ModelAdmin):
+    fields = ('name', 'images', 'description')
+    list_display = ['name']
+
+
+admin.site.register(ArticleFamily, ArticleFamilyAdmin)
+
+
+class ArticleAttributesAdmin(admin.ModelAdmin):
+    fields = ('attribute', 'value')
+    list_display = ('attribute', 'value')
+
+
+admin.site.register(ArticleAttribute, ArticleAttributesAdmin)
+
+
+class ArticleAttributeTypeAdmin(admin.ModelAdmin):
+    fields = ('name', )
+    list_display = ('name', )
+
+
+admin.site.register(ArticleAttributeType, ArticleAttributeTypeAdmin)
