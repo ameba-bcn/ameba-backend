@@ -6,7 +6,7 @@ from django.contrib.auth.models import Group
 
 from api.tests._helpers import BaseTest, check_structure
 from api.tests.user import BaseUserTest
-from api.models import Article, ArticleSize, Image, Item
+from api.models import Article, Image, Item
 from api.models import Discount
 
 
