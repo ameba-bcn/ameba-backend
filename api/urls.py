@@ -9,7 +9,7 @@ from api import views
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet, basename='user')
 router.register(r'interviews', views.InterviewViewSet, basename='interview')
-router.register(r'articles', views.ArticleViewSet, basename='article')
+# router.register(r'articles', views.ArticleViewSet, basename='article')
 router.register(r'events', views.EventViewSet, basename='event')
 
 
