@@ -3,9 +3,9 @@ from api.serializers.token import DeleteTokenSerializer, SingleUseTokenSerialize
 from api.serializers.interview import (
     InterviewListSerializer, InterviewDetailSerializer
 )
-from api.serializers.article import (
-    ArticleDetailSerializer, ArticleListSerializer
-)
+# from api.serializers.article import (
+#     ArticleDetailSerializer, ArticleListSerializer
+# )
 from api.serializers.cart import CartSerializer, CartCheckoutSerializer
 from api.serializers.event import (
     EventDetailSerializer, EventListSerializer, UserSavedEventsListSerializer

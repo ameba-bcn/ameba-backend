@@ -1,14 +1,18 @@
 from django.contrib import admin
 
-from api.admin.item import BaseItemAdmin
+from api.admin.item import (
+    BaseItemAdmin, ImageChoiceInLine, DiscountChoiceInLine, ItemVariantInline
+)
 from api.models import Subscription
 
 
+class SubscriptionVariantInline(ItemVariantInline):
+    fields = ItemVariantInline.fields + ['benefits']
+
+
 class SubscriptionAdmin(BaseItemAdmin):
-    fieldsets = [
-        (None, {'fields': ['name', 'description', 'benefits', 'price', 'stock',
-                           'created', 'updated']})
-    ]
+    inlines = [SubscriptionVariantInline, ImageChoiceInLine,
+               DiscountChoiceInLine]
 
 
 admin.site.register(Subscription, SubscriptionAdmin)
