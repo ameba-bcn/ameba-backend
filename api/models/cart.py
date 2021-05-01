@@ -46,7 +46,7 @@ class Cart(Model):
                 fraction = 1. - discount.value / 100.
             else:
                 fraction = 1.
-            amount += cart_item['item'].amount * fraction
+            amount += cart_item['item_variant'].amount * fraction
         return int(amount)
 
     @property
@@ -62,7 +62,7 @@ class Cart(Model):
             for discount in discounts_by_value:
                 if self.is_applicable(cart_discounts, discount):
                     discounts.append({
-                        'item': cart_item.item_variant,
+                        'item_variant': cart_item.item_variant,
                         'discount': discount,
                         'cart_item': cart_item
                     })
@@ -70,7 +70,7 @@ class Cart(Model):
                     break
             else:
                 discounts.append({
-                    'item': cart_item.item_variant,
+                    'item_variant': cart_item.item_variant,
                     'discount': None,
                     'cart_item': cart_item
                 })
@@ -80,9 +80,11 @@ class Cart(Model):
         user = self.user
         return discount.remaining_usages(user) > cur_discounts.count(discount)
 
-    def discounts_by_value_desc(self, item):
+    def discounts_by_value_desc(self, item_variant):
         if self.user:
-            valid_dis = item.get_valid_discounts(self.user, self.discount_code)
+            valid_dis = item_variant.item.get_valid_discounts(
+                self.user, self.discount_code
+            )
             return sorted(valid_dis, key=lambda x: x.value, reverse=True)
         return []
 

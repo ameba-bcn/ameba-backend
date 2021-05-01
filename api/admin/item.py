@@ -9,7 +9,8 @@ from api.models import (
 
 
 class ItemVariantInline(admin.TabularInline):
-    fields = ['attributes', 'stock', 'price']
+    fields = ['id', 'attributes', 'stock', 'price']
+    readonly_fields = ('id', )
     model = ItemVariant
     extra = 0
     verbose_name = 'Variant'
