@@ -1,6 +1,6 @@
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import (
-    ListModelMixin, DestroyModelMixin, CreateModelMixin, RetrieveModelMixin
+    ListModelMixin, DestroyModelMixin, CreateModelMixin
 )
 from rest_framework.permissions import IsAuthenticated
 
