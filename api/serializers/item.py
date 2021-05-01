@@ -1,9 +1,25 @@
 from rest_framework import serializers
 
-from api.models import Item
+from api.models import Item, ItemVariant, ItemAttribute
 
 
-class BaseItemListSerializer(serializers.ModelSerializer):
+class AttributeSerializer(serializers.ModelSerializer):
+    attribute = serializers.SlugRelatedField('name')
+
+    class Meta:
+        model = ItemAttribute
+        fields = ['attribute', 'value']
+
+
+class VariantSerializer(serializers.ModelSerializer):
+    attributes = AttributeSerializer(many=True)
+
+    class Meta:
+        model = ItemVariant
+        fields = ['id', 'item', 'attributes', 'stock', 'price']
+
+
+class ItemListSerializer(serializers.ModelSerializer):
     images = serializers.SlugRelatedField(many=True,
                                           read_only=True,
                                           slug_field='url')
@@ -25,11 +41,11 @@ class BaseItemListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Item
-        fields = ['id', 'name', 'price', 'images', 'discount']
+        fields = ['name', 'images', 'discount', 'price_range', 'stock']
 
 
-class BaseItemDetailSerializer(BaseItemListSerializer):
+class ItemDetailSerializer(ItemListSerializer):
+    variants = VariantSerializer(many=True)
 
-    class Meta(BaseItemListSerializer.Meta):
-        fields = BaseItemListSerializer.Meta.fields + ["description", "stock",
-                                                       "discount"]
+    class Meta(ItemListSerializer.Meta):
+        fields = ItemListSerializer.Meta.fields + ['description', 'variants']

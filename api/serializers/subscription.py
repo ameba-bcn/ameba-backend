@@ -1,16 +1,15 @@
-from api.serializers.item import (BaseItemDetailSerializer,
-                                  BaseItemListSerializer)
+from api.serializers.item import ItemDetailSerializer, ItemListSerializer
 from api.models import Subscription
 
 
-class SubscriptionDetailSerializer(BaseItemDetailSerializer):
+class SubscriptionListSerializer(ItemListSerializer):
 
-    class Meta(BaseItemDetailSerializer.Meta):
+    class Meta(ItemDetailSerializer.Meta):
         model = Subscription
-        fields = BaseItemDetailSerializer.Meta.fields + ['benefits']
 
 
-class SubscriptionListSerializer(BaseItemListSerializer):
+class SubscriptionDetailSerializer(ItemDetailSerializer):
 
-    class Meta(BaseItemDetailSerializer.Meta):
+    class Meta(ItemDetailSerializer.Meta):
         model = Subscription
+        fields = ItemDetailSerializer.Meta.fields + ['benefits']
