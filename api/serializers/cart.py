@@ -72,12 +72,6 @@ class CartSerializer(ModelSerializer):
         )
         read_only_fields = ('user', 'id', 'total', 'count', 'item_variants')
 
-    def to_internal_value(self, data):
-        cart_items = data.pop('item_variants', None)
-        if cart_items:
-            data['new_item_variants'] = cart_items
-        return super().to_internal_value(data)
-
     def _get_user(self):
         request = self.context.get('request')
         if request.user.is_authenticated:
