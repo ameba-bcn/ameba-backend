@@ -21,7 +21,7 @@ class CartItemSerializer(Serializer):
     @staticmethod
     def get_discount_name(cart_item):
         if cart_item['discount']:
-            return cart_item['item_variant'].discount.name
+            return cart_item['discount'].name
         return ''
 
     @staticmethod
@@ -55,20 +55,28 @@ class CartItemSerializer(Serializer):
 
 
 class CartSerializer(ModelSerializer):
-    cart_items = CartItemSerializer(many=True, read_only=True)
+    item_variants = CartItemSerializer(many=True, read_only=True,
+                                       source='cart_items')
     count = SerializerMethodField()
-    item_variants = SlugRelatedField(
+    new_item_variants = SlugRelatedField(
         many=True, queryset=ItemVariant.objects.all(),
-        slug_field='id', required=False
+        slug_field='id', required=False, write_only=True,
+        source='item_variants'
     )
 
     class Meta:
         model = Cart
         fields = (
-            'id', 'user', 'total', 'count', 'item_variants', 'cart_items',
+            'id', 'user', 'total', 'count', 'new_item_variants', 'item_variants',
             'discount_code'
         )
-        read_only_fields = ('user', 'id', 'total', 'count', 'cart_items')
+        read_only_fields = ('user', 'id', 'total', 'count', 'item_variants')
+
+    def to_internal_value(self, data):
+        cart_items = data.pop('item_variants', None)
+        if cart_items:
+            data['new_item_variants'] = cart_items
+        return super().to_internal_value(data)
 
     def _get_user(self):
         request = self.context.get('request')
@@ -126,7 +134,7 @@ class CartItemSummarySerializer(CartItemSerializer):
 
 
 class CartCheckoutSerializer(CartSerializer):
-    cart_items = CartItemSummarySerializer(many=True, read_only=True)
+    item_variants_detail = CartItemSummarySerializer(many=True, read_only=True)
     email = SerializerMethodField()
     checkout = SerializerMethodField()
 
