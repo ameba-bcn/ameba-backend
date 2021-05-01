@@ -105,6 +105,12 @@ class ItemVariant(models.Model):
     price = models.DecimalField(max_digits=8, decimal_places=2)
     benefits = models.TextField(max_length=1000, default='')
 
+    def get_valid_discounts(self, user, code=None):
+        return self.item.get_valid_discounts(user, code)
+
+    def get_max_discount_value(self, user, code=None):
+        return self.item.get_max_discount_value(user, code)
+
     @property
     def amount(self):
         """ Returns price in lower EUR currency unit (cents)
@@ -112,9 +118,12 @@ class ItemVariant(models.Model):
         """
         return int(float(self.price) * 100)
 
-    def __str__(self):
-        item_class = self.item.__class__.__name__.lower()
+    @property
+    def name(self):
         item_name = self.item.name
         attrs = self.attributes.all()
-        variants = [f'{attr.attribute.name}: {attr.value}' for attr in attrs]
-        return f'{item_class} - {item_name}(' + ' / '.join(variants) + ')'
+        variants = [f'{attr.attribute.name}={attr.value}' for attr in attrs]
+        return f'{item_name}(' + ','.join(variants) + ')'
+
+    def __str__(self):
+        return self.name
