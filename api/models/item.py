@@ -33,19 +33,12 @@ class Item(models.Model):
 
     @property
     def price_range(self):
-        prices = [variant.price for variant in self.variants.all()]
+        prices = set(variant.price for variant in self.variants.all())
         if len(prices) == 1:
             return f'{min(prices)}€'
         elif len(prices) == 0:
             return '-'
         return f'{min(prices)}€ / {max(prices)}€'
-
-    @property
-    def amount(self):
-        """ Returns price in lower EUR currency unit (cents)
-        :return: Integer with price in EUR cents
-        """
-        return int(float(self.price) * 100)
 
     def __str__(self):
         return self.name
@@ -112,8 +105,16 @@ class ItemVariant(models.Model):
     price = models.DecimalField(max_digits=8, decimal_places=2)
     benefits = models.TextField(max_length=1000, default='')
 
+    @property
+    def amount(self):
+        """ Returns price in lower EUR currency unit (cents)
+        :return: Integer with price in EUR cents
+        """
+        return int(float(self.price) * 100)
+
     def __str__(self):
-        return ' / '.join([
-            f'{attr.attribute.name}: {attr.value}' for attr in
-            self.attributes.all()
-        ])
+        item_class = self.item.__class__.__name__.lower()
+        item_name = self.item.name
+        attrs = self.attributes.all()
+        variants = [f'{attr.attribute.name}: {attr.value}' for attr in attrs]
+        return f'{item_class} - {item_name}(' + ' / '.join(variants) + ')'
