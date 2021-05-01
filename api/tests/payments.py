@@ -77,7 +77,7 @@ class PaymentFlowTest(BaseCartTest):
         cart = self.get_cart(user=user, items=items)
 
         response_1 = self.checkout(token=token)
-        cart.items.remove(3)
+        cart.item_variants.remove(3)
         response_2 = self.checkout(token=token)
 
         self.assertEqual(
@@ -99,7 +99,7 @@ class PaymentFlowTest(BaseCartTest):
         self.assertEqual(response_1.data['amount'], 6000)
         self.assertEqual(checkout_details_1['payment_intent']['amount'], 6000)
 
-        cart.items.remove(3)
+        cart.item_variants.remove(3)
         response_2 = self.checkout(token=token)
         cart.refresh_from_db()
         checkout_details_2 = cart.checkout_details
