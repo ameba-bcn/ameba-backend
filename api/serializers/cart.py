@@ -75,7 +75,7 @@ class CartSerializer(ModelSerializer):
 
     @staticmethod
     def get_count(cart):
-        return cart.items.all().count()
+        return cart.item_variants.all().count()
 
     def create(self, validated_data):
         cart = Cart.objects.create()
@@ -84,7 +84,7 @@ class CartSerializer(ModelSerializer):
     def update(self, instance, validated_data):
         self._resolve_user(instance)
         if 'items' in validated_data:
-            instance.items.clear()
+            instance.item_variants.clear()
             self._add_cart_items(instance, validated_data['items'])
         if 'discount_code' in validated_data:
             instance.discount_code = validated_data.get('discount_code')
@@ -106,13 +106,13 @@ class CartSerializer(ModelSerializer):
     @staticmethod
     def _add_cart_items(instance, items):
         for item in items:
-            instance.items.through.objects.create(cart=instance, item=item)
+            instance.item_variants.through.objects.create(cart=instance, item=item)
 
     @staticmethod
     def _remove_existing_user_cart(user):
         if Cart.objects.filter(user=user).exists():
             old_cart = Cart.objects.get(user=user)
-            old_cart.items.clear()
+            old_cart.item_variants.clear()
             old_cart.delete()
 
 

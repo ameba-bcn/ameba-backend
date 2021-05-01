@@ -31,7 +31,7 @@ class BaseCartTest(BaseTest):
         cart = Cart.objects.create(user=user)
         if items:
             self.create_items(items)
-            cart.items.set(items)
+            cart.item_variants.set(items)
         return cart
 
     @staticmethod
@@ -375,7 +375,7 @@ class TestPatchCart(BaseCartTest):
 
         if current_items:
             for item in current_items:
-                cart.items.add(item)
+                cart.item_variants.add(item)
 
         cart_id = current_label or cart.id
         response = self._partial_update(
