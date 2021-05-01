@@ -8,7 +8,7 @@ from api.models import Cart
 class CartItemTabular(admin.TabularInline):
     model = Cart.item_variants.through
     extra = 0
-    fields = ['item', 'price', 'discount', 'subtotal', 'preview']
+    fields = ['item_variant', 'price', 'discount', 'subtotal', 'preview']
     readonly_fields = ['discount', 'preview', 'price', 'subtotal']
 
     def preview(self, obj):
