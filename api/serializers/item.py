@@ -4,7 +4,7 @@ from api.models import Item, ItemVariant, ItemAttribute
 
 
 class AttributeSerializer(serializers.ModelSerializer):
-    attribute = serializers.SlugRelatedField('name')
+    attribute = serializers.SlugRelatedField('name', read_only=True)
 
     class Meta:
         model = ItemAttribute
@@ -41,7 +41,7 @@ class ItemListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Item
-        fields = ['name', 'images', 'discount', 'price_range', 'stock']
+        fields = ['id', 'name', 'images', 'discount', 'price_range', 'stock']
 
 
 class ItemDetailSerializer(ItemListSerializer):

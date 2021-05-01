@@ -9,7 +9,7 @@ class EventListSerializer(ItemListSerializer):
     class Meta:
         model = Event
         fields = ItemListSerializer.Meta.fields + [
-            'datetime', 'saved', 'purchased', 'is_active'
+            'datetime', 'saved', 'purchased'
         ]
 
 
@@ -18,7 +18,7 @@ class EventDetailSerializer(ItemDetailSerializer):
     class Meta:
         model = Event
         fields = ItemDetailSerializer.Meta.fields + [
-            'datetime', 'address', 'purchased', 'saved', 'is_active'
+            'datetime', 'address', 'purchased', 'saved'
         ]
 
 
