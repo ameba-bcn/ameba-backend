@@ -128,13 +128,14 @@ class CartItemSummarySerializer(CartItemSerializer):
 
 
 class CartCheckoutSerializer(CartSerializer):
-    item_variants_detail = CartItemSummarySerializer(many=True, read_only=True)
+    item_variants = CartItemSummarySerializer(many=True, read_only=True,
+                                              source='cart_items')
     email = SerializerMethodField()
     checkout = SerializerMethodField()
 
     class Meta:
         model = Cart
-        fields = ('user', 'email', 'total', 'amount', 'cart_items',
+        fields = ('user', 'email', 'total', 'amount', 'item_variants',
                   'checkout')
 
     @property
