@@ -32,7 +32,7 @@ class Item(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     @property
-    def price(self):
+    def price_range(self):
         prices = [variant.price for variant in self.variants.all()]
         if len(prices) == 1:
             return f'{min(prices)}€'
