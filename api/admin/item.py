@@ -44,10 +44,12 @@ class ImageChoiceInLine(admin.TabularInline):
 
 
 class BaseItemAdmin(admin.ModelAdmin):
-    fields = ['name', 'description', 'price', 'created', 'updated']
+    fields = [
+        'name', 'description', 'is_active', 'price_range', 'created', 'updated'
+    ]
     inlines = [ItemVariantInline, ImageChoiceInLine, DiscountChoiceInLine]
-    readonly_fields = ['created', 'updated', 'price']
-    list_display = ['name', 'price', 'description', 'preview']
+    readonly_fields = ['created', 'updated', 'price_range']
+    list_display = ['name', 'price_range', 'description', 'preview']
 
     def preview(self, obj):
         img_tag = '<img src="{}" width="75" height="75" style="margin:10px" />'
