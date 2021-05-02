@@ -30,11 +30,18 @@ el {id} del carro en las vistas detalle (del tipo `carts/{id}/`)
 """
 
     partial_update = """
-Actualiza los elementos del carrito mediante la lista "items" del body:
+Actualiza los elementos del carrito mediante la lista "item_variant_ids" del body:
 ```
 {
-"items": [1, 3, 4]
+    "item_variant_ids": [1, 3, 4]
 }
+```
+Los item_variant_ids son los ids de la lista de __"variants"__ que aparecen en 
+la respuesta de alguno de los siguientes endpoints:
+```
+/articles/<id>/ 
+/events/<id>/ 
+/subscriptions/<id>/
 ```
 ### Forma autenticada (con  bearer token):
 - Se puede reemplazar el id del carro en la url por la etiqueta 
@@ -46,7 +53,7 @@ automágicamente.
 - Hay que saber el id del carro previamente e incluirlo en la url.
 
 Si la lista items está vacía se vacía el carro. Si no se pasa la key
-"items" no hace nada.
+"item_variant_ids" no hace nada.
 """
 
     checkout = """
@@ -181,6 +188,10 @@ Borra  el  carrito una vez haya sido  procesado (`/api/carts/current/checkout/`)
 - __Requiere autenticación__ de usuario y admite reemplazo del id del carro  
 por 
 la etiqueta "current".
+
+- Es necesario procesar el proceso de compra con stripe en el lado del 
+cliente antes de hace esta request, excepto cuando la cantidad total del 
+carro es 0, que se debe hacer directamente el delete después del checkout.
 
 - Es __importante__ hacer una request de este tipo cuando un proceso de 
 compra ha terminado.
