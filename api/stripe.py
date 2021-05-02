@@ -33,27 +33,40 @@ def create_payment_intent(amount, idempotency_key):
     )
 
 
+def payment_intent_exists(checkout_details):
+    return (
+        checkout_details
+        and 'id' in checkout_details.get('payment_intent', {})
+    )
+
+
+def no_payment_intent_needed(checkout_details):
+    return (
+        checkout_details
+        and 'date_time' in checkout_details
+        and 'payment_intent' not in checkout_details
+    )
+
+
 def get_create_update_payment_intent(amount, idempotency_key, checkout_details):
-    if checkout_details and checkout_details["payment_intent"]["id"]:
+    if payment_intent_exists(checkout_details):
         intent_id = checkout_details["payment_intent"]["id"]
-        checkout_details = stripe.PaymentIntent.retrieve(id=intent_id)
-        checkout_details.update({"amount": amount})
-        checkout_details.save()
+        payment_intent = stripe.PaymentIntent.retrieve(id=intent_id)
+        payment_intent.update({"amount": amount})
+        payment_intent.save()
     else:
-        checkout_details = create_payment_intent(
+        payment_intent = create_payment_intent(
             amount=amount, idempotency_key=str(idempotency_key)
         )
-    return checkout_details
+    return payment_intent
 
 
 def get_payment_intent(checkout_details):
-    if checkout_details and checkout_details["payment_intent"]["id"]:
+    if payment_intent_exists(checkout_details):
         pid = checkout_details["payment_intent"]["id"]
-        if pid == NO_PAYMENT_NEEDED_ID:
-            return EMPTY_PAYMENT_INTENT
         payment_intent = stripe.PaymentIntent.retrieve(id=pid)
         return payment_intent
-    elif not checkout_details or "payment_intent" not in checkout_details:
-        raise CartCheckoutNotProcessed
+    elif no_payment_intent_needed(checkout_details):
+        return {'status': IntentStatus.NOT_NEEDED}
     else:
         raise WrongPaymentIntent

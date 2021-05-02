@@ -27,10 +27,10 @@ class BaseCartTest(BaseTest):
     def get_token(user):
         return RefreshToken.for_user(user)
 
-    def get_cart(self, user=None, item_variants=None):
+    def get_cart(self, user=None, item_variants=None, for_free=False):
         cart = Cart.objects.create(user=user)
         if item_variants:
-            self.create_items_variants(item_variants)
+            self.create_items_variants(item_variants, for_free=for_free)
             cart.item_variants.set(item_variants)
         return cart
 
@@ -39,9 +39,9 @@ class BaseCartTest(BaseTest):
         cart.refresh_from_db()
         return cart.user == user
 
-    def create_items_variants(self, item_variants):
+    def create_items_variants(self, item_variants, for_free=False):
         if item_variants:
-            item_id = 1
+            item_id = item_variants[0]
             item = Item.objects.create(
                 id=item_id,
                 name=f'item_{item_id}',
@@ -52,7 +52,7 @@ class BaseCartTest(BaseTest):
                 cart_data = dict(
                     id=item_variant,
                     item=item,
-                    price=item_variant * 10,
+                    price=0 if for_free else item_variant * 10,
                     stock=item_variant
                 )
                 item_variant = ItemVariant.objects.create(**cart_data)
