@@ -2,6 +2,19 @@
 
 ### Release notes
 
+#### 0.14
+##### Features
+- ItemVariants model
+- PATCH /api/cart/current/ con body `{'item_variant_ids': [id_1, id_2]}`
+- Key variants con variants info e id en:
+    ```
+    /api/articles/
+    /api/events/
+    /api/subscriptions/
+    ```
+- Finalización de proceso de compra sin pasar por stripe cuando el precio total
+ del carro es 0
+
 #### 0.13
 ##### Features
 - `/api/subscribe/` endpoint para subscripciones de email
