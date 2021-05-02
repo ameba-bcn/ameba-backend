@@ -56,7 +56,7 @@ class CartItemSerializer(Serializer):
 
 class CartSerializer(ModelSerializer):
     item_variants = CartItemSerializer(many=True, read_only=True,
-                                       source='cart_items')
+                                       source='computed_item_variants')
     count = SerializerMethodField()
     item_variant_ids = SlugRelatedField(
         many=True, queryset=ItemVariant.objects.all(),
@@ -128,7 +128,7 @@ class CartItemSummarySerializer(CartItemSerializer):
 
 class CartCheckoutSerializer(CartSerializer):
     item_variants = CartItemSummarySerializer(many=True, read_only=True,
-                                              source='cart_items')
+                                              source='computed_item_variants')
     email = SerializerMethodField()
     checkout = SerializerMethodField()
 

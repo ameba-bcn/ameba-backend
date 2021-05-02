@@ -10,13 +10,12 @@ class PaymentManager(models.Manager):
     def create_payment(cart, payment_intent):
         user = cart.user
         cart_record = CartSerializer(instance=cart).data
-        payment = Payment(
+        payment = Payment.objects.create(
             id=cart.id,
             user=user,
             cart_record=cart_record,
             details=dict(payment_intent)
         )
-        payment.save()
         return payment
 
 
