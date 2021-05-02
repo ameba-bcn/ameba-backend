@@ -3,6 +3,7 @@ from api.serializers.token import DeleteTokenSerializer, SingleUseTokenSerialize
 from api.serializers.interview import (
     InterviewListSerializer, InterviewDetailSerializer
 )
+from api.serializers.item import ItemListSerializer, ItemDetailSerializer
 from api.serializers.article import (
     ArticleDetailSerializer, ArticleListSerializer
 )
