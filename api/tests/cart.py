@@ -6,7 +6,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from api.models.cart import Cart
 from api.models.user import User
-from api.models import Item
+from api.models import Item, ItemVariant, ItemAttribute, ItemAttributeType
 
 
 class BaseCartTest(BaseTest):
@@ -27,11 +27,11 @@ class BaseCartTest(BaseTest):
     def get_token(user):
         return RefreshToken.for_user(user)
 
-    def get_cart(self, user=None, items=None):
+    def get_cart(self, user=None, item_variants=None):
         cart = Cart.objects.create(user=user)
-        if items:
-            self.create_items(items)
-            cart.item_variants.set(items)
+        if item_variants:
+            self.create_items_variants(item_variants)
+            cart.item_variants.set(item_variants)
         return cart
 
     @staticmethod
@@ -39,18 +39,34 @@ class BaseCartTest(BaseTest):
         cart.refresh_from_db()
         return cart.user == user
 
-    @staticmethod
-    def create_items(items):
-        if items:
-            for item in items:
+    def create_items_variants(self, item_variants):
+        if item_variants:
+            item_id = 1
+            item = Item.objects.create(
+                id=item_id,
+                name=f'item_{item_id}',
+                description=f'This is the item {item_id}',
+                is_active=True
+            )
+            for item_variant in item_variants:
                 cart_data = dict(
-                    id=item,
-                    name=f'item_{item}',
-                    description=f'This is the item {item}',
-                    price=item * 10,
-                    stock=item,
+                    id=item_variant,
+                    item=item,
+                    price=item_variant * 10,
+                    stock=item_variant
                 )
-                Item.objects.create(**cart_data)
+                item_variant = ItemVariant.objects.create(**cart_data)
+                self.create_attributes(item_variant)
+
+    def create_attributes(self, item_variant):
+        color = ItemAttributeType.objects.create(name='color')
+        size = ItemAttributeType.objects.create(name='size')
+        for att, value in (
+            (color, 'red'), (size, 'm'), (color, 'green'), (size, 'l')
+        ):
+            attribute = ItemAttribute.objects.create(attribute=att,
+                                                     value=value)
+            item_variant.attributes.add(attribute)
 
 
 class TestGetCart(BaseCartTest):
