@@ -58,16 +58,15 @@ class CartSerializer(ModelSerializer):
     item_variants = CartItemSerializer(many=True, read_only=True,
                                        source='cart_items')
     count = SerializerMethodField()
-    new_item_variants = SlugRelatedField(
+    item_variant_ids = SlugRelatedField(
         many=True, queryset=ItemVariant.objects.all(),
-        slug_field='id', required=False, write_only=True,
-        source='item_variants'
+        slug_field='id', required=False, source='item_variants'
     )
 
     class Meta:
         model = Cart
         fields = (
-            'id', 'user', 'total', 'count', 'new_item_variants', 'item_variants',
+            'id', 'user', 'total', 'count', 'item_variant_ids', 'item_variants',
             'discount_code'
         )
         read_only_fields = ('user', 'id', 'total', 'count', 'item_variants')
