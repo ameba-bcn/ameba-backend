@@ -104,7 +104,8 @@ class TestItem(BaseTest):
                 'stock': int,
                 'price': str
             }],
-            'images': [str]
+            'images': [str],
+            'has_stock': bool
         }
         articles = self._list(token=None).data
         for article in articles:
@@ -408,7 +409,7 @@ class TestItem(BaseTest):
 
         response = self._get(pk=article.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['stock'], sum(stocks))
+        self.assertEqual(response.data['has_stock'], bool(sum(stocks)))
 
     def test_stock_is_zero_if_computed_from_sizes_is_zero(self):
         article = Article.objects.create(**{
@@ -431,4 +432,4 @@ class TestItem(BaseTest):
 
         response = self._get(pk=article.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['stock'], sum(stocks))
+        self.assertEqual(response.data['has_stock'], bool(sum(stocks)))
