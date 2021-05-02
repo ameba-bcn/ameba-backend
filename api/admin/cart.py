@@ -40,7 +40,7 @@ class CartAdmin(admin.ModelAdmin):
         (None, {'fields': ['id', 'user', 'total', 'discount_code']})
     ]
     inlines = (CartItemTabular, )
-    readonly_fields = ['id', 'total', 'cart_items']
+    readonly_fields = ['id', 'total', 'computed_item_variants']
 
 
 admin.site.register(Cart, CartAdmin)

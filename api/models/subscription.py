@@ -5,6 +5,3 @@ from api.models import Item
 
 class Subscription(Item):
     pass
-
-
-
