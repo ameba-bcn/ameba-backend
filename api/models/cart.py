@@ -103,6 +103,10 @@ class Cart(Model):
 
     def is_checkout_updated(self):
         return (
-            self.amount == self.checkout_details['payment_intent']['amount']
-            or not self.checkout_details
+            (
+                self.checkout_details
+                and 'payment_intent' not in self.checkout_details
+                and self.amount == 0
+            )
+            or self.amount == self.checkout_details['payment_intent']['amount']
         )
