@@ -62,7 +62,7 @@ def iter_iter(iterable):
     if type(iterable) is list:
         return enumerate(iterable)
     elif type(iterable) is dict:
-        return iterable.item_variants()
+        return iterable.items()
 
 
 def check_structure(data, structure):
