@@ -8,4 +8,3 @@ class ArticleViewSet(BaseReadOnlyViewSet):
     detail_serializer = ArticleDetailSerializer
     model = Article
     queryset = Article.objects.filter(is_active=True)
-

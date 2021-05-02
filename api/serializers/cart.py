@@ -56,7 +56,7 @@ class CartItemSerializer(Serializer):
 
 class CartSerializer(ModelSerializer):
     item_variants = CartItemSerializer(many=True, read_only=True,
-                                       source='cart_items')
+                                       source='computed_item_variants')
     count = SerializerMethodField()
     item_variant_ids = SlugRelatedField(
         many=True, queryset=ItemVariant.objects.all(),
@@ -128,7 +128,7 @@ class CartItemSummarySerializer(CartItemSerializer):
 
 class CartCheckoutSerializer(CartSerializer):
     item_variants = CartItemSummarySerializer(many=True, read_only=True,
-                                              source='cart_items')
+                                              source='computed_item_variants')
     email = SerializerMethodField()
     checkout = SerializerMethodField()
 
@@ -147,7 +147,12 @@ class CartCheckoutSerializer(CartSerializer):
 
     @staticmethod
     def get_checkout(instance):
-        return {
-            "client_secret": instance.checkout_details["payment_intent"][
-                    "client_secret"]
-        }
+        if (
+            instance.checkout_details
+            and 'payment_intent' in instance.checkout_details
+        ):
+            return {
+                "client_secret": instance.checkout_details["payment_intent"][
+                        "client_secret"]
+            }
+        return {}

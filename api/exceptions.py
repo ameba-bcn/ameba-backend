@@ -41,7 +41,7 @@ class StripeSyncError(APIException):
 
 class CartCheckoutNotProcessed(APIException):
     status_code = HTTP_400_BAD_REQUEST
-    default_detail = 'Cart has bot been processed.'
+    default_detail = 'Cart has not been processed.'
     default_code = 'cart_not_processed'
 
 
@@ -109,5 +109,11 @@ class WrongProvidedCredentials(APIException):
 
 class AddressDoesNotExist(APIException):
     status_code = HTTP_400_BAD_REQUEST
-    default_message = 'List address does not exist.'
+    default_detail = 'List address does not exist.'
     default_code = 'address_does_not_exist'
+
+
+class CheckoutNeeded(APIException):
+    status_code = HTTP_400_BAD_REQUEST
+    default_detail = 'Checkout needed before continue.'
+    default_code = 'checkout_needed'
