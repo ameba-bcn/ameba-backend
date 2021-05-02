@@ -13,7 +13,7 @@ from api.tests.subscribe import SubscribeTest
 from api.tests.mailgun_unsubscribe import ApiMailgunUnsubscriptionTest
 from api.tests.signals import SubscriberSignalsTest, MailgunSignalsTest
 from api.tests.mailgun import MailgunApiTest
-
+from api.tests.item import TestItem
 
 from unittest import mock
 
