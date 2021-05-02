@@ -1,8 +1,21 @@
-from django.contrib import admin
-from api.models import Discount, Item
 from django.forms.models import BaseInlineFormSet
 from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
+from django.contrib import admin
+
+from api.models import (
+    Discount, Item, ItemVariant, ItemAttribute, ItemAttributeType
+)
+
+
+class ItemVariantInline(admin.TabularInline):
+    fields = ['id', 'attributes', 'stock', 'price']
+    readonly_fields = ('id', )
+    model = ItemVariant
+    extra = 0
+    verbose_name = 'Variant'
+    verbose_name_plural = 'Variants'
+    formset = BaseInlineFormSet
 
 
 class DiscountChoiceInLine(admin.TabularInline):
@@ -32,13 +45,14 @@ class ImageChoiceInLine(admin.TabularInline):
 
 
 class BaseItemAdmin(admin.ModelAdmin):
-    fieldsets = [
-        (None, {'fields': ['name', 'description', 'price', 'stock',
-                           'created', 'updated']})
+    fields = [
+        'name', 'description', 'is_active', 'price_range', 'created',
+        'updated', 'has_stock'
     ]
-    inlines = [ImageChoiceInLine, DiscountChoiceInLine]
-    readonly_fields = ['created', 'updated']
-    list_display = ['name', 'price', 'stock', 'description', 'preview']
+    inlines = [ItemVariantInline, ImageChoiceInLine, DiscountChoiceInLine]
+    readonly_fields = ['created', 'updated', 'price_range', 'has_stock']
+    list_display = ['name', 'price_range', 'description', 'preview',
+                    'has_stock']
 
     def preview(self, obj):
         img_tag = '<img src="{}" width="75" height="75" style="margin:10px" />'
@@ -52,4 +66,20 @@ class BaseItemAdmin(admin.ModelAdmin):
     preview.allow_tags = True
 
 
-# admin.site.register(Item, BaseItemAdmin)
+admin.site.register(Item, BaseItemAdmin)
+
+
+class ItemAttributeAdmin(admin.ModelAdmin):
+    fields = ('attribute', 'value')
+    list_display = ('attribute', 'value')
+
+
+admin.site.register(ItemAttribute, ItemAttributeAdmin)
+
+
+class ItemAttributeTypeAdmin(admin.ModelAdmin):
+    fields = ('name', )
+    list_display = ('name', )
+
+
+admin.site.register(ItemAttributeType, ItemAttributeTypeAdmin)

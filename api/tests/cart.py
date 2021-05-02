@@ -6,7 +6,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from api.models.cart import Cart
 from api.models.user import User
-from api.models import Item
+from api.models import Item, ItemVariant, ItemAttribute, ItemAttributeType
 
 
 class BaseCartTest(BaseTest):
@@ -27,11 +27,11 @@ class BaseCartTest(BaseTest):
     def get_token(user):
         return RefreshToken.for_user(user)
 
-    def get_cart(self, user=None, items=None):
+    def get_cart(self, user=None, item_variants=None):
         cart = Cart.objects.create(user=user)
-        if items:
-            self.create_items(items)
-            cart.items.set(items)
+        if item_variants:
+            self.create_items_variants(item_variants)
+            cart.item_variants.set(item_variants)
         return cart
 
     @staticmethod
@@ -39,18 +39,34 @@ class BaseCartTest(BaseTest):
         cart.refresh_from_db()
         return cart.user == user
 
-    @staticmethod
-    def create_items(items):
-        if items:
-            for item in items:
+    def create_items_variants(self, item_variants):
+        if item_variants:
+            item_id = 1
+            item = Item.objects.create(
+                id=item_id,
+                name=f'item_{item_id}',
+                description=f'This is the item {item_id}',
+                is_active=True
+            )
+            for item_variant in item_variants:
                 cart_data = dict(
-                    id=item,
-                    name=f'item_{item}',
-                    description=f'This is the item {item}',
-                    price=item * 10,
-                    stock=item,
+                    id=item_variant,
+                    item=item,
+                    price=item_variant * 10,
+                    stock=item_variant
                 )
-                Item.objects.create(**cart_data)
+                item_variant = ItemVariant.objects.create(**cart_data)
+                self.create_attributes(item_variant)
+
+    def create_attributes(self, item_variant):
+        color = ItemAttributeType.objects.create(name='color')
+        size = ItemAttributeType.objects.create(name='size')
+        for att, value in (
+            (color, 'red'), (size, 'm'), (color, 'green'), (size, 'l')
+        ):
+            attribute = ItemAttribute.objects.create(attribute=att,
+                                                     value=value)
+            item_variant.attributes.add(attribute)
 
 
 class TestGetCart(BaseCartTest):
@@ -64,7 +80,8 @@ class TestGetCart(BaseCartTest):
             "user": None,
             "total": "0.00 €",
             "count": 0,
-            "cart_items": [],
+            "item_variants": [],
+            "item_variant_ids": [],
             "discount_code": None
         }
 
@@ -136,8 +153,8 @@ class TestPostCarts(BaseCartTest):
     def _get_body(self, items, other_keys):
         body = {}
         if type(items) is list:
-            body['items'] = items
-            self.create_items(items)
+            body['item_variant_ids'] = items
+            self.create_items_variants(items)
         if other_keys:
             for key in other_keys:
                 body[key] = 'whatever value'
@@ -161,20 +178,20 @@ class TestPostCarts(BaseCartTest):
         self.assertEqual(len(items or []), response.data['count'])
 
     def _execute_test(self, test_attrs):
-        body = self._get_body(test_attrs['items'], test_attrs['other_keys'])
+        body = self._get_body(test_attrs['item_variant_ids'], test_attrs['other_keys'])
         response = self._perform_request(
             auth=test_attrs['auth'],
             previous_cart=test_attrs['previous_cart'],
             body=body
         )
         self.assertEqual(response.status_code, test_attrs['returns'])
-        self._check_response_body(test_attrs['items'], response)
+        self._check_response_body(test_attrs['item_variant_ids'], response)
 
     def test_post_no_auth_no_items_returns_200(self):
         test_attrs = dict(
             auth=False,
             previous_cart=False,
-            items=None,
+            item_variant_ids=None,
             other_keys=None,
             returns=status.HTTP_201_CREATED
         )
@@ -184,7 +201,7 @@ class TestPostCarts(BaseCartTest):
         test_attrs = dict(
             auth=False,
             previous_cart=False,
-            items=None,
+            item_variant_ids=None,
             other_keys=['my_key', 'cart', 'user'],
             returns=status.HTTP_201_CREATED
         )
@@ -194,7 +211,7 @@ class TestPostCarts(BaseCartTest):
         test_attrs = dict(
             auth=False,
             previous_cart=False,
-            items=[],
+            item_variant_ids=[],
             other_keys=None,
             returns=status.HTTP_201_CREATED
         )
@@ -204,7 +221,7 @@ class TestPostCarts(BaseCartTest):
         test_attrs = dict(
             auth=False,
             previous_cart=False,
-            items=[],
+            item_variant_ids=[],
             other_keys=['my_key', 'cart', 'user'],
             returns=status.HTTP_201_CREATED
         )
@@ -214,7 +231,7 @@ class TestPostCarts(BaseCartTest):
         test_attrs = dict(
             auth=False,
             previous_cart=False,
-            items=[1, 2],
+            item_variant_ids=[1, 2],
             other_keys=None,
             returns=status.HTTP_201_CREATED
         )
@@ -224,7 +241,7 @@ class TestPostCarts(BaseCartTest):
         test_attrs = dict(
             auth=False,
             previous_cart=False,
-            items=[1, 2],
+            item_variant_ids=[1, 2],
             other_keys=['my_key', 'cart', 'user'],
             returns=status.HTTP_201_CREATED
         )
@@ -234,7 +251,7 @@ class TestPostCarts(BaseCartTest):
         test_attrs = dict(
             auth=True,
             previous_cart=False,
-            items=None,
+            item_variant_ids=None,
             other_keys=None,
             returns=status.HTTP_201_CREATED
         )
@@ -244,7 +261,7 @@ class TestPostCarts(BaseCartTest):
         test_attrs = dict(
             auth=True,
             previous_cart=False,
-            items=None,
+            item_variant_ids=None,
             other_keys=['my_key', 'cart', 'user'],
             returns=status.HTTP_201_CREATED
         )
@@ -254,7 +271,7 @@ class TestPostCarts(BaseCartTest):
         test_attrs = dict(
             auth=True,
             previous_cart=False,
-            items=[],
+            item_variant_ids=[],
             other_keys=None,
             returns=status.HTTP_201_CREATED
         )
@@ -264,7 +281,7 @@ class TestPostCarts(BaseCartTest):
         test_attrs = dict(
             auth=True,
             previous_cart=False,
-            items=[],
+            item_variant_ids=[],
             other_keys=['my_key', 'cart', 'user'],
             returns=status.HTTP_201_CREATED
         )
@@ -274,7 +291,7 @@ class TestPostCarts(BaseCartTest):
         test_attrs = dict(
             auth=True,
             previous_cart=False,
-            items=[1, 2],
+            item_variant_ids=[1, 2],
             other_keys=None,
             returns=status.HTTP_201_CREATED
         )
@@ -284,7 +301,7 @@ class TestPostCarts(BaseCartTest):
         test_attrs = dict(
             auth=True,
             previous_cart=False,
-            items=[1, 2],
+            item_variant_ids=[1, 2],
             other_keys=['my_key', 'cart', 'user'],
             returns=status.HTTP_201_CREATED
         )
@@ -294,7 +311,7 @@ class TestPostCarts(BaseCartTest):
         test_attrs = dict(
             auth=True,
             previous_cart=True,
-            items=None,
+            item_variant_ids=None,
             other_keys=None,
             returns=status.HTTP_201_CREATED
         )
@@ -304,7 +321,7 @@ class TestPostCarts(BaseCartTest):
         test_attrs = dict(
             auth=True,
             previous_cart=True,
-            items=None,
+            item_variant_ids=None,
             other_keys=['my_key', 'cart', 'user'],
             returns=status.HTTP_201_CREATED
         )
@@ -314,7 +331,7 @@ class TestPostCarts(BaseCartTest):
         test_attrs = dict(
             auth=True,
             previous_cart=True,
-            items=[],
+            item_variant_ids=[],
             other_keys=None,
             returns=status.HTTP_201_CREATED
         )
@@ -324,7 +341,7 @@ class TestPostCarts(BaseCartTest):
         test_attrs = dict(
             auth=True,
             previous_cart=True,
-            items=[],
+            item_variant_ids=[],
             other_keys=['my_key', 'cart', 'user'],
             returns=status.HTTP_201_CREATED
         )
@@ -334,7 +351,7 @@ class TestPostCarts(BaseCartTest):
         test_attrs = dict(
             auth=True,
             previous_cart=True,
-            items=[1, 2],
+            item_variant_ids=[1, 2],
             other_keys=None,
             returns=status.HTTP_201_CREATED
         )
@@ -344,7 +361,7 @@ class TestPostCarts(BaseCartTest):
         test_attrs = dict(
             auth=True,
             previous_cart=True,
-            items=[1, 2],
+            item_variant_ids=[1, 2],
             other_keys=['my_key', 'cart', 'user'],
             returns=status.HTTP_201_CREATED
         )
@@ -356,13 +373,13 @@ class TestPatchCart(BaseCartTest):
     def _execute_test(self, current_items, new_items, auth, current_label,
                       status_code):
 
-        self.create_items(current_items)
-        self.create_items(new_items)
+        self.create_items_variants(current_items)
+        self.create_items_variants(new_items)
 
         request_body = None
         if type(new_items) is list:
             request_body = {
-                'items': new_items
+                'item_variant_ids': new_items
             }
 
         token = None
@@ -375,7 +392,7 @@ class TestPatchCart(BaseCartTest):
 
         if current_items:
             for item in current_items:
-                cart.items.add(item)
+                cart.item_variants.add(item)
 
         cart_id = current_label or cart.id
         response = self._partial_update(
@@ -471,36 +488,36 @@ class TestPatchCart(BaseCartTest):
     def test_path_auth_current_label_creates_new_cart_for_user(self):
         user = self.get_user()
         token = self.get_token(user).access_token
-        body = {'items': [1, 2]}
-        self.create_items(body['items'])
+        body = {'item_variant_ids': [1, 2]}
+        self.create_items_variants(body['item_variant_ids'])
 
         response = self._partial_update('current', token, body)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['count'], len(body['items']))
+        self.assertEqual(response.data['count'], len(body['item_variant_ids']))
 
     def test_path_auth_others_cart_not_allowed(self):
         user = self.get_user(1)
         token = self.get_token(user).access_token
 
-        body = {'items': [1, 2]}
+        body = {'item_variant_ids': [1, 2]}
 
         user_2 = self.get_user(2)
         token_2 = self.get_token(user_2).access_token
-        cart_2 = self.get_cart(user=user_2, items=body.get('items'))
+        cart_2 = self.get_cart(user=user_2, item_variants=body.get('item_variant_ids'))
 
         response = self._partial_update(cart_2.id, token, body)
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         response_2 = self._get(pk=cart_2.id, token=token_2)
-        self.assertEqual(response_2.data['count'], len(body.get('items')))
+        self.assertEqual(response_2.data['count'], len(body.get('item_variant_ids')))
 
 
 class TestCartCheckout(BaseCartTest):
     DETAIL_ENDPOINT = '/api/carts/{pk}/checkout/'
 
     def test_not_authenticated_checkout_returns_401(self):
-        cart = self.get_cart(items=[1, 2])
+        cart = self.get_cart(item_variants=[1, 2])
         response = self._get(pk=cart.id)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

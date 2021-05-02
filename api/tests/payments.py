@@ -14,35 +14,35 @@ class PaymentFlowTest(BaseCartTest):
         self._authenticate(token=token)
         return self.client.get(self.CHECKOUT_ENDPOINT.format(pk=pk))
 
-    def check_cart_summary(self, items, cart_summary):
+    def check_cart_summary(self, item_variants, cart_summary):
         found_items = []
-        for summary_item in cart_summary['cart_items']:
-            for item in items:
+        for summary_item in cart_summary['item_variants']:
+            for item in item_variants:
                 if summary_item['name'] == f'item_{item}':
-                    found_items.append(items)
+                    found_items.append(item_variants)
                     self.assertEqual(summary_item['price'], f'{item * 10}.00€')
                     self.assertEqual(summary_item['subtotal'], f'{item * 10}.00€')
                     self.assertEqual(summary_item['discount_value'], '')
                     self.assertEqual(summary_item['discount_name'], '')
-        self.assertEqual(items.sort(), found_items.sort())
+        self.assertEqual(item_variants.sort(), found_items.sort())
 
     def test_cart_checkout_returns_cart_summary(self):
-        items = [1, 2]
+        item_variants = [1, 2]
         user = self.get_user()
         token = self.get_token(user).access_token
-        cart = self.get_cart(user=user, items=items)
+        cart = self.get_cart(user=user, item_variants=item_variants)
 
         response = self.checkout(token=token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['amount'], 3000)
         self.assertEqual(response.data['total'], '30.00 €')
-        self.check_cart_summary(items=items, cart_summary=response.data)
+        self.check_cart_summary(item_variants=item_variants, cart_summary=response.data)
 
     def test_cart_checkout_starts_payment_process(self):
-        items = [1, 2]
+        item_variants = [1, 2]
         user = self.get_user()
         token = self.get_token(user).access_token
-        cart = self.get_cart(user=user, items=items)
+        cart = self.get_cart(user=user, item_variants=item_variants)
 
         response = self.checkout(token=token)
         self.assertIn('checkout', response.data)
@@ -71,13 +71,13 @@ class PaymentFlowTest(BaseCartTest):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_cart_checkout_after_cart_update_has_same_stripe_data(self):
-        items = [1, 2, 3]
+        item_variants = [1, 2, 3]
         user = self.get_user()
         token = self.get_token(user).access_token
-        cart = self.get_cart(user=user, items=items)
+        cart = self.get_cart(user=user, item_variants=item_variants)
 
         response_1 = self.checkout(token=token)
-        cart.items.remove(3)
+        cart.item_variants.remove(3)
         response_2 = self.checkout(token=token)
 
         self.assertEqual(
@@ -85,10 +85,10 @@ class PaymentFlowTest(BaseCartTest):
         )
 
     def test_cart_second_checkout_update_prices_if_items_changed(self):
-        items = [1, 2, 3]
+        item_variants = [1, 2, 3]
         user = self.get_user()
         token = self.get_token(user).access_token
-        cart = self.get_cart(user=user, items=items)
+        cart = self.get_cart(user=user, item_variants=item_variants)
         self.assertIsNone(cart.checkout_details)
 
         response_1 = self.checkout(token=token)
@@ -99,7 +99,7 @@ class PaymentFlowTest(BaseCartTest):
         self.assertEqual(response_1.data['amount'], 6000)
         self.assertEqual(checkout_details_1['payment_intent']['amount'], 6000)
 
-        cart.items.remove(3)
+        cart.item_variants.remove(3)
         response_2 = self.checkout(token=token)
         cart.refresh_from_db()
         checkout_details_2 = cart.checkout_details
@@ -109,10 +109,10 @@ class PaymentFlowTest(BaseCartTest):
         self.assertEqual(checkout_details_2['payment_intent']['amount'], 3000)
 
     def test_delete_checked_out_cart_saves_payment(self):
-        items = [1, 2, 3]
+        item_variants = [1, 2, 3]
         user = self.get_user()
         token = self.get_token(user).access_token
-        cart = self.get_cart(user=user, items=items)
+        cart = self.get_cart(user=user, item_variants=item_variants)
 
         self.checkout(token=token)
         delete_response = self._delete(pk='current', token=token)
@@ -121,10 +121,10 @@ class PaymentFlowTest(BaseCartTest):
         self.assertTrue(Payment.objects.filter(id=cart.id))
 
     def test_stored_payment_has_relevant_cart_data(self):
-        items = [1, 2, 3]
+        item_variants = [1, 2, 3]
         user = self.get_user()
         token = self.get_token(user).access_token
-        cart = self.get_cart(user=user, items=items)
+        cart = self.get_cart(user=user, item_variants=item_variants)
 
         self.checkout(token=token)
         delete_response = self._delete(pk='current', token=token)
@@ -132,14 +132,14 @@ class PaymentFlowTest(BaseCartTest):
         self.assertEqual(delete_response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertTrue(Payment.objects.filter(id=cart.id))
         payment = Payment.objects.get(id=cart.id)
-        self.check_cart_summary(items=items, cart_summary=payment.cart_record)
+        self.check_cart_summary(item_variants=item_variants, cart_summary=payment.cart_record)
         self.assertEqual(payment.amount, 6000)
 
     def test_stored_payment_has_relevant_payment_data(self):
-        items = [1, 2, 3]
+        item_variants = [1, 2, 3]
         user = self.get_user()
         token = self.get_token(user).access_token
-        cart = self.get_cart(user=user, items=items)
+        cart = self.get_cart(user=user, item_variants=item_variants)
 
         checkout_response = self.checkout(token=token)
         payment_intent_secret = checkout_response.data['checkout']['client_secret']
@@ -151,10 +151,10 @@ class PaymentFlowTest(BaseCartTest):
         )
 
     def test_delete_not_checkout_out_cart_is_not_possible(self):
-        items = [1, 2, 3]
+        item_variants = [1, 2, 3]
         user = self.get_user()
         token = self.get_token(user).access_token
-        cart = self.get_cart(user=user, items=items)
+        cart = self.get_cart(user=user, item_variants=item_variants)
 
         response = self._delete(pk='current', token=token)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -164,9 +164,9 @@ class PaymentFlowTest(BaseCartTest):
         )
 
     def test_delete_cart_no_auth_is_not_possible(self):
-        items = [1, 2, 3]
+        item_variants = [1, 2, 3]
         user = self.get_user()
-        cart = self.get_cart(user=user, items=items)
+        cart = self.get_cart(user=user, item_variants=item_variants)
 
         response = self._delete(pk=cart.id)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

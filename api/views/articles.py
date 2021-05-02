@@ -1,4 +1,4 @@
-from api.serializers import ArticleListSerializer, ArticleDetailSerializer
+from api.serializers import ArticleDetailSerializer, ArticleListSerializer
 from api.models import Article
 from api.views.base import BaseReadOnlyViewSet
 
@@ -8,3 +8,4 @@ class ArticleViewSet(BaseReadOnlyViewSet):
     detail_serializer = ArticleDetailSerializer
     model = Article
     queryset = Article.objects.filter(is_active=True)
+

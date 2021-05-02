@@ -7,7 +7,7 @@ from django.db.models import (
 
 
 class CartItems(Model):
-    item = ForeignKey(to='Item', on_delete=CASCADE)
+    item_variant = ForeignKey(to='ItemVariant', on_delete=CASCADE)
     cart = ForeignKey(to='Cart', on_delete=CASCADE)
 
     @property
@@ -23,7 +23,7 @@ class Cart(Model):
     id = UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = OneToOneField(to='User', on_delete=CASCADE, blank=True,
                          null=True, related_name='_cart')
-    items = ManyToManyField(to='Item', through='CartItems')
+    item_variants = ManyToManyField(to='ItemVariant', through='CartItems')
     created = DateTimeField(auto_now_add=True)
     updated = DateTimeField(auto_now=True)
     discount_code = ForeignKey(to='DiscountCode', on_delete=SET_NULL,
@@ -31,7 +31,7 @@ class Cart(Model):
     checkout_details = JSONField(blank=True, null=True)
 
     def delete(self, using=None, keep_parents=False):
-        self.items.clear()
+        self.item_variants.clear()
         return super().delete(using, keep_parents)
 
     @property
@@ -46,7 +46,7 @@ class Cart(Model):
                 fraction = 1. - discount.value / 100.
             else:
                 fraction = 1.
-            amount += cart_item['item'].amount * fraction
+            amount += cart_item['item_variant'].amount * fraction
         return int(amount)
 
     @property
@@ -58,11 +58,11 @@ class Cart(Model):
         discounts = []
         cart_items_by_price = self.cart_items_by_price_desc()
         for cart_item in cart_items_by_price:
-            discounts_by_value = self.discounts_by_value_desc(cart_item.item)
+            discounts_by_value = self.discounts_by_value_desc(cart_item.item_variant)
             for discount in discounts_by_value:
                 if self.is_applicable(cart_discounts, discount):
                     discounts.append({
-                        'item': cart_item.item,
+                        'item_variant': cart_item.item_variant,
                         'discount': discount,
                         'cart_item': cart_item
                     })
@@ -70,7 +70,7 @@ class Cart(Model):
                     break
             else:
                 discounts.append({
-                    'item': cart_item.item,
+                    'item_variant': cart_item.item_variant,
                     'discount': None,
                     'cart_item': cart_item
                 })
@@ -80,18 +80,20 @@ class Cart(Model):
         user = self.user
         return discount.remaining_usages(user) > cur_discounts.count(discount)
 
-    def discounts_by_value_desc(self, item):
+    def discounts_by_value_desc(self, item_variant):
         if self.user:
-            valid_dis = item.get_valid_discounts(self.user, self.discount_code)
+            valid_dis = item_variant.item.get_valid_discounts(
+                self.user, self.discount_code
+            )
             return sorted(valid_dis, key=lambda x: x.value, reverse=True)
         return []
 
     def cart_items_by_price_desc(self):
         queryset = self.get_cart_items()
-        return sorted(queryset, key=lambda x: x.item.price, reverse=True)
+        return sorted(queryset, key=lambda x: x.item_variant.price, reverse=True)
 
     def get_cart_items(self):
-        return self.items.through.objects.filter(cart=self)
+        return self.item_variants.through.objects.filter(cart=self)
 
     def is_empty(self):
         return not self.get_cart_items().exists()

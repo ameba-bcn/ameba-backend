@@ -1,7 +1,7 @@
 from rest_framework.serializers import ModelSerializer, \
     SerializerMethodField, Serializer, PrimaryKeyRelatedField, SlugRelatedField
 
-from api.models import Cart, Item
+from api.models import Cart, ItemVariant
 from api.exceptions import CartCheckoutNeedsUser
 
 
@@ -16,7 +16,7 @@ class CartItemSerializer(Serializer):
 
     @staticmethod
     def get_name(cart_item):
-        return cart_item['item'].name
+        return cart_item['item_variant'].name
 
     @staticmethod
     def get_discount_name(cart_item):
@@ -32,16 +32,16 @@ class CartItemSerializer(Serializer):
 
     @staticmethod
     def get_price(cart_item):
-        return f"{cart_item['item'].price}€"
+        return f"{cart_item['item_variant'].price}€"
 
     @staticmethod
     def get_id(cart_item):
-        return cart_item['item'].id
+        return cart_item['item_variant'].id
 
     @staticmethod
     def get_preview(cart_item):
-        if cart_item['item'].images.all().exists():
-            return cart_item['item'].images.all()[0].url
+        if cart_item['item_variant'].item.images.all().exists():
+            return cart_item['item_variant'].item.images.all()[0].url
 
     @staticmethod
     def get_subtotal(cart_item):
@@ -50,23 +50,26 @@ class CartItemSerializer(Serializer):
         else:
             discount_value = 0
         fraction = float(1. - discount_value / 100.)
-        price = float(cart_item['item'].price)
+        price = float(cart_item['item_variant'].price)
         return f"{'%.2f' % (price * fraction)}€"
 
 
 class CartSerializer(ModelSerializer):
-    cart_items = CartItemSerializer(many=True, read_only=True)
+    item_variants = CartItemSerializer(many=True, read_only=True,
+                                       source='cart_items')
     count = SerializerMethodField()
-    items = SlugRelatedField(
-        many=True, write_only=True, queryset=Item.objects.all(),
-        slug_field='id', required=False
+    item_variant_ids = SlugRelatedField(
+        many=True, queryset=ItemVariant.objects.all(),
+        slug_field='id', required=False, source='item_variants'
     )
 
     class Meta:
         model = Cart
-        fields = ('id', 'user', 'total', 'count', 'cart_items', 'items',
-                  'discount_code')
-        read_only_fields = ('user', 'id', 'total', 'count', 'cart_items')
+        fields = (
+            'id', 'user', 'total', 'count', 'item_variant_ids', 'item_variants',
+            'discount_code'
+        )
+        read_only_fields = ('user', 'id', 'total', 'count', 'item_variants')
 
     def _get_user(self):
         request = self.context.get('request')
@@ -75,7 +78,7 @@ class CartSerializer(ModelSerializer):
 
     @staticmethod
     def get_count(cart):
-        return cart.items.all().count()
+        return cart.item_variants.all().count()
 
     def create(self, validated_data):
         cart = Cart.objects.create()
@@ -83,9 +86,9 @@ class CartSerializer(ModelSerializer):
 
     def update(self, instance, validated_data):
         self._resolve_user(instance)
-        if 'items' in validated_data:
-            instance.items.clear()
-            self._add_cart_items(instance, validated_data['items'])
+        if 'item_variants' in validated_data:
+            instance.item_variants.clear()
+            self._add_cart_items(instance, validated_data['item_variants'])
         if 'discount_code' in validated_data:
             instance.discount_code = validated_data.get('discount_code')
         instance.save()
@@ -104,15 +107,17 @@ class CartSerializer(ModelSerializer):
         return instance
 
     @staticmethod
-    def _add_cart_items(instance, items):
-        for item in items:
-            instance.items.through.objects.create(cart=instance, item=item)
+    def _add_cart_items(instance, item_variants):
+        for item_variant in item_variants:
+            instance.item_variants.through.objects.create(
+                cart=instance, item_variant=item_variant
+            )
 
     @staticmethod
     def _remove_existing_user_cart(user):
         if Cart.objects.filter(user=user).exists():
             old_cart = Cart.objects.get(user=user)
-            old_cart.items.clear()
+            old_cart.item_variants.clear()
             old_cart.delete()
 
 
@@ -122,13 +127,14 @@ class CartItemSummarySerializer(CartItemSerializer):
 
 
 class CartCheckoutSerializer(CartSerializer):
-    cart_items = CartItemSummarySerializer(many=True, read_only=True)
+    item_variants = CartItemSummarySerializer(many=True, read_only=True,
+                                              source='cart_items')
     email = SerializerMethodField()
     checkout = SerializerMethodField()
 
     class Meta:
         model = Cart
-        fields = ('user', 'email', 'total', 'amount', 'cart_items',
+        fields = ('user', 'email', 'total', 'amount', 'item_variants',
                   'checkout')
 
     @property

@@ -1,50 +1,31 @@
 from rest_framework import serializers
 
+from api.serializers.item import ItemDetailSerializer, ItemListSerializer
 from api.models import Event
 
 
-class BaseEventSerializer(serializers.ModelSerializer):
-    images = serializers.SlugRelatedField(many=True,
-                                          read_only=True,
-                                          slug_field='url')
-    discount = serializers.SerializerMethodField()
-    saved = serializers.SerializerMethodField()
-    purchased = serializers.SerializerMethodField()
-
-    def get_discount(self, article):
-        user = self.context.get('request').user
-        return article.get_max_discount_value(user)
-
-    def get_saved(self, event):
-        user = self.context.get('request').user
-        return event.saved_by.filter(id=user.id).exists()
-
-    def get_purchased(self, event):
-        user = self.context.get('request').user
-        return event.acquired_by.filter(id=user.id).exists()
-
-
-class EventDetailSerializer(BaseEventSerializer):
+class EventListSerializer(ItemListSerializer):
 
     class Meta:
         model = Event
-        fields = ['id', 'name', 'datetime', 'address', 'description',
-                  'price', 'stock', 'images', 'is_active', 'discount',
-                  'artists', 'discount', 'purchased', 'saved']
-        depth = 0
+        fields = ItemListSerializer.Meta.fields + [
+            'datetime', 'saved', 'purchased'
+        ]
 
 
-class EventListSerializer(BaseEventSerializer):
+class EventDetailSerializer(ItemDetailSerializer):
 
     class Meta:
         model = Event
-        fields = ['id', 'name', 'price', 'images', 'discount', 'datetime',
-                  'address', 'saved', 'purchased']
+        fields = ItemDetailSerializer.Meta.fields + [
+            'datetime', 'address', 'purchased', 'saved'
+        ]
 
 
 class UserSavedEventsListSerializer(serializers.ModelSerializer):
-    event = serializers.SlugRelatedField(source='item', slug_field='id',
-                                         queryset=Event.objects.all())
+    event = serializers.SlugRelatedField(
+        source='item', slug_field='id', queryset=Event.objects.all()
+    )
 
     class Meta:
         model = Event.saved_by.through
