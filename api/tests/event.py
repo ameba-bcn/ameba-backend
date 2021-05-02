@@ -147,9 +147,7 @@ class TestSavedUserEvents(BaseEventTest):
         user, token = BaseUserTest._insert_user(user_data)
         item_data = {
             'name': 'Item (note event)',
-            'description': 'Item description',
-            'price': '10.50',
-            'stock': 5
+            'description': 'Item description'
         }
         event = Item.objects.create(**item_data)
         response = self._create(props={'event': event.id}, token=token)
@@ -164,9 +162,7 @@ class TestSavedUserEvents(BaseEventTest):
         user, token = BaseUserTest._insert_user(user_data)
         item_data = {
             'name': 'Item (note event)',
-            'description': 'Item description',
-            'price': '10.50',
-            'stock': 5
+            'description': 'Item description'
         }
         event = Item.objects.create(**item_data)
         response = self._delete(pk=event.id, token=token)
@@ -183,7 +179,6 @@ class TestEvents(BaseEventTest):
             {
                 'id': int,
                 'name': str,
-                'price': str,
                 'images': [str],
                 'discount': int,
                 'saved': bool,
