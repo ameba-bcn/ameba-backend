@@ -50,7 +50,7 @@ class Cart(Model):
         return int(amount)
 
     @property
-    def cart_items(self):
+    def computed_item_variants(self):
         return self.get_cart_items_with_discounts()
 
     def get_cart_items_with_discounts(self):
@@ -100,3 +100,9 @@ class Cart(Model):
 
     def is_anonymous(self):
         return not self.user
+
+    def is_checkout_updated(self):
+        return (
+            self.amount == self.checkout_details['payment_intent']['amount']
+            or not self.checkout_details
+        )

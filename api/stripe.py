@@ -9,10 +9,19 @@ stripe.api_key = settings.STRIPE_SECRET
 
 CURRENCY = 'eur'
 PAYMENT_METHOD_TYPES = ['card']
+NO_PAYMENT_NEEDED_ID = 'nopaymentneeded'
 
 
 class IntentStatus:
     SUCCESS = 'succeeded'
+    NOT_NEEDED = 'no_payment_needed'
+
+
+EMPTY_PAYMENT_INTENT = {
+    'status': IntentStatus.NOT_NEEDED,
+    'amount': 0,
+    'id': NO_PAYMENT_NEEDED_ID
+}
 
 
 def create_payment_intent(amount, idempotency_key):
@@ -40,6 +49,8 @@ def get_create_update_payment_intent(amount, idempotency_key, checkout_details):
 def get_payment_intent(checkout_details):
     if checkout_details and checkout_details["payment_intent"]["id"]:
         pid = checkout_details["payment_intent"]["id"]
+        if pid == NO_PAYMENT_NEEDED_ID:
+            return EMPTY_PAYMENT_INTENT
         payment_intent = stripe.PaymentIntent.retrieve(id=pid)
         return payment_intent
     elif not checkout_details or "payment_intent" not in checkout_details:
