@@ -19,8 +19,6 @@ class BaseEventTest(BaseTest):
         event_data_template = {
             'name': 'Event {num}',
             'description': 'Event {num} description',
-            'price': '{num}.50',
-            'stock': 5,
             'datetime': timezone.now(),
             'address': 'Carrer del Chanquete 3, Barcelona'
         }
@@ -202,12 +200,9 @@ class TestEvents(BaseEventTest):
             'id': int,
             'name': str,
             'description': str,
-            'price': str,
-            'stock': int,
             'saved': bool,
             'purchased': bool,
             'images': [str],
-            'is_active': bool,
             'address': str,
             'datetime': str
         }
@@ -345,9 +340,7 @@ class TestEvents(BaseEventTest):
         user, token = BaseUserTest._insert_user(user_data)
         item_data = {
             'name': 'Item (note event)',
-            'description': 'Item description',
-            'price': '10.50',
-            'stock': 5
+            'description': 'Item description'
         }
         event_obj = Item.objects.create(**item_data)
         event_obj.acquired_by.add(user)
@@ -365,9 +358,7 @@ class TestEvents(BaseEventTest):
         user, token = BaseUserTest._insert_user(user_data)
         item_data = {
             'name': 'Item (note event)',
-            'description': 'Item description',
-            'price': '10.50',
-            'stock': 5
+            'description': 'Item description'
         }
         event_obj = Item.objects.create(**item_data)
         event_obj.acquired_by.add(user)

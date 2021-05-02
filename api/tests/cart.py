@@ -80,7 +80,8 @@ class TestGetCart(BaseCartTest):
             "user": None,
             "total": "0.00 €",
             "count": 0,
-            "cart_items": [],
+            "item_variants": [],
+            "item_variant_ids": [],
             "discount_code": None
         }
 
@@ -153,7 +154,7 @@ class TestPostCarts(BaseCartTest):
         body = {}
         if type(items) is list:
             body['items'] = items
-            self.create_items(items)
+            self.create_items_variants(items)
         if other_keys:
             for key in other_keys:
                 body[key] = 'whatever value'
@@ -372,8 +373,8 @@ class TestPatchCart(BaseCartTest):
     def _execute_test(self, current_items, new_items, auth, current_label,
                       status_code):
 
-        self.create_items(current_items)
-        self.create_items(new_items)
+        self.create_items_variants(current_items)
+        self.create_items_variants(new_items)
 
         request_body = None
         if type(new_items) is list:
@@ -488,7 +489,7 @@ class TestPatchCart(BaseCartTest):
         user = self.get_user()
         token = self.get_token(user).access_token
         body = {'items': [1, 2]}
-        self.create_items(body['items'])
+        self.create_items_variants(body['items'])
 
         response = self._partial_update('current', token, body)
 
@@ -503,7 +504,7 @@ class TestPatchCart(BaseCartTest):
 
         user_2 = self.get_user(2)
         token_2 = self.get_token(user_2).access_token
-        cart_2 = self.get_cart(user=user_2, items=body.get('items'))
+        cart_2 = self.get_cart(user=user_2, item_variants=body.get('items'))
 
         response = self._partial_update(cart_2.id, token, body)
 
@@ -517,6 +518,6 @@ class TestCartCheckout(BaseCartTest):
     DETAIL_ENDPOINT = '/api/carts/{pk}/checkout/'
 
     def test_not_authenticated_checkout_returns_401(self):
-        cart = self.get_cart(items=[1, 2])
+        cart = self.get_cart(item_variants=[1, 2])
         response = self._get(pk=cart.id)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
