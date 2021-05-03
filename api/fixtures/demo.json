@@ -1,996 +1,2781 @@
-
 [
-  {
-    "model": "api.question",
-    "pk": 1,
-    "fields": {
-      "question": "Quines són les teves influències?",
-      "is_default":  true
-    }
-  },
-  {
-    "model": "api.question",
-    "pk": 2,
-    "fields": {
-      "question": "Com veus l’escena electrònica a Barcelona?",
-      "is_default":  true
-    }
-  },
-    {
-    "model": "api.question",
-    "pk": 3,
-    "fields": {
-      "question": "Quins elements són indispensables en la teva música?",
-      "is_default":  true
-    }
-  },
-    {
-    "model": "api.question",
-    "pk": 4,
-    "fields": {
-      "question": "Un disc que sempre portes en la teva maleta?",
-      "is_default":  true
-    }
-  },
-    {
-    "model": "api.question",
-    "pk": 5,
-    "fields": {
-      "question": "Quins són els teus segells de referència?",
-      "is_default":  true
-    }
-  },
-
-  {
-    "model": "api.artist",
-    "pk": 1,
-    "fields": {
-      "name": "Lucient",
-      "biography": "Artist bio"
-    }
-  },
-
-  {
-    "model": "api.interview",
-    "pk": 1,
-    "fields": {
-      "artist": 1,
-      "updated": "2020-07-08 12:05:01.000001Z",
-      "created": "2020-07-08 12:05:01.000001Z",
-      "title": "Lucient",
-      "introduction": "Mario G. Quelart porta ja uns quants anys mostrant el seu talent i «savoir faire» pels principals clubs i festivals del territori nacional. Ho fa sempre amb el nom de Lucient, o gairebé sempre, ja que de vegades s’ajunta amb Albert Salines (aka Wooky) amb el duet C.E.E. Shepherds. Lucient forma part de la família del segell Lapsus i del club LAUT de Barcelona, on és resident, i on s’ha posat a prova a si mateix amb dues maratonianes sessions de 12 hores non-stop, detall que indica per si sol el seu amplíssim coneixement de la música de ball de totes les èpoques i la seguretat amb la qual exerceix el seu ofici darrere dels plats. En Mario també dirigeix i presenta el programa «Synesthésiques«, a l’emissora local Dublab.es, i recentment ha estrenat el programa «Voyager» a C/C Radio. Entre les seves producción trobem remixes per artistas com la Museless i temes propis com el que trobem al recopilatori «Barca Is Not Barcelona», editat al segell d’Olde Gods, Minor Planets. Està treballant en el seu primer EP, que es preveu per algun moment del 2021.",
-      "image": "interviews/demo/lucient.jpg"
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 1,
-    "fields": {
-      "interview": 1,
-      "question": 1,
-      "is_active": true,
-      "answer": "Les meves influències són moltes i molt variades. Vinc del rock i el Pop, abans de punxar electrònica vaig estar molts anys punxant «indie» i fins i tot vaig tocar en alguna banda, però també m’encanta la música negra, soul, funk, disco, afrobeat… També sóc un gran amant de la IDM i l’electrònica més experimental i quan no estic enfocat a una pista de ball els sons més balearics o fins i tot l’ambient o el jazz són dels discos que més escolto."
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 2,
-    "fields": {
-      "interview": 1,
-      "question": 2,
-      "is_active": true,
-      "answer": "Crec que l’escena electrònica de Barcelona viu un dels seus millors moments, bons artistes, varietat d’estils, un fotimer de botigues de discos especialitzades, clubs i festivals molt interessants (fora dels grans i habituals monstres de sempre, que també són importants). Fins i tot, crec que hi ha més col·laboracionisme que mai. El temps dirà i la perspectiva em donarà o no la raó, però si sabem treure suc de la situació de l’escena actual, en uns anys podem ser un referent més important dintre de l’escena electrònica global."
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 3,
-    "fields": {
-      "interview": 1,
-      "question": 3,
-      "is_active": true,
-      "answer": "Em costa molt posar-li nom, ja que moltes vegades trio música que aparentment no té res a veure entre si, però que tenen aquell nosequè que em fa encendre una alarma dins el meu cap i em fa posar aquell disc a la maleta. Crec que un element bastant habitual en la música que punxo és que ajuden al viatge, ja sigui mental o físic."
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 4,
-    "fields": {
-      "interview": 1,
-      "question": 4,
-      "is_active": true,
-      "answer": "Crec que un dels discs que més he punxat al llarg de la meva carrera és el Ne Noya (Daphni Mix) – Cos Ber Zam, que va publicar el mateix Daphni al seu segell, Jiaolong ara farà uns 10 anys."
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 5,
-    "fields": {
-      "interview": 1,
-      "question": 5,
-      "is_active": true,
-      "answer": "Segur que me’n deixo alguns, però sens dubte hi ha de ser Music From Memory, Whities (Que ara ha canviat el nom pel de AD 93), Antinote, Dark Entries, Early Sounds Recordings, Hivern, L.I.E.S., Livity Sound, Lobster Theremin o Craigie Knowes."
-    }
-  },
-
-  {
-    "model": "api.artist",
-    "pk": 2,
-    "fields": {
-      "name": "Telexketch",
-      "biography": "Artist bio"
-    }
-  },
-  {
-    "model": "api.interview",
-    "pk": 2,
-    "fields": {
-      "artist": 2,
-      "title": "Telexketch",
-      "created": "2020-06-29 12:05:01.000001Z",
-      "updated": "2020-06-29 12:05:01.000001Z",
-      "introduction": "Telexketch és un dels djs de Barcelona amb major recorregut i reconeixement de tota l’escena. Adicte als clubs de ball des de principis dels 90, decideix fer el salt a les cabines ja que com clubber s’avorreix en les pistes de ball recarregades de mínimal insubstancial. Eclecticisme a l’hora de mesclar, la seva atenció i facilitat per a llegir la pista li permet canviar d’una dècada a una altra mantenint el feeling i emoció en els seus sets. La seva maleta té cabuda per al millor so disco dels anys 70, italodisco, spacedisco, hi-nrg, nudisco, chicago, deep, discohouse, italohouse, hiphouse, pianohouse, breaks, 90’s, electro, detroit, french touch i el que s’intervingui … Des dels anys 70 fins a l’actualitat… A més de reconèixer-se un col·leccionista empedreït de discos de vinil i realitzar dj sets assíduament, Telexketch porta un temps treballant en edits de temes oblidats dins dels gèneres disc, italo i house. Telexketch ha actuat en multitud de sales de la seva ciutat a més de diversos clubs de la península.",
-      "image": "interviews/demo/telexketch.jpg"
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 6,
-    "fields": {
-      "interview": 2,
-      "question": 1,
-      "is_active": true,
-      "answer": "Les meves influències són vàries:-Als anys 80 quan era petit era impossible escapar del ItaloDisco mes cheesy, sonava a qualsevol radiofórmula, recordo escoltar Miko Misison, Savage, Ken Lazlo, els Max Mix, de fet el Max Mix 4 va ser el primer cassette que vaig comprar amb 11 anys a l’any ’86. És normal tenint en compte que a Barcelona, Sabadell… Van néixer productors inclús un corrent dins l’italo catalogada com a Sabadell Sound o Paella Disco. A finals del 80’s vaig descobrir l’Acid House,l’UK House i les caixes de ritmes, quasi de primera mà. Eren una colla de skaters, de la primera onada de skaters a la ciutat comtal, molt jovenets no passaven dels 13 i 14 anys, però tenien uns col·legues d’un barri proper que ja havien acabat la mili i tal… Baixaven al nostre barri a patinar, ens ensenyaven alguns trucs d’skate, ells estaven molt al corrent de què passava a Europa en termes musicals, a vegades portaven caixes de ritmes, ens gravàvem VHS de l’MTV Anglesa que els enviaven algun col·lega que tenien a Londres, etc etc etc. Ja amb la majoria d’edat complerta després d’un pas efímer pels temples de la denominada makina, parlo de l’any ’93 més o menys vaig descobrir el que deien Trance i Hardtrance en les excursions mensuals a La Sala del Cel de Girona, crec que allò va canviar la meva perspectiva del que era sortir de festa o/i anar de clubbing.-Posteriorment ja va ser el Cyberian, Nitsa, Movidisco, Fellini, La Terrrazza, etc… amb l’eclecticisme musical i el multi-etiquetisme dels anys 90 dins l’electrònica i gràcies a aquests clubs, que vam apostar de manera ferma pel clubbing va canviar l’enfocament musical a la ciutat de tota una generació i les venidores."
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 7,
-    "fields": {
-      "interview": 2,
-      "question": 2,
-      "is_active": true,
-      "answer": "Això va per èpoques i no té fi, no obstant faré una petita llista. Un d’ells seria sense dubte Megatone Records de Patrick Cowley, tinc una pila d’aquest Hi-Nrg. Altres de l’època Disco serien Malligator del Cerrone, Coast to Coast, Fantasy, Importe/12, Unidisc, Matra, West End, Prelude, Goody Music….Dins de l’Italodisco, per exemple: Best Records, Baby Records, Il Discotto, DiscoMagic, Memory Records, Sensation Records, House of Music, ZYX. Bonzai Records, no tinc massa però reconec que hi ha temazos de trance molt rescatables avui en dia. Que seria de nosaltres sense els segells de referència dins del House com FFRR, Dancemania, Jack Trax, Dj International Records, Hot Mix… Roule i Crydamoure dels Daft Punk, PWL, Junior Boys Own, Wall of Sound, R&S, Ninja Tune, Minifunk, Yellow Productions, Rephlex, Warp… Dels més actuals m’agraden molt Bordello A Parigi, Rush Hours, Running Back, Skylax, Clone, Moustache Records, Viewlexx, Red Laser Records, Dark Entries, Permanet Vacation, Disco Segretta, Spa In Disco, Nang Records, Hivern, Aspecto Humano, i com no Italo Moderni que ha començat bastant a tope dins la nova escena ItaloDisco a BCN."
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 8,
-    "fields": {
-      "interview": 2,
-      "question": 3,
-      "is_active": true,
-      "answer": "Doncs no sabria dir, un bon sinte, un ritme amb groovy, una bona caixa… Però per ser sincer crec que el dia d’avui no trobo res indispensable, hi ha coses Lo-Fi que m’agraden, hi ha música electrònica feta totalment amb instruments orgànics, a la fi, si sona bé i em transmet quelcom doncs ja m’agrada ;)"
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 9,
-    "fields": {
-      "interview": 2,
-      "question": 4,
-      "is_active": true,
-      "answer": "Hi ha escena, i tant, cada cop creix més, però passa alguna cosa que no sé que és. M’agradaria dir que trobo una escena meravellosa amb el fotimer d’artistes bons que tenim, les condicions de la ciutat (temps, garitos i botigues de discos per metre quadrat, etc…) les associacions com la vostra, i sobretot el públic. Als clubs cada vegada programen més locals, no només per obrir la nit, sinó per tancar i per oferir el seu projecte durant tota la nit, això és un indicatiu de què hi ha escena a més a més de ser una de les coses més importants en la creació d’una escena local. Han nascut noves botigues de discos que crec que és una altra cosa bàsica, llocs de dia on la gent es pugui barrejar, relacionar-se amb altres artistes, chequejar, compartir i comprar música. El cas és que no trobo una internacionalització de l’escena Barcelonina com si passa a Amsterdam per exemple. És veritat que ha crescut i tenim artistes que fan tours per tot arreu però encara és un % molt minúscul comparat amb altres indrets. Quan miro la programació del Dekmantel és un clar exemple del que estic dient un alt % d’artistes són d’Amsterdam i sinó d´Holanda, copen les millors hores, bé, crec que a Dekmantel no hi ha un slot dolent… hehehe Això que estic dient, no sé si només està passant a Amsterdam actualment, és possible que encara tenim aquell mantra al cap del que és de fora és millor. Una cosa «bona» del COVID-19, és que en línies generals crec que estem valorant molt més el producte local, de proximitat, ens estem tornant més solidaris, més humans, ens estem preocupant dels nostres, veïns, amics, família, de la gent que tenim a prop, i potser és el detonant que feia falta… o potser necessitem la creació d’una promotora/booker local per moure el talent local que tenim per tot arreu, heu pensat a fer aquest pas? Crec que seria molt bona «Ameba Booking» Hehehhe"
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 10,
-    "fields": {
-      "interview": 2,
-      "question": 5,
-      "is_active": true,
-      "answer": "Abans portava sempre el Phyllis Nelson – I Like You (extended version) de l’any ‘85, una barreja de Hi–nrg, Disco que jo catalogaria dins del Protohouse. De fet el vaig descobrir a principis dels 2000’s per tres bandes, mitjançant el meu amic Felix, per mediació d’en D.A.R.Y.L (el primer nick name de Dj de John Talabot) que es va jartar de punxar-lo a la sala Neon del Nitsa, i juraria que a un dels sets de l’I-F a l’Intergalactic FM. Al cap de poc temps ja el vaig trobar, i dir que el tinc desgastat de treure-li suc. No obstant això, actualment no tinc un disc enclaustrat a la maleta ;)"
-    }
-  },
-
-
-  {
-    "model": "api.artist",
-    "pk": 3,
-    "fields": {
-      "name": "Phran",
-      "biography": "Artist bio"
-    }
-  },
-  {
-    "model": "api.interview",
-    "pk": 3,
-    "fields": {
-      "artist": 3,
-      "title": "Phran",
-      "created": "2020-06-15 12:05:01.000001Z",
-      "updated": "2020-06-15 12:05:01.000001Z",
-      "introduction": "Phran és un veneçolà de naixement que porta anys ja vivint i agitant l’underground barceloní amb els seus múltiples projectes. Aquests dos últims anys han estat per a ell un moment molt important, ja que s’ha embarcat en quatre aventures que, de moment, han començat amb molt bon peu: People You May Know, duo d’improvisacions, jams de house i experimentacions analògiques al costat de Ylia; Dos Ritmos, que li ha unit a Lucca Lozano amb la recerca de la perfecta simbiosi entre percussions llatines ancestrals i ritmes trencats electrònics fets per a la pista de ball; IVAN, projecte compartit al costat d’Ivy Barkakati; i Latino Body, programa de ràdio i B2B sota el seu altre àlies DJ Phidias acompanyat de Sano. Tots ells demostren de la seva gran capacitat d’associació i la permeabilitat del seu discurs. Els discos publicats amb aquests respectius projectes (“One Hand Clap”, en Hooded Records, “Antrophony”, en el segell berlinès Klasse Wrecks, i el seu autopublicat «Delicius Fantasy») són tres excel·lents releases que s’afegeixen a una discografia encara curta però suculenta i repleta d’idees, amb diversos EPs en solitari i compartits (3 EP’s a Klasse Wrecks, «Impulse», junt amb Ivy Barkakati en Rhythm Control Barcelona, i «Latent Effect», en Best Effort). Aquest últim any l’hem pogut veure a diversos festivals locals com Sónar amb el projecte Phran, MIRA amb el projecte People You May Know, Manrusonica amb el projecte IVAN o Parkfest amb el projecte Latino Body i Phran.",
-      "image": "interviews/demo/phran.jpg"
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 11,
-    "fields": {
-      "interview": 3,
-      "question": 1,
-      "is_active": true,
-      "answer": "En aquest moment: Els albiraments d’Ovnis en el barri del Poble Nou, Lost Tracks, Zauberstab Zine, Vico C, Lisa M i Omar S."
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 12,
-    "fields": {
-      "interview": 3,
-      "question": 2,
-      "is_active": true,
-      "answer": "Com a migrant veneçolà assentat en Barna des de 2011, veig amb admiració la quantitat de bons artistes, productors i DJs que hi ha a la ciutat, també amb connexions per tota la península. Sempre hi ha algun altre DJ, artista o segell que un no tenia en el radar i resulta ser boníssim. La meva manera d’entendre l’art i el meu treball ha canviat aprenent de tanta gent fent coses interessants en l’escena local. Potser l’escena ha depès molt del turisme i aquesta sigui una oportunitat per a fer les coses d’una altra manera."
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 13,
-    "fields": {
-      "interview": 3,
-      "question": 3,
-      "is_active": true,
-      "answer": "La internet, una Drum Machine i un Delay."
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 14,
-    "fields": {
-      "interview": 3,
-      "question": 4,
-      "is_active": true,
-      "answer": "Com a migrant veneçolà assentat en Barna des de 2011, veig amb admiració la quantitat de bons artistes, productors i DJs que hi ha a la ciutat, també amb connexions per tota la península. Sempre hi ha algun altre DJ, artista o segell que un no tenia en el radar i resulta ser boníssim. La meva manera d’entendre l’art i el meu treball ha canviat aprenent de tanta gent fent coses interessants en l’escena local. Potser l’escena ha depès molt del turisme i aquesta sigui una oportunitat per a fer les coses d’una altra manera."
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 15,
-    "fields": {
-      "interview": 3,
-      "question": 5,
-      "is_active": true,
-      "answer": "Algun de Rhythm & Sound"
-    }
-  },
-
-
-  {
-    "model": "api.artist",
-    "pk": 4,
-    "fields": {
-      "name": "Omega III",
-      "biography": "Artist bio"
-    }
-  },
-  {
-    "model": "api.interview",
-    "pk": 4,
-    "fields": {
-      "title": "Omega III",
-      "artist": 4,
-      "created": "2020-05-25 12:05:01.000001Z",
-      "updated": "2020-05-25 12:05:01.000001Z",
-      "introduction": "Omega III és un DJ i grafiter barceloní nascut i criat en Sheffield, va començar a interessar-se per la música electrònica a principis dels 90 amb l’aparició de Warp Records i el moviment Bleep, sorgit en el nord del Regne Unit. Actiu en tots els aspectes del club/graff des que es va mudar a la capital catalana a mitjans del 2000, la seva última aventura és el programa mensual Wave 131, en Dublab.es. En la universitat va començar a col·laborar amb el DJ i productor berlinès Luca Lozano i contribueix periòdicament amb mescles per als seus segells Klasse Wrecks i Grafiti Tapes, llançant les ja clàssiques «Fantasy FM: The Lost Tape», al costat de Lozano, i «Grafiti Tapes 7», al costat de Plom.",
-      "image": "interviews/demo/omega_3.png"
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 16,
-    "fields": {
-      "interview": 4,
-      "question": 1,
-      "is_active": true,
-      "answer": "La cultura de rave dels inicis dels 90, sobretot en el nord d’Anglaterra. Els estils que van sonar aleshores: de Britcore a bleep, breakbeat i jungle, IDM i techno. Ens agrada l’estètica DIY al nivell visual, ambient de festa informal i lliure, una producció que valora molt els greus i tota la cultura de soundsystems que ve de Jamaica en els seus inicis. No pensem que la cultura i els valors d’aquesta època estan morts, encara es pot apreciar el moviment en altres formes avui en dia."
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 17,
-    "fields": {
-      "interview": 4,
-      "question": 2,
-      "is_active": true,
-      "answer": "Avui en dia hi ha massa segells de qualitat per nomenar aquí, però quan anem de compres, sempre estem buscant coses velles de Warp, Network, 10, Production House, XL, Suburban Base, Movin‘ Shadow, Chill, MoWax i Chill. Al nivell regional, Hivern i Lapsus són dos segells que mereixen tot el reconeixement que han rebut. Representen molt bé el producte nacional."
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 18,
-    "fields": {
-      "interview": 4,
-      "question": 3,
-      "is_active": true,
-      "answer": "La majoria de la nostra música està en vinils, però cada cop més la combinem amb nova música que arriba d’amics com a promo. Ens agrada punxar a velocitats ràpides i amb confiança quan punxem en directe, aleshores els temes que seleccionem són prou simples i expressius. Ens agrada pensar que cada sessió és una banda sonora d’una pel·lícula, una instal·lació, un viatge, aleshores és sempre diferent."
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 19,
-    "fields": {
-      "interview": 4,
-      "question": 4,
-      "is_active": true,
-      "answer": "Pots trobar des de macro-esdeveniments amb música molt bona a propostes petites i innovadores, festivals d’altíssim nivell i ràdios amb molt bona programació cada dia. Realment ens falta temps per anar a tot el que ens interessa veure. Que falta? – Més espais informals i permissius, on apreciar la música a l’aire lliure. – Bars on es pugui punxar. – Ganes del públic per sortir del circuit habitual."
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 20,
-    "fields": {
-      "interview": 4,
-      "question": 5,
-      "is_active": true,
-      "answer": "Unique 3 – The Theme. Com explica el Matt Anniss en el seu llibre Join The Future, és possiblement el primer tema de bleep & bass que va editar, una combinació de subgreus del mític Rob Gordon (co-fundador de Warp) amb l’estètica del grup de breakdance, Unique 3. Quan va sortir, diuen que Virgin Records, que va editar el disc, va rebre unes quantes cartes de discoteques perquè el tema va rebentar els altaveus."
-    }
-  },
-
-  {
-    "model": "api.artist",
-    "pk": 5,
-    "fields": {
-      "name": "Harvey Touch",
-      "biography": "Artist bio"
-    }
-  },
-  {
-    "model": "api.interview",
-    "pk": 5,
-    "fields": {
-      "title": "Harvey Touch",
-      "artist": 5,
-      "created": "2020-03-06 12:05:01.000001Z",
-      "updated": "2020-03-06 12:05:01.000001Z",
-      "introduction": "Sota el nom de Harvey Touch s’amaga el projecte en solitari del productor càntabre establert a Barcelona Javi Toca. Després de diversos anys explorant diferents gèneres, en 2017 la seva carrera comença amb Opal, Changes (EELF) i Warm By Your Side (Houseum), on demostra el seu gust pels samplejos. Els dos últims temes criden l’atenció de la comunitat de Soundcloud i Youtube, la qual cosa porta a l’artista a començar amb les actuacions en directe (ARTeNOU, Razzmatazz, Garage 442) i a presentar DJ sets carregats de house percussiu i ritmes exòtics. Després d’un any de silenci, Harvey Touch arranca de nou el passat 2019 amb l’EP Astral Patterns editat dins del segell libanès Feedasoul, mostrant tres talls més contundents, amb un cert matís espiritual, i que va fer de pont amb el seu àlbum, Archipiélago, un treball més rítmic, introspectiu i oníric. Recentment ha editat en el segell valencià theBasement Discos amb Poca Broma EP, un treball que beu amor per la música dels 70 i la transforma en quatre produccions originals que desborden calidesa i elegància. Els seus coneguts edits posen també a l’artista com un digger de primer nivell, amb autèntiques delícies per a qualsevol DJ.",
-      "image": "interviews/demo/harvey_touch.jpg"
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 21,
-    "fields": {
-      "interview": 5,
-      "question": 1,
-      "is_active": true,
-      "answer": "Moltes i molt variades: jazz, house, techno, hip hop, disc, ambient, new age, balearic…"
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 22,
-    "fields": {
-      "interview": 5,
-      "question": 2,
-      "is_active": true,
-      "answer": "No crec que existeixi ja una escena com a tal. Dins de la ciutat ara s’emporta l’individualisme, o com a molt petits col·lectius que funcionen i es mouen bé en el seu entorn (p. ej Mainline).El costat bo és que ara mateix l’escena es considera a nivell global. Jo demà puc parlar amb un promotor o un productor o un DJ de Dublín, Berlín o Líban, i crear una xarxa molt més extensa del que haguéssim imaginat fa 10 anys."
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 23,
-    "fields": {
-      "interview": 5,
-      "question": 3,
-      "is_active": true,
-      "answer": "Ableton. Alguna planta i una il·luminació adequada."
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 24,
-    "fields": {
-      "interview": 5,
-      "question": 4,
-      "is_active": true,
-      "answer": "Oyabun de Folamour, o alguna cosa de Four Tet.\n\n"
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 25,
-    "fields": {
-      "interview": 5,
-      "question": 5,
-      "is_active": true,
-      "answer": "Coastal Haze, TheBasement Discos, Blaq Numbers, Get Together, Shall Not Fade i Periodica Rècords."
-    }
-  },
-
-
-  {
-    "model": "api.artist",
-    "pk": 6,
-    "fields": {
-      "name": "Lowprofile",
-      "biography": "Artist bio"
-    }
-  },
-  {
-    "model": "api.interview",
-    "pk": 6,
-    "fields": {
-      "artist": 6,
-      "title": "Lowprofile",
-      "created": "2020-08-06 12:05:01.000001Z",
-      "updated": "2020-08-06 12:05:01.000001Z",
-      "introduction": "Funcionalitat, emoció i intensitat. Aquests són els tres eixos que defineixen la visió de Lowprofile en la música. El Dj de Barcelona, i membre fundador de LowKeyMoves, és conegut per tenir una sensibilitat especial a l’hora de moure’s entre moods i gèneres. Amb una precisió i una classe poc freqüents de trobar, la seva paleta sonora va des dels ritmes més incisius de les darreres innovacions de la música de ball, fins al Hip Hop, l’R&B i més enllà. Amb les seves arrels plantades a la música electrònica britànica i nord-americana, i als sons urbans de les darreres dècades, Lowprofile també mira cap a Amèrica del Sud, Àfrica o Jamaica per a celebrar la música global amb els ulls sempre centrats en la pista de ball.\n\n",
-      "image": "interviews/demo/lowprofile.jpg"
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 26,
-    "fields": {
-      "interview": 6,
-      "question": 1,
-      "is_active": true,
-      "answer": "El UK Funky de principis finals del 00’s-principis dels 10’s, el dancehall dels 00’s, la nova música de club que està sorgint a NY i voltants, el Grime, el Bmore, l’R&B, el Rap de la Bay Area, i en general qualsevol gènere musical concebit amb el club a la ment."
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 27,
-    "fields": {
-      "interview": 6,
-      "question": 2,
-      "is_active": true,
-      "answer": "Els que més impacte han tingut sobre mi, sense cap dubte són Night Slugs i Sound Pellegrino."
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 28,
-    "fields": {
-      "interview": 6,
-      "question": 3,
-      "is_active": true,
-      "answer": "Com a Dj, busco música fixant-me sempre en l’impacte que pot tenir en el soundsystem d’un club. Per a mi, això vol dir tracks amb estructures funcionals i directes, dosis d’emoció ben mesurades i, sobre tot, intensitat."
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 29,
-    "fields": {
-      "interview": 6,
-      "question": 4,
-      "is_active": true,
-      "answer": "Més variada i inclusiva que mai. No hagués cregut fa 10 anys que podríem arribar fins a aquest punt. Esperem que una vegada passi tot això segueixi progressant com ho estava fent <3 Encara no has escoltat a Lowprofile? Aquí et deixem amb el seu podcast per Central Magazine, un viatge a través de gran part del seu rang musical quan es tracta de Djing!"
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 30,
-    "fields": {
-      "interview": 6,
-      "question": 5,
-      "is_active": true,
-      "answer": "Aquest no n’ha sortit mai"
-    }
-  },
-
-  {
-    "model": "api.artist",
-    "pk": 7,
-    "fields": {
-      "name": "Virginie",
-      "biography": "Artist bio"
-    }
-  },
-  {
-    "model": "api.interview",
-    "pk": 7,
-    "fields": {
-      "artist": 7,
-      "title": "Virginie",
-      "created": "2020-05-18 12:05:01.000001Z",
-      "updated": "2020-05-18 12:05:01.000001Z",
-      "introduction": "Col·leccionista de vinils des de petitona, Virginie va començar la seva feina com a discjòquei professional en 1999. Eclèctica per naturalesa, és coneguda per combinar música negra amb electrònica i hip-hop. Virginie ha visitat diferents ciutats arreu del món, des de Veneçuela a Finlàndia, passant per Nova York, França, Madrid, Bilbao, Itàlia o Barcelona. Darrere dels plats, la seva selecció musical captiva el públic allà on va, aquí a Barcelona ho hem pogut comprovar en el Cruïlla Fest, SoundEat!, Brunch in the City, Brunch Electronik, DGTL Barcelona o Primavera Sound on VIR (el seu altre aka) va presentar el seu nou projecte Shakti Aliance, juntament amb Troya Modet.Actualment té diversos projectes en mà, com ser Booker de la C/C Ràdio, dedicada a discjòqueis i productors. Hem aprofitat aquests dies d’aturada per fer cinc cèntims amb ella i que ens parli una mica de les seves influències.",
-      "image": "interviews/demo/virginie.jpg"
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 31,
-    "fields": {
-      "interview": 7,
-      "question": 1,
-      "is_active": true,
-      "answer": "Ciutats com New York, Chicago, Detroit, California… Artistes com Kenny Dope, Ron Trent, Spinna, Andrés, Omar S, Kerry Chandler, Theo Parrish, Dam-Funk, Moodymann, Kai Alce, Madlib, J Dilla, Sade ,Erykah Badu, Amp Fiddler, Jill Scott, Marvin Gaye, Gil Scott Heron, Minnie Riperton… Uff i molts més!!!"
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 32,
-    "fields": {
-      "interview": 7,
-      "question": 2,
-      "is_active": true,
-      "answer": "Nervous Records, Strictly Rhythm, King Groove, BBE, Stones Throw, P.P.U, Motown, Underground Resistance, Ibadan, Dance Mania…"
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 33,
-    "fields": {
-      "interview": 7,
-      "question": 3,
-      "is_active": true,
-      "answer": "Veu, groove, bass lines, keyboards i synth sounds.\n\n"
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 34,
-    "fields": {
-      "interview": 7,
-      "question": 4,
-      "is_active": true,
-      "answer": "Ara de moment s’ha acabat! Quan torni serà totalment diferent… I esperem que vagi a millor!"
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 35,
-    "fields": {
-      "interview": 7,
-      "question": 5,
-      "is_active": true,
-      "answer": "Shahara-Ja – I’m an Arabian Knight (Egyptian Lover mix)\n\n"
-    }
-  },
-
-  {
-    "model": "api.artist",
-    "pk": 8,
-    "fields": {
-      "name": "Dj Bruce Lee",
-      "biography": "Artist bio"
-    }
-  },
-  {
-    "model": "api.interview",
-    "pk": 8,
-    "fields": {
-      "artist": 8,
-      "title": "Dj Bruce Lee",
-      "created": "2020-12-05 12:05:01.000001Z",
-      "updated": "2020-12-05 12:05:01.000001Z",
-      "introduction": "Més de vint anys com a dj, dos segells en actiu: End Of Dayz i Rhythm Control Barcelona, aquest segon homònim de la seva botiga de discos oberta l’any 2016. Dj Bruce Lee és un clàssic de l’escena de Barcelona, ha passat per gairebé totes les cabines on programen house, techno o electro. També l’hem pogut veure a festivals com el Sónar Barcelona o el nostre Parkfest l’any 2018. Els seus serveis són reclamats per dj’s internacionals que visiten la ciutat. Últimament està desenvolupant la seva faceta de productor i els seus temes són punxats per dj’s de la talla de Surgeon o Ben Sims.",
-      "image": "interviews/demo/dj_bruce_lee.jpg"
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 36,
-    "fields": {
-      "interview": 8,
-      "question": 1,
-      "is_active": true,
-      "answer": "Grups com Dire Straits o Mano Negra… Estils com el Reggae, Detroit Techno / House / Electro, Chicago House, NY House, NY Disco, UK Techno, NY Techno… O artistes com Ben Sims, Dave Clarke, Surgeon, Mark Broom, James Ruskin, DJ Assault, DJ Funk, Claude Young, Jeff Mills, etc…"
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 37,
-    "fields": {
-      "interview": 8,
-      "question": 2,
-      "is_active": true,
-      "answer": "Dance Mania, Tresor, Hardgroove, Theory, Dynamic Tension, Ostgut Ton…"
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 38,
-    "fields": {
-      "interview": 8,
-      "question": 3,
-      "is_active": true,
-      "answer": "Groove i hipnotisme."
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 39,
-    "fields": {
-      "interview": 8,
-      "question": 4,
-      "is_active": true,
-      "answer": "Millor que fa uns anys. Els clubs grans (i festivals o grans esdeveniments) des de fa uns anys donen més oportunitats a gent local que abans, encara que queda molt per fer. També veig una comercialització en l’escena però això és una cosa global. Estem a anys llum de llocs com Berlín però crec que no ens podem queixar tal i com està el percal."
-    }
-  },
-  {
-    "model": "api.answer",
-    "pk": 40,
-    "fields": {
-      "interview": 8,
-      "question": 5,
-      "is_active": true,
-      "answer": "Últimament el Head Front Panel 004."
-    }
-  },
-
-    {
-    "model": "api.image",
-    "pk": 1,
-    "fields": {
-      "image": "items/demo/ameba-5-anys-woo-commerce-500x469.jpg"
-    }
-  },
-  {
-    "model": "api.image",
-    "pk": 2,
-    "fields": {
-      "image": "items/demo/ameba-old-woo-commerce-500x469.jpg"
-    }
-  },
-  {
-    "model": "api.image",
-    "pk": 3,
-    "fields": {
-      "image": "items/demo/ameba-new-woo-commerce-500x469.jpg"
-    }
-  },
-  {
-    "model": "api.image",
-    "pk": 4,
-    "fields": {
-      "image": "items/demo/ameba-modular-0-woo-commerce-500x469.jpg"
-    }
-  },
-  {
-    "model": "api.image",
-    "pk": 5,
-    "fields": {
-      "image": "items/demo/ameba-modular-0-woo-commerce-500x469.jpg"
-    }
-  },
-  {
-    "model": "api.image",
-    "pk": 6,
-    "fields": {
-      "image": "items/demo/notonearth-002-tote-modular-ok-500x500.jpg"
-    }
-  },
-  {
-    "model": "api.image",
-    "pk": 7,
-    "fields": {
-      "image": "items/demo/notonearth-002-tote-vinil-500x500.jpg"
-    }
-  },
-  {
-    "model": "api.image",
-    "pk": 8,
-    "fields": {
-      "image": "items/demo/carnet-500x501.png"
-    }
-  },
-  {
-    "model": "api.image",
-    "pk": 9,
-    "fields": {
-      "image": "items/demo/carnet-subscriptor-500x501.png"
-    }
-  },
-
-  {
-    "model": "api.image",
-    "pk": 10,
-    "fields": {
-      "image": "items/demo/parkfest19.png"
-    }
-  },
-  {
-    "model": "api.image",
-    "pk": 11,
-    "fields": {
-      "image": "items/demo/65851320_1042781555915081_1846433318455738368_n.jpg"
-    }
-  },
-  {
-    "model": "api.image",
-    "pk": 12,
-    "fields": {
-      "image": "items/demo/67213754_2229994557108707_7569289137988042752_n.jpg"
-    }
-  },
-  {
-    "model": "api.image",
-    "pk": 13,
-    "fields": {
-      "image": "items/demo/67616229_2274077669367062_2054933820100050944_n.jpg"
-    }
-  },
-  {
-    "model": "api.image",
-    "pk": 14,
-    "fields": {
-      "image": "items/demo/ameba-alicia-carrera-workshop-01-1024x1024.png"
-    }
-  },
-
-  {
-    "model": "api.item",
-    "pk": 1,
-    "fields": {
-      "name": "Samarreta 5È aniversari",
-      "description": "Samarreta 5È aniversari",
-      "price": 30.0,
-      "stock": 10,
-      "images": [1],
-      "created": "2020-03-06 12:05:01.000001Z",
-      "updated": "2020-03-06 12:05:01.000001Z"
-    }
-  },
-  {
-    "model": "api.item",
-    "pk": 2,
-    "fields": {
-      "name": "Samarreta Ameba 2016",
-      "description": "Samarreta Ameba 2016",
-      "price": 30.0,
-      "stock": 2,
-      "images": [2],
-      "created": "2020-03-06 12:05:01.000001Z",
-      "updated": "2020-03-06 12:05:01.000001Z"
-    }
-  },
-  {
-    "model": "api.item",
-    "pk": 3,
-    "fields": {
-      "name": "Samarreta Ameba 2019",
-      "description": "Samarreta Ameba 2019",
-      "price": 30.0,
-      "stock": 5,
-      "images": [3],
-      "created": "2020-03-06 12:05:01.000001Z",
-      "updated": "2020-03-06 12:05:01.000001Z"
-    }
-  },
-  {
-    "model": "api.item",
-    "pk": 4,
-    "fields": {
-      "name": "Samarreta modular",
-      "description": "Samarreta modular",
-      "price": 30.0,
-      "stock": 3,
-      "images": [4],
-      "created": "2020-03-06 12:05:01.000001Z",
-      "updated": "2020-03-06 12:05:01.000001Z"
-    }
-  },
-  {
-    "model": "api.item",
-    "pk": 5,
-    "fields": {
-      "name": "Samarreta vinil",
-      "description": "Samarreta vinil",
-      "price": 30.0,
-      "stock": 0,
-      "images": [5],
-      "created": "2020-03-06 12:05:01.000001Z",
-      "updated": "2020-03-06 12:05:01.000001Z"
-    }
-  },
-  {
-    "model": "api.item",
-    "pk": 6,
-    "fields": {
-      "name": "Tote bag modular",
-      "description": "Tote bag modular",
-      "price": 30.0,
-      "stock": 12,
-      "images": [6],
-      "created": "2020-03-06 12:05:01.000001Z",
-      "updated": "2020-03-06 12:05:01.000001Z"
-    }
-  },
-  {
-    "model": "api.item",
-    "pk": 7,
-    "fields": {
-      "name": "Tote bag vinil",
-      "description": "Tote bag vinil",
-      "price": 30.0,
-      "stock": 12,
-      "images": [7],
-      "created": "2020-03-06 12:05:01.000001Z",
-      "updated": "2020-03-06 12:05:01.000001Z"
-    }
-  },
-  {
-    "model": "api.item",
-    "pk": 8,
-    "fields": {
-      "name": "Professional",
-      "description": "Ameba soci professional",
-      "price": 15.0,
-      "stock": -1,
-      "images": [8],
-      "created": "2020-03-06 12:05:01.000001Z",
-      "updated": "2020-03-06 12:05:01.000001Z"
-    }
-  },
-  {
-    "model": "api.item",
-    "pk": 9,
-    "fields": {
-      "name": "Subscriptor",
-      "description": "Ameba soci subscriptor",
-      "price": 5.0,
-      "stock": -1,
-      "images": [9],
-      "created": "2020-03-06 12:05:01.000001Z",
-      "updated": "2020-03-06 12:05:01.000001Z"
-    }
-  },
-
-  {
-    "model": "api.article",
-    "pk": 1,
-    "fields": {
-      "item_ptr_id": 1
-    }
-  },
-  {
-    "model": "api.article",
-    "pk": 2,
-    "fields": {
-      "item_ptr_id": 2
-    }
-  },
-  {
-    "model": "api.article",
-    "pk": 3,
-    "fields": {
-      "item_ptr_id": 3
-    }
-  },
-  {
-    "model": "api.article",
-    "pk": 4,
-    "fields": {
-      "item_ptr_id": 4
-    }
-  },
-  {
-    "model": "api.article",
-    "pk": 5,
-    "fields": {
-      "item_ptr_id": 5
-    }
-  },
-  {
-    "model": "api.article",
-    "pk": 6,
-    "fields": {
-      "item_ptr_id": 6
-    }
-  },
-  {
-    "model": "api.article",
-    "pk": 7,
-    "fields": {
-      "item_ptr_id": 7
-    }
-  },
-  {
-    "model": "api.subscription",
-    "pk": 8,
-    "fields": {
-      "item_ptr_id": 8,
-      "benefits": "Benefits del soci professional."
-    }
-  },
-  {
-    "model":   "api.subscription",
-    "pk": 9,
-    "fields": {
-      "item_ptr_id": 9,
-      "benefits": "Benefits del soci subscriptor."
-    }
-  },
-  {
-    "model": "api.user",
-    "pk": 1,
-    "fields": {
-      "username": "Web User",
-      "email": "web_user@ameba.cat",
-      "password": "pbkdf2_sha256$216000$dEbwg03QZtrm$C//iV3WoT/t3RuCWZ6wx8SpDIoH/aEa+YxDdjORg0Vs=",
-      "groups": [1],
-      "is_active": true
-    }
-  },
-    {
-    "model": "api.user",
-    "pk": 2,
-    "fields": {
-      "username": "Ameba Member",
-      "email": "ameba_member@ameba.cat",
-      "password": "pbkdf2_sha256$216000$zwNQp18wsfuS$KYLisAbZ0bvQA8JfTMMv8R4xRccSsGwZC5t4EkH0A/0=",
-      "groups": [2],
-      "is_active": true
-    }
-  },
-  {
-    "model": "api.user",
-    "pk": 3,
-    "fields": {
-      "username": "Web Ameba Member",
-      "email": "web_ameba_member@ameba.cat",
-      "password": "pbkdf2_sha256$216000$xVOq3YVAe59d$HCuXaivdjrfJzImNUVSDmLpxmwt+GSw+CvovHOdMSl0=",
-      "groups": [1, 2],
-      "is_active": true
-    }
-  },
-  {
-    "model": "api.user",
-    "pk": 4,
-    "fields": {
-      "username": "Ameba Editor",
-      "email": "ameba_editor@ameba.cat",
-      "password": "pbkdf2_sha256$216000$3vjqkraArlW3$QWbAynPqM2h88TmcED4ndnWLRG1cOkK0YbUuXiGtqns=",
-      "groups": [3],
-      "is_active": true
-    }
-  },
-  {
-    "model": "api.user",
-    "pk": 5,
-    "fields": {
-      "username": "Ameba Admin",
-      "email": "ameba_admin@ameba.cat",
-      "password": "pbkdf2_sha256$216000$lz79hcC9iarq$RlsLDnvZhriumEVktGe2mWi6a96NZ5tLV4NuFYmzncQ=",
-      "groups": [4],
-      "is_active": true
-    }
-  },
-  {
-    "model": "api.user",
-    "pk": 6,
-    "fields": {
-      "username": "Joni",
-      "email": "jonrivala@gmail.com",
-      "password": "pbkdf2_sha256$216000$lz79hcC9iarq$RlsLDnvZhriumEVktGe2mWi6a96NZ5tLV4NuFYmzncQ=",
-      "groups": [4],
-      "is_active": true,
-      "is_superuser": true,
-      "is_staff": true
-    }
-  },
-  {
-    "model": "api.user",
-    "pk": 7,
-    "fields": {
-      "username": "Hector",
-      "email": "hector.pascual.diaz@gmail.com",
-      "password": "pbkdf2_sha256$216000$lz79hcC9iarq$RlsLDnvZhriumEVktGe2mWi6a96NZ5tLV4NuFYmzncQ=",
-      "groups": [4],
-      "is_active": true,
-      "is_superuser": true,
-      "is_staff": true
-    }
-  },
-
+{
+  "model": "admin.logentry",
+  "pk": 1,
+  "fields": {
+    "action_time": "2021-05-03T19:06:50.577Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "1",
+    "object_repr": "images/article-camiseta-ameba-5-anys-469x469.png",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 2,
+  "fields": {
+    "action_time": "2021-05-03T19:09:33.001Z",
+    "user": 1,
+    "content_type": 30,
+    "object_id": "1",
+    "object_repr": "size",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 3,
+  "fields": {
+    "action_time": "2021-05-03T19:09:42.245Z",
+    "user": 1,
+    "content_type": 29,
+    "object_id": "1",
+    "object_repr": "size: s",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 4,
+  "fields": {
+    "action_time": "2021-05-03T19:09:53.743Z",
+    "user": 1,
+    "content_type": 29,
+    "object_id": "2",
+    "object_repr": "size: m",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 5,
+  "fields": {
+    "action_time": "2021-05-03T19:10:05.229Z",
+    "user": 1,
+    "content_type": 29,
+    "object_id": "3",
+    "object_repr": "size: s",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 6,
+  "fields": {
+    "action_time": "2021-05-03T19:10:21.298Z",
+    "user": 1,
+    "content_type": 29,
+    "object_id": "4",
+    "object_repr": "size: l",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 7,
+  "fields": {
+    "action_time": "2021-05-03T19:11:15.813Z",
+    "user": 1,
+    "content_type": 32,
+    "object_id": "1",
+    "object_repr": "Camiseta AMEBA 5 años",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"item variant\", \"object\": \"Camiseta AMEBA 5 a\\u00f1os(size=m)\"}}, {\"added\": {\"name\": \"item variant\", \"object\": \"Camiseta AMEBA 5 a\\u00f1os(size=s)\"}}, {\"added\": {\"name\": \"item variant\", \"object\": \"Camiseta AMEBA 5 a\\u00f1os(size=l)\"}}, {\"added\": {\"name\": \"item-image relationship\", \"object\": \"Item_images object (1)\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 8,
+  "fields": {
+    "action_time": "2021-05-03T19:12:10.964Z",
+    "user": 1,
+    "content_type": 17,
+    "object_id": "1",
+    "object_repr": "Descuento socios (5%)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 9,
+  "fields": {
+    "action_time": "2021-05-03T19:17:22.012Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "2",
+    "object_repr": "images/article-camiseta-ameba-modular-469x469.png",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 10,
+  "fields": {
+    "action_time": "2021-05-03T19:17:31.304Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "3",
+    "object_repr": "images/article-camiseta-ameba-new-469x469.png",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 11,
+  "fields": {
+    "action_time": "2021-05-03T19:17:40.709Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "4",
+    "object_repr": "images/article-camiseta-ameba-old-469x469.png",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 12,
+  "fields": {
+    "action_time": "2021-05-03T19:17:48.639Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "5",
+    "object_repr": "images/article-camiseta-ameba-vinil-469x469.png",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 13,
+  "fields": {
+    "action_time": "2021-05-03T19:18:00.065Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "6",
+    "object_repr": "images/article-totebag-modular-500x500.jpg",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 14,
+  "fields": {
+    "action_time": "2021-05-03T19:18:10.274Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "7",
+    "object_repr": "images/article-totebag-vinil-500x500.jpg",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 15,
+  "fields": {
+    "action_time": "2021-05-03T19:18:19.661Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "8",
+    "object_repr": "images/event-ameba-djs-el-rouge-960x960.png",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 16,
+  "fields": {
+    "action_time": "2021-05-03T19:18:29.403Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "9",
+    "object_repr": "images/event-ameba-prismatica-960x960.png",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 17,
+  "fields": {
+    "action_time": "2021-05-03T19:18:37.441Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "10",
+    "object_repr": "images/event-parkfest19-1024x1024.png",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 18,
+  "fields": {
+    "action_time": "2021-05-03T19:18:47.733Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "11",
+    "object_repr": "images/event-parkfest19-1024x1024_IKAIWRE.png",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 19,
+  "fields": {
+    "action_time": "2021-05-03T19:18:56.876Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "11",
+    "object_repr": "images/event-parkfest19-1024x1024_IKAIWRE.png",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 20,
+  "fields": {
+    "action_time": "2021-05-03T19:19:05.838Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "12",
+    "object_repr": "images/event-vise-notonearth-lolita-10-08-19.png",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 21,
+  "fields": {
+    "action_time": "2021-05-03T19:19:16.459Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "13",
+    "object_repr": "images/event-workshop-alicia-carrera-1024x1024.png",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 22,
+  "fields": {
+    "action_time": "2021-05-03T19:19:24.278Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "14",
+    "object_repr": "images/subscripcion-ameba-profesional-500x500.png",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 23,
+  "fields": {
+    "action_time": "2021-05-03T19:19:31.017Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "15",
+    "object_repr": "images/subscripcion-ameba-soci-500x500.png",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 24,
+  "fields": {
+    "action_time": "2021-05-03T19:21:05.676Z",
+    "user": 1,
+    "content_type": 32,
+    "object_id": "2",
+    "object_repr": "Camiseta AMEBA modular",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"item-image relationship\", \"object\": \"Item_images object (2)\"}}, {\"added\": {\"name\": \"item variant\", \"object\": \"Camiseta AMEBA modular(size=s)\"}}, {\"added\": {\"name\": \"item variant\", \"object\": \"Camiseta AMEBA modular(size=m)\"}}, {\"added\": {\"name\": \"item variant\", \"object\": \"Camiseta AMEBA modular(size=l)\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 25,
+  "fields": {
+    "action_time": "2021-05-03T19:21:18.535Z",
+    "user": 1,
+    "content_type": 32,
+    "object_id": "1",
+    "object_repr": "Camiseta AMEBA 5 años",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"name\": \"item variant\", \"object\": \"Camiseta AMEBA 5 a\\u00f1os(size=m)\", \"fields\": [\"Stock\"]}}, {\"changed\": {\"name\": \"item variant\", \"object\": \"Camiseta AMEBA 5 a\\u00f1os(size=l)\", \"fields\": [\"Stock\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 26,
+  "fields": {
+    "action_time": "2021-05-03T19:22:01.312Z",
+    "user": 1,
+    "content_type": 32,
+    "object_id": "3",
+    "object_repr": "Camiseta AMEBA 2019",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"item-image relationship\", \"object\": \"Item_images object (3)\"}}, {\"added\": {\"name\": \"item variant\", \"object\": \"Camiseta AMEBA 2019(size=s)\"}}, {\"added\": {\"name\": \"item variant\", \"object\": \"Camiseta AMEBA 2019(size=m)\"}}, {\"added\": {\"name\": \"item variant\", \"object\": \"Camiseta AMEBA 2019(size=l)\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 27,
+  "fields": {
+    "action_time": "2021-05-03T19:23:23.843Z",
+    "user": 1,
+    "content_type": 32,
+    "object_id": "4",
+    "object_repr": "Camiseta AMEBA 2017",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"item-image relationship\", \"object\": \"Item_images object (4)\"}}, {\"added\": {\"name\": \"item variant\", \"object\": \"Camiseta AMEBA 2017(size=s)\"}}, {\"added\": {\"name\": \"item variant\", \"object\": \"Camiseta AMEBA 2017(size=m)\"}}, {\"added\": {\"name\": \"item variant\", \"object\": \"Camiseta AMEBA 2017(size=l)\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 28,
+  "fields": {
+    "action_time": "2021-05-03T19:24:10.439Z",
+    "user": 1,
+    "content_type": 32,
+    "object_id": "5",
+    "object_repr": "Camiseta AMEBA Vinyl",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"item-image relationship\", \"object\": \"Item_images object (5)\"}}, {\"added\": {\"name\": \"item variant\", \"object\": \"Camiseta AMEBA Vinyl(size=s)\"}}, {\"added\": {\"name\": \"item variant\", \"object\": \"Camiseta AMEBA Vinyl(size=m)\"}}, {\"added\": {\"name\": \"item variant\", \"object\": \"Camiseta AMEBA Vinyl(size=l)\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 29,
+  "fields": {
+    "action_time": "2021-05-03T19:25:12.104Z",
+    "user": 1,
+    "content_type": 32,
+    "object_id": "6",
+    "object_repr": "Tote modular",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"item-image relationship\", \"object\": \"Item_images object (6)\"}}, {\"added\": {\"name\": \"item variant\", \"object\": \"Tote modular(size=s)\"}}, {\"added\": {\"name\": \"item variant\", \"object\": \"Tote modular(size=m)\"}}, {\"added\": {\"name\": \"item variant\", \"object\": \"Tote modular(size=l)\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 30,
+  "fields": {
+    "action_time": "2021-05-03T19:25:47.904Z",
+    "user": 1,
+    "content_type": 29,
+    "object_id": "5",
+    "object_repr": "size: unique",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 31,
+  "fields": {
+    "action_time": "2021-05-03T19:26:01.548Z",
+    "user": 1,
+    "content_type": 32,
+    "object_id": "7",
+    "object_repr": "Tote Vinyl",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"item-image relationship\", \"object\": \"Item_images object (7)\"}}, {\"added\": {\"name\": \"item variant\", \"object\": \"Tote Vinyl(size=unique)\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 32,
+  "fields": {
+    "action_time": "2021-05-03T19:28:28.514Z",
+    "user": 1,
+    "content_type": 32,
+    "object_id": "6",
+    "object_repr": "Tote modular",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 33,
+  "fields": {
+    "action_time": "2021-05-03T19:29:02.893Z",
+    "user": 1,
+    "content_type": 32,
+    "object_id": "8",
+    "object_repr": "Tote modular",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"item-image relationship\", \"object\": \"Item_images object (8)\"}}, {\"added\": {\"name\": \"item variant\", \"object\": \"Tote modular(size=unique)\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 34,
+  "fields": {
+    "action_time": "2021-05-03T20:21:24.641Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "16",
+    "object_repr": "images/artist-dj_bruce_lee-855x855.png",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 35,
+  "fields": {
+    "action_time": "2021-05-03T20:21:31.834Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "17",
+    "object_repr": "images/artist-harvey_touch-1200x1200.jpg",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 36,
+  "fields": {
+    "action_time": "2021-05-03T20:21:39.891Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "18",
+    "object_repr": "images/artist-lowprofile-440x440.png",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 37,
+  "fields": {
+    "action_time": "2021-05-03T20:21:46.293Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "19",
+    "object_repr": "images/artist-lucient-1920x1920.png",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 38,
+  "fields": {
+    "action_time": "2021-05-03T20:21:51.503Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "20",
+    "object_repr": "images/artist-omega_3-800x800.png",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 39,
+  "fields": {
+    "action_time": "2021-05-03T20:21:56.693Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "21",
+    "object_repr": "images/artist-phran-1707x1707.png",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 40,
+  "fields": {
+    "action_time": "2021-05-03T20:22:03.264Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "22",
+    "object_repr": "images/artist-telexketch-1260.png",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 41,
+  "fields": {
+    "action_time": "2021-05-03T20:22:09.906Z",
+    "user": 1,
+    "content_type": 9,
+    "object_id": "23",
+    "object_repr": "images/artist-virginie-1366x1366.png",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 42,
+  "fields": {
+    "action_time": "2021-05-03T20:23:03.921Z",
+    "user": 1,
+    "content_type": 13,
+    "object_id": "1",
+    "object_repr": "Dj Bruce Lee",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"artist-image relationship\", \"object\": \"Artist_images object (1)\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 43,
+  "fields": {
+    "action_time": "2021-05-03T20:23:46.255Z",
+    "user": 1,
+    "content_type": 13,
+    "object_id": "2",
+    "object_repr": "Harvey Touch",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"artist-image relationship\", \"object\": \"Artist_images object (2)\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 44,
+  "fields": {
+    "action_time": "2021-05-03T20:24:19.655Z",
+    "user": 1,
+    "content_type": 13,
+    "object_id": "3",
+    "object_repr": "Lowprofile",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"artist-image relationship\", \"object\": \"Artist_images object (3)\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 45,
+  "fields": {
+    "action_time": "2021-05-03T20:24:53.383Z",
+    "user": 1,
+    "content_type": 13,
+    "object_id": "4",
+    "object_repr": "Lucient",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"artist-image relationship\", \"object\": \"Artist_images object (4)\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 46,
+  "fields": {
+    "action_time": "2021-05-03T20:25:19.433Z",
+    "user": 1,
+    "content_type": 13,
+    "object_id": "5",
+    "object_repr": "Omega 3",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"artist-image relationship\", \"object\": \"Artist_images object (5)\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 47,
+  "fields": {
+    "action_time": "2021-05-03T20:25:47.621Z",
+    "user": 1,
+    "content_type": 13,
+    "object_id": "6",
+    "object_repr": "Phran",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"artist-image relationship\", \"object\": \"Artist_images object (6)\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 48,
+  "fields": {
+    "action_time": "2021-05-03T20:26:08.513Z",
+    "user": 1,
+    "content_type": 13,
+    "object_id": "7",
+    "object_repr": "Telexketch",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"artist-image relationship\", \"object\": \"Artist_images object (7)\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 49,
+  "fields": {
+    "action_time": "2021-05-03T20:26:32.009Z",
+    "user": 1,
+    "content_type": 13,
+    "object_id": "8",
+    "object_repr": "Virginie",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"artist-image relationship\", \"object\": \"Artist_images object (8)\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 50,
+  "fields": {
+    "action_time": "2021-05-03T20:30:14.982Z",
+    "user": 1,
+    "content_type": 22,
+    "object_id": "9",
+    "object_repr": "AMEBA DJ's (El Rouge)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"item-image relationship\", \"object\": \"Item_images object (9)\"}}, {\"added\": {\"name\": \"item variant\", \"object\": \"AMEBA DJ's (El Rouge)(size=unique)\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 51,
+  "fields": {
+    "action_time": "2021-05-03T20:32:31.148Z",
+    "user": 1,
+    "content_type": 22,
+    "object_id": "10",
+    "object_repr": "ameba prismática",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"item-image relationship\", \"object\": \"Item_images object (10)\"}}, {\"added\": {\"name\": \"item variant\", \"object\": \"ameba prism\\u00e1tica(size=unique)\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 52,
+  "fields": {
+    "action_time": "2021-05-03T20:35:41.636Z",
+    "user": 1,
+    "content_type": 22,
+    "object_id": "11",
+    "object_repr": "Parkfest 19",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"item-image relationship\", \"object\": \"Item_images object (11)\"}}, {\"added\": {\"name\": \"item variant\", \"object\": \"Parkfest 19(size=unique)\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 53,
+  "fields": {
+    "action_time": "2021-05-03T20:38:36.605Z",
+    "user": 1,
+    "content_type": 22,
+    "object_id": "12",
+    "object_repr": "Ameba als clubs: Vise – Not on Earth – Ameba DJS",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"item-image relationship\", \"object\": \"Item_images object (12)\"}}, {\"added\": {\"name\": \"item variant\", \"object\": \"Ameba als clubs: Vise \\u2013 Not on Earth \\u2013 Ameba DJS(size=unique)\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 54,
+  "fields": {
+    "action_time": "2021-05-03T20:40:07.168Z",
+    "user": 1,
+    "content_type": 22,
+    "object_id": "13",
+    "object_repr": "Autoedició i distribució musical by Alicia Carrera",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"item-image relationship\", \"object\": \"Item_images object (13)\"}}, {\"added\": {\"name\": \"item variant\", \"object\": \"Autoedici\\u00f3 i distribuci\\u00f3 musical by Alicia Carrera(size=unique)\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 55,
+  "fields": {
+    "action_time": "2021-05-03T20:41:08.377Z",
+    "user": 1,
+    "content_type": 14,
+    "object_id": "1",
+    "object_repr": "Quines són les teves influències?",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 56,
+  "fields": {
+    "action_time": "2021-05-03T20:41:17.841Z",
+    "user": 1,
+    "content_type": 14,
+    "object_id": "2",
+    "object_repr": "Com veus l’escena electrònica a Barcelona?",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 57,
+  "fields": {
+    "action_time": "2021-05-03T20:41:25.351Z",
+    "user": 1,
+    "content_type": 14,
+    "object_id": "3",
+    "object_repr": "Quins elements són indispensables en la teva música?",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 58,
+  "fields": {
+    "action_time": "2021-05-03T20:41:33.239Z",
+    "user": 1,
+    "content_type": 14,
+    "object_id": "4",
+    "object_repr": "Un disc que sempre portes en la teva maleta?",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 59,
+  "fields": {
+    "action_time": "2021-05-03T20:41:42.788Z",
+    "user": 1,
+    "content_type": 14,
+    "object_id": "5",
+    "object_repr": "Quins són els teus segells de referència?",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 60,
+  "fields": {
+    "action_time": "2021-05-03T20:48:42.691Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "1",
+    "object_repr": "Lucient",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"answer\", \"object\": \"Lucient - Quines s\\u00f3n les teves influ\\u00e8ncies? \"}}, {\"added\": {\"name\": \"answer\", \"object\": \"Lucient - Com veus l\\u2019escena electr\\u00f2nica a Barcelona? \"}}, {\"added\": {\"name\": \"answer\", \"object\": \"Lucient - Quins elements s\\u00f3n indispensables en la teva m\\u00fasica? \"}}, {\"added\": {\"name\": \"answer\", \"object\": \"Lucient - Un disc que sempre portes en la teva maleta? \"}}, {\"added\": {\"name\": \"answer\", \"object\": \"Lucient - Quins s\\u00f3n els teus segells de refer\\u00e8ncia? \"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 61,
+  "fields": {
+    "action_time": "2021-05-03T20:49:29.481Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "2",
+    "object_repr": "Dj Bruce Lee",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"answer\", \"object\": \"Dj Bruce Lee - Quines s\\u00f3n les teves influ\\u00e8ncies? \"}}, {\"added\": {\"name\": \"answer\", \"object\": \"Dj Bruce Lee - Com veus l\\u2019escena electr\\u00f2nica a Barcelona? \"}}, {\"added\": {\"name\": \"answer\", \"object\": \"Dj Bruce Lee - Quins elements s\\u00f3n indispensables en la teva m\\u00fasica? \"}}, {\"added\": {\"name\": \"answer\", \"object\": \"Dj Bruce Lee - Un disc que sempre portes en la teva maleta? \"}}, {\"added\": {\"name\": \"answer\", \"object\": \"Dj Bruce Lee - Quins s\\u00f3n els teus segells de refer\\u00e8ncia? \"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 62,
+  "fields": {
+    "action_time": "2021-05-03T20:53:55.262Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "2",
+    "object_repr": "Dj Bruce Lee",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 63,
+  "fields": {
+    "action_time": "2021-05-03T20:55:09.890Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "2",
+    "object_repr": "Dj Bruce Lee",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 64,
+  "fields": {
+    "action_time": "2021-05-03T20:56:11.696Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "3",
+    "object_repr": "Harvey Touch",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"answer\", \"object\": \"Harvey Touch - Quines s\\u00f3n les teves influ\\u00e8ncies? \"}}, {\"added\": {\"name\": \"answer\", \"object\": \"Harvey Touch - Com veus l\\u2019escena electr\\u00f2nica a Barcelona? \"}}, {\"added\": {\"name\": \"answer\", \"object\": \"Harvey Touch - Quins elements s\\u00f3n indispensables en la teva m\\u00fasica? \"}}, {\"added\": {\"name\": \"answer\", \"object\": \"Harvey Touch - Un disc que sempre portes en la teva maleta? \"}}, {\"added\": {\"name\": \"answer\", \"object\": \"Harvey Touch - Quins s\\u00f3n els teus segells de refer\\u00e8ncia? \"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 65,
+  "fields": {
+    "action_time": "2021-05-03T20:57:13.926Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "4",
+    "object_repr": "Lowprofile",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"answer\", \"object\": \"Lowprofile - Quines s\\u00f3n les teves influ\\u00e8ncies? \"}}, {\"added\": {\"name\": \"answer\", \"object\": \"Lowprofile - Com veus l\\u2019escena electr\\u00f2nica a Barcelona? \"}}, {\"added\": {\"name\": \"answer\", \"object\": \"Lowprofile - Quins elements s\\u00f3n indispensables en la teva m\\u00fasica? \"}}, {\"added\": {\"name\": \"answer\", \"object\": \"Lowprofile - Un disc que sempre portes en la teva maleta? \"}}, {\"added\": {\"name\": \"answer\", \"object\": \"Lowprofile - Quins s\\u00f3n els teus segells de refer\\u00e8ncia? \"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 66,
+  "fields": {
+    "action_time": "2021-05-03T20:58:34.631Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "5",
+    "object_repr": "Omega 3",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"answer\", \"object\": \"Omega 3 - Quines s\\u00f3n les teves influ\\u00e8ncies? \"}}, {\"added\": {\"name\": \"answer\", \"object\": \"Omega 3 - Com veus l\\u2019escena electr\\u00f2nica a Barcelona? \"}}, {\"added\": {\"name\": \"answer\", \"object\": \"Omega 3 - Quins elements s\\u00f3n indispensables en la teva m\\u00fasica? \"}}, {\"added\": {\"name\": \"answer\", \"object\": \"Omega 3 - Un disc que sempre portes en la teva maleta? \"}}, {\"added\": {\"name\": \"answer\", \"object\": \"Omega 3 - Quins s\\u00f3n els teus segells de refer\\u00e8ncia? \"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 67,
+  "fields": {
+    "action_time": "2021-05-03T21:00:22.167Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "6",
+    "object_repr": "Phran",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"answer\", \"object\": \"Phran - Quines s\\u00f3n les teves influ\\u00e8ncies? \"}}, {\"added\": {\"name\": \"answer\", \"object\": \"Phran - Com veus l\\u2019escena electr\\u00f2nica a Barcelona? \"}}, {\"added\": {\"name\": \"answer\", \"object\": \"Phran - Quins elements s\\u00f3n indispensables en la teva m\\u00fasica? \"}}, {\"added\": {\"name\": \"answer\", \"object\": \"Phran - Un disc que sempre portes en la teva maleta? \"}}, {\"added\": {\"name\": \"answer\", \"object\": \"Phran - Quins s\\u00f3n els teus segells de refer\\u00e8ncia? \"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 68,
+  "fields": {
+    "action_time": "2021-05-03T21:01:16.466Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "7",
+    "object_repr": "Telexketch",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"answer\", \"object\": \"Telexketch - Quines s\\u00f3n les teves influ\\u00e8ncies? \"}}, {\"added\": {\"name\": \"answer\", \"object\": \"Telexketch - Com veus l\\u2019escena electr\\u00f2nica a Barcelona? \"}}, {\"added\": {\"name\": \"answer\", \"object\": \"Telexketch - Quins elements s\\u00f3n indispensables en la teva m\\u00fasica? \"}}, {\"added\": {\"name\": \"answer\", \"object\": \"Telexketch - Un disc que sempre portes en la teva maleta? \"}}, {\"added\": {\"name\": \"answer\", \"object\": \"Telexketch - Quins s\\u00f3n els teus segells de refer\\u00e8ncia? \"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 69,
+  "fields": {
+    "action_time": "2021-05-03T21:02:15.157Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "8",
+    "object_repr": "Virginie",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"answer\", \"object\": \"Virginie - Quines s\\u00f3n les teves influ\\u00e8ncies? \"}}, {\"added\": {\"name\": \"answer\", \"object\": \"Virginie - Com veus l\\u2019escena electr\\u00f2nica a Barcelona? \"}}, {\"added\": {\"name\": \"answer\", \"object\": \"Virginie - Quins elements s\\u00f3n indispensables en la teva m\\u00fasica? \"}}, {\"added\": {\"name\": \"answer\", \"object\": \"Virginie - Un disc que sempre portes en la teva maleta? \"}}, {\"added\": {\"name\": \"answer\", \"object\": \"Virginie - Quins s\\u00f3n els teus segells de refer\\u00e8ncia? \"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 70,
+  "fields": {
+    "action_time": "2021-05-03T21:03:16.530Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "2",
+    "object_repr": "web_user@ameba.cat",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 71,
+  "fields": {
+    "action_time": "2021-05-03T21:03:58.197Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "3",
+    "object_repr": "ameba_member@ameba.cat",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 72,
+  "fields": {
+    "action_time": "2021-05-03T21:04:39.755Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "4",
+    "object_repr": "hector.pascual.diaz@gmail.com",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 1,
+  "fields": {
+    "name": "Can add log entry",
+    "content_type": 1,
+    "codename": "add_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 2,
+  "fields": {
+    "name": "Can change log entry",
+    "content_type": 1,
+    "codename": "change_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 3,
+  "fields": {
+    "name": "Can delete log entry",
+    "content_type": 1,
+    "codename": "delete_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 4,
+  "fields": {
+    "name": "Can view log entry",
+    "content_type": 1,
+    "codename": "view_logentry"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 5,
+  "fields": {
+    "name": "Can add permission",
+    "content_type": 2,
+    "codename": "add_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 6,
+  "fields": {
+    "name": "Can change permission",
+    "content_type": 2,
+    "codename": "change_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 7,
+  "fields": {
+    "name": "Can delete permission",
+    "content_type": 2,
+    "codename": "delete_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 8,
+  "fields": {
+    "name": "Can view permission",
+    "content_type": 2,
+    "codename": "view_permission"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 9,
+  "fields": {
+    "name": "Can add group",
+    "content_type": 3,
+    "codename": "add_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 10,
+  "fields": {
+    "name": "Can change group",
+    "content_type": 3,
+    "codename": "change_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 11,
+  "fields": {
+    "name": "Can delete group",
+    "content_type": 3,
+    "codename": "delete_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 12,
+  "fields": {
+    "name": "Can view group",
+    "content_type": 3,
+    "codename": "view_group"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 13,
+  "fields": {
+    "name": "Can add content type",
+    "content_type": 4,
+    "codename": "add_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 14,
+  "fields": {
+    "name": "Can change content type",
+    "content_type": 4,
+    "codename": "change_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 15,
+  "fields": {
+    "name": "Can delete content type",
+    "content_type": 4,
+    "codename": "delete_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 16,
+  "fields": {
+    "name": "Can view content type",
+    "content_type": 4,
+    "codename": "view_contenttype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 17,
+  "fields": {
+    "name": "Can add session",
+    "content_type": 5,
+    "codename": "add_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 18,
+  "fields": {
+    "name": "Can change session",
+    "content_type": 5,
+    "codename": "change_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 19,
+  "fields": {
+    "name": "Can delete session",
+    "content_type": 5,
+    "codename": "delete_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 20,
+  "fields": {
+    "name": "Can view session",
+    "content_type": 5,
+    "codename": "view_session"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 21,
+  "fields": {
+    "name": "Can add blacklisted token",
+    "content_type": 6,
+    "codename": "add_blacklistedtoken"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 22,
+  "fields": {
+    "name": "Can change blacklisted token",
+    "content_type": 6,
+    "codename": "change_blacklistedtoken"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 23,
+  "fields": {
+    "name": "Can delete blacklisted token",
+    "content_type": 6,
+    "codename": "delete_blacklistedtoken"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 24,
+  "fields": {
+    "name": "Can view blacklisted token",
+    "content_type": 6,
+    "codename": "view_blacklistedtoken"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 25,
+  "fields": {
+    "name": "Can add outstanding token",
+    "content_type": 7,
+    "codename": "add_outstandingtoken"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 26,
+  "fields": {
+    "name": "Can change outstanding token",
+    "content_type": 7,
+    "codename": "change_outstandingtoken"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 27,
+  "fields": {
+    "name": "Can delete outstanding token",
+    "content_type": 7,
+    "codename": "delete_outstandingtoken"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 28,
+  "fields": {
+    "name": "Can view outstanding token",
+    "content_type": 7,
+    "codename": "view_outstandingtoken"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 29,
+  "fields": {
+    "name": "Can add user",
+    "content_type": 8,
+    "codename": "add_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 30,
+  "fields": {
+    "name": "Can change user",
+    "content_type": 8,
+    "codename": "change_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 31,
+  "fields": {
+    "name": "Can delete user",
+    "content_type": 8,
+    "codename": "delete_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 32,
+  "fields": {
+    "name": "Can view user",
+    "content_type": 8,
+    "codename": "view_user"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 33,
+  "fields": {
+    "name": "Can add image",
+    "content_type": 9,
+    "codename": "add_image"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 34,
+  "fields": {
+    "name": "Can change image",
+    "content_type": 9,
+    "codename": "change_image"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 35,
+  "fields": {
+    "name": "Can delete image",
+    "content_type": 9,
+    "codename": "delete_image"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 36,
+  "fields": {
+    "name": "Can view image",
+    "content_type": 9,
+    "codename": "view_image"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 37,
+  "fields": {
+    "name": "Can add item",
+    "content_type": 10,
+    "codename": "add_item"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 38,
+  "fields": {
+    "name": "Can change item",
+    "content_type": 10,
+    "codename": "change_item"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 39,
+  "fields": {
+    "name": "Can delete item",
+    "content_type": 10,
+    "codename": "delete_item"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 40,
+  "fields": {
+    "name": "Can view item",
+    "content_type": 10,
+    "codename": "view_item"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 41,
+  "fields": {
+    "name": "Can add membership",
+    "content_type": 11,
+    "codename": "add_membership"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 42,
+  "fields": {
+    "name": "Can change membership",
+    "content_type": 11,
+    "codename": "change_membership"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 43,
+  "fields": {
+    "name": "Can delete membership",
+    "content_type": 11,
+    "codename": "delete_membership"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 44,
+  "fields": {
+    "name": "Can view membership",
+    "content_type": 11,
+    "codename": "view_membership"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 45,
+  "fields": {
+    "name": "Can add member",
+    "content_type": 12,
+    "codename": "add_member"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 46,
+  "fields": {
+    "name": "Can change member",
+    "content_type": 12,
+    "codename": "change_member"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 47,
+  "fields": {
+    "name": "Can delete member",
+    "content_type": 12,
+    "codename": "delete_member"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 48,
+  "fields": {
+    "name": "Can view member",
+    "content_type": 12,
+    "codename": "view_member"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 49,
+  "fields": {
+    "name": "Can add artist",
+    "content_type": 13,
+    "codename": "add_artist"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 50,
+  "fields": {
+    "name": "Can change artist",
+    "content_type": 13,
+    "codename": "change_artist"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 51,
+  "fields": {
+    "name": "Can delete artist",
+    "content_type": 13,
+    "codename": "delete_artist"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 52,
+  "fields": {
+    "name": "Can view artist",
+    "content_type": 13,
+    "codename": "view_artist"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 53,
+  "fields": {
+    "name": "Can add question",
+    "content_type": 14,
+    "codename": "add_question"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 54,
+  "fields": {
+    "name": "Can change question",
+    "content_type": 14,
+    "codename": "change_question"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 55,
+  "fields": {
+    "name": "Can delete question",
+    "content_type": 14,
+    "codename": "delete_question"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 56,
+  "fields": {
+    "name": "Can view question",
+    "content_type": 14,
+    "codename": "view_question"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 57,
+  "fields": {
+    "name": "Can add interview",
+    "content_type": 15,
+    "codename": "add_interview"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 58,
+  "fields": {
+    "name": "Can change interview",
+    "content_type": 15,
+    "codename": "change_interview"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 59,
+  "fields": {
+    "name": "Can delete interview",
+    "content_type": 15,
+    "codename": "delete_interview"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 60,
+  "fields": {
+    "name": "Can view interview",
+    "content_type": 15,
+    "codename": "view_interview"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 61,
+  "fields": {
+    "name": "Can add answer",
+    "content_type": 16,
+    "codename": "add_answer"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 62,
+  "fields": {
+    "name": "Can change answer",
+    "content_type": 16,
+    "codename": "change_answer"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 63,
+  "fields": {
+    "name": "Can delete answer",
+    "content_type": 16,
+    "codename": "delete_answer"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 64,
+  "fields": {
+    "name": "Can view answer",
+    "content_type": 16,
+    "codename": "view_answer"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 65,
+  "fields": {
+    "name": "Can add discount",
+    "content_type": 17,
+    "codename": "add_discount"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 66,
+  "fields": {
+    "name": "Can change discount",
+    "content_type": 17,
+    "codename": "change_discount"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 67,
+  "fields": {
+    "name": "Can delete discount",
+    "content_type": 17,
+    "codename": "delete_discount"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 68,
+  "fields": {
+    "name": "Can view discount",
+    "content_type": 17,
+    "codename": "view_discount"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 69,
+  "fields": {
+    "name": "Can add discount usage",
+    "content_type": 18,
+    "codename": "add_discountusage"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 70,
+  "fields": {
+    "name": "Can change discount usage",
+    "content_type": 18,
+    "codename": "change_discountusage"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 71,
+  "fields": {
+    "name": "Can delete discount usage",
+    "content_type": 18,
+    "codename": "delete_discountusage"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 72,
+  "fields": {
+    "name": "Can view discount usage",
+    "content_type": 18,
+    "codename": "view_discountusage"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 73,
+  "fields": {
+    "name": "Can add discount code",
+    "content_type": 19,
+    "codename": "add_discountcode"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 74,
+  "fields": {
+    "name": "Can change discount code",
+    "content_type": 19,
+    "codename": "change_discountcode"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 75,
+  "fields": {
+    "name": "Can delete discount code",
+    "content_type": 19,
+    "codename": "delete_discountcode"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 76,
+  "fields": {
+    "name": "Can view discount code",
+    "content_type": 19,
+    "codename": "view_discountcode"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 77,
+  "fields": {
+    "name": "Can add cart",
+    "content_type": 20,
+    "codename": "add_cart"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 78,
+  "fields": {
+    "name": "Can change cart",
+    "content_type": 20,
+    "codename": "change_cart"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 79,
+  "fields": {
+    "name": "Can delete cart",
+    "content_type": 20,
+    "codename": "delete_cart"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 80,
+  "fields": {
+    "name": "Can view cart",
+    "content_type": 20,
+    "codename": "view_cart"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 81,
+  "fields": {
+    "name": "Can add cart items",
+    "content_type": 21,
+    "codename": "add_cartitems"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 82,
+  "fields": {
+    "name": "Can change cart items",
+    "content_type": 21,
+    "codename": "change_cartitems"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 83,
+  "fields": {
+    "name": "Can delete cart items",
+    "content_type": 21,
+    "codename": "delete_cartitems"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 84,
+  "fields": {
+    "name": "Can view cart items",
+    "content_type": 21,
+    "codename": "view_cartitems"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 85,
+  "fields": {
+    "name": "Can add event",
+    "content_type": 22,
+    "codename": "add_event"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 86,
+  "fields": {
+    "name": "Can change event",
+    "content_type": 22,
+    "codename": "change_event"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 87,
+  "fields": {
+    "name": "Can delete event",
+    "content_type": 22,
+    "codename": "delete_event"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 88,
+  "fields": {
+    "name": "Can view event",
+    "content_type": 22,
+    "codename": "view_event"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 89,
+  "fields": {
+    "name": "Can add subscription",
+    "content_type": 23,
+    "codename": "add_subscription"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 90,
+  "fields": {
+    "name": "Can change subscription",
+    "content_type": 23,
+    "codename": "change_subscription"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 91,
+  "fields": {
+    "name": "Can delete subscription",
+    "content_type": 23,
+    "codename": "delete_subscription"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 92,
+  "fields": {
+    "name": "Can view subscription",
+    "content_type": 23,
+    "codename": "view_subscription"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 93,
+  "fields": {
+    "name": "Can add payment",
+    "content_type": 24,
+    "codename": "add_payment"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 94,
+  "fields": {
+    "name": "Can change payment",
+    "content_type": 24,
+    "codename": "change_payment"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 95,
+  "fields": {
+    "name": "Can delete payment",
+    "content_type": 24,
+    "codename": "delete_payment"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 96,
+  "fields": {
+    "name": "Can view payment",
+    "content_type": 24,
+    "codename": "view_payment"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 97,
+  "fields": {
+    "name": "Can add cover",
+    "content_type": 25,
+    "codename": "add_cover"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 98,
+  "fields": {
+    "name": "Can change cover",
+    "content_type": 25,
+    "codename": "change_cover"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 99,
+  "fields": {
+    "name": "Can delete cover",
+    "content_type": 25,
+    "codename": "delete_cover"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 100,
+  "fields": {
+    "name": "Can view cover",
+    "content_type": 25,
+    "codename": "view_cover"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 101,
+  "fields": {
+    "name": "Can add artist media url",
+    "content_type": 26,
+    "codename": "add_artistmediaurl"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 102,
+  "fields": {
+    "name": "Can change artist media url",
+    "content_type": 26,
+    "codename": "change_artistmediaurl"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 103,
+  "fields": {
+    "name": "Can delete artist media url",
+    "content_type": 26,
+    "codename": "delete_artistmediaurl"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 104,
+  "fields": {
+    "name": "Can view artist media url",
+    "content_type": 26,
+    "codename": "view_artistmediaurl"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 105,
+  "fields": {
+    "name": "Can add mailing list",
+    "content_type": 27,
+    "codename": "add_mailinglist"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 106,
+  "fields": {
+    "name": "Can change mailing list",
+    "content_type": 27,
+    "codename": "change_mailinglist"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 107,
+  "fields": {
+    "name": "Can delete mailing list",
+    "content_type": 27,
+    "codename": "delete_mailinglist"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 108,
+  "fields": {
+    "name": "Can view mailing list",
+    "content_type": 27,
+    "codename": "view_mailinglist"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 109,
+  "fields": {
+    "name": "Can add subscriber",
+    "content_type": 28,
+    "codename": "add_subscriber"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 110,
+  "fields": {
+    "name": "Can change subscriber",
+    "content_type": 28,
+    "codename": "change_subscriber"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 111,
+  "fields": {
+    "name": "Can delete subscriber",
+    "content_type": 28,
+    "codename": "delete_subscriber"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 112,
+  "fields": {
+    "name": "Can view subscriber",
+    "content_type": 28,
+    "codename": "view_subscriber"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 113,
+  "fields": {
+    "name": "Can add item attribute",
+    "content_type": 29,
+    "codename": "add_itemattribute"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 114,
+  "fields": {
+    "name": "Can change item attribute",
+    "content_type": 29,
+    "codename": "change_itemattribute"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 115,
+  "fields": {
+    "name": "Can delete item attribute",
+    "content_type": 29,
+    "codename": "delete_itemattribute"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 116,
+  "fields": {
+    "name": "Can view item attribute",
+    "content_type": 29,
+    "codename": "view_itemattribute"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 117,
+  "fields": {
+    "name": "Can add item attribute type",
+    "content_type": 30,
+    "codename": "add_itemattributetype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 118,
+  "fields": {
+    "name": "Can change item attribute type",
+    "content_type": 30,
+    "codename": "change_itemattributetype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 119,
+  "fields": {
+    "name": "Can delete item attribute type",
+    "content_type": 30,
+    "codename": "delete_itemattributetype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 120,
+  "fields": {
+    "name": "Can view item attribute type",
+    "content_type": 30,
+    "codename": "view_itemattributetype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 121,
+  "fields": {
+    "name": "Can add item variant",
+    "content_type": 31,
+    "codename": "add_itemvariant"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 122,
+  "fields": {
+    "name": "Can change item variant",
+    "content_type": 31,
+    "codename": "change_itemvariant"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 123,
+  "fields": {
+    "name": "Can delete item variant",
+    "content_type": 31,
+    "codename": "delete_itemvariant"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 124,
+  "fields": {
+    "name": "Can view item variant",
+    "content_type": 31,
+    "codename": "view_itemvariant"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 125,
+  "fields": {
+    "name": "Can add article",
+    "content_type": 32,
+    "codename": "add_article"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 126,
+  "fields": {
+    "name": "Can change article",
+    "content_type": 32,
+    "codename": "change_article"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 127,
+  "fields": {
+    "name": "Can delete article",
+    "content_type": 32,
+    "codename": "delete_article"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 128,
+  "fields": {
+    "name": "Can view article",
+    "content_type": 32,
+    "codename": "view_article"
+  }
+},
+{
+  "model": "auth.group",
+  "pk": 1,
+  "fields": {
+    "name": "web_user",
+    "permissions": [
+      29,
+      30,
+      31,
+      32
+    ]
+  }
+},
+{
+  "model": "auth.group",
+  "pk": 2,
+  "fields": {
+    "name": "ameba_member",
+    "permissions": [
+      29,
+      30,
+      31,
+      32
+    ]
+  }
+},
+{
+  "model": "auth.group",
+  "pk": 3,
+  "fields": {
+    "name": "ameba_editor",
+    "permissions": [
+      29,
+      30,
+      31,
+      32
+    ]
+  }
+},
+{
+  "model": "auth.group",
+  "pk": 4,
+  "fields": {
+    "name": "ameba_admin",
+    "permissions": [
+      29,
+      30,
+      31,
+      32
+    ]
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 1,
+  "fields": {
+    "app_label": "admin",
+    "model": "logentry"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 2,
+  "fields": {
+    "app_label": "auth",
+    "model": "permission"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 3,
+  "fields": {
+    "app_label": "auth",
+    "model": "group"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 4,
+  "fields": {
+    "app_label": "contenttypes",
+    "model": "contenttype"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 5,
+  "fields": {
+    "app_label": "sessions",
+    "model": "session"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 6,
+  "fields": {
+    "app_label": "token_blacklist",
+    "model": "blacklistedtoken"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 7,
+  "fields": {
+    "app_label": "token_blacklist",
+    "model": "outstandingtoken"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 8,
+  "fields": {
+    "app_label": "api",
+    "model": "user"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 9,
+  "fields": {
+    "app_label": "api",
+    "model": "image"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 10,
+  "fields": {
+    "app_label": "api",
+    "model": "item"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 11,
+  "fields": {
+    "app_label": "api",
+    "model": "membership"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 12,
+  "fields": {
+    "app_label": "api",
+    "model": "member"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 13,
+  "fields": {
+    "app_label": "api",
+    "model": "artist"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 14,
+  "fields": {
+    "app_label": "api",
+    "model": "question"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 15,
+  "fields": {
+    "app_label": "api",
+    "model": "interview"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 16,
+  "fields": {
+    "app_label": "api",
+    "model": "answer"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 17,
+  "fields": {
+    "app_label": "api",
+    "model": "discount"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 18,
+  "fields": {
+    "app_label": "api",
+    "model": "discountusage"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 19,
+  "fields": {
+    "app_label": "api",
+    "model": "discountcode"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 20,
+  "fields": {
+    "app_label": "api",
+    "model": "cart"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 21,
+  "fields": {
+    "app_label": "api",
+    "model": "cartitems"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 22,
+  "fields": {
+    "app_label": "api",
+    "model": "event"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 23,
+  "fields": {
+    "app_label": "api",
+    "model": "subscription"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 24,
+  "fields": {
+    "app_label": "api",
+    "model": "payment"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 25,
+  "fields": {
+    "app_label": "api",
+    "model": "cover"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 26,
+  "fields": {
+    "app_label": "api",
+    "model": "artistmediaurl"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 27,
+  "fields": {
+    "app_label": "api",
+    "model": "mailinglist"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 28,
+  "fields": {
+    "app_label": "api",
+    "model": "subscriber"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 29,
+  "fields": {
+    "app_label": "api",
+    "model": "itemattribute"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 30,
+  "fields": {
+    "app_label": "api",
+    "model": "itemattributetype"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 31,
+  "fields": {
+    "app_label": "api",
+    "model": "itemvariant"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 32,
+  "fields": {
+    "app_label": "api",
+    "model": "article"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "02ir1wjsg9ozhiuoo2u50c3um2elez23",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyG0C13x6N1vILC7SNXQpLQn47_bJj3ocea9mbcKcV1KWJvMYWR1UZ06_XYp0lPqDvgR633SNNVlHpPeFX3Qpm8Ty-t6uH8HJbayrRGJjMUo1oElTwYTQsYBTcpb6Ilh4LMBD2A9IYrz1pEA5N5bNp36fAHRjzci:1lddtM:d1pKgrmOnJF0uqITYPq4--KbEjx0LdWYfjg-krRAX4U",
+    "expire_date": "2021-05-17T19:06:04.383Z"
+  }
+},
+{
+  "model": "api.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$216000$inLEiIFiahQT$nZubHirXnYHH2oqmHJhGDdp4pqZex8Wj8UMnRa5BbVQ=",
+    "last_login": "2021-05-03T19:06:04.377Z",
+    "is_superuser": true,
+    "is_staff": true,
+    "date_joined": "2021-05-03T19:05:57.274Z",
+    "username": "joni",
+    "email": "jonrivala@gmail.com",
+    "is_active": true,
+    "groups": [
+      1
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "api.user",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$216000$UOs7gmvFmTcz$JsGhas5EhbkD3qvh8lyreKqztMRLmc8IP9DCQYMBWN8=",
+    "last_login": "2021-05-03T21:02:55Z",
+    "is_superuser": false,
+    "is_staff": false,
+    "date_joined": "2021-05-03T21:02:42Z",
+    "username": "Web User",
+    "email": "web_user@ameba.cat",
+    "is_active": true,
+    "groups": [
+      1
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "api.user",
+  "pk": 3,
+  "fields": {
+    "password": "pbkdf2_sha256$216000$UjRvO59OpNeX$0lC5ClWzY8Q+q95ph0K4fdslyl9Jou4vk57WTis2RwE=",
+    "last_login": "2021-05-03T21:03:36Z",
+    "is_superuser": false,
+    "is_staff": false,
+    "date_joined": "2021-05-03T21:03:22Z",
+    "username": "Ameba Member",
+    "email": "ameba_member@ameba.cat",
+    "is_active": true,
+    "groups": [
+      2
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "api.user",
+  "pk": 4,
+  "fields": {
+    "password": "pbkdf2_sha256$216000$j6KuTLMeaThD$wcR8A9X9Eh0FE0ezQfqe7ynWM0xP7RVHGUXEAlvgaAg=",
+    "last_login": "2021-05-03T21:04:24Z",
+    "is_superuser": true,
+    "is_staff": true,
+    "date_joined": "2021-05-03T21:04:18Z",
+    "username": "Hector",
+    "email": "hector.pascual.diaz@gmail.com",
+    "is_active": true,
+    "groups": [
+      4
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "api.mailinglist",
+  "pk": 1,
+  "fields": {
+    "address": "newsletter@mail-out.ameba.cat",
+    "is_test": false
+  }
+},
+{
+  "model": "api.image",
+  "pk": 1,
+  "fields": {
+    "image": "images/article-camiseta-ameba-5-anys-469x469.png"
+  }
+},
+{
+  "model": "api.image",
+  "pk": 2,
+  "fields": {
+    "image": "images/article-camiseta-ameba-modular-469x469.png"
+  }
+},
+{
+  "model": "api.image",
+  "pk": 3,
+  "fields": {
+    "image": "images/article-camiseta-ameba-new-469x469.png"
+  }
+},
+{
+  "model": "api.image",
+  "pk": 4,
+  "fields": {
+    "image": "images/article-camiseta-ameba-old-469x469.png"
+  }
+},
+{
+  "model": "api.image",
+  "pk": 5,
+  "fields": {
+    "image": "images/article-camiseta-ameba-vinil-469x469.png"
+  }
+},
+{
+  "model": "api.image",
+  "pk": 6,
+  "fields": {
+    "image": "images/article-totebag-modular-500x500.jpg"
+  }
+},
+{
+  "model": "api.image",
+  "pk": 7,
+  "fields": {
+    "image": "images/article-totebag-vinil-500x500.jpg"
+  }
+},
+{
+  "model": "api.image",
+  "pk": 8,
+  "fields": {
+    "image": "images/event-ameba-djs-el-rouge-960x960.png"
+  }
+},
+{
+  "model": "api.image",
+  "pk": 9,
+  "fields": {
+    "image": "images/event-ameba-prismatica-960x960.png"
+  }
+},
+{
+  "model": "api.image",
+  "pk": 10,
+  "fields": {
+    "image": "images/event-parkfest19-1024x1024.png"
+  }
+},
+{
+  "model": "api.image",
+  "pk": 12,
+  "fields": {
+    "image": "images/event-vise-notonearth-lolita-10-08-19.png"
+  }
+},
+{
+  "model": "api.image",
+  "pk": 13,
+  "fields": {
+    "image": "images/event-workshop-alicia-carrera-1024x1024.png"
+  }
+},
+{
+  "model": "api.image",
+  "pk": 14,
+  "fields": {
+    "image": "images/subscripcion-ameba-profesional-500x500.png"
+  }
+},
+{
+  "model": "api.image",
+  "pk": 15,
+  "fields": {
+    "image": "images/subscripcion-ameba-soci-500x500.png"
+  }
+},
+{
+  "model": "api.image",
+  "pk": 16,
+  "fields": {
+    "image": "images/artist-dj_bruce_lee-855x855.png"
+  }
+},
+{
+  "model": "api.image",
+  "pk": 17,
+  "fields": {
+    "image": "images/artist-harvey_touch-1200x1200.jpg"
+  }
+},
+{
+  "model": "api.image",
+  "pk": 18,
+  "fields": {
+    "image": "images/artist-lowprofile-440x440.png"
+  }
+},
+{
+  "model": "api.image",
+  "pk": 19,
+  "fields": {
+    "image": "images/artist-lucient-1920x1920.png"
+  }
+},
+{
+  "model": "api.image",
+  "pk": 20,
+  "fields": {
+    "image": "images/artist-omega_3-800x800.png"
+  }
+},
+{
+  "model": "api.image",
+  "pk": 21,
+  "fields": {
+    "image": "images/artist-phran-1707x1707.png"
+  }
+},
+{
+  "model": "api.image",
+  "pk": 22,
+  "fields": {
+    "image": "images/artist-telexketch-1260.png"
+  }
+},
+{
+  "model": "api.image",
+  "pk": 23,
+  "fields": {
+    "image": "images/artist-virginie-1366x1366.png"
+  }
+},
+{
+  "model": "api.item",
+  "pk": 1,
+  "fields": {
+    "name": "Camiseta AMEBA 5 años",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse vehicula venenatis tincidunt. Duis euismod posuere ullamcorper. Duis eget arcu vel metus vestibulum fermentum at a justo. Etiam dignissim tortor quis quam ullamcorper, nec cursus arcu ullamcorper. Integer vulputate cursus risus, a scelerisque magna imperdiet a. Vestibulum ullamcorper risus sit amet commodo tincidunt. Donec pellentesque varius pretium. Integer viverra interdum sapien ac condimentum. Vivamus nec metus non diam fermentum faucibus.",
+    "is_active": true,
+    "created": "2021-05-03T19:11:15.783Z",
+    "updated": "2021-05-03T19:21:18.517Z",
+    "images": [
+      1
+    ],
+    "acquired_by": [],
+    "saved_by": []
+  }
+},
+{
+  "model": "api.item",
+  "pk": 2,
+  "fields": {
+    "name": "Camiseta AMEBA modular",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse vehicula venenatis tincidunt. Duis euismod posuere ullamcorper. Duis eget arcu vel metus vestibulum fermentum at a justo. Etiam dignissim tortor quis quam ullamcorper, nec cursus arcu ullamcorper. Integer vulputate cursus risus, a scelerisque magna imperdiet a. Vestibulum ullamcorper risus sit amet commodo tincidunt. Donec pellentesque varius pretium. Integer viverra interdum sapien ac condimentum. Vivamus nec metus non diam fermentum faucibus. Phasellus imperdiet purus eget augue lacinia tempor. Nulla at tellus ac ligula blandit maximus. Duis iaculis id velit in auctor. Sed vulputate feugiat justo vitae sollicitudin. Ut faucibus, libero in pretium porttitor, tortor nulla venenatis est, fringilla dictum lorem lectus at erat. Interdum et malesuada fames ac ante ipsum primis in.",
+    "is_active": true,
+    "created": "2021-05-03T19:21:05.648Z",
+    "updated": "2021-05-03T19:21:05.648Z",
+    "images": [
+      2
+    ],
+    "acquired_by": [],
+    "saved_by": []
+  }
+},
+{
+  "model": "api.item",
+  "pk": 3,
+  "fields": {
+    "name": "Camiseta AMEBA 2019",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse vehicula venenatis tincidunt. Duis euismod posuere ullamcorper. Duis eget arcu vel metus vestibulum fermentum at a justo. Etiam dignissim tortor quis quam ullamcorper, nec cursus arcu ullamcorper. Integer vulputate cursus risus, a scelerisque magna imperdiet a. Vestibulum ullamcorper risus sit amet commodo tincidunt. Donec pellentesque varius pretium. Integer viverra interdum sapien ac condimentum. Vivamus nec metus non diam fermentum faucibus. Phasellus imperdiet purus eget augue lacinia tempor. Nulla at tellus ac ligula blandit maximus. Duis iaculis id velit in auctor. Sed vulputate feugiat justo vitae sollicitudin. Ut faucibus, libero in pretium porttitor, tortor nulla venenatis est, fringilla dictum lorem lectus at erat. Interdum et malesuada fames ac ante ipsum primis in.",
+    "is_active": true,
+    "created": "2021-05-03T19:22:01.282Z",
+    "updated": "2021-05-03T19:22:01.282Z",
+    "images": [
+      3
+    ],
+    "acquired_by": [],
+    "saved_by": []
+  }
+},
+{
+  "model": "api.item",
+  "pk": 4,
+  "fields": {
+    "name": "Camiseta AMEBA 2017",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse vehicula venenatis tincidunt. Duis euismod posuere ullamcorper. Duis eget arcu vel metus vestibulum fermentum at a justo. Etiam dignissim tortor quis quam ullamcorper, nec cursus arcu ullamcorper. Integer vulputate cursus risus, a scelerisque magna imperdiet a. Vestibulum ullamcorper risus sit amet commodo tincidunt. Donec pellentesque varius pretium. Integer viverra interdum sapien ac condimentum. Vivamus nec metus non diam fermentum faucibus. Phasellus imperdiet purus eget augue lacinia tempor. Nulla at tellus ac ligula blandit maximus. Duis iaculis id velit in auctor. Sed vulputate feugiat justo vitae sollicitudin. Ut faucibus, libero in pretium porttitor, tortor nulla venenatis est, fringilla dictum lorem lectus at erat. Interdum et malesuada fames ac ante ipsum primis in.",
+    "is_active": true,
+    "created": "2021-05-03T19:23:23.819Z",
+    "updated": "2021-05-03T19:23:23.819Z",
+    "images": [
+      4
+    ],
+    "acquired_by": [],
+    "saved_by": []
+  }
+},
+{
+  "model": "api.item",
+  "pk": 5,
+  "fields": {
+    "name": "Camiseta AMEBA Vinyl",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse vehicula venenatis tincidunt. Duis euismod posuere ullamcorper. Duis eget arcu vel metus vestibulum fermentum at a justo. Etiam dignissim tortor quis quam ullamcorper, nec cursus arcu ullamcorper. Integer vulputate cursus risus, a scelerisque magna imperdiet a. Vestibulum ullamcorper risus sit amet commodo tincidunt. Donec pellentesque varius pretium. Integer viverra interdum sapien ac condimentum. Vivamus nec metus non diam fermentum faucibus. Phasellus imperdiet purus eget augue lacinia tempor. Nulla at tellus ac ligula blandit maximus. Duis iaculis id velit in auctor. Sed vulputate feugiat justo vitae sollicitudin. Ut faucibus, libero in pretium porttitor, tortor nulla venenatis est, fringilla dictum lorem lectus at erat. Interdum et malesuada fames ac ante ipsum primis in.",
+    "is_active": true,
+    "created": "2021-05-03T19:24:10.410Z",
+    "updated": "2021-05-03T19:24:10.410Z",
+    "images": [
+      5
+    ],
+    "acquired_by": [],
+    "saved_by": []
+  }
+},
+{
+  "model": "api.item",
+  "pk": 7,
+  "fields": {
+    "name": "Tote Vinyl",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse vehicula venenatis tincidunt. Duis euismod posuere ullamcorper. Duis eget arcu vel metus vestibulum fermentum at a justo. Etiam dignissim tortor quis quam ullamcorper, nec cursus arcu ullamcorper. Integer vulputate cursus risus, a scelerisque magna imperdiet a. Vestibulum ullamcorper risus sit amet commodo tincidunt. Donec pellentesque varius pretium. Integer viverra interdum sapien ac condimentum. Vivamus nec metus non diam fermentum faucibus. Phasellus imperdiet purus eget augue lacinia tempor. Nulla at tellus ac ligula blandit maximus. Duis iaculis id velit in auctor. Sed vulputate feugiat justo vitae sollicitudin. Ut faucibus, libero in pretium porttitor, tortor nulla venenatis est, fringilla dictum lorem lectus at erat. Interdum et malesuada fames ac ante ipsum primis in.",
+    "is_active": true,
+    "created": "2021-05-03T19:26:01.536Z",
+    "updated": "2021-05-03T19:26:01.536Z",
+    "images": [
+      7
+    ],
+    "acquired_by": [],
+    "saved_by": []
+  }
+},
+{
+  "model": "api.item",
+  "pk": 8,
+  "fields": {
+    "name": "Tote modular",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse vehicula venenatis tincidunt. Duis euismod posuere ullamcorper. Duis eget arcu vel metus vestibulum fermentum at a justo. Etiam dignissim tortor quis quam ullamcorper, nec cursus arcu ullamcorper. Integer vulputate cursus risus, a scelerisque magna imperdiet a. Vestibulum ullamcorper risus sit amet commodo tincidunt. Donec pellentesque varius pretium. Integer viverra interdum sapien ac condimentum. Vivamus nec metus non diam fermentum faucibus. Phasellus imperdiet purus eget augue lacinia tempor. Nulla at tellus ac ligula blandit maximus. Duis iaculis id velit in auctor. Sed vulputate feugiat justo vitae sollicitudin. Ut faucibus, libero in pretium porttitor, tortor nulla venenatis est, fringilla dictum lorem lectus at erat. Interdum et malesuada fames ac ante ipsum primis in.",
+    "is_active": true,
+    "created": "2021-05-03T19:29:02.880Z",
+    "updated": "2021-05-03T19:29:02.880Z",
+    "images": [
+      6
+    ],
+    "acquired_by": [],
+    "saved_by": []
+  }
+},
+{
+  "model": "api.item",
+  "pk": 9,
+  "fields": {
+    "name": "AMEBA DJ's (El Rouge)",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse vehicula venenatis tincidunt. Duis euismod posuere ullamcorper. Duis eget arcu vel metus vestibulum fermentum at a justo. Etiam dignissim tortor quis quam ullamcorper, nec cursus arcu ullamcorper. Integer vulputate cursus risus, a scelerisque magna imperdiet a. Vestibulum ullamcorper risus sit amet commodo tincidunt. Donec pellentesque varius pretium. Integer viverra interdum sapien ac condimentum. Vivamus nec metus non diam fermentum faucibus. Phasellus imperdiet purus eget augue lacinia tempor. Nulla at tellus ac ligula blandit maximus. Duis iaculis id velit in auctor. Sed vulputate feugiat justo vitae sollicitudin. Ut faucibus, libero in pretium porttitor, tortor nulla venenatis est, fringilla dictum lorem lectus at erat. Interdum et malesuada fames ac ante ipsum primis in.",
+    "is_active": true,
+    "created": "2021-05-03T20:30:14.965Z",
+    "updated": "2021-05-03T20:30:14.965Z",
+    "images": [
+      8
+    ],
+    "acquired_by": [],
+    "saved_by": []
+  }
+},
 {
   "model": "api.item",
   "pk": 10,
   "fields": {
-    "name": "AMEBA Parcfest 2019",
-    "description": "El 29 de juny torna l’Ameba Parkfest en la seva cinquena edició al Parc de l’Espanya Industrial. Tota una jornada de música electrònica.",
-    "price": "6.00",
-    "stock": -1,
+    "name": "ameba prismática",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse vehicula venenatis tincidunt. Duis euismod posuere ullamcorper. Duis eget arcu vel metus vestibulum fermentum at a justo. Etiam dignissim tortor quis quam ullamcorper, nec cursus arcu ullamcorper. Integer vulputate cursus risus, a scelerisque magna imperdiet a. Vestibulum ullamcorper risus sit amet commodo tincidunt. Donec pellentesque varius pretium. Integer viverra interdum sapien ac condimentum. Vivamus nec metus non diam fermentum faucibus. Phasellus imperdiet purus eget augue lacinia tempor. Nulla at tellus ac ligula blandit maximus. Duis iaculis id velit in auctor. Sed vulputate feugiat justo vitae sollicitudin. Ut faucibus, libero in pretium porttitor, tortor nulla venenatis est, fringilla dictum lorem lectus at erat. Interdum et malesuada fames ac ante ipsum primis in.",
     "is_active": true,
-    "created": "2021-01-17T22:47:06.208Z",
-    "updated": "2021-01-17T22:58:06.099Z",
+    "created": "2021-05-03T20:32:31.129Z",
+    "updated": "2021-05-03T20:32:31.129Z",
     "images": [
-      10
+      9
     ],
     "acquired_by": [],
     "saved_by": []
@@ -1000,15 +2785,13 @@
   "model": "api.item",
   "pk": 11,
   "fields": {
-    "name": "El Rouge presens AMEBA DJ's",
-    "description": "Doors open 21h. Per a aquesta ocasió comptarem amb Bill Baggins (Dublab/Rhythm Control) i Noir Renoir (L'Electra). Mandanga de la bona per a dinar i sopar.",
-    "price": "0.00",
-    "stock": 20,
+    "name": "Parkfest 19",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse vehicula venenatis tincidunt. Duis euismod posuere ullamcorper. Duis eget arcu vel metus vestibulum fermentum at a justo. Etiam dignissim tortor quis quam ullamcorper, nec cursus arcu ullamcorper. Integer vulputate cursus risus, a scelerisque magna imperdiet a. Vestibulum ullamcorper risus sit amet commodo tincidunt. Donec pellentesque varius pretium. Integer viverra interdum sapien ac condimentum. Vivamus nec metus non diam fermentum faucibus. Phasellus imperdiet purus eget augue lacinia tempor. Nulla at tellus ac ligula blandit maximus. Duis iaculis id velit in auctor. Sed vulputate feugiat justo vitae sollicitudin. Ut faucibus, libero in pretium porttitor, tortor nulla venenatis est, fringilla dictum lorem lectus at erat. Interdum et malesuada fames ac ante ipsum primis in.",
     "is_active": true,
-    "created": "2021-01-17T22:51:57.342Z",
-    "updated": "2021-01-17T22:57:57.630Z",
+    "created": "2021-05-03T20:35:41.611Z",
+    "updated": "2021-05-03T20:35:41.611Z",
     "images": [
-      11
+      10
     ],
     "acquired_by": [],
     "saved_by": []
@@ -1018,13 +2801,11 @@
   "model": "api.item",
   "pk": 12,
   "fields": {
-    "name": "AMEBA Prismática 2019",
-    "description": "Seguim!! El proper dissabte que ve 13 de Juliol i un any més tenim el plaer de formar part de la programació de les festes del Raval! En aquesta ocasió ens mudem a la Plaça Joan Coromines amb activitats per a tota la família: taller de grafiti amb Montana Colors, exhibicions de breakdance i les ja èpiques subhastes de Discos Edison’s.",
-    "price": "6.00",
-    "stock": -1,
+    "name": "Ameba als clubs: Vise – Not on Earth – Ameba DJS",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse vehicula venenatis tincidunt. Duis euismod posuere ullamcorper. Duis eget arcu vel metus vestibulum fermentum at a justo. Etiam dignissim tortor quis quam ullamcorper, nec cursus arcu ullamcorper. Integer vulputate cursus risus, a scelerisque magna imperdiet a. Vestibulum ullamcorper risus sit amet commodo tincidunt. Donec pellentesque varius pretium. Integer viverra interdum sapien ac condimentum. Vivamus nec metus non diam fermentum faucibus. Phasellus imperdiet purus eget augue lacinia tempor. Nulla at tellus ac ligula blandit maximus. Duis iaculis id velit in auctor. Sed vulputate feugiat justo vitae sollicitudin. Ut faucibus, libero in pretium porttitor, tortor nulla venenatis est, fringilla dictum lorem lectus at erat. Interdum et malesuada fames ac ante ipsum primis in.",
     "is_active": true,
-    "created": "2021-01-17T22:55:46.540Z",
-    "updated": "2021-01-17T22:55:46.540Z",
+    "created": "2021-05-03T20:38:36.585Z",
+    "updated": "2021-05-03T20:38:36.585Z",
     "images": [
       12
     ],
@@ -1036,13 +2817,11 @@
   "model": "api.item",
   "pk": 13,
   "fields": {
-    "name": "Ameba als Clubs (Razzmatazz): Vise – Not on Earth – Ameba DJS",
-    "description": "El proper dissabte dia 10 tornem a la sala Lolita de Razzmatazz amb un nova nit d’Ameba als Clubs. En aquesta ocasió comptarem amb els directes dels socis barcelonins VISE i Not On Earth. Propostes que tenen els sons electrònics com a punt de partida però sense deixar de buscar l’equilibri entre l’orgànic i el sintètic. Completen la nit el set de Bill Baggins i el B2B de Noir Renoir i Bob Ventura.",
-    "price": "0.00",
-    "stock": -1,
+    "name": "Autoedició i distribució musical by Alicia Carrera",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse vehicula venenatis tincidunt. Duis euismod posuere ullamcorper. Duis eget arcu vel metus vestibulum fermentum at a justo. Etiam dignissim tortor quis quam ullamcorper, nec cursus arcu ullamcorper. Integer vulputate cursus risus, a scelerisque magna imperdiet a. Vestibulum ullamcorper risus sit amet commodo tincidunt. Donec pellentesque varius pretium. Integer viverra interdum sapien ac condimentum. Vivamus nec metus non diam fermentum faucibus. Phasellus imperdiet purus eget augue lacinia tempor. Nulla at tellus ac ligula blandit maximus. Duis iaculis id velit in auctor. Sed vulputate feugiat justo vitae sollicitudin. Ut faucibus, libero in pretium porttitor, tortor nulla venenatis est, fringilla dictum lorem lectus at erat. Interdum et malesuada fames ac ante ipsum primis in.",
     "is_active": true,
-    "created": "2021-01-17T23:01:26.820Z",
-    "updated": "2021-01-17T23:01:26.820Z",
+    "created": "2021-05-03T20:40:07.140Z",
+    "updated": "2021-05-03T20:40:07.140Z",
     "images": [
       13
     ],
@@ -1051,32 +2830,1012 @@
   }
 },
 {
-  "model": "api.item",
-  "pk": 14,
+  "model": "api.itemattributetype",
+  "pk": 1,
   "fields": {
-    "name": "Autoedició i distribució musical by Alicia Carrera",
-    "description": "Tornem de vacances amb un nou taller de la mà d’Alicia Carrera, ex-label manager d’Hivern Discs, dj i moltes coses més, on ens explicarà com funciona la distribució d’una producció musical, com generar una identitat artística, de quines plataformes disposem i com operen.",
-    "price": "15.00",
-    "stock": 20,
-    "is_active": true,
-    "created": "2021-01-17T23:04:00.274Z",
-    "updated": "2021-01-17T23:09:41.794Z",
-    "images": [
-      14
-    ],
-    "acquired_by": [],
-    "saved_by": []
+    "name": "size"
   }
 },
-
-
+{
+  "model": "api.itemattribute",
+  "pk": 1,
+  "fields": {
+    "attribute": 1,
+    "value": "s"
+  }
+},
+{
+  "model": "api.itemattribute",
+  "pk": 2,
+  "fields": {
+    "attribute": 1,
+    "value": "m"
+  }
+},
+{
+  "model": "api.itemattribute",
+  "pk": 3,
+  "fields": {
+    "attribute": 1,
+    "value": "s"
+  }
+},
+{
+  "model": "api.itemattribute",
+  "pk": 4,
+  "fields": {
+    "attribute": 1,
+    "value": "l"
+  }
+},
+{
+  "model": "api.itemattribute",
+  "pk": 5,
+  "fields": {
+    "attribute": 1,
+    "value": "unique"
+  }
+},
+{
+  "model": "api.itemvariant",
+  "pk": 1,
+  "fields": {
+    "item": 1,
+    "stock": -1,
+    "price": "15.00",
+    "benefits": "",
+    "attributes": [
+      2
+    ]
+  }
+},
+{
+  "model": "api.itemvariant",
+  "pk": 2,
+  "fields": {
+    "item": 1,
+    "stock": 5,
+    "price": "15.00",
+    "benefits": "",
+    "attributes": [
+      3
+    ]
+  }
+},
+{
+  "model": "api.itemvariant",
+  "pk": 3,
+  "fields": {
+    "item": 1,
+    "stock": 0,
+    "price": "15.00",
+    "benefits": "",
+    "attributes": [
+      4
+    ]
+  }
+},
+{
+  "model": "api.itemvariant",
+  "pk": 4,
+  "fields": {
+    "item": 2,
+    "stock": -1,
+    "price": "15.00",
+    "benefits": "",
+    "attributes": [
+      1
+    ]
+  }
+},
+{
+  "model": "api.itemvariant",
+  "pk": 5,
+  "fields": {
+    "item": 2,
+    "stock": 5,
+    "price": "15.00",
+    "benefits": "",
+    "attributes": [
+      2
+    ]
+  }
+},
+{
+  "model": "api.itemvariant",
+  "pk": 6,
+  "fields": {
+    "item": 2,
+    "stock": 0,
+    "price": "15.00",
+    "benefits": "",
+    "attributes": [
+      4
+    ]
+  }
+},
+{
+  "model": "api.itemvariant",
+  "pk": 7,
+  "fields": {
+    "item": 3,
+    "stock": -1,
+    "price": "15.00",
+    "benefits": "",
+    "attributes": [
+      1
+    ]
+  }
+},
+{
+  "model": "api.itemvariant",
+  "pk": 8,
+  "fields": {
+    "item": 3,
+    "stock": 5,
+    "price": "15.00",
+    "benefits": "",
+    "attributes": [
+      2
+    ]
+  }
+},
+{
+  "model": "api.itemvariant",
+  "pk": 9,
+  "fields": {
+    "item": 3,
+    "stock": 0,
+    "price": "15.00",
+    "benefits": "",
+    "attributes": [
+      4
+    ]
+  }
+},
+{
+  "model": "api.itemvariant",
+  "pk": 10,
+  "fields": {
+    "item": 4,
+    "stock": -1,
+    "price": "15.00",
+    "benefits": "",
+    "attributes": [
+      1
+    ]
+  }
+},
+{
+  "model": "api.itemvariant",
+  "pk": 11,
+  "fields": {
+    "item": 4,
+    "stock": 5,
+    "price": "15.00",
+    "benefits": "",
+    "attributes": [
+      2
+    ]
+  }
+},
+{
+  "model": "api.itemvariant",
+  "pk": 12,
+  "fields": {
+    "item": 4,
+    "stock": 0,
+    "price": "15.00",
+    "benefits": "",
+    "attributes": [
+      4
+    ]
+  }
+},
+{
+  "model": "api.itemvariant",
+  "pk": 13,
+  "fields": {
+    "item": 5,
+    "stock": -1,
+    "price": "15.00",
+    "benefits": "",
+    "attributes": [
+      1
+    ]
+  }
+},
+{
+  "model": "api.itemvariant",
+  "pk": 14,
+  "fields": {
+    "item": 5,
+    "stock": 5,
+    "price": "15.00",
+    "benefits": "",
+    "attributes": [
+      2
+    ]
+  }
+},
+{
+  "model": "api.itemvariant",
+  "pk": 15,
+  "fields": {
+    "item": 5,
+    "stock": 0,
+    "price": "15.00",
+    "benefits": "",
+    "attributes": [
+      4
+    ]
+  }
+},
+{
+  "model": "api.itemvariant",
+  "pk": 19,
+  "fields": {
+    "item": 7,
+    "stock": 5,
+    "price": "10.00",
+    "benefits": "",
+    "attributes": [
+      5
+    ]
+  }
+},
+{
+  "model": "api.itemvariant",
+  "pk": 20,
+  "fields": {
+    "item": 8,
+    "stock": 15,
+    "price": "15.00",
+    "benefits": "",
+    "attributes": [
+      5
+    ]
+  }
+},
+{
+  "model": "api.itemvariant",
+  "pk": 21,
+  "fields": {
+    "item": 9,
+    "stock": 50,
+    "price": "5.00",
+    "benefits": "",
+    "attributes": [
+      5
+    ]
+  }
+},
+{
+  "model": "api.itemvariant",
+  "pk": 22,
+  "fields": {
+    "item": 10,
+    "stock": -1,
+    "price": "0.00",
+    "benefits": "",
+    "attributes": [
+      5
+    ]
+  }
+},
+{
+  "model": "api.itemvariant",
+  "pk": 23,
+  "fields": {
+    "item": 11,
+    "stock": -1,
+    "price": "0.00",
+    "benefits": "",
+    "attributes": [
+      5
+    ]
+  }
+},
+{
+  "model": "api.itemvariant",
+  "pk": 24,
+  "fields": {
+    "item": 12,
+    "stock": -1,
+    "price": "12.00",
+    "benefits": "",
+    "attributes": [
+      5
+    ]
+  }
+},
+{
+  "model": "api.itemvariant",
+  "pk": 25,
+  "fields": {
+    "item": 13,
+    "stock": 50,
+    "price": "15.00",
+    "benefits": "",
+    "attributes": [
+      5
+    ]
+  }
+},
+{
+  "model": "api.artist",
+  "pk": 1,
+  "fields": {
+    "name": "Dj Bruce Lee",
+    "biography": "Més de vint anys com a dj, dos segells en actiu: End Of Dayz i Rhythm Control Barcelona, aquest segon homònim de la seva botiga de discos oberta l’any 2016. Dj Bruce Lee és un clàssic de l’escena de Barcelona, ha passat per gairebé totes les cabines on programen house, techno o electro. També l’hem pogut veure a festivals com el Sónar Barcelona o el nostre Parkfest l’any 2018. Els seus serveis són reclamats per dj’s internacionals que visiten la ciutat. Últimament està desenvolupant la seva faceta de productor i els seus temes són punxats per dj’s de la talla de Surgeon o Ben Sims.",
+    "images": [
+      16
+    ]
+  }
+},
+{
+  "model": "api.artist",
+  "pk": 2,
+  "fields": {
+    "name": "Harvey Touch",
+    "biography": "Sota el nom de Harvey Touch s’amaga el projecte en solitari del productor càntabre establert a Barcelona Javi Toca. Després de diversos anys explorant diferents gèneres, en 2017 la seva carrera comença amb Opal, Changes (EELF) i Warm By Your Side (Houseum), on demostra el seu gust pels samplejos. Els dos últims temes criden l’atenció de la comunitat de Soundcloud i Youtube, la qual cosa porta a l’artista a començar amb les actuacions en directe (ARTeNOU, Razzmatazz, Garage 442) i a presentar DJ sets carregats de house percussiu i ritmes exòtics. Després d’un any de silenci, Harvey Touch arranca de nou el passat 2019 amb l’EP Astral Patterns editat dins del segell libanès Feedasoul, mostrant tres talls més contundents, amb un cert matís espiritual, i que va fer de pont amb el seu àlbum, Archipiélago, un treball més rítmic, introspectiu i oníric. Recentment ha editat en el segell valencià theBasement Discos amb Poca Broma EP, un treball que beu amor per la música dels 70 i la transforma en quatre produccions originals que desborden calidesa i elegància. Els seus coneguts edits posen també a l’artista com un digger de primer nivell, amb autèntiques delícies per a qualsevol DJ.",
+    "images": [
+      17
+    ]
+  }
+},
+{
+  "model": "api.artist",
+  "pk": 3,
+  "fields": {
+    "name": "Lowprofile",
+    "biography": "Funcionalitat, emoció i intensitat. Aquests són els tres eixos que defineixen la visió de Lowprofile en la música. El Dj de Barcelona, i membre fundador de LowKeyMoves, és conegut per tenir una sensibilitat especial a l’hora de moure’s entre moods i gèneres. Amb una precisió i una classe poc freqüents de trobar, la seva paleta sonora va des dels ritmes més incisius de les darreres innovacions de la música de ball, fins al Hip Hop, l’R&B i més enllà. Amb les seves arrels plantades a la música electrònica britànica i nord-americana, i als sons urbans de les darreres dècades, Lowprofile també mira cap a Amèrica del Sud, Àfrica o Jamaica per a celebrar la música global amb els ulls sempre centrats en la pista de ball.",
+    "images": [
+      18
+    ]
+  }
+},
+{
+  "model": "api.artist",
+  "pk": 4,
+  "fields": {
+    "name": "Lucient",
+    "biography": "Mario G. Quelart porta ja uns quants anys mostrant el seu talent i «savoir faire» pels principals clubs i festivals del territori nacional. Ho fa sempre amb el nom de Lucient, o gairebé sempre, ja que de vegades s’ajunta amb Albert Salines (aka Wooky) amb el duet C.E.E. Shepherds. Lucient forma part de la família del segell Lapsus i del club LAUT de Barcelona, on és resident, i on s’ha posat a prova a si mateix amb dues maratonianes sessions de 12 hores non-stop, detall que indica per si sol el seu amplíssim coneixement de la música de ball de totes les èpoques i la seguretat amb la qual exerceix el seu ofici darrere dels plats. En Mario també dirigeix i presenta el programa «Synesthésiques«, a l’emissora local Dublab.es, i recentment ha estrenat el programa «Voyager» a C/C Radio. Entre les seves producción trobem remixes per artistas com la Museless i temes propis com el que trobem al recopilatori «Barca Is Not Barcelona», editat al segell d’Olde Gods, Minor Planets. Està treballant en el seu primer EP, que es preveu per algun moment del 2021.",
+    "images": [
+      19
+    ]
+  }
+},
+{
+  "model": "api.artist",
+  "pk": 5,
+  "fields": {
+    "name": "Omega 3",
+    "biography": "Omega III és un DJ i grafiter barceloní nascut i criat en Sheffield, va començar a interessar-se per la música electrònica a principis dels 90 amb l’aparició de Warp Records i el moviment Bleep, sorgit en el nord del Regne Unit. Actiu en tots els aspectes del club/graff des que es va mudar a la capital catalana a mitjans del 2000, la seva última aventura és el programa mensual Wave 131, en Dublab.es. En la universitat va començar a col·laborar amb el DJ i productor berlinès Luca Lozano i contribueix periòdicament amb mescles per als seus segells Klasse Wrecks i Grafiti Tapes, llançant les ja clàssiques «Fantasy FM: The Lost Tape», al costat de Lozano, i «Grafiti Tapes 7», al costat de Plom.",
+    "images": [
+      20
+    ]
+  }
+},
+{
+  "model": "api.artist",
+  "pk": 6,
+  "fields": {
+    "name": "Phran",
+    "biography": "Phran és un veneçolà de naixement que porta anys ja vivint i agitant l’underground barceloní amb els seus múltiples projectes. Aquests dos últims anys han estat per a ell un moment molt important, ja que s’ha embarcat en quatre aventures que, de moment, han començat amb molt bon peu: People You May Know, duo d’improvisacions, jams de house i experimentacions analògiques al costat de Ylia; Dos Ritmos, que li ha unit a Lucca Lozano amb la recerca de la perfecta simbiosi entre percussions llatines ancestrals i ritmes trencats electrònics fets per a la pista de ball; IVAN, projecte compartit al costat d’Ivy Barkakati; i Latino Body, programa de ràdio i B2B sota el seu altre àlies DJ Phidias acompanyat de Sano. Tots ells demostren de la seva gran capacitat d’associació i la permeabilitat del seu discurs. Els discos publicats amb aquests respectius projectes (“One Hand Clap”, en Hooded Records, “Antrophony”, en el segell berlinès Klasse Wrecks, i el seu autopublicat «Delicius Fantasy») són tres excel·lents releases que s’afegeixen a una discografia encara curta però suculenta i repleta d’idees, amb diversos EPs en solitari i compartits (3 EP’s a Klasse Wrecks, «Impulse», junt amb Ivy Barkakati en Rhythm Control Barcelona, i «Latent Effect», en Best Effort). Aquest últim any l’hem pogut veure a diversos festivals locals com Sónar amb el projecte Phran, MIRA amb el projecte People You May Know, Manrusonica amb el projecte IVAN o Parkfest amb el projecte Latino Body i Phran.",
+    "images": [
+      21
+    ]
+  }
+},
+{
+  "model": "api.artist",
+  "pk": 7,
+  "fields": {
+    "name": "Telexketch",
+    "biography": "Telexketch és un dels djs de Barcelona amb major recorregut i reconeixement de tota l’escena. Adicte als clubs de ball des de principis dels 90, decideix fer el salt a les cabines ja que com clubber s’avorreix en les pistes de ball recarregades de mínimal insubstancial. Eclecticisme a l’hora de mesclar, la seva atenció i facilitat per a llegir la pista li permet canviar d’una dècada a una altra mantenint el feeling i emoció en els seus sets. La seva maleta té cabuda per al millor so disco dels anys 70, italodisco, spacedisco, hi-nrg, nudisco, chicago, deep, discohouse, italohouse, hiphouse, pianohouse, breaks, 90’s, electro, detroit, french touch i el que s’intervingui … Des dels anys 70 fins a l’actualitat… A més de reconèixer-se un col·leccionista empedreït de discos de vinil i realitzar dj sets assíduament, Telexketch porta un temps treballant en edits de temes oblidats dins dels gèneres disc, italo i house. Telexketch ha actuat en multitud de sales de la seva ciutat a més de diversos clubs de la península.",
+    "images": [
+      22
+    ]
+  }
+},
+{
+  "model": "api.artist",
+  "pk": 8,
+  "fields": {
+    "name": "Virginie",
+    "biography": "Col·leccionista de vinils des de petitona, Virginie va començar la seva feina com a discjòquei professional en 1999. Eclèctica per naturalesa, és coneguda per combinar música negra amb electrònica i hip-hop. Virginie ha visitat diferents ciutats arreu del món, des de Veneçuela a Finlàndia, passant per Nova York, França, Madrid, Bilbao, Itàlia o Barcelona. Darrere dels plats, la seva selecció musical captiva el públic allà on va, aquí a Barcelona ho hem pogut comprovar en el Cruïlla Fest, SoundEat!, Brunch in the City, Brunch Electronik, DGTL Barcelona o Primavera Sound on VIR (el seu altre aka) va presentar el seu nou projecte Shakti Aliance, juntament amb Troya Modet.Actualment té diversos projectes en mà, com ser Booker de la C/C Ràdio, dedicada a discjòqueis i productors. Hem aprofitat aquests dies d’aturada per fer cinc cèntims amb ella i que ens parli una mica de les seves influències.",
+    "images": [
+      23
+    ]
+  }
+},
+{
+  "model": "api.interview",
+  "pk": 1,
+  "fields": {
+    "artist": 4,
+    "title": "Lucient",
+    "updated": "2021-05-03T20:48:42.671Z",
+    "created": "2021-05-03T20:48:42.672Z"
+  }
+},
+{
+  "model": "api.interview",
+  "pk": 2,
+  "fields": {
+    "artist": 1,
+    "title": "Dj Bruce Lee",
+    "updated": "2021-05-03T20:55:09.888Z",
+    "created": "2021-05-03T20:49:29.462Z"
+  }
+},
+{
+  "model": "api.interview",
+  "pk": 3,
+  "fields": {
+    "artist": 2,
+    "title": "Harvey Touch",
+    "updated": "2021-05-03T20:56:11.686Z",
+    "created": "2021-05-03T20:56:11.686Z"
+  }
+},
+{
+  "model": "api.interview",
+  "pk": 4,
+  "fields": {
+    "artist": 3,
+    "title": "Lowprofile",
+    "updated": "2021-05-03T20:57:13.917Z",
+    "created": "2021-05-03T20:57:13.917Z"
+  }
+},
+{
+  "model": "api.interview",
+  "pk": 5,
+  "fields": {
+    "artist": 5,
+    "title": "Omega 3",
+    "updated": "2021-05-03T20:58:34.621Z",
+    "created": "2021-05-03T20:58:34.621Z"
+  }
+},
+{
+  "model": "api.interview",
+  "pk": 6,
+  "fields": {
+    "artist": 6,
+    "title": "Phran",
+    "updated": "2021-05-03T21:00:22.160Z",
+    "created": "2021-05-03T21:00:22.160Z"
+  }
+},
+{
+  "model": "api.interview",
+  "pk": 7,
+  "fields": {
+    "artist": 7,
+    "title": "Telexketch",
+    "updated": "2021-05-03T21:01:16.457Z",
+    "created": "2021-05-03T21:01:16.457Z"
+  }
+},
+{
+  "model": "api.interview",
+  "pk": 8,
+  "fields": {
+    "artist": 8,
+    "title": "Virginie",
+    "updated": "2021-05-03T21:02:15.144Z",
+    "created": "2021-05-03T21:02:15.144Z"
+  }
+},
+{
+  "model": "api.question",
+  "pk": 1,
+  "fields": {
+    "question": "Quines són les teves influències?",
+    "is_default": true
+  }
+},
+{
+  "model": "api.question",
+  "pk": 2,
+  "fields": {
+    "question": "Com veus l’escena electrònica a Barcelona?",
+    "is_default": true
+  }
+},
+{
+  "model": "api.question",
+  "pk": 3,
+  "fields": {
+    "question": "Quins elements són indispensables en la teva música?",
+    "is_default": true
+  }
+},
+{
+  "model": "api.question",
+  "pk": 4,
+  "fields": {
+    "question": "Un disc que sempre portes en la teva maleta?",
+    "is_default": true
+  }
+},
+{
+  "model": "api.question",
+  "pk": 5,
+  "fields": {
+    "question": "Quins són els teus segells de referència?",
+    "is_default": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 1,
+  "fields": {
+    "interview": 1,
+    "answer": "Les meves influències són moltes i molt variades. Vinc del rock i el Pop, abans de punxar electrònica vaig estar molts anys punxant «indie» i fins i tot vaig tocar en alguna banda, però també m’encanta la música negra, soul, funk, disco, afrobeat… També sóc un gran amant de la IDM i l’electrònica més experimental i quan no estic enfocat a una pista de ball els sons més balearics o fins i tot l’ambient o el jazz són dels discos que més escolto.",
+    "question": 1,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 2,
+  "fields": {
+    "interview": 1,
+    "answer": "Crec que l’escena electrònica de Barcelona viu un dels seus millors moments, bons artistes, varietat d’estils, un fotimer de botigues de discos especialitzades, clubs i festivals molt interessants (fora dels grans i habituals monstres de sempre, que també són importants). Fins i tot, crec que hi ha més col·laboracionisme que mai. El temps dirà i la perspectiva em donarà o no la raó, però si sabem treure suc de la situació de l’escena actual, en uns anys podem ser un referent més important dintre de l’escena electrònica global.",
+    "question": 2,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 3,
+  "fields": {
+    "interview": 1,
+    "answer": "Em costa molt posar-li nom, ja que moltes vegades trio música que aparentment no té res a veure entre si, però que tenen aquell nosequè que em fa encendre una alarma dins el meu cap i em fa posar aquell disc a la maleta. Crec que un element bastant habitual en la música que punxo és que ajuden al viatge, ja sigui mental o físic.",
+    "question": 3,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 4,
+  "fields": {
+    "interview": 1,
+    "answer": "Crec que un dels discs que més he punxat al llarg de la meva carrera és el Ne Noya (Daphni Mix) – Cos Ber Zam, que va publicar el mateix Daphni al seu segell, Jiaolong ara farà uns 10 anys.",
+    "question": 4,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 5,
+  "fields": {
+    "interview": 1,
+    "answer": "Segur que me’n deixo alguns, però sens dubte hi ha de ser Music From Memory, Whities (Que ara ha canviat el nom pel de AD 93), Antinote, Dark Entries, Early Sounds Recordings, Hivern, L.I.E.S., Livity Sound, Lobster Theremin o Craigie Knowes.",
+    "question": 5,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 6,
+  "fields": {
+    "interview": 2,
+    "answer": "Les meves influències són moltes i molt variades. Vinc del rock i el Pop, abans de punxar electrònica vaig estar molts anys punxant «indie» i fins i tot vaig tocar en alguna banda, però també m’encanta la música negra, soul, funk, disco, afrobeat… També sóc un gran amant de la IDM i l’electrònica més experimental i quan no estic enfocat a una pista de ball els sons més balearics o fins i tot l’ambient o el jazz són dels discos que més escolto.",
+    "question": 1,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 7,
+  "fields": {
+    "interview": 2,
+    "answer": "Crec que l’escena electrònica de Barcelona viu un dels seus millors moments, bons artistes, varietat d’estils, un fotimer de botigues de discos especialitzades, clubs i festivals molt interessants (fora dels grans i habituals monstres de sempre, que també són importants). Fins i tot, crec que hi ha més col·laboracionisme que mai. El temps dirà i la perspectiva em donarà o no la raó, però si sabem treure suc de la situació de l’escena actual, en uns anys podem ser un referent més important dintre de l’escena electrònica global.",
+    "question": 2,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 8,
+  "fields": {
+    "interview": 2,
+    "answer": "Em costa molt posar-li nom, ja que moltes vegades trio música que aparentment no té res a veure entre si, però que tenen aquell nosequè que em fa encendre una alarma dins el meu cap i em fa posar aquell disc a la maleta. Crec que un element bastant habitual en la música que punxo és que ajuden al viatge, ja sigui mental o físic.",
+    "question": 3,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 9,
+  "fields": {
+    "interview": 2,
+    "answer": "Crec que un dels discs que més he punxat al llarg de la meva carrera és el Ne Noya (Daphni Mix) – Cos Ber Zam, que va publicar el mateix Daphni al seu segell, Jiaolong ara farà uns 10 anys.",
+    "question": 4,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 10,
+  "fields": {
+    "interview": 2,
+    "answer": "Segur que me’n deixo alguns, però sens dubte hi ha de ser Music From Memory, Whities (Que ara ha canviat el nom pel de AD 93), Antinote, Dark Entries, Early Sounds Recordings, Hivern, L.I.E.S., Livity Sound, Lobster Theremin o Craigie Knowes.",
+    "question": 5,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 11,
+  "fields": {
+    "interview": 3,
+    "answer": "Ableton. Alguna planta i una il·luminació adequada.",
+    "question": 1,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 12,
+  "fields": {
+    "interview": 3,
+    "answer": "Moltes i molt variades: jazz, house, techno, hip hop, disc, ambient, new age, balearic…",
+    "question": 2,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 13,
+  "fields": {
+    "interview": 3,
+    "answer": "No crec que existeixi ja una escena com a tal. Dins de la ciutat ara s’emporta l’individualisme, o com a molt petits col·lectius que funcionen i es mouen bé en el seu entorn (p. ej Mainline).El costat bo és que ara mateix l’escena es considera a nivell global. Jo demà puc parlar amb un promotor o un productor o un DJ de Dublín, Berlín o Líban, i crear una xarxa molt més extensa del que haguéssim imaginat fa 10 anys.",
+    "question": 3,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 14,
+  "fields": {
+    "interview": 3,
+    "answer": "Oyabun de Folamour, o alguna cosa de Four Tet.",
+    "question": 4,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 15,
+  "fields": {
+    "interview": 3,
+    "answer": "Coastal Haze, TheBasement Discos, Blaq Numbers, Get Together, Shall Not Fade i Periodica Rècords.",
+    "question": 5,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 16,
+  "fields": {
+    "interview": 4,
+    "answer": "El UK Funky de principis finals del 00’s-principis dels 10’s, el dancehall dels 00’s, la nova música de club que està sorgint a NY i voltants, el Grime, el Bmore, l’R&B, el Rap de la Bay Area, i en general qualsevol gènere musical concebit amb el club a la ment.",
+    "question": 1,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 17,
+  "fields": {
+    "interview": 4,
+    "answer": "Els que més impacte han tingut sobre mi, sense cap dubte són Night Slugs i Sound Pellegrino.",
+    "question": 2,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 18,
+  "fields": {
+    "interview": 4,
+    "answer": "Com a Dj, busco música fixant-me sempre en l’impacte que pot tenir en el soundsystem d’un club. Per a mi, això vol dir tracks amb estructures funcionals i directes, dosis d’emoció ben mesurades i, sobre tot, intensitat.",
+    "question": 3,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 19,
+  "fields": {
+    "interview": 4,
+    "answer": "Més variada i inclusiva que mai. No hagués cregut fa 10 anys que podríem arribar fins a aquest punt. Esperem que una vegada passi tot això segueixi progressant com ho estava fent <3 Encara no has escoltat a Lowprofile? Aquí et deixem amb el seu podcast per Central Magazine, un viatge a través de gran part del seu rang musical quan es tracta de Djing!",
+    "question": 4,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 20,
+  "fields": {
+    "interview": 4,
+    "answer": "Aquest no n’ha sortit mai",
+    "question": 5,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 21,
+  "fields": {
+    "interview": 5,
+    "answer": "La cultura de rave dels inicis dels 90, sobretot en el nord d’Anglaterra. Els estils que van sonar aleshores: de Britcore a bleep, breakbeat i jungle, IDM i techno. Ens agrada l’estètica DIY al nivell visual, ambient de festa informal i lliure, una producció que valora molt els greus i tota la cultura de soundsystems que ve de Jamaica en els seus inicis. No pensem que la cultura i els valors d’aquesta època estan morts, encara es pot apreciar el moviment en altres formes avui en dia.",
+    "question": 1,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 22,
+  "fields": {
+    "interview": 5,
+    "answer": "Avui en dia hi ha massa segells de qualitat per nomenar aquí, però quan anem de compres, sempre estem buscant coses velles de Warp, Network, 10, Production House, XL, Suburban Base, Movin‘ Shadow, Chill, MoWax i Chill. Al nivell regional, Hivern i Lapsus són dos segells que mereixen tot el reconeixement que han rebut. Representen molt bé el producte nacional.",
+    "question": 2,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 23,
+  "fields": {
+    "interview": 5,
+    "answer": "La majoria de la nostra música està en vinils, però cada cop més la combinem amb nova música que arriba d’amics com a promo. Ens agrada punxar a velocitats ràpides i amb confiança quan punxem en directe, aleshores els temes que seleccionem són prou simples i expressius. Ens agrada pensar que cada sessió és una banda sonora d’una pel·lícula, una instal·lació, un viatge, aleshores és sempre diferent.",
+    "question": 3,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 24,
+  "fields": {
+    "interview": 5,
+    "answer": "Pots trobar des de macro-esdeveniments amb música molt bona a propostes petites i innovadores, festivals d’altíssim nivell i ràdios amb molt bona programació cada dia. Realment ens falta temps per anar a tot el que ens interessa veure. Que falta? – Més espais informals i permissius, on apreciar la música a l’aire lliure. – Bars on es pugui punxar. – Ganes del públic per sortir del circuit habitual.",
+    "question": 4,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 25,
+  "fields": {
+    "interview": 5,
+    "answer": "Unique 3 – The Theme. Com explica el Matt Anniss en el seu llibre Join The Future, és possiblement el primer tema de bleep & bass que va editar, una combinació de subgreus del mític Rob Gordon (co-fundador de Warp) amb l’estètica del grup de breakdance, Unique 3. Quan va sortir, diuen que Virgin Records, que va editar el disc, va rebre unes quantes cartes de discoteques perquè el tema va rebentar els altaveus.",
+    "question": 5,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 26,
+  "fields": {
+    "interview": 6,
+    "answer": "En aquest moment: Els albiraments d’Ovnis en el barri del Poble Nou, Lost Tracks, Zauberstab Zine, Vico C, Lisa M i Omar S.",
+    "question": 1,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 27,
+  "fields": {
+    "interview": 6,
+    "answer": "La internet, una Drum Machine i un Delay.",
+    "question": 2,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 28,
+  "fields": {
+    "interview": 6,
+    "answer": "Algun de Rhythm & Sound",
+    "question": 3,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 29,
+  "fields": {
+    "interview": 6,
+    "answer": "Com a migrant veneçolà assentat en Barna des de 2011, veig amb admiració la quantitat de bons artistes, productors i DJs que hi ha a la ciutat, també amb connexions per tota la península. Sempre hi ha algun altre DJ, artista o segell que un no tenia en el radar i resulta ser boníssim. La meva manera d’entendre l’art i el meu treball ha canviat aprenent de tanta gent fent coses interessants en l’escena local. Potser l’escena ha depès molt del turisme i aquesta sigui una oportunitat per a fer les coses d’una altra manera.",
+    "question": 4,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 30,
+  "fields": {
+    "interview": 6,
+    "answer": "Com a migrant veneçolà assentat en Barna des de 2011, veig amb admiració la quantitat de bons artistes, productors i DJs que hi ha a la ciutat, també amb connexions per tota la península. Sempre hi ha algun altre DJ, artista o segell que un no tenia en el radar i resulta ser boníssim. La meva manera d’entendre l’art i el meu treball ha canviat aprenent de tanta gent fent coses interessants en l’escena local. Potser l’escena ha depès molt del turisme i aquesta sigui una oportunitat per a fer les coses d’una altra manera.",
+    "question": 5,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 31,
+  "fields": {
+    "interview": 7,
+    "answer": "Les meves influències són vàries:-Als anys 80 quan era petit era impossible escapar del ItaloDisco mes cheesy, sonava a qualsevol radiofórmula, recordo escoltar Miko Misison, Savage, Ken Lazlo, els Max Mix, de fet el Max Mix 4 va ser el primer cassette que vaig comprar amb 11 anys a l’any ’86. És normal tenint en compte que a Barcelona, Sabadell… Van néixer productors inclús un corrent dins l’italo catalogada com a Sabadell Sound o Paella Disco. A finals del 80’s vaig descobrir l’Acid House,l’UK House i les caixes de ritmes, quasi de primera mà. Eren una colla de skaters, de la primera onada de skaters a la ciutat comtal, molt jovenets no passaven dels 13 i 14 anys, però tenien uns col·legues d’un barri proper que ja havien acabat la mili i tal… Baixaven al nostre barri a patinar, ens ensenyaven alguns trucs d’skate, ells estaven molt al corrent de què passava a Europa en termes musicals, a vegades portaven caixes de ritmes, ens gravàvem VHS de l’MTV Anglesa que els enviaven algun col·",
+    "question": 1,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 32,
+  "fields": {
+    "interview": 7,
+    "answer": "Això va per èpoques i no té fi, no obstant faré una petita llista. Un d’ells seria sense dubte Megatone Records de Patrick Cowley, tinc una pila d’aquest Hi-Nrg. Altres de l’època Disco serien Malligator del Cerrone, Coast to Coast, Fantasy, Importe/12, Unidisc, Matra, West End, Prelude, Goody Music….Dins de l’Italodisco, per exemple: Best Records, Baby Records, Il Discotto, DiscoMagic, Memory Records, Sensation Records, House of Music, ZYX. Bonzai Records, no tinc massa però reconec que hi ha temazos de trance molt rescatables avui en dia. Que seria de nosaltres sense els segells de referència dins del House com FFRR, Dancemania, Jack Trax, Dj International Records, Hot Mix… Roule i Crydamoure dels Daft Punk, PWL, Junior Boys Own, Wall of Sound, R&S, Ninja Tune, Minifunk, Yellow Productions, Rephlex, Warp… Dels més actuals m’agraden molt Bordello A Parigi, Rush Hours, Running Back, Skylax, Clone, Moustache Records, Viewlexx, Red Laser Records, Dark Entries, Permanet Vacation, Disco Se",
+    "question": 2,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 33,
+  "fields": {
+    "interview": 7,
+    "answer": "Doncs no sabria dir, un bon sinte, un ritme amb groovy, una bona caixa… Però per ser sincer crec que el dia d’avui no trobo res indispensable, hi ha coses Lo-Fi que m’agraden, hi ha música electrònica feta totalment amb instruments orgànics, a la fi, si sona bé i em transmet quelcom doncs ja m’agrada ;)",
+    "question": 3,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 34,
+  "fields": {
+    "interview": 7,
+    "answer": "Hi ha escena, i tant, cada cop creix més, però passa alguna cosa que no sé que és. M’agradaria dir que trobo una escena meravellosa amb el fotimer d’artistes bons que tenim, les condicions de la ciutat (temps, garitos i botigues de discos per metre quadrat, etc…) les associacions com la vostra, i sobretot el públic. Als clubs cada vegada programen més locals, no només per obrir la nit, sinó per tancar i per oferir el seu projecte durant tota la nit, això és un indicatiu de què hi ha escena a més a més de ser una de les coses més importants en la creació d’una escena local. Han nascut noves botigues de discos que crec que és una altra cosa bàsica, llocs de dia on la gent es pugui barrejar, relacionar-se amb altres artistes, chequejar, compartir i comprar música. El cas és que no trobo una internacionalització de l’escena Barcelonina com si passa a Amsterdam per exemple. És veritat que ha crescut i tenim artistes que fan tours per tot arreu però encara és un % molt minúscul comparat amb",
+    "question": 4,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 35,
+  "fields": {
+    "interview": 7,
+    "answer": "Abans portava sempre el Phyllis Nelson – I Like You (extended version) de l’any ‘85, una barreja de Hi–nrg, Disco que jo catalogaria dins del Protohouse. De fet el vaig descobrir a principis dels 2000’s per tres bandes, mitjançant el meu amic Felix, per mediació d’en D.A.R.Y.L (el primer nick name de Dj de John Talabot) que es va jartar de punxar-lo a la sala Neon del Nitsa, i juraria que a un dels sets de l’I-F a l’Intergalactic FM. Al cap de poc temps ja el vaig trobar, i dir que el tinc desgastat de treure-li suc. No obstant això, actualment no tinc un disc enclaustrat a la maleta ;)",
+    "question": 5,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 36,
+  "fields": {
+    "interview": 8,
+    "answer": "Ciutats com New York, Chicago, Detroit, California… Artistes com Kenny Dope, Ron Trent, Spinna, Andrés, Omar S, Kerry Chandler, Theo Parrish, Dam-Funk, Moodymann, Kai Alce, Madlib, J Dilla, Sade ,Erykah Badu, Amp Fiddler, Jill Scott, Marvin Gaye, Gil Scott Heron, Minnie Riperton… Uff i molts més!!!",
+    "question": 1,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 37,
+  "fields": {
+    "interview": 8,
+    "answer": "Nervous Records, Strictly Rhythm, King Groove, BBE, Stones Throw, P.P.U, Motown, Underground Resistance, Ibadan, Dance Mania…",
+    "question": 2,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 38,
+  "fields": {
+    "interview": 8,
+    "answer": "Veu, groove, bass lines, keyboards i synth sounds.",
+    "question": 3,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 39,
+  "fields": {
+    "interview": 8,
+    "answer": "Ara de moment s’ha acabat! Quan torni serà totalment diferent… I esperem que vagi a millor!",
+    "question": 4,
+    "is_active": true
+  }
+},
+{
+  "model": "api.answer",
+  "pk": 40,
+  "fields": {
+    "interview": 8,
+    "answer": "Shahara-Ja – I’m an Arabian Knight (Egyptian Lover mix)",
+    "question": 5,
+    "is_active": true
+  }
+},
+{
+  "model": "api.article",
+  "pk": 1,
+  "fields": {}
+},
+{
+  "model": "api.article",
+  "pk": 2,
+  "fields": {}
+},
+{
+  "model": "api.article",
+  "pk": 3,
+  "fields": {}
+},
+{
+  "model": "api.article",
+  "pk": 4,
+  "fields": {}
+},
+{
+  "model": "api.article",
+  "pk": 5,
+  "fields": {}
+},
+{
+  "model": "api.article",
+  "pk": 7,
+  "fields": {}
+},
+{
+  "model": "api.article",
+  "pk": 8,
+  "fields": {}
+},
+{
+  "model": "api.discount",
+  "pk": 1,
+  "fields": {
+    "name": "Descuento socios",
+    "value": 5,
+    "need_code": false,
+    "number_of_uses": -1,
+    "items": [
+      1
+    ],
+    "groups": [
+      2
+    ]
+  }
+},
+{
+  "model": "api.event",
+  "pk": 9,
+  "fields": {
+    "datetime": "2019-07-11T20:00:00Z",
+    "address": "El Rouge, Carrer del Poeta Cabanyes, 21, 08004 Barcelona",
+    "artists": []
+  }
+},
 {
   "model": "api.event",
   "pk": 10,
   "fields": {
-    "item_ptr_id": 10,
-    "datetime": "2019-06-19T13:00:00Z",
-    "address": "Parc de l'Espanya Industrial",
+    "datetime": "2019-07-13T18:00:00Z",
+    "address": "CCCB, Plaça Joan Coromines, Barcelona",
     "artists": []
   }
 },
@@ -1084,9 +3843,8 @@
   "model": "api.event",
   "pk": 11,
   "fields": {
-    "item_ptr_id": 11,
-    "datetime": "2019-07-11T18:00:00Z",
-    "address": "Carrer del Poeta Cabanyes, 21, 08004 Barcelona",
+    "datetime": "2019-06-29T13:00:00Z",
+    "address": "Parc de l'Espanya Industrial, Barcelona",
     "artists": []
   }
 },
@@ -1094,9 +3852,8 @@
   "model": "api.event",
   "pk": 12,
   "fields": {
-    "item_ptr_id": 12,
-    "datetime": "2019-07-13T20:00:00Z",
-    "address": "Plaça Joan Coromines, Barcelona",
+    "datetime": "2019-08-10T01:00:00Z",
+    "address": "RAZZMATAZZ, Carrer dels Almogàvers, 122, 08018 Barcelona",
     "artists": []
   }
 },
@@ -1104,39 +3861,53 @@
   "model": "api.event",
   "pk": 13,
   "fields": {
-    "item_ptr_id": 13,
-    "datetime": "2019-08-10T00:00:00Z",
-    "address": "RAZZMATAZZ, Carrer dels Almogàvers, 122, 08018 Barcelona",
+    "datetime": "2019-10-25T18:30:00Z",
+    "address": "Centre Cultural Albareda - C/ Albareda 22",
     "artists": []
   }
 },
-  {
-    "model": "api.event",
-    "pk": 14,
-    "fields": {
-      "item_ptr_id": 14,
-      "datetime": "2019-10-25T18:30:00Z",
-      "address": "Centre Cultural Albareda - C/ Albareda 22",
-      "artists": []
-    }
-  },
-
 {
-  "model": "api.discount",
+  "model": "api.subscriber",
+  "pk": 1,
+  "fields": {
+    "email": "jonrivala@gmail.com",
+    "created": "2021-05-03T19:05:57.424Z",
+    "mailing_lists": [
+      1
+    ]
+  }
+},
+{
+  "model": "api.subscriber",
+  "pk": 2,
+  "fields": {
+    "email": "web_user@ameba.cat",
+    "created": "2021-05-03T21:03:16.456Z",
+    "mailing_lists": [
+      1
+    ]
+  }
+},
+{
+  "model": "api.subscriber",
   "pk": 3,
   "fields": {
-    "name": "Socis",
-    "value": 33,
-    "need_code": false,
-    "number_of_uses": -1,
-    "items": [
-      13
-    ],
-    "groups": [
-      2
+    "email": "ameba_member@ameba.cat",
+    "created": "2021-05-03T21:03:58.140Z",
+    "mailing_lists": [
+      1
+    ]
+  }
+},
+{
+  "model": "api.subscriber",
+  "pk": 4,
+  "fields": {
+    "email": "hector.pascual.diaz@gmail.com",
+    "created": "2021-05-03T21:04:39.708Z",
+    "mailing_lists": [
+      1
     ]
   }
 }
-
 ]
-
