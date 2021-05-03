@@ -11,15 +11,15 @@ from trumbowyg.widgets import TrumbowygWidget
 from api.admin.image import get_image_preview
 
 
-class InterviewAdminForm(ModelForm):
-    introduction = forms.CharField(widget=TrumbowygWidget)
-
-    class Meta:
-        model = Interview
-        fields = ['introduction']
-        widgets = {
-            'text': TrumbowygWidget(),
-        }
+# class InterviewAdminForm(ModelForm):
+#     introduction = forms.CharField(widget=TrumbowygWidget)
+#
+#     class Meta:
+#         model = Interview
+#         fields = ['introduction']
+#         widgets = {
+#             'text': TrumbowygWidget(),
+#         }
 
 
 class ArtistQuestionsInLineFormSet(BaseInlineFormSet):
@@ -44,27 +44,26 @@ class ArtistQuestionsInLineFormSet(BaseInlineFormSet):
 
 class ChoiceInline(admin.TabularInline):
     model = Answer
-    extra = ArtistQuestionsInLineFormSet.get_default_question_num()
+    extra = 0
     verbose_name = 'Answer'
     formset = ArtistQuestionsInLineFormSet
     fields = ('question', 'answer', 'is_active')
 
 
 class InterviewAdmin(admin.ModelAdmin):
-    form = InterviewAdminForm
+    # form = InterviewAdminForm
     fieldsets = [
-        (None, {'fields': ['title', 'artist', 'introduction', 'image',
-                           'thumbnail_preview']}),
+        (None, {'fields': ['title', 'artist', 'thumbnail_preview']}),
     ]
-    readonly_fields = ('thumbnail_preview', )
+    readonly_fields = ('thumbnail_preview', 'list_preview')
     inlines = [ChoiceInline]
     list_display = ('title', 'artist', 'list_preview', )
 
     def thumbnail_preview(self, obj):
-        if obj.image:
+        if obj.artist and obj.artist.image.all():
             return mark_safe(
                 '<img src="{}" width="300" height="300" />'.format(
-                    obj.image.url
+                    obj.artist.images.first().url
                 ))
 
     thumbnail_preview.short_description = _('Preview')
@@ -72,7 +71,7 @@ class InterviewAdmin(admin.ModelAdmin):
 
     @staticmethod
     def list_preview(obj):
-        return get_image_preview(obj.image, 75)
+        return get_image_preview(obj.artist.images.first(), 75)
 
 
 admin.site.register(Interview, InterviewAdmin)
