@@ -49,10 +49,9 @@ class BaseItemAdmin(admin.ModelAdmin):
         'name', 'description', 'is_active', 'price_range', 'created',
         'updated', 'has_stock'
     ]
-    inlines = [ItemVariantInline, ImageChoiceInLine, DiscountChoiceInLine]
+    inlines = [ImageChoiceInLine, ItemVariantInline, DiscountChoiceInLine]
     readonly_fields = ['created', 'updated', 'price_range', 'has_stock']
-    list_display = ['name', 'price_range', 'description', 'preview',
-                    'has_stock']
+    list_display = ['name', 'price_range', 'preview', 'has_stock']
 
     def preview(self, obj):
         img_tag = '<img src="{}" width="75" height="75" style="margin:10px" />'
