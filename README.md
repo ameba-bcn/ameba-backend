@@ -2,6 +2,12 @@
 
 ### Release notes
 
+#### 0.15
+##### Features
+- Images with 1x1 aspect
+- Fixtures for new models (compatible with 0.14)
+- Interview/Artist reworked
+
 #### 0.14
 ##### Features
 - ItemVariants model
