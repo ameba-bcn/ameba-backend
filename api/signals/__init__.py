@@ -22,11 +22,10 @@ def populate_models(sender, **kwargs):
 def add_user_groups(sender, instance, created, **kwargs):
     if created:
         instance.groups.add(Group.objects.get(name=DEFAULT_GROUP))
-        if instance.is_member():
+        if instance.has_member_profile():
             instance.groups.add(Group.objects.get(name=MEMBER_GROUP))
 
 
 @receiver(post_save, sender=models.Member)
 def on_new_member(sender, instance, created, **kwargs):
-    if created and instance.is_user():
-        instance.user.groups.add(Group.objects.get(name=MEMBER_GROUP))
+    pass
