@@ -30,6 +30,18 @@ class BaseUserTest(_helpers.BaseTest):
         self.assertEqual(response_data['email'], expected['email'])
         self.assertIs(response_data['member'], expected['member'])
 
+    def get_profile(self, pk, token):
+        self._authenticate(token)
+        return self.client.get(f'/api/users/{pk}/member_profile/')
+
+    def update_profile(self, pk, token, props):
+        self._authenticate(token)
+        return self.client.patch(f'/api/users/{pk}/member_profile/',data=props)
+
+    def post_profile(self, pk, token, props):
+        self._authenticate(token)
+        return self.client.post(f'/api/users/{pk}/member_profile/',data=props)
+
 
 class UserTest(BaseUserTest):
 
@@ -105,7 +117,6 @@ class UserTest(BaseUserTest):
     def test_create_user_matching_member_returns_member(self):
         member_data = {
             'number':  1,
-            'email':  'amebauser1@ameba.cat',
             'first_name': 'Amen',
             'last_name': 'Bauser',
             'phone_number': '1238746'
@@ -180,3 +191,90 @@ class UserTest(BaseUserTest):
         self._create(user_props)
         user = User.objects.get(email='new_not_active_user@ameba.cat')
         self.assertFalse(user.is_active)
+
+    def test_post_user_member_profile(self):
+        user_props = {
+            'username': 'User',
+            'password': 'ameba12345',
+            'email': 'user@ameba.cat',
+        }
+
+        user, token = self._insert_user(user_props)
+        user.is_active = True
+        user.save()
+
+        profile_props = {
+            'address': 'My user address',
+            'first_name': 'First Name',
+            'last_name': 'Last Name',
+            'phone_number': '661839816'
+        }
+
+        response = self.post_profile(pk='current', token=token,
+                                 props=profile_props)
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertIn('number', response.data)
+
+        user.refresh_from_db()
+        self.assertTrue(user.member)
+        self.assertTrue(Member.objects.filter(user=user))
+
+    def test_get_member_from_current_user(self):
+        user_props = {
+            'username': 'User',
+            'password': 'ameba12345',
+            'email': 'user@ameba.cat',
+        }
+
+        user, token = self._insert_user(user_props)
+        user.is_active = True
+        user.save()
+
+        member = Member.objects.create(
+            user=user,
+            address='Address',
+            first_name='First Name',
+            last_name='Last Name',
+            phone_number='661839816'
+        )
+        response = self.get_profile(pk=user.id, token=token)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_get_non_member_from_current_user(self):
+        user_props = {
+            'username': 'User',
+            'password': 'ameba12345',
+            'email': 'user@ameba.cat',
+        }
+
+        user, token = self._insert_user(user_props)
+        user.is_active = True
+        user.save()
+
+        response = self.get_profile(pk=user.id, token=token)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_patch_member_from_current_user(self):
+        user_props = {
+            'username': 'User2',
+            'password': 'ameba12345',
+            'email': 'user@ameba.cat',
+        }
+
+        user, token = self._insert_user(user_props)
+        user.is_active = True
+        user.save()
+
+        member = Member.objects.create(
+            user=user,
+            address='Address',
+            first_name='First Name',
+            last_name='Last Name',
+            phone_number='654321987'
+        )
+        response = self.update_profile(
+            pk=user.id, token=token, props={'phone_number': '666555444'}
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['phone_number'], '666555444')
