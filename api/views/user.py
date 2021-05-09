@@ -59,7 +59,7 @@ class UserViewSet(
             user_registered.send(sender=User, user=user, request=request)
         return response
 
-    @action(detail=True, serializer_class=serializers.MemberSerializer)
+    @action(detail=True, serializer_class=serializers.DocMemberSerializer)
     def member_profile(self, request, *args, **kwargs):
         user = self.get_object()
         if not user.has_member_profile():
