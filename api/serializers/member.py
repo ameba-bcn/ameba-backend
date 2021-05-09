@@ -4,6 +4,18 @@ from api.models import Member, User
 from api.exceptions import EmailAlreadyExists
 
 
+class MemberSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Member
+        fields = ('number', 'address', 'first_name', 'last_name',
+                  'phone_number', 'user')
+        read_only_fields = ('number', )
+        extra_kwargs = {
+            'user': {'write_only': True}
+        }
+
+
 class MemberRegisterSerializer(serializers.Serializer):
     address = serializers.CharField(max_length=255, required=True,
                                     allow_blank=False)
