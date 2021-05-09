@@ -4,6 +4,13 @@ from api.models import Member, User
 from api.exceptions import EmailAlreadyExists
 
 
+class DocMemberSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Member
+        fields = ('address', 'first_name', 'last_name',
+                  'phone_number')
+
+
 class MemberSerializer(serializers.ModelSerializer):
 
     class Meta:
