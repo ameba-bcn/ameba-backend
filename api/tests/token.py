@@ -6,13 +6,19 @@ from api.tests import _helpers
 from api import models
 from api.exceptions import WrongProvidedCredentials
 
+
 class TestSessions(_helpers.BaseTest):
     LIST_ENDPOINT = '/api/token/'
     DETAIL_ENDPOINT = '/api/token/{id}/'
+    REFRESH_ENDPOINT = '/api/token/refresh/'
 
     def login(self, email, password):
         props = {'email': email, 'password': password}
         return self._create(props)
+
+    def refresh(self, refresh_token=''):
+        props = dict(refresh=refresh_token)
+        return self.client.post(self.REFRESH_ENDPOINT, data=props)
 
     def delete(self, pk, token=''):
         self.client.credentials(
@@ -116,3 +122,22 @@ class TestSessions(_helpers.BaseTest):
         self.delete(token, token.access_token)
         response = self.delete(token, token.access_token)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_refresh_token_returns_new_token(self):
+        user_attrs = {
+            'email': 'new_user@ameba.cat',
+            'password': 'ameba12345'
+        }
+        self.create_user(**user_attrs)
+        response = self.login(**user_attrs)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('access', response.data)
+        self.assertIn('refresh', response.data)
+
+        access = response.data['access']
+        refresh = response.data['refresh']
+
+        response = self.refresh(refresh)
+
+        self.assertIn('access', response.data)
+        self.assertNotEqual(response.data['access'], access)
