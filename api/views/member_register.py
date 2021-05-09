@@ -1,12 +1,16 @@
-from rest_framework import viewsets
-from rest_framework import mixins
 from rest_framework.permissions import AllowAny
+from rest_framework.decorators import api_view, permission_classes
+from drf_yasg.utils import swagger_auto_schema
 
-from api.serializers import FullRegistrationSerializer
+from api.responses import NewMemberResponse
+from api.serializers import MemberRegisterSerializer
 
 
-class FullRegistrationViewSet(
-    mixins.CreateModelMixin, viewsets.GenericViewSet
-):
-    serializer_class = FullRegistrationSerializer
-    permission_classes = (AllowAny, )
+@swagger_auto_schema(method='post', request_body=MemberRegisterSerializer)
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def member_register(request):
+    serialized_data = MemberRegisterSerializer(data=request.data)
+    serialized_data.is_valid(raise_exception=True)
+    serialized_data.create(serialized_data.validated_data)
+    return NewMemberResponse()

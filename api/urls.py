@@ -22,8 +22,6 @@ router.register(r'subscriptions', views.SubscriptionViewSet,
 router.register(r'recovery', views.RecoveryViewSet, basename='recovery')
 router.register(r'covers', views.CoversViewSet, basename='covers')
 router.register(r'artists', views.ArtistViewSet, basename='artists')
-router.register(r'full_registration', views.FullRegistrationViewSet,
-                basename='full_registration')
 
 urlpatterns = [
     path('', include(router.urls)),
@@ -35,4 +33,5 @@ urlpatterns = [
     path('activate/', views.activate),
     path('subscribe/', views.subscribe),
     path('mailgun_unsubscribe/', views.mailgun_unsubscribe_hook),
+    path('member_register/', views.member_register),
 ]

@@ -23,4 +23,4 @@ from api.serializers.artist import ArtistSerializer, ArtistListSerializer
 from api.serializers.subscriber import (
     DeleteSubscriberSerializer, SubscribeSerializer
 )
-from api.serializers.member import MemberSerializer, FullRegistrationSerializer
+from api.serializers.member import MemberRegisterSerializer
