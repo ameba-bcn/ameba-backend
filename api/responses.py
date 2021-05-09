@@ -35,3 +35,10 @@ class NewSubscriberResponse(Response):
             status=status.HTTP_200_OK,
             data=dict(detail=self.message)
         )
+
+
+class NewMemberResponse(Response):
+    def __init__(self):
+        super().__init__(
+            status=status.HTTP_201_CREATED
+        )

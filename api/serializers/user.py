@@ -15,3 +15,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = [
             'username', 'password', 'email', 'member', 'date_joined'
         ]
+
+    def validate(self, attrs):
+        attrs = super().validate(attrs)
+        return attrs

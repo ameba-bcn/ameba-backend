@@ -1,7 +1,7 @@
 from drf_yasg.generators import OpenAPISchemaGenerator
 
 from api.docs import carts, recovery, activate, covers, subscriber, \
-    articles, events, subscriptions
+    articles, events, subscriptions, user
 
 
 class CustomOpenAPISchemaGenerator(OpenAPISchemaGenerator):
@@ -11,6 +11,10 @@ class CustomOpenAPISchemaGenerator(OpenAPISchemaGenerator):
 
         swagger = super().get_schema(request, public)
         swagger.tags = [
+            {
+                "name": "users",
+                "description": user.UserDocs.common
+            },
             {
                 "name": "carts",
                 "description": carts.CartsDocs.common

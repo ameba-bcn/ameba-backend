@@ -8,26 +8,18 @@ from api.models.membership import Membership
 User = get_user_model()
 
 
+def get_default_number():
+    if not Member.objects.all():
+        return 100
+    else:
+        return Member.objects.all().order_by('-number').first().number + 1
+
+
 class Member(models.Model):
-    number = models.IntegerField(primary_key=True)
-    memberships = models.ManyToManyField(Membership, blank=True)
-    user = models.OneToOneField(
-        to=User, on_delete=models.CASCADE, related_name='member',
-        blank=True, null=True
-    )
-    email = models.EmailField()
+    number = models.IntegerField(primary_key=True, editable=True,
+                                 default=get_default_number)
+    user = models.OneToOneField(to='User', on_delete=models.CASCADE)
     address = models.CharField(max_length=255, blank=True)
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
     phone_number = models.CharField(max_length=10)
-
-    def save(self, *args, **kwargs):
-        try:
-            user = User.objects.get(email=self.email)
-            self.user = user
-        except exceptions.ObjectDoesNotExist:
-            pass
-        super().save(*args, **kwargs)
-
-    def is_user(self):
-        return self.user is not None

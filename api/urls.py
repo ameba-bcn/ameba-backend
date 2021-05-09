@@ -33,4 +33,5 @@ urlpatterns = [
     path('activate/', views.activate),
     path('subscribe/', views.subscribe),
     path('mailgun_unsubscribe/', views.mailgun_unsubscribe_hook),
+    path('member_register/', views.member_register),
 ]
