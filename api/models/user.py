@@ -45,19 +45,18 @@ class User(AbstractUser):
     def save(self, *args, **kwargs):
         if not self._is_password_hashed():
             self.set_password(self.password)
-        try:
-            member = api_models.Member.objects.get(email=self.email)
-            self.member = member
-        except exceptions.ObjectDoesNotExist:
-            pass
         return super().save(*args, **kwargs)
 
     def _is_password_hashed(self):
         algorithm = hashers.get_hasher().algorithm
         return self.password.startswith(algorithm)
 
-    def is_member(self):
-        return api_models.Member.objects.filter(user=self.id).exists()
+    def has_member_profile(self):
+        try:
+            return self.member is not None
+        except api_models.Member.DoesNotExist:
+            pass
+        return False
 
     def activate(self):
         self.is_active = True
