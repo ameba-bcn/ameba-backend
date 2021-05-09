@@ -123,3 +123,8 @@ class UserHasNotMemberProfile(APIException):
     status_code = HTTP_404_NOT_FOUND
     default_detail = 'User has not member profile'
     default_code = 'member_profile_is_missing'
+
+
+class EmailAlreadyExists(APIException):
+    status_code = HTTP_400_BAD_REQUEST
+    default_detail = 'Email passed already exists.'

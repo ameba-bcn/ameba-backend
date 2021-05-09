@@ -1,48 +1,40 @@
-from rest_framework.serializers import ModelSerializer, \
-    SerializerMethodField, Serializer, PrimaryKeyRelatedField, \
-    SlugRelatedField, RelatedField
+from rest_framework import serializers
 
 from api.models import Member, User
-from api.serializers import UserSerializer
+from api.exceptions import EmailAlreadyExists
 
 
-class MemberSerializer(ModelSerializer):
+class MemberRegisterSerializer(serializers.Serializer):
+    address = serializers.CharField(max_length=255, required=True,
+                                    allow_blank=False)
+    first_name = serializers.CharField(max_length=20, required=True,
+                                       allow_blank=False)
+    last_name = serializers.CharField(max_length=20, required=True,
+                                      allow_blank=False)
+    phone_number = serializers.CharField(max_length=10, required=True,
+                                         allow_blank=False)
+    username = serializers.CharField(max_length=30, required=True,
+                                     allow_blank=False)
+    password = serializers.CharField(write_only=True, required=True,
+                                     allow_blank=False)
+    email = serializers.EmailField(required=True, allow_blank=False)
 
     class Meta:
-        model = Member
-        fields = ('number', 'address', 'first_name', 'last_name',
-                  'phone_number', 'user')
-        read_only_fields = ('number', )
-        extra_kwargs = {
-            'user': {'write_only': True}
-        }
+        fields = ('address', 'first_name', 'last_name', 'phone_number',
+                  'username', 'password', 'email')
 
-
-class FullRegistrationSerializer(ModelSerializer):
-    user = UserSerializer()
-
-    class Meta:
-        model = Member
-        fields = ('number', 'address', 'first_name', 'last_name',
-                  'phone_number', 'user')
-        read_only_fields = ('number', )
-
-    def to_internal_value(self, data):
-        new_data = dict(data)
-        user_data = {
-            'password': new_data.pop('password', None),
-            'email': new_data.pop('email', None),
-            'username': new_data.pop('username', None)
-        }
-        new_data['user'] = user_data
-        return new_data
-
-    def validate(self, attrs):
-        result = super().validate(attrs)
-        return result
+    @staticmethod
+    def validate_email(email):
+        if User.objects.filter(email=email):
+            raise EmailAlreadyExists
+        return email
 
     def create(self, validated_data):
-        user_data = validated_data.pop('user')
+        user_data = {
+            'username': validated_data.pop('username'),
+            'email': validated_data.pop('email'),
+            'password': validated_data.pop('password')
+        }
         user = User.objects.create(**user_data)
         member_profile = Member.objects.create(user=user, **validated_data)
         return member_profile

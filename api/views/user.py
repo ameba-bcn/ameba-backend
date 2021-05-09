@@ -35,7 +35,7 @@ class UserViewSet(
 
     def get_serializer_class(self):
         if self.action == 'member_profile':
-            self.serializer_class = serializers.MemberSerializer
+            self.serializer_class = serializers.MemberRegisterSerializer
         return super().get_serializer_class()
 
     def get_permissions(self):
@@ -59,7 +59,7 @@ class UserViewSet(
             user_registered.send(sender=User, user=user, request=request)
         return response
 
-    @action(detail=True, serializer_class=serializers.MemberSerializer)
+    @action(detail=True, serializer_class=serializers.MemberRegisterSerializer)
     def member_profile(self, request, *args, **kwargs):
         user = self.get_object()
         if not user.has_member_profile():

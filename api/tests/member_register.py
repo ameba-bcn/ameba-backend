@@ -5,7 +5,7 @@ from api.models import Member, User
 
 
 class FullRegistrationTest(BaseUserTest):
-    LIST_ENDPOINT = '/api/full_registration/'
+    LIST_ENDPOINT = '/api/member_register/'
 
     def test_register_new_user_and_member(self):
         form_props = {
@@ -59,6 +59,25 @@ class FullRegistrationTest(BaseUserTest):
             'password': 'ameba12345',
             'email': 'user11',
             'address': 'My user address',
+            'last_name': 'Last Name',
+            'phone_number': '661839816'
+        }
+
+        response = self._create(props=form_props)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_register_email_already_exists(self):
+        self._insert_user(dict(
+            username='username',
+            email='user11@ameba.cat',
+            password='ameba12345'
+        ))
+        form_props = {
+            'username': 'User2',
+            'password': 'ameba12345',
+            'email': 'user11@ameba.cat',
+            'address': 'My user address',
+            'first_name': 'First Name',
             'last_name': 'Last Name',
             'phone_number': '661839816'
         }

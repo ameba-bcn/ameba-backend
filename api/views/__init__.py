@@ -13,4 +13,5 @@ from api.views.recovery import RecoveryViewSet
 from api.views.covers import CoversViewSet
 from api.views.artists import ArtistViewSet
 from api.views.subscriber import subscribe, mailgun_unsubscribe_hook
-from api.views.member_register import FullRegistrationViewSet
+from api.views.member_register import member_register
+
