@@ -8,11 +8,17 @@ INTRO_PREVIEW = 160
 class Interview(models.Model):
     artist = models.ForeignKey(to='Artist', on_delete=models.DO_NOTHING)
     title = models.CharField(max_length=55)
+    introduction = models.TextField(max_length=2500, blank=True)
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
+    image = models.ImageField(upload_to='interviews', blank=True)
 
     def __str__(self):
         return f'{self.title}'
+
+    @property
+    def intro_preview(self):
+        return self.introduction[:INTRO_PREVIEW]
 
     @property
     def current_answers(self):
