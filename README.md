@@ -2,6 +2,14 @@
 
 ### Release notes
 
+#### 0.16
+##### Features
+- Endpoints for member profile ```/api/users/<id>/member_profile/```
+- User+Member register endpoint ```/api/member_register/```
+
+##### Bugfixes
+- ```/api/token/refresh/``` wrong routing expected password and username
+
 #### 0.15
 ##### Features
 - Images with 1x1 aspect
