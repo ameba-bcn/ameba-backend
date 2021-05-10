@@ -23,3 +23,9 @@ class Member(models.Model):
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
     phone_number = models.CharField(max_length=10)
+
+    @property
+    def active_membership(self):
+        if self.memberships.all():
+            return not self.memberships.order_by('-expires').first().is_expired
+        return None

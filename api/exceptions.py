@@ -1,10 +1,10 @@
 from rest_framework.exceptions import APIException
 from rest_framework.status import (
     HTTP_400_BAD_REQUEST,
-    HTTP_500_INTERNAL_SERVER_ERROR,
     HTTP_404_NOT_FOUND,
     HTTP_401_UNAUTHORIZED,
-    HTTP_403_FORBIDDEN
+    HTTP_403_FORBIDDEN,
+    HTTP_424_FAILED_DEPENDENCY
 )
 
 
@@ -15,7 +15,7 @@ class CartIsEmpty(APIException):
 
 
 class WrongPaymentIntent(APIException):
-    status_code = HTTP_500_INTERNAL_SERVER_ERROR
+    status_code = HTTP_424_FAILED_DEPENDENCY
     default_detail = 'Wrong payment intent object.'
     default_code = 'wrong_payment_intent'
 
