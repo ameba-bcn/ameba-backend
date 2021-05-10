@@ -57,6 +57,12 @@ class CartHasMultipleSubscriptions(APIException):
     default_code = 'cart_has_multiple_subscriptions'
 
 
+class MemberProfileRequired(APIException):
+    status_code = HTTP_400_BAD_REQUEST
+    default_detail = 'Member profile is needed before purchasing subscription.'
+    default_code = 'member_profile_required'
+
+
 class TokenExpired(APIException):
     status_code = HTTP_400_BAD_REQUEST
     default_detail = 'Token has expired.'

@@ -58,6 +58,9 @@ def on_cart_deleted(sender, cart, request, **kwargs):
     if payment_intent['status'] not in SUCCEEDED_PAYMENTS and not settings.DEBUG:
         raise PaymentIsNotSucceed
 
+    if cart.subscription:
+        pass
+
     payment = Payment.objects.create_payment(cart=cart, payment_intent=payment_intent)
     # Send payment confirmation email
     cart_record = payment.cart_record

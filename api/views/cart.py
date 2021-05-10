@@ -12,7 +12,8 @@ from api.permissions import CartPermission
 from api.serializers import CartSerializer, CartCheckoutSerializer
 from api.models import Cart
 from api.exceptions import (
-    CartIsEmpty, CartCheckoutNeedsUser, CartHasMultipleSubscriptions
+    CartIsEmpty, CartCheckoutNeedsUser, CartHasMultipleSubscriptions,
+    MemberProfileRequired
 )
 from api.signals import cart_checkout, cart_processed
 from api.docs.carts import CartsDocs
@@ -88,6 +89,8 @@ class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
             raise CartCheckoutNeedsUser
         if cart.has_multiple_subscriptions():
             raise CartHasMultipleSubscriptions
+        if cart.subscription and not cart.user.has_member_profile():
+            raise MemberProfileRequired
         cart_checkout.send(sender=self, cart=cart, request=self.request)
         serializer_class = self.get_serializer_class()
         return Response(serializer_class(cart).data)
