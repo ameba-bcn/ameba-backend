@@ -1,3 +1,5 @@
+from django.contrib.auth.models import Group
+from api.groups import MEMBER_GROUP, MEMBER_PRO_GROUP
 from django import dispatch
 from django.db.models import signals
 
@@ -15,4 +17,6 @@ def on_new_subscription(member, subscription):
     attrs = dict(member=member, subscription=subscription)
     if not active_ms.is_expired():
         attrs['starts'] = active_ms.expires
-    Membership.objects.create(**attrs)
+    member = Membership.objects.create(**attrs)
+    member.user.groups.add(subscription.group)
+

@@ -105,7 +105,6 @@ class ItemVariant(models.Model):
     attributes = models.ManyToManyField('ItemAttribute', blank=False)
     stock = models.IntegerField()
     price = models.DecimalField(max_digits=8, decimal_places=2)
-    benefits = models.TextField(max_length=1000, default='')
 
     def get_valid_discounts(self, user, code=None):
         return self.item.get_valid_discounts(user, code)
