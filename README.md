@@ -118,9 +118,14 @@ python manage.py runserver
 ```
 
 ### Demo data
+#### Load dataset
 Dataset inicial con datos reales:
 ```
 python manage.py loaddata demo.json
+```
+#### Crear dataset a partir de datos actuales
+```
+python manage.py dumpdata --indent 2 > demo.json
 ```
 
 ### Documentación

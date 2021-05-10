@@ -936,6 +936,45 @@
   }
 },
 {
+  "model": "admin.logentry",
+  "pk": 73,
+  "fields": {
+    "action_time": "2021-05-09T09:57:54.810Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "5",
+    "object_repr": "jonrivala2@gmail.com",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Active\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 74,
+  "fields": {
+    "action_time": "2021-05-10T16:16:45.141Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "14",
+    "object_repr": "Socio",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"item variant\", \"object\": \"Socio(size=unique)\"}}, {\"added\": {\"name\": \"item-image relationship\", \"object\": \"Item_images object (13)\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 75,
+  "fields": {
+    "action_time": "2021-05-10T16:17:14.541Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "15",
+    "object_repr": "Pro",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"item variant\", \"object\": \"Pro(size=unique)\"}}, {\"added\": {\"name\": \"item-image relationship\", \"object\": \"Item_images object (14)\"}}]"
+  }
+},
+{
   "model": "auth.permission",
   "pk": 1,
   "fields": {
@@ -2404,6 +2443,80 @@
   }
 },
 {
+  "model": "sessions.session",
+  "pk": "tuqgb9rfhlruuffb0c2jgrjnaz8te2s2",
+  "fields": {
+    "session_data": ".eJxVjMEOwiAQRP-FsyG0C13x6N1vILC7SNXQpLQn47_bJj3ocea9mbcKcV1KWJvMYWR1UZ06_XYp0lPqDvgR633SNNVlHpPeFX3Qpm8Ty-t6uH8HJbayrRGJjMUo1oElTwYTQsYBTcpb6Ilh4LMBD2A9IYrz1pEA5N5bNp36fAHRjzci:1lfgBm:Q4OZE4rNlkjoB371LtSfBl_59vAY1BK4Rm_p14IJP64",
+    "expire_date": "2021-05-23T09:57:30.020Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 1,
+  "fields": {
+    "user": 1,
+    "jti": "3fbbc7f50f904012b67485fbb72ce6a5",
+    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTYyMTE1Nzg2NCwianRpIjoiM2ZiYmM3ZjUwZjkwNDAxMmI2NzQ4NWZiYjcyY2U2YTUiLCJ1c2VyX2lkIjoxfQ.gDwpuE2H6wiDOqnjWC7wd_ioWTL5lJh--DyPIm_mqh0",
+    "created_at": "2021-05-09T09:37:44.980Z",
+    "expires_at": "2021-05-16T09:37:44Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 2,
+  "fields": {
+    "user": 1,
+    "jti": "ce64d7ad763b48c085c25f7d9489d342",
+    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTYyMTE1ODkzMSwianRpIjoiY2U2NGQ3YWQ3NjNiNDhjMDg1YzI1ZjdkOTQ4OWQzNDIiLCJ1c2VyX2lkIjoxfQ.FXSF63J0rDSkfEXcJhSU2rhAtg6at5jOYTHVIlA8by8",
+    "created_at": "2021-05-09T09:55:31.424Z",
+    "expires_at": "2021-05-16T09:55:31Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 3,
+  "fields": {
+    "user": 2,
+    "jti": "5a7d29b222e84125835142c3ba3e008c",
+    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTYyMTE1ODk2MywianRpIjoiNWE3ZDI5YjIyMmU4NDEyNTgzNTE0MmMzYmEzZTAwOGMiLCJ1c2VyX2lkIjoyfQ.LPa2AyvulAn63379C2o-hD2JXNHs4m4O64Po3OqVIKk",
+    "created_at": "2021-05-09T09:56:03.909Z",
+    "expires_at": "2021-05-16T09:56:03Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 4,
+  "fields": {
+    "user": 2,
+    "jti": "8650a39ad18f4586addc80e1c13e94f1",
+    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTYyMTE1ODk3NiwianRpIjoiODY1MGEzOWFkMThmNDU4NmFkZGM4MGUxYzEzZTk0ZjEiLCJ1c2VyX2lkIjoyfQ.JWono_bPI33yw3ZT7gNMRJleQy1G-3HUPSzP_g0ir5U",
+    "created_at": "2021-05-09T09:56:16.377Z",
+    "expires_at": "2021-05-16T09:56:16Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 5,
+  "fields": {
+    "user": 5,
+    "jti": "252b43d5afe4495b8dd6a260b5f594c7",
+    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTYyMTE1OTA2MywianRpIjoiMjUyYjQzZDVhZmU0NDk1YjhkZDZhMjYwYjVmNTk0YzciLCJ1c2VyX2lkIjo1fQ.cMSN9xIKHBy6AcSMuiLEEJv0zSJdbgYDttVNJgMCdPo",
+    "created_at": "2021-05-09T09:57:43.480Z",
+    "expires_at": "2021-05-16T09:57:43Z"
+  }
+},
+{
+  "model": "token_blacklist.outstandingtoken",
+  "pk": 6,
+  "fields": {
+    "user": 5,
+    "jti": "2f7b6f30cb5b4803a1cf372543609b37",
+    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTYyMTE1OTA4MiwianRpIjoiMmY3YjZmMzBjYjViNDgwM2ExY2YzNzI1NDM2MDliMzciLCJ1c2VyX2lkIjo1fQ.RGKZsikJKQ8dCX5nFBU9NXPeihX9HhEhPg2ieNs7xZw",
+    "created_at": "2021-05-09T09:58:02.167Z",
+    "expires_at": "2021-05-16T09:58:02Z"
+  }
+},
+{
   "model": "api.user",
   "pk": 1,
   "fields": {
@@ -2471,6 +2584,24 @@
     "is_active": true,
     "groups": [
       4
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "api.user",
+  "pk": 5,
+  "fields": {
+    "password": "pbkdf2_sha256$216000$q3j5gsZcxSQ9$skBtL2MAYaJAX5hgQ959gSp7D7uQVEk0fCM198+Xdqs=",
+    "last_login": null,
+    "is_superuser": false,
+    "is_staff": false,
+    "date_joined": "2021-05-09T09:57:42Z",
+    "username": "joni",
+    "email": "jonrivala2@gmail.com",
+    "is_active": true,
+    "groups": [
+      1
     ],
     "user_permissions": []
   }
@@ -2830,6 +2961,38 @@
   }
 },
 {
+  "model": "api.item",
+  "pk": 14,
+  "fields": {
+    "name": "Socio",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin luctus consectetur lorem, et cursus arcu dapibus eget. Sed viverra, ante ac interdum lobortis, velit mi tempor risus, non laoreet purus justo a sem. Ut sit amet velit a ex porttitor venenatis imperdiet nec leo. Fusce varius feugiat nibh non maximus.",
+    "is_active": true,
+    "created": "2021-05-10T16:16:45.119Z",
+    "updated": "2021-05-10T16:16:45.119Z",
+    "images": [
+      15
+    ],
+    "acquired_by": [],
+    "saved_by": []
+  }
+},
+{
+  "model": "api.item",
+  "pk": 15,
+  "fields": {
+    "name": "Pro",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin luctus consectetur lorem, et cursus arcu dapibus eget. Sed viverra, ante ac interdum lobortis, velit mi tempor risus, non laoreet purus justo a sem. Ut sit amet velit a ex porttitor venenatis imperdiet nec leo. Fusce varius feugiat nibh non maximus.",
+    "is_active": true,
+    "created": "2021-05-10T16:17:14.522Z",
+    "updated": "2021-05-10T16:17:14.522Z",
+    "images": [
+      14
+    ],
+    "acquired_by": [],
+    "saved_by": []
+  }
+},
+{
   "model": "api.itemattributetype",
   "pk": 1,
   "fields": {
@@ -3163,6 +3326,32 @@
   }
 },
 {
+  "model": "api.itemvariant",
+  "pk": 26,
+  "fields": {
+    "item": 14,
+    "stock": -1,
+    "price": "25.00",
+    "benefits": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin luctus consectetur lorem, et cursus arcu dapibus eget. Sed viverra, ante ac interdum lobortis, velit mi tempor risus, non laoreet purus justo a sem. Ut sit amet velit a ex porttitor venenatis imperdiet nec leo. Fusce varius feugiat nibh non maximus.",
+    "attributes": [
+      5
+    ]
+  }
+},
+{
+  "model": "api.itemvariant",
+  "pk": 27,
+  "fields": {
+    "item": 15,
+    "stock": -1,
+    "price": "35.00",
+    "benefits": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin luctus consectetur lorem, et cursus arcu dapibus eget. Sed viverra, ante ac interdum lobortis, velit mi tempor risus, non laoreet purus justo a sem. Ut sit amet velit a ex porttitor venenatis imperdiet nec leo. Fusce varius feugiat nibh non maximus.",
+    "attributes": [
+      5
+    ]
+  }
+},
+{
   "model": "api.artist",
   "pk": 1,
   "fields": {
@@ -3256,8 +3445,10 @@
   "fields": {
     "artist": 4,
     "title": "Lucient",
+    "introduction": "",
     "updated": "2021-05-03T20:48:42.671Z",
-    "created": "2021-05-03T20:48:42.672Z"
+    "created": "2021-05-03T20:48:42.672Z",
+    "image": ""
   }
 },
 {
@@ -3266,8 +3457,10 @@
   "fields": {
     "artist": 1,
     "title": "Dj Bruce Lee",
+    "introduction": "",
     "updated": "2021-05-03T20:55:09.888Z",
-    "created": "2021-05-03T20:49:29.462Z"
+    "created": "2021-05-03T20:49:29.462Z",
+    "image": ""
   }
 },
 {
@@ -3276,8 +3469,10 @@
   "fields": {
     "artist": 2,
     "title": "Harvey Touch",
+    "introduction": "",
     "updated": "2021-05-03T20:56:11.686Z",
-    "created": "2021-05-03T20:56:11.686Z"
+    "created": "2021-05-03T20:56:11.686Z",
+    "image": ""
   }
 },
 {
@@ -3286,8 +3481,10 @@
   "fields": {
     "artist": 3,
     "title": "Lowprofile",
+    "introduction": "",
     "updated": "2021-05-03T20:57:13.917Z",
-    "created": "2021-05-03T20:57:13.917Z"
+    "created": "2021-05-03T20:57:13.917Z",
+    "image": ""
   }
 },
 {
@@ -3296,8 +3493,10 @@
   "fields": {
     "artist": 5,
     "title": "Omega 3",
+    "introduction": "",
     "updated": "2021-05-03T20:58:34.621Z",
-    "created": "2021-05-03T20:58:34.621Z"
+    "created": "2021-05-03T20:58:34.621Z",
+    "image": ""
   }
 },
 {
@@ -3306,8 +3505,10 @@
   "fields": {
     "artist": 6,
     "title": "Phran",
+    "introduction": "",
     "updated": "2021-05-03T21:00:22.160Z",
-    "created": "2021-05-03T21:00:22.160Z"
+    "created": "2021-05-03T21:00:22.160Z",
+    "image": ""
   }
 },
 {
@@ -3316,8 +3517,10 @@
   "fields": {
     "artist": 7,
     "title": "Telexketch",
+    "introduction": "",
     "updated": "2021-05-03T21:01:16.457Z",
-    "created": "2021-05-03T21:01:16.457Z"
+    "created": "2021-05-03T21:01:16.457Z",
+    "image": ""
   }
 },
 {
@@ -3326,8 +3529,10 @@
   "fields": {
     "artist": 8,
     "title": "Virginie",
+    "introduction": "",
     "updated": "2021-05-03T21:02:15.144Z",
-    "created": "2021-05-03T21:02:15.144Z"
+    "created": "2021-05-03T21:02:15.144Z",
+    "image": ""
   }
 },
 {
@@ -3867,6 +4072,16 @@
   }
 },
 {
+  "model": "api.subscription",
+  "pk": 14,
+  "fields": {}
+},
+{
+  "model": "api.subscription",
+  "pk": 15,
+  "fields": {}
+},
+{
   "model": "api.subscriber",
   "pk": 1,
   "fields": {
@@ -3905,6 +4120,17 @@
   "fields": {
     "email": "hector.pascual.diaz@gmail.com",
     "created": "2021-05-03T21:04:39.708Z",
+    "mailing_lists": [
+      1
+    ]
+  }
+},
+{
+  "model": "api.subscriber",
+  "pk": 5,
+  "fields": {
+    "email": "jonrivala2@gmail.com",
+    "created": "2021-05-09T09:57:43.421Z",
     "mailing_lists": [
       1
     ]
