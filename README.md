@@ -2,6 +2,10 @@
 
 ### Release notes
 
+#### 0.17
+##### Bugfixes
+- ```/api/subscriptions/ returned no data```
+
 #### 0.16
 ##### Features
 - Endpoints for member profile ```/api/users/<id>/member_profile/```
