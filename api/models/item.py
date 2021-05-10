@@ -1,6 +1,5 @@
 from datetime import timedelta
 from django.db.models import Sum
-
 from django.db import models
 
 
@@ -78,6 +77,9 @@ class Item(models.Model):
     @property
     def has_stock(self):
         return bool(self.stock)
+
+    def is_subscription(self):
+        return hasattr(self, 'subscription')
 
 
 class ItemAttributeType(models.Model):

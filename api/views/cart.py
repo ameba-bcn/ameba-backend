@@ -11,7 +11,9 @@ from rest_framework.exceptions import MethodNotAllowed
 from api.permissions import CartPermission
 from api.serializers import CartSerializer, CartCheckoutSerializer
 from api.models import Cart
-from api.exceptions import CartIsEmpty, CartCheckoutNeedsUser
+from api.exceptions import (
+    CartIsEmpty, CartCheckoutNeedsUser, CartHasMultipleSubscriptions
+)
 from api.signals import cart_checkout, cart_processed
 from api.docs.carts import CartsDocs
 
@@ -84,6 +86,8 @@ class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
             raise CartIsEmpty
         if cart.is_anonymous():
             raise CartCheckoutNeedsUser
+        if cart.has_multiple_subscriptions():
+            raise CartHasMultipleSubscriptions
         cart_checkout.send(sender=self, cart=cart, request=self.request)
         serializer_class = self.get_serializer_class()
         return Response(serializer_class(cart).data)

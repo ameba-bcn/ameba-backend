@@ -101,6 +101,11 @@ class Cart(Model):
     def is_anonymous(self):
         return not self.user
 
+    def has_multiple_subscriptions(self):
+        return len(list(filter(
+            lambda x: x.item.is_subscription(), self.item_variants.all()
+        ))) > 1
+
     def is_checkout_updated(self):
         return (
             (
