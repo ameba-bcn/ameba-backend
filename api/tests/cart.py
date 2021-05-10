@@ -1,5 +1,5 @@
 import time
-
+from django.contrib.auth.models import Group
 from api.tests._helpers import BaseTest, check_structure
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -58,12 +58,19 @@ class BaseCartTest(BaseTest):
                               item_class=Item):
         if item_variants:
             item_id = item_variants[0]
-            item = item_class.objects.create(
+            attrs = dict(
                 id=item_id,
                 name=f'item_{item_id}',
                 description=f'This is the item {item_id}',
                 is_active=True
             )
+            if item_class is Subscription:
+                group, created = Group.objects.get_or_create(
+                    name='ameba_member'
+                )
+                attrs['group'] = group
+
+            item = item_class.objects.create(**attrs)
             for item_variant in item_variants:
                 cart_data = dict(
                     id=item_variant,
