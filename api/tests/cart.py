@@ -6,7 +6,9 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from api.models.cart import Cart
 from api.models.user import User
-from api.models import Item, ItemVariant, ItemAttribute, ItemAttributeType
+from api.models import (
+    Item, ItemVariant, ItemAttribute, ItemAttributeType, Subscription
+)
 
 
 class BaseCartTest(BaseTest):
@@ -27,10 +29,12 @@ class BaseCartTest(BaseTest):
     def get_token(user):
         return RefreshToken.for_user(user)
 
-    def get_cart(self, user=None, item_variants=None, for_free=False):
+    def get_cart(self, user=None, item_variants=None, for_free=False,
+                 item_class=Item):
         cart = Cart.objects.create(user=user)
         if item_variants:
-            self.create_items_variants(item_variants, for_free=for_free)
+            self.create_items_variants(item_variants, for_free=for_free,
+                                       item_class=item_class)
             cart.item_variants.set(item_variants)
         return cart
 
@@ -39,10 +43,11 @@ class BaseCartTest(BaseTest):
         cart.refresh_from_db()
         return cart.user == user
 
-    def create_items_variants(self, item_variants, for_free=False):
+    def create_items_variants(self, item_variants, for_free=False,
+                              item_class=Item):
         if item_variants:
             item_id = item_variants[0]
-            item = Item.objects.create(
+            item = item_class.objects.create(
                 id=item_id,
                 name=f'item_{item_id}',
                 description=f'This is the item {item_id}',
@@ -521,3 +526,21 @@ class TestCartCheckout(BaseCartTest):
         cart = self.get_cart(item_variants=[1, 2])
         response = self._get(pk=cart.id)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_cart_with_multiple_subscriptions_returns_400(self):
+        user = self.get_user(1)
+        token = self.get_token(user).access_token
+        cart = self.get_cart(
+            user=user, item_variants=[1, 2], item_class=Subscription
+        )
+        response = self._get(pk=cart.id, token=token)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_cart_with_one_subscription_returns_200(self):
+        user = self.get_user(1)
+        token = self.get_token(user).access_token
+        cart = self.get_cart(
+            user=user, item_variants=[1], item_class=Subscription
+        )
+        response = self._get(pk=cart.id, token=token)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)

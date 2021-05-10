@@ -51,6 +51,12 @@ class CartCheckoutNeedsUser(APIException):
     default_code = 'cart_checkout_needs_user'
 
 
+class CartHasMultipleSubscriptions(APIException):
+    status_code = HTTP_400_BAD_REQUEST
+    default_detail = 'Cart has multiple subscriptions.'
+    default_code = 'cart_has_multiple_subscriptions'
+
+
 class TokenExpired(APIException):
     status_code = HTTP_400_BAD_REQUEST
     default_detail = 'Token has expired.'
