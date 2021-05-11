@@ -1,10 +1,10 @@
 from rest_framework.exceptions import APIException
 from rest_framework.status import (
     HTTP_400_BAD_REQUEST,
-    HTTP_500_INTERNAL_SERVER_ERROR,
     HTTP_404_NOT_FOUND,
     HTTP_401_UNAUTHORIZED,
-    HTTP_403_FORBIDDEN
+    HTTP_403_FORBIDDEN,
+    HTTP_424_FAILED_DEPENDENCY
 )
 
 
@@ -15,7 +15,7 @@ class CartIsEmpty(APIException):
 
 
 class WrongPaymentIntent(APIException):
-    status_code = HTTP_500_INTERNAL_SERVER_ERROR
+    status_code = HTTP_424_FAILED_DEPENDENCY
     default_detail = 'Wrong payment intent object.'
     default_code = 'wrong_payment_intent'
 
@@ -49,6 +49,18 @@ class CartCheckoutNeedsUser(APIException):
     status_code = HTTP_400_BAD_REQUEST
     default_detail = 'Cart checkout needs a valid user.'
     default_code = 'cart_checkout_needs_user'
+
+
+class CartHasMultipleSubscriptions(APIException):
+    status_code = HTTP_400_BAD_REQUEST
+    default_detail = 'Cart has multiple subscriptions.'
+    default_code = 'cart_has_multiple_subscriptions'
+
+
+class MemberProfileRequired(APIException):
+    status_code = HTTP_400_BAD_REQUEST
+    default_detail = 'Member profile is needed before purchasing subscription.'
+    default_code = 'member_profile_required'
 
 
 class TokenExpired(APIException):

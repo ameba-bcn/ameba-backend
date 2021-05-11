@@ -101,12 +101,33 @@ class Cart(Model):
     def is_anonymous(self):
         return not self.user
 
+    @property
+    def subscriptions(self):
+        return [
+            x.item.subscription for x in self.item_variants.all() if
+            x.item.is_subscription()
+        ]
+
+    @property
+    def subscription(self):
+        if len(self.subscriptions) == 1:
+            return self.subscriptions[0]
+        return None
+
+    def has_multiple_subscriptions(self):
+        return len(self.subscriptions) > 1
+
     def is_checkout_updated(self):
-        return (
-            (
-                self.checkout_details
-                and 'payment_intent' not in self.checkout_details
-                and self.amount == 0
-            )
-            or self.amount == self.checkout_details['payment_intent']['amount']
-        )
+        if (
+            self.checkout_details
+            and 'payment_intent' not in self.checkout_details
+            and self.amount == 0
+        ):
+            return True
+        elif (
+            'payment_intent' in self.checkout_details
+            and self.amount == self.checkout_details['payment_intent']['amount']
+        ):
+            return True
+        else:
+            return False

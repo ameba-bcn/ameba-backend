@@ -5,6 +5,7 @@ from api.permissions import ADD, VIEW, DELETE, CHANGE, get_or_create_permission
 
 DEFAULT_GROUP = 'web_user'
 MEMBER_GROUP = 'ameba_member'
+MEMBER_PRO_GROUP = 'ameba_member_pro'
 EDITOR_GROUP = 'ameba_editor'
 ADMIN_GROUP = 'ameba_admin'
 
@@ -21,15 +22,19 @@ GROUPS = {
     },
     MEMBER_GROUP: {
         'pk': 2,
-        'parent': 'web_user'
+        'parent': DEFAULT_GROUP
     },
     EDITOR_GROUP: {
         'pk': 3,
-        'parent': 'ameba_member'
+        'parent': MEMBER_GROUP
     },
     ADMIN_GROUP: {
         'pk': 4,
-        'parent': 'ameba_editor'
+        'parent': EDITOR_GROUP
+    },
+    MEMBER_PRO_GROUP: {
+        'pk': 5,
+        'parent': MEMBER_GROUP
     }
 }
 

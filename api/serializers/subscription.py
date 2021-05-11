@@ -3,12 +3,6 @@ from api.serializers.item import ItemDetailSerializer, ItemListSerializer, \
 from api.models import Subscription
 
 
-class SubscriptionVariantSerializer(VariantSerializer):
-    class Meta:
-        model = VariantSerializer.Meta.model
-        fields = VariantSerializer.Meta.fields + ['benefits']
-
-
 class SubscriptionListSerializer(ItemListSerializer):
 
     class Meta(ItemDetailSerializer.Meta):
@@ -16,7 +10,7 @@ class SubscriptionListSerializer(ItemListSerializer):
 
 
 class SubscriptionDetailSerializer(ItemDetailSerializer):
-    variants = SubscriptionVariantSerializer(many=True)
 
     class Meta(ItemDetailSerializer.Meta):
         model = Subscription
+        fields = ItemDetailSerializer.Meta.fields + ['benefits']
