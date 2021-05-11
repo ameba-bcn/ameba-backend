@@ -1,15 +1,9 @@
 from django.utils import timezone
 from rest_framework import status
-from rest_framework_simplejwt.tokens import RefreshToken
 from unittest import mock
 
-from api.tests._helpers import BaseTest, check_structure
 from api.tests.cart import BaseCartTest
-from api.models.cart import Cart
-from api.models.user import User
-from api.models import (
-    Item, ItemVariant, ItemAttribute, ItemAttributeType, Subscription, Member
-)
+from api.models import Subscription
 from api import stripe
 
 valid_payment_intent = {
@@ -18,7 +12,7 @@ valid_payment_intent = {
 }
 
 
-class TestCartCheckout(BaseCartTest):
+class TestSubscriptionPurchase(BaseCartTest):
     DETAIL_ENDPOINT = '/api/carts/{pk}/'
 
     @mock.patch('api.signals.payments.get_payment_intent', return_value={'status': stripe.IntentStatus.NOT_NEEDED})
