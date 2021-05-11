@@ -1,10 +1,14 @@
-# ameba-site backend v0.13
+# ameba-site backend v0.17
 
 ### Release notes
 
 #### 0.17
+##### Features
+- Subscription creates member after pruchase
+
 ##### Bugfixes
 - ```/api/subscriptions/ returned no data```
+- Fixtures updated due to new db model
 
 #### 0.16
 ##### Features
