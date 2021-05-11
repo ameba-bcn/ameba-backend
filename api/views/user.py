@@ -5,6 +5,7 @@ from rest_framework import mixins
 from rest_framework import permissions as drf_permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from drf_yasg.utils import swagger_auto_schema
 
 from api import serializers
 from api import permissions
@@ -64,6 +65,7 @@ class UserViewSet(
         serializer = serializer_class(instance=user.member)
         return Response(serializer.data)
 
+    @swagger_auto_schema(request_body=serializers.DocMemberSerializer)
     @member_profile.mapping.post
     def create_member_profile(self, request, *args, **kwargs):
         user = self.get_object()
@@ -75,6 +77,7 @@ class UserViewSet(
         serializer = serializer_class(member)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+    @swagger_auto_schema(request_body=serializers.DocMemberSerializer)
     @member_profile.mapping.patch
     def update_member_profile(self, request, *args, **kwargs):
         user = self.get_object()
