@@ -1,12 +1,14 @@
 import time
-
+from django.contrib.auth.models import Group
 from api.tests._helpers import BaseTest, check_structure
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from api.models.cart import Cart
 from api.models.user import User
-from api.models import Item, ItemVariant, ItemAttribute, ItemAttributeType
+from api.models import (
+    Item, ItemVariant, ItemAttribute, ItemAttributeType, Subscription, Member
+)
 
 
 class BaseCartTest(BaseTest):
@@ -14,23 +16,36 @@ class BaseCartTest(BaseTest):
     LIST_ENDPOINT = '/api/carts/'
 
     @staticmethod
-    def get_user(user_tag=None):
+    def get_user(user_tag=None, member_profile=False):
         user_props = {
             'username': f'User {user_tag or 0}',
             'password': 'passwordsitomio',
             'email': f'amebauser_{user_tag or 0}@ameba.cat',
             'is_active': True
         }
-        return User.objects.create(**user_props)
+
+        user = User.objects.create(**user_props)
+
+        if member_profile:
+            Member.objects.create(
+                user=user,
+                address='whatever address is the place',
+                first_name='Obvious',
+                last_name='Lee',
+                phone_number='123456789'
+            )
+        return user
 
     @staticmethod
     def get_token(user):
         return RefreshToken.for_user(user)
 
-    def get_cart(self, user=None, item_variants=None, for_free=False):
+    def get_cart(self, user=None, item_variants=None, for_free=False,
+                 item_class=Item):
         cart = Cart.objects.create(user=user)
         if item_variants:
-            self.create_items_variants(item_variants, for_free=for_free)
+            self.create_items_variants(item_variants, for_free=for_free,
+                                       item_class=item_class)
             cart.item_variants.set(item_variants)
         return cart
 
@@ -39,15 +54,23 @@ class BaseCartTest(BaseTest):
         cart.refresh_from_db()
         return cart.user == user
 
-    def create_items_variants(self, item_variants, for_free=False):
+    def create_items_variants(self, item_variants, for_free=False,
+                              item_class=Item):
         if item_variants:
             item_id = item_variants[0]
-            item = Item.objects.create(
+            attrs = dict(
                 id=item_id,
                 name=f'item_{item_id}',
                 description=f'This is the item {item_id}',
                 is_active=True
             )
+            if item_class is Subscription:
+                group, created = Group.objects.get_or_create(
+                    name='ameba_member'
+                )
+                attrs['group'] = group
+
+            item = item_class.objects.create(**attrs)
             for item_variant in item_variants:
                 cart_data = dict(
                     id=item_variant,
@@ -521,3 +544,30 @@ class TestCartCheckout(BaseCartTest):
         cart = self.get_cart(item_variants=[1, 2])
         response = self._get(pk=cart.id)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_cart_with_multiple_subscriptions_returns_400(self):
+        user = self.get_user(1, member_profile=True)
+        token = self.get_token(user).access_token
+        cart = self.get_cart(
+            user=user, item_variants=[1, 2], item_class=Subscription
+        )
+        response = self._get(pk=cart.id, token=token)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_cart_with_one_subscription_returns_200(self):
+        user = self.get_user(1, member_profile=True)
+        token = self.get_token(user).access_token
+        cart = self.get_cart(
+            user=user, item_variants=[1], item_class=Subscription
+        )
+        response = self._get(pk=cart.id, token=token)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_cart_from_user_without_member_profile_returns_400(self):
+        user = self.get_user(1, member_profile=False)
+        token = self.get_token(user).access_token
+        cart = self.get_cart(
+            user=user, item_variants=[1], item_class=Subscription
+        )
+        response = self._get(pk=cart.id, token=token)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

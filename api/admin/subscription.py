@@ -6,13 +6,8 @@ from api.admin.item import (
 from api.models import Subscription
 
 
-class SubscriptionVariantInline(ItemVariantInline):
-    fields = ItemVariantInline.fields + ['benefits']
-
-
 class SubscriptionAdmin(BaseItemAdmin):
-    inlines = [SubscriptionVariantInline, ImageChoiceInLine,
-               DiscountChoiceInLine]
+    fields = BaseItemAdmin.fields + ['benefits', 'group']
 
 
 admin.site.register(Subscription, SubscriptionAdmin)

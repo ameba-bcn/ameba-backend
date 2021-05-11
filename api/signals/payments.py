@@ -8,7 +8,7 @@ from api.stripe import get_payment_intent, get_create_update_payment_intent,\
 from api.models import Payment, Cart
 from api.exceptions import StripeSyncError, CheckoutNeeded, PaymentIsNotSucceed
 from api.email_factories import PaymentSuccessfulEmail
-
+from api.signals.memberships import subscription_purchased
 
 cart_checkout = django.dispatch.Signal(providing_args=['cart'])
 cart_processed = django.dispatch.Signal(providing_args=['cart', 'request'])
@@ -57,6 +57,13 @@ def on_cart_deleted(sender, cart, request, **kwargs):
 
     if payment_intent['status'] not in SUCCEEDED_PAYMENTS and not settings.DEBUG:
         raise PaymentIsNotSucceed
+
+    if cart.subscription:
+        subscription_purchased.send(
+            sender=sender,
+            member=cart.user.member,
+            subscription=cart.subscription
+        )
 
     payment = Payment.objects.create_payment(cart=cart, payment_intent=payment_intent)
     # Send payment confirmation email
