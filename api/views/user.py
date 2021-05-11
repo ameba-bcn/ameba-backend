@@ -33,11 +33,6 @@ class UserViewSet(
     queryset = User.objects.all()
     permission_classes = [permissions.CustomModelUserPermission]
 
-    def get_serializer_class(self):
-        if self.action == 'member_profile':
-            self.serializer_class = serializers.MemberSerializer
-        return super().get_serializer_class()
-
     def get_permissions(self):
         if self.action == 'create':
             self.permission_classes = [drf_permissions.AllowAny]
@@ -59,7 +54,7 @@ class UserViewSet(
             user_registered.send(sender=User, user=user, request=request)
         return response
 
-    @action(detail=True, serializer_class=serializers.DocMemberSerializer)
+    @action(detail=True, serializer_class=serializers.MemberSerializer)
     def member_profile(self, request, *args, **kwargs):
         user = self.get_object()
         if not user.has_member_profile():
