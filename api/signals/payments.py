@@ -27,9 +27,7 @@ def sync_payment_intent(sender, cart, request, **kwargs):
                 checkout_details=cart.checkout_details
             )
             checkout_details['payment_intent'] = payment_intent
-
-        cart.checkout_details = checkout_details
-        cart.save()
+        cart.checkout(checkout_details)
 
     except InvalidRequestError as StripeError:
         if not cart.checkout_details:
@@ -50,7 +48,7 @@ def on_cart_deleted(sender, cart, request, **kwargs):
     if not cart.checkout_details:
         return
 
-    if not cart.is_checkout_updated():
+    if cart.has_changed():
         raise CheckoutNeeded
 
     payment_intent = get_payment_intent(checkout_details=cart.checkout_details)

@@ -1,8 +1,9 @@
 import uuid
 
+from django.core import signing
 from django.db.models import (
     Model, ForeignKey, ManyToManyField, JSONField, OneToOneField,
-    UUIDField, DateTimeField, SET_NULL, CASCADE
+    UUIDField, DateTimeField, SET_NULL, CASCADE, CharField
 )
 
 
@@ -29,6 +30,7 @@ class Cart(Model):
     discount_code = ForeignKey(to='DiscountCode', on_delete=SET_NULL,
                                blank=True, null=True)
     checkout_details = JSONField(blank=True, null=True)
+    checkout_hash = CharField(blank=True, max_length=128)
 
     def delete(self, using=None, keep_parents=False):
         self.item_variants.clear()
@@ -37,6 +39,11 @@ class Cart(Model):
     @property
     def total(self):
         return '{:.2f} €'.format(self.amount / 100.)
+
+    def get_hash(self):
+        return hash(tuple(
+            (iv.id, iv.price) for iv in self.item_variants.all().order_by('id')
+        ) + (self.amount, ))
 
     @property
     def amount(self):
@@ -117,17 +124,10 @@ class Cart(Model):
     def has_multiple_subscriptions(self):
         return len(self.subscriptions) > 1
 
-    def is_checkout_updated(self):
-        if (
-            self.checkout_details
-            and 'payment_intent' not in self.checkout_details
-            and self.amount == 0
-        ):
-            return True
-        elif (
-            'payment_intent' in self.checkout_details
-            and self.amount == self.checkout_details['payment_intent']['amount']
-        ):
-            return True
-        else:
-            return False
+    def has_changed(self):
+        return self.checkout_hash != self.get_hash()
+
+    def checkout(self, checkout_details):
+        self.checkout_details = checkout_details
+        self.checkout_hash = self.get_hash()
+        self.save()
