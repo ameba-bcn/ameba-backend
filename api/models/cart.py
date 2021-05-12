@@ -1,6 +1,5 @@
 import uuid
 
-from django.core import signing
 from django.db.models import (
     Model, ForeignKey, ManyToManyField, JSONField, OneToOneField,
     UUIDField, DateTimeField, SET_NULL, CASCADE, CharField
@@ -41,9 +40,9 @@ class Cart(Model):
         return '{:.2f} €'.format(self.amount / 100.)
 
     def get_hash(self):
-        return hash(tuple(
+        return str(hash(tuple(
             (iv.id, iv.price) for iv in self.item_variants.all().order_by('id')
-        ) + (self.amount, ))
+        ) + (self.amount, )))
 
     @property
     def amount(self):
