@@ -7,4 +7,4 @@ class CoverSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cover
-        fields = ['image', 'is_active', 'index', 'created']
+        fields = ['file', 'is_active', 'index', 'created']

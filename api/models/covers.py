@@ -2,14 +2,18 @@ from django.db import models
 
 
 class Cover(models.Model):
-    image = models.ImageField(upload_to='covers')
+    file = models.FileField(upload_to='covers')
     is_active = models.BooleanField()
     index = models.IntegerField()
     created = models.DateTimeField(auto_now_add=True)
 
     @property
     def url(self):
-        return self.image.url
+        return self.file.url
 
     def __str__(self):
-        return self.image.name
+        return self.file.name
+
+    @property
+    def extension(self):
+        return self.file.name.split('.')[-1]
