@@ -2,6 +2,10 @@
 
 ### Release notes
 
+#### 0.18
+##### Bugfixes
+- AW-169 Activation email not sent on member+user registration
+
 #### 0.17
 ##### Features
 - Subscription creates member after pruchase
