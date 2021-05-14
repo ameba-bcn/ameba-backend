@@ -11,19 +11,19 @@ def get_image_preview(image, size=150):
 
 class CoverAdmin(admin.ModelAdmin):
     ordering = ('index', '-created')
-    fields = ('image', 'is_active', 'index', 'created', 'preview')
+    fields = ('file', 'is_active', 'index', 'created', 'preview')
     readonly_fields = ['preview', 'created']
-    list_display = ('image', 'is_active', 'index', 'created',
+    list_display = ('file', 'is_active', 'index', 'created',
                     'list_preview')
-    search_fields = ('image', )
+    search_fields = ('file', )
 
     @staticmethod
     def preview(obj):
-        return get_image_preview(obj.image)
+        return get_image_preview(obj.file)
 
     @staticmethod
     def list_preview(obj):
-        return get_image_preview(obj.image, 75)
+        return get_image_preview(obj.file, 75)
 
 
 admin.site.register(Cover, CoverAdmin)
