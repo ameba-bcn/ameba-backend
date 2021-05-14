@@ -54,7 +54,7 @@ def perform_request(method, endpoint, attributes=None):
                 endpoint=endpoint,
                 data=attributes,
                 status=response.status_code,
-                content=response.json()
+                content=response
             ))
             return response
 
