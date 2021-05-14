@@ -3,6 +3,10 @@
 ### Release notes
 
 #### 0.18
+##### Features
+- AW-171: General file instead of image for cover video
+- AW-155: Endpoint /api/about/ for AMEBA's about info
+
 ##### Bugfixes
 - AW-169 Activation email not sent on member+user registration
 
