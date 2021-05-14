@@ -6,3 +6,7 @@ class About(models.Model):
     is_active = models.BooleanField()
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+
+    @property
+    def preview(self):
+        return self.text[:15]
