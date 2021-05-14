@@ -13,3 +13,7 @@ class Cover(models.Model):
 
     def __str__(self):
         return self.file.name
+
+    @property
+    def extension(self):
+        return self.file.name.split('.')[-1]
