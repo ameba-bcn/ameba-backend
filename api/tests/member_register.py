@@ -1,13 +1,16 @@
+from unittest import mock
 from rest_framework import status
 
 from api.tests.user import BaseUserTest
 from api.models import Member, User
+from api import email_factories
 
 
 class FullRegistrationTest(BaseUserTest):
     LIST_ENDPOINT = '/api/member_register/'
 
-    def test_register_new_user_and_member(self):
+    @mock.patch.object(email_factories.UserRegisteredEmail, 'from_request')
+    def test_register_new_user_and_member(self, from_request):
         form_props = {
             'username': 'User2',
             'password': 'ameba12345',
@@ -25,6 +28,7 @@ class FullRegistrationTest(BaseUserTest):
 
         user = User.objects.get(email='user11@ameba.cat')
         self.assertTrue(Member.objects.filter(user=user))
+        from_request.assert_called()
 
     def test_register_new_user_and_member_no_username(self):
         form_props = {

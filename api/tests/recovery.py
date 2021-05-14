@@ -5,7 +5,7 @@ from django.core import signing
 from django.contrib.auth import get_user_model
 
 from api.tests._helpers import BaseTest
-from api.signals import emails
+from api import email_factories
 
 User = get_user_model()
 
@@ -13,7 +13,7 @@ User = get_user_model()
 class TestRecoveryFlow(BaseTest):
     LIST_ENDPOINT = '/api/recovery/'
 
-    @mock.patch.object(emails.RecoveryRequestEmail, "from_request")
+    @mock.patch.object(email_factories.RecoveryRequestEmail, "from_request")
     def test_recovery_request(self, from_request_mock):
         user = User.objects.create(password='whatever', username='UserName',
                                    email='username@ameba.cat')
@@ -26,7 +26,7 @@ class TestRecoveryFlow(BaseTest):
         self.assertIs(type(response.data['detail']), str)
         from_request_mock.assert_called()
 
-    @mock.patch.object(emails.RecoveryRequestEmail, "from_request")
+    @mock.patch.object(email_factories.RecoveryRequestEmail, "from_request")
     def test_recovery_request_non_existent_user(self, from_request_mock):
         data = dict(email='username@ameba.cat')
         response = self._list(props=data, token=None)
@@ -35,7 +35,7 @@ class TestRecoveryFlow(BaseTest):
         self.assertIs(type(response.data['detail']), str)
         from_request_mock.assert_not_called()
 
-    @mock.patch.object(emails.PasswordChangedEmail, "from_request")
+    @mock.patch.object(email_factories.PasswordChangedEmail, "from_request")
     def test_recovery_token_returns_200(self, from_request_mock):
         user = User.objects.create(
             password='whatever',
@@ -66,7 +66,7 @@ class TestRecoveryFlow(BaseTest):
         response = self._create(props=data, token=None)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    @mock.patch.object(emails.PasswordChangedEmail, "from_request")
+    @mock.patch.object(email_factories.PasswordChangedEmail, "from_request")
     @mock.patch.object(signing, 'loads')
     def test_recovery_expired_token_returns_400(self, loads_mock,
                                                 from_request_mock):
@@ -83,7 +83,7 @@ class TestRecoveryFlow(BaseTest):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         from_request_mock.assert_not_called()
 
-    @mock.patch.object(emails.PasswordChangedEmail, "from_request")
+    @mock.patch.object(email_factories.PasswordChangedEmail, "from_request")
     def test_recovery_changed_token_returns_400(self, from_request_mock):
         user = User.objects.create(
             password='whatever',
@@ -101,7 +101,7 @@ class TestRecoveryFlow(BaseTest):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         from_request_mock.assert_not_called()
 
-    @mock.patch.object(emails.PasswordChangedEmail, "from_request")
+    @mock.patch.object(email_factories.PasswordChangedEmail, "from_request")
     def test_recovery_empty_token_returns_404(self, from_request_mock):
         user = User.objects.create(password='whatever', username='UserName',
                                    email='username@ameba.cat')
@@ -111,7 +111,7 @@ class TestRecoveryFlow(BaseTest):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         from_request_mock.assert_not_called()
 
-    @mock.patch.object(emails.PasswordChangedEmail, "from_request")
+    @mock.patch.object(email_factories.PasswordChangedEmail, "from_request")
     def test_recovery_missing_token_returns_400(self, from_request_mock):
         user = User.objects.create(password='whatever', username='UserName',
                                    email='username@ameba.cat')
@@ -121,7 +121,7 @@ class TestRecoveryFlow(BaseTest):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         from_request_mock.assert_not_called()
 
-    @mock.patch.object(emails.PasswordChangedEmail, "from_request")
+    @mock.patch.object(email_factories.PasswordChangedEmail, "from_request")
     def test_recovery_missing_password_returns_400(self, from_request_mock):
         user = User.objects.create(password='whatever', username='UserName',
                                    email='username@ameba.cat')
@@ -132,7 +132,7 @@ class TestRecoveryFlow(BaseTest):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         from_request_mock.assert_not_called()
 
-    @mock.patch.object(emails.PasswordChangedEmail, "from_request")
+    @mock.patch.object(email_factories.PasswordChangedEmail, "from_request")
     def test_recovery_missing_user_returns_404(self, from_request_mock):
         user = User.objects.create(password='whatever', username='UserName',
                                    email='username@ameba.cat')
