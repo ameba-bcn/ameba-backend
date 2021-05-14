@@ -18,3 +18,4 @@ from api.models.event import Event
 from api.models.subscription import Subscription
 from api.models.payment import Payment
 from api.models.subscriber import Subscriber
+from api.models.about import About

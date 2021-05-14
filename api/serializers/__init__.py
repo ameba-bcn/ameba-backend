@@ -26,3 +26,4 @@ from api.serializers.subscriber import (
 from api.serializers.member import (
     MemberRegisterSerializer, MemberSerializer, DocMemberSerializer
 )
+from api.serializers.about import AboutSerializer
