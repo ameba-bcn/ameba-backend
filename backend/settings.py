@@ -71,7 +71,8 @@ INSTALLED_APPS = [
     'trumbowyg',
     'location_field.apps.DefaultConfig',
     'anymail',
-    'django_inlinecss'
+    'django_inlinecss',
+    'django_extensions'
 ]
 
 MIDDLEWARE = [
