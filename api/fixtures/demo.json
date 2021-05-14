@@ -1027,6 +1027,45 @@
   }
 },
 {
+  "model": "admin.logentry",
+  "pk": 80,
+  "fields": {
+    "action_time": "2021-05-14T11:00:47.162Z",
+    "user": 1,
+    "content_type": 33,
+    "object_id": "1",
+    "object_repr": "About object (1)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 81,
+  "fields": {
+    "action_time": "2021-05-14T11:00:53.216Z",
+    "user": 1,
+    "content_type": 33,
+    "object_id": "2",
+    "object_repr": "About object (2)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 82,
+  "fields": {
+    "action_time": "2021-05-14T11:01:04.831Z",
+    "user": 1,
+    "content_type": 33,
+    "object_id": "1",
+    "object_repr": "About object (1)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Text\"]}}]"
+  }
+},
+{
   "model": "auth.permission",
   "pk": 1,
   "fields": {
@@ -2179,6 +2218,42 @@
   }
 },
 {
+  "model": "auth.permission",
+  "pk": 129,
+  "fields": {
+    "name": "Can add about",
+    "content_type": 33,
+    "codename": "add_about"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 130,
+  "fields": {
+    "name": "Can change about",
+    "content_type": 33,
+    "codename": "change_about"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 131,
+  "fields": {
+    "name": "Can delete about",
+    "content_type": 33,
+    "codename": "delete_about"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 132,
+  "fields": {
+    "name": "Can view about",
+    "content_type": 33,
+    "codename": "view_about"
+  }
+},
+{
   "model": "auth.group",
   "pk": 1,
   "fields": {
@@ -2500,6 +2575,14 @@
   }
 },
 {
+  "model": "contenttypes.contenttype",
+  "pk": 33,
+  "fields": {
+    "app_label": "api",
+    "model": "about"
+  }
+},
+{
   "model": "sessions.session",
   "pk": "02ir1wjsg9ozhiuoo2u50c3um2elez23",
   "fields": {
@@ -2669,6 +2752,26 @@
       1
     ],
     "user_permissions": []
+  }
+},
+{
+  "model": "api.about",
+  "pk": 1,
+  "fields": {
+    "text": "[OLD] Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ornare, ipsum vel facilisis bibendum, felis ex efficitur mi, nec sodales velit nulla nec leo. Suspendisse mollis varius ligula ac venenatis. Fusce et mattis erat. Morbi nec dui massa. Pellentesque turpis augue, molestie ut quam non, euismod pretium purus. Quisque auctor purus quis velit egestas, eget vestibulum lectus pretium. Praesent maximus, ipsum porttitor vestibulum porta, quam leo posuere massa, ut tempus sem dolor venenatis sem. In quam sem, bibendum eget turpis ac, porta porta nunc. Duis commodo efficitur efficitur. Donec tempus enim quis dui cursus, vitae convallis magna bibendum. Mauris faucibus bibendum viverra. Aenean molestie dignissim magna, in aliquet lacus interdum et. Aliquam rhoncus eros at augue laoreet, nec mollis nulla dictum. Donec in ipsum lacus. Phasellus lorem elit, laoreet id mattis in, finibus eu velit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae;\\r\\n\\r\\nIn eget mi ut lorem placerat blandit. Nullam id ante et augue feugiat laoreet et vitae tortor. Sed orci mi, hendrerit congue nibh ac, rutrum eleifend diam. Cras a porttitor felis. In et nunc maximus, tincidunt quam quis, lacinia sem. Praesent in orci ac nisi efficitur lacinia. Donec commodo neque eget urna.",
+    "is_active": false,
+    "created": "2021-05-14T11:00:47.159Z",
+    "updated": "2021-05-14T11:01:04.829Z"
+  }
+},
+{
+  "model": "api.about",
+  "pk": 2,
+  "fields": {
+    "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ornare, ipsum vel facilisis bibendum, felis ex efficitur mi, nec sodales velit nulla nec leo. Suspendisse mollis varius ligula ac venenatis. Fusce et mattis erat. Morbi nec dui massa. Pellentesque turpis augue, molestie ut quam non, euismod pretium purus. Quisque auctor purus quis velit egestas, eget vestibulum lectus pretium. Praesent maximus, ipsum porttitor vestibulum porta, quam leo posuere massa, ut tempus sem dolor venenatis sem. In quam sem, bibendum eget turpis ac, porta porta nunc. Duis commodo efficitur efficitur. Donec tempus enim quis dui cursus, vitae convallis magna bibendum. Mauris faucibus bibendum viverra. Aenean molestie dignissim magna, in aliquet lacus interdum et. Aliquam rhoncus eros at augue laoreet, nec mollis nulla dictum. Donec in ipsum lacus. Phasellus lorem elit, laoreet id mattis in, finibus eu velit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae;\\r\\n\\r\\nIn eget mi ut lorem placerat blandit. Nullam id ante et augue feugiat laoreet et vitae tortor. Sed orci mi, hendrerit congue nibh ac, rutrum eleifend diam. Cras a porttitor felis. In et nunc maximus, tincidunt quam quis, lacinia sem. Praesent in orci ac nisi efficitur lacinia. Donec commodo neque eget urna.",
+    "is_active": true,
+    "created": "2021-05-14T11:00:53.214Z",
+    "updated": "2021-05-14T11:00:53.214Z"
   }
 },
 {
