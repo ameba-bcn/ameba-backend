@@ -3,6 +3,7 @@
 from api.models.user import User
 
 # Then this.
+from api.models.about import About
 from api.models.mailing_list import MailingList
 from api.models.covers import Cover
 from api.models.images import Image
