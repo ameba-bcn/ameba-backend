@@ -110,7 +110,8 @@ class TestGetCart(BaseCartTest):
             "count": 0,
             "item_variants": [],
             "item_variant_ids": [],
-            "discount_code": None
+            "discount_code": None,
+            "state": ""
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
