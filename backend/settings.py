@@ -15,7 +15,7 @@ from datetime import timedelta
 from envs import env
 import os
 
-VERSION = '0.18'
+VERSION = '0.19'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
