@@ -14,6 +14,12 @@ class CartIsEmpty(APIException):
     default_code = 'cart_is_empty'
 
 
+class WrongCartId(APIException):
+    status_code = HTTP_400_BAD_REQUEST
+    default_detail = 'Wrong cart id.'
+    default_code = 'wrong_cart_id'
+
+
 class WrongPaymentIntent(APIException):
     status_code = HTTP_424_FAILED_DEPENDENCY
     default_detail = 'Wrong payment intent object.'

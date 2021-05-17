@@ -637,3 +637,25 @@ class TestCartStateFlow(BaseCartTest):
         response = self._get(pk='current', token=token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data.get('state'), 'payment_failed')
+
+
+class TestRegisterWithCart(BaseCartTest):
+
+    def register_user(self, props):
+        return self.client.post('/api/users/', props)
+
+    def test_passing_cart_to_register_form(self):
+        cart = self.get_cart(item_variants=[1, 2])
+
+        user_props = {
+            'username': 'username1',
+            'email': 'username1@ameba.cat',
+            'password': 'mypassword',
+            'cart_id': str(cart.id)
+        }
+
+        response = self.register_user(props=user_props)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        cart.refresh_from_db()
+        self.assertTrue(cart.user)
