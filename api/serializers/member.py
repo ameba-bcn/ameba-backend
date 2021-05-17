@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
-from api.models import Member, User
-from api.exceptions import EmailAlreadyExists
+from api.models import Member, User, Cart
+from api.exceptions import EmailAlreadyExists, WrongCartId, CartNeedOneSubscription
 
 
 class DocMemberSerializer(serializers.ModelSerializer):
@@ -37,10 +37,21 @@ class MemberRegisterSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True, required=True,
                                      allow_blank=False)
     email = serializers.EmailField(required=True, allow_blank=False)
+    cart_id = serializers.CharField(required=True, write_only=True)
 
     class Meta:
         fields = ('address', 'first_name', 'last_name', 'phone_number',
                   'username', 'password', 'email')
+
+    @staticmethod
+    def validate_cart_id(cart_id):
+        if not Cart.objects.filter(id=cart_id):
+            raise WrongCartId
+        cart = Cart.objects.get(id=cart_id)
+        for item_variant in cart.item_variants.all():
+            if item_variant.item.is_subscription():
+                return cart_id
+        raise CartNeedOneSubscription
 
     @staticmethod
     def validate_email(email):
@@ -55,5 +66,13 @@ class MemberRegisterSerializer(serializers.Serializer):
             'password': validated_data.pop('password')
         }
         user = User.objects.create(**user_data)
+
+        cart_id = validated_data.pop('cart_id')
+        if not Cart.objects.filter(id=cart_id):
+            raise WrongCartId
+        cart = Cart.objects.get(id=cart_id)
+        cart.user = user
+        cart.save()
+
         member_profile = Member.objects.create(user=user, **validated_data)
         return member_profile
