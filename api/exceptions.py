@@ -20,6 +20,12 @@ class WrongCartId(APIException):
     default_code = 'wrong_cart_id'
 
 
+class CartNeedOneSubscription(APIException):
+    status_code = HTTP_400_BAD_REQUEST
+    default_detail = 'Cart needs subscription.'
+    default_code = 'cart_needs_subscription'
+
+
 class WrongPaymentIntent(APIException):
     status_code = HTTP_424_FAILED_DEPENDENCY
     default_detail = 'Wrong payment intent object.'
