@@ -2,6 +2,15 @@
 
 ### Release notes
 
+#### 0.19
+##### Features
+- AW-173: Cart now have state attribute with cart process state flow.
+- AW-173: POST /api/users/ have optional attribute cart_id
+- AW-173: POST /api/member_register/ have required attribute cart_id
+
+##### Bugfixes
+- AW-173: /api/docs/ not working due to wrong body_request on GET doc
+
 #### 0.18
 ##### Features
 - AW-171: General file instead of image for cover video
