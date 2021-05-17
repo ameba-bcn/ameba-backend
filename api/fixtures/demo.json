@@ -1,4 +1,12 @@
 [
+  {
+  "model": "api.mailinglist",
+  "pk": 1,
+  "fields": {
+    "address": "newsletter@mail-out.ameba.cat",
+    "is_test": false
+  }
+},
 {
   "model": "admin.logentry",
   "pk": 1,
@@ -2772,14 +2780,6 @@
     "is_active": true,
     "created": "2021-05-14T11:00:53.214Z",
     "updated": "2021-05-14T11:00:53.214Z"
-  }
-},
-{
-  "model": "api.mailinglist",
-  "pk": 1,
-  "fields": {
-    "address": "newsletter@mail-out.ameba.cat",
-    "is_test": false
   }
 },
 {
