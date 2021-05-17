@@ -12,8 +12,9 @@ User = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
     member = serializers.PrimaryKeyRelatedField(read_only=True)
     date_joined = serializers.DateTimeField(required=False)
-    cart_id = serializers.CharField(max_length=64, write_only=True,
-                                    required=False)
+    cart_id = serializers.CharField(
+        max_length=64, write_only=True, required=False
+    )
 
     class Meta:
         model = User
