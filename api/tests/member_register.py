@@ -2,7 +2,8 @@ from unittest import mock
 from rest_framework import status
 
 from api.tests.user import BaseUserTest
-from api.models import Member, User
+from api.tests.cart import BaseCartTest
+from api.models import Member, User, Subscription
 from api import email_factories
 
 
@@ -11,6 +12,10 @@ class FullRegistrationTest(BaseUserTest):
 
     @mock.patch.object(email_factories.UserRegisteredEmail, 'from_request')
     def test_register_new_user_and_member(self, from_request):
+        base_cart_test = BaseCartTest()
+        cart = base_cart_test.get_cart(item_variants=[1],
+                                       item_class=Subscription)
+
         form_props = {
             'username': 'User2',
             'password': 'ameba12345',
@@ -18,7 +23,8 @@ class FullRegistrationTest(BaseUserTest):
             'address': 'My user address',
             'first_name': 'First Name',
             'last_name': 'Last Name',
-            'phone_number': '661839816'
+            'phone_number': '661839816',
+            'cart_id': cart.id
         }
 
         response = self._create(props=form_props)
@@ -30,8 +36,29 @@ class FullRegistrationTest(BaseUserTest):
         self.assertTrue(Member.objects.filter(user=user))
         from_request.assert_called()
 
-    def test_register_new_user_and_member_no_username(self):
+    @mock.patch.object(email_factories.UserRegisteredEmail, 'from_request')
+    def test_register_new_user_and_member_no_subscription(self, from_request):
+        base_cart_test = BaseCartTest()
+        cart = base_cart_test.get_cart(item_variants=[1])
+
         form_props = {
+            'username': 'User2',
+            'password': 'ameba12345',
+            'email': 'user11@ameba.cat',
+            'address': 'My user address',
+            'first_name': 'First Name',
+            'last_name': 'Last Name',
+            'phone_number': '661839816',
+            'cart_id': cart.id
+        }
+
+        response = self._create(props=form_props)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    @mock.patch.object(email_factories.UserRegisteredEmail, 'from_request')
+    def test_register_new_user_and_member_no_cart_id(self, from_request):
+        form_props = {
+            'username': 'User2',
             'password': 'ameba12345',
             'email': 'user11@ameba.cat',
             'address': 'My user address',
@@ -43,7 +70,29 @@ class FullRegistrationTest(BaseUserTest):
         response = self._create(props=form_props)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
+    def test_register_new_user_and_member_no_username(self):
+        base_cart_test = BaseCartTest()
+        cart = base_cart_test.get_cart(item_variants=[1],
+                                       item_class=Subscription)
+
+        form_props = {
+            'password': 'ameba12345',
+            'email': 'user11@ameba.cat',
+            'address': 'My user address',
+            'first_name': 'First Name',
+            'last_name': 'Last Name',
+            'phone_number': '661839816',
+            'cart_id': cart.id
+        }
+
+        response = self._create(props=form_props)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
     def test_register_new_user_and_member_no_wrong_email(self):
+        base_cart_test = BaseCartTest()
+        cart = base_cart_test.get_cart(item_variants=[1],
+                                       item_class=Subscription)
+
         form_props = {
             'username': 'User2',
             'password': 'ameba12345',
@@ -51,26 +100,36 @@ class FullRegistrationTest(BaseUserTest):
             'address': 'My user address',
             'first_name': 'First Name',
             'last_name': 'Last Name',
-            'phone_number': '661839816'
+            'phone_number': '661839816',
+            'cart_id': cart.id
         }
 
         response = self._create(props=form_props)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_register_new_user_and_member_no_first_name(self):
+        base_cart_test = BaseCartTest()
+        cart = base_cart_test.get_cart(item_variants=[1],
+                                       item_class=Subscription)
+
         form_props = {
             'username': 'User2',
             'password': 'ameba12345',
             'email': 'user11',
             'address': 'My user address',
             'last_name': 'Last Name',
-            'phone_number': '661839816'
+            'phone_number': '661839816',
+            'cart_id': cart.id
         }
 
         response = self._create(props=form_props)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_register_email_already_exists(self):
+        base_cart_test = BaseCartTest()
+        cart = base_cart_test.get_cart(item_variants=[1],
+                                       item_class=Subscription)
+
         self._insert_user(dict(
             username='username',
             email='user11@ameba.cat',
@@ -83,7 +142,8 @@ class FullRegistrationTest(BaseUserTest):
             'address': 'My user address',
             'first_name': 'First Name',
             'last_name': 'Last Name',
-            'phone_number': '661839816'
+            'phone_number': '661839816',
+            'cart_id': cart.id
         }
 
         response = self._create(props=form_props)

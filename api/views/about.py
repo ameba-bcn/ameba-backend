@@ -6,7 +6,7 @@ from api.serializers import AboutSerializer
 from api.models import About
 
 
-@swagger_auto_schema(method='get', request_body=AboutSerializer)
+@swagger_auto_schema(method='get', query_serializer=AboutSerializer)
 @api_view(['GET'])
 def about(request):
     about_obj = About.objects.filter(is_active=True).order_by('-created').first()

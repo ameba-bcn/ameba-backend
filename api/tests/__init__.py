@@ -4,9 +4,9 @@ from api.tests.token import TestSessions
 from api.tests.user import UserTest
 from api.tests.event import TestEvents, TestSavedUserEvents
 from api.tests.cart import (
-    TestGetCart, TestPatchCart, TestPostCarts, TestCartCheckout
+    TestGetCart, TestPatchCart, TestPostCarts, TestCartCheckout,
+    TestCartStateFlow
 )
-from api.tests.payments import PaymentFlowTest
 from api.tests.activate import TestActivation
 from api.tests.recovery import TestRecoveryFlow
 from api.tests.subscribe import SubscribeTest
