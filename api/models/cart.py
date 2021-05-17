@@ -6,6 +6,13 @@ from django.db.models import (
 )
 
 
+CART_STATES = (
+    ('checkout_failed', 'checkout_failed'),
+    ('payment_pending', 'payment_pending'),
+    ('payment_failed', 'payment_failed')
+)
+
+
 class CartItems(Model):
     item_variant = ForeignKey(to='ItemVariant', on_delete=CASCADE)
     cart = ForeignKey(to='Cart', on_delete=CASCADE)
@@ -30,6 +37,7 @@ class Cart(Model):
                                blank=True, null=True)
     checkout_details = JSONField(blank=True, null=True)
     checkout_hash = CharField(blank=True, max_length=128)
+    state = CharField(max_length=20, blank=True, choices=CART_STATES)
 
     def delete(self, using=None, keep_parents=False):
         self.item_variants.clear()
