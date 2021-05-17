@@ -18,9 +18,6 @@ class MemberSerializer(serializers.ModelSerializer):
         fields = ('number', 'address', 'first_name', 'last_name',
                   'phone_number', 'user')
         read_only_fields = ('number', )
-        # extra_kwargs = {
-        #     'user': {'write_only': True}
-        # }
 
 
 class MemberRegisterSerializer(serializers.Serializer):
