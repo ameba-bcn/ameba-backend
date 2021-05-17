@@ -15,7 +15,7 @@ from api.signals.mailgun import on_deleted_subscription, on_new_subscription
 
 def populate_models(sender, **kwargs):
     create_group_permissions()
-    create_mailing_lists()
+    # create_mailing_lists()
 
 
 @receiver(post_save, sender=models.User)

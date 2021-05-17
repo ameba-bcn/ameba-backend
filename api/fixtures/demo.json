@@ -2775,6 +2775,14 @@
   }
 },
 {
+  "model": "api.mailinglist",
+  "pk": 1,
+  "fields": {
+    "address": "newsletter@mail-out.ameba.cat",
+    "is_test": false
+  }
+},
+{
   "model": "api.image",
   "pk": 1,
   "fields": {
