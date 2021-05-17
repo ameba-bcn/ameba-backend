@@ -67,9 +67,11 @@ class CartSerializer(ModelSerializer):
         model = Cart
         fields = (
             'id', 'user', 'total', 'count', 'item_variant_ids', 'item_variants',
-            'discount_code'
+            'discount_code', 'state'
         )
-        read_only_fields = ('user', 'id', 'total', 'count', 'item_variants')
+        read_only_fields = (
+            'user', 'id', 'total', 'count', 'item_variants', 'state'
+        )
 
     def _get_user(self):
         request = self.context.get('request')

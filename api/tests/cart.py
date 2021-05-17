@@ -14,6 +14,7 @@ from api.models import (
 class BaseCartTest(BaseTest):
     DETAIL_ENDPOINT = '/api/carts/{pk}/'
     LIST_ENDPOINT = '/api/carts/'
+    CHECKOUT_ENDPOINT = '/api/carts/{pk}/checkout/'
 
     @staticmethod
     def get_user(user_tag=None, member_profile=False):
@@ -39,6 +40,10 @@ class BaseCartTest(BaseTest):
     @staticmethod
     def get_token(user):
         return RefreshToken.for_user(user)
+
+    def checkout(self, pk='current', token=None):
+        self._authenticate(token=token)
+        return self.client.get(self.CHECKOUT_ENDPOINT.format(pk=pk))
 
     def get_cart(self, user=None, item_variants=None, for_free=False,
                  item_class=Item):
@@ -571,3 +576,63 @@ class TestCartCheckout(BaseCartTest):
         )
         response = self._get(pk=cart.id, token=token)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+class TestCartStateFlow(BaseCartTest):
+    DETAIL_ENDPOINT = '/api/carts/{pk}/'
+    LIST_ENDPOINT = '/api/carts/'
+
+    def test_new_cart_has_no_state(self):
+        user = self.get_user(1)
+        token = self.get_token(user).access_token
+        cart = self.get_cart(user=user, item_variants=[1, 2])
+        response = self._get(pk=cart.id, token=token)
+        self.assertIn('state', response.data)
+        self.assertFalse(response.data.get('state'))
+
+    def test_unsuccessful_try_change_state_checkout_intent(self):
+        user = self.get_user(1)
+        token = self.get_token(user).access_token
+        response = self._get(pk='current', token=token)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response = self.checkout(token=token)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        response = self._get(pk='current', token=token)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('state', response.data)
+        self.assertEqual(response.data.get('state'), 'checkout_intent')
+
+    def test_changed_cart_requires_checkout_before_payment(self):
+        user = self.get_user(1)
+        token = self.get_token(user).access_token
+        cart = self.get_cart(user=user, item_variants=[1, 2, 3])
+
+        response = self.checkout(token=token)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self._partial_update(
+            pk='current', token=token, props={'item_variant_ids': [1, 2]}
+        )
+
+        response = self._delete(pk='current', token=token)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        response = self._get(pk='current', token=token)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data.get('state'), 'checkout_needed')
+
+    def test_payment_failed_reflected_in_state(self):
+        user = self.get_user(1)
+        token = self.get_token(user).access_token
+        cart = self.get_cart(user=user, item_variants=[1, 2, 3])
+
+        response = self.checkout(token=token)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response = self._delete(pk='current', token=token)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        response = self._get(pk='current', token=token)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data.get('state'), 'payment_failed')
