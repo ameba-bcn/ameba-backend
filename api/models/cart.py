@@ -4,12 +4,21 @@ from django.db.models import (
     Model, ForeignKey, ManyToManyField, JSONField, OneToOneField,
     UUIDField, DateTimeField, SET_NULL, CASCADE, CharField
 )
+from api.exceptions import (
+    CartIsEmpty, CartCheckoutNeedsUser, CartHasMultipleSubscriptions,
+    MemberProfileRequired
+)
+
+CHECKOUT_INTENT = 'checkout_intent'
+CHECKOUT_NEEDED = 'checkout_needed'
+CHECKOUT_READY = 'checkout_ready'
+PAYMENT_FAILED = 'payment_failed'
 
 
 CART_STATES = (
-    ('checkout_failed', 'checkout_failed'),
-    ('payment_pending', 'payment_pending'),
-    ('payment_failed', 'payment_failed')
+    (CHECKOUT_INTENT, CHECKOUT_INTENT),
+    (CHECKOUT_READY, CHECKOUT_READY),
+    (PAYMENT_FAILED, PAYMENT_FAILED)
 )
 
 
@@ -132,9 +141,36 @@ class Cart(Model):
         return len(self.subscriptions) > 1
 
     def has_changed(self):
-        return self.checkout_hash != self.get_hash()
+        if self.checkout_hash != self.get_hash():
+            self.state = CHECKOUT_NEEDED
+            self.save()
+            return True
+        return False
+
+    def is_checkout_able(self):
+        if self.is_empty():
+            raise CartIsEmpty
+        if self.is_anonymous():
+            raise CartCheckoutNeedsUser
+        if self.has_multiple_subscriptions():
+            raise CartHasMultipleSubscriptions
+        if self.subscription and not self.user.has_member_profile():
+            raise MemberProfileRequired
 
     def checkout(self, checkout_details):
         self.checkout_details = checkout_details
         self.checkout_hash = self.get_hash()
+        self.save()
+
+    def checkout_start(self):
+        self.state = CHECKOUT_INTENT
+        self.save()
+        self.is_checkout_able()
+
+    def checkout_finish(self):
+        self.state = CHECKOUT_READY
+        self.save()
+
+    def payment_not_succeeded(self):
+        self.state = PAYMENT_FAILED
         self.save()

@@ -10,7 +10,6 @@ from api.tests.cart import BaseCartTest
 class PaymentFlowTest(BaseCartTest):
     DETAIL_ENDPOINT = '/api/carts/{pk}/'
     LIST_ENDPOINT = '/api/carts/'
-    CHECKOUT_ENDPOINT = '/api/carts/{pk}/checkout/'
 
     def setUp(self):
         self.debug = settings.DEBUG
@@ -18,10 +17,6 @@ class PaymentFlowTest(BaseCartTest):
 
     def tearDown(self):
         settings.DEBUG = self.debug
-
-    def checkout(self, pk='current', token=None):
-        self._authenticate(token=token)
-        return self.client.get(self.CHECKOUT_ENDPOINT.format(pk=pk))
 
     def check_cart_summary(self, item_variants, cart_summary):
         found_items = []

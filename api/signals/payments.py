@@ -54,6 +54,7 @@ def on_cart_deleted(sender, cart, request, **kwargs):
     payment_intent = get_payment_intent(checkout_details=cart.checkout_details)
 
     if payment_intent['status'] not in SUCCEEDED_PAYMENTS and not settings.DEBUG:
+        cart.payment_not_succeeded()
         raise PaymentIsNotSucceed
 
     if cart.subscription:
