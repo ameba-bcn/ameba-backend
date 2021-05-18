@@ -11,7 +11,7 @@ de L'Associació de Musica Electrònica de Barcelona.
 Por favor, haz click en el siguiente link para activar tu cuenta.
 {% endblocktrans %}
 
-    {{ protocol }}://{{ site_name }}/activate/?token={{ activation_token }}
+    {{ protocol }}://{{ site_name }}/ameba-site/activate/?token={{activation_token }}
 
 
 L'Associació de Musica Electrònica de Barcelona
