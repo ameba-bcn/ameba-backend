@@ -12,7 +12,7 @@ def on_new_user(sender, instance, created, **kwargs):
         subscriber, created = Subscriber.objects.get_or_create(
             email=instance.email
         )
-        mailing_list = MailingList.objects.get(
+        mailing_list, created = MailingList.objects.get_or_create(
             address=settings.DEFAULT_MAILING_LIST
         )
         subscriber.mailing_lists.add(mailing_list)

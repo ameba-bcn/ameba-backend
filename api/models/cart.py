@@ -1,25 +1,22 @@
 import uuid
-
+from django import dispatch
 from django.db.models import (
     Model, ForeignKey, ManyToManyField, JSONField, OneToOneField,
     UUIDField, DateTimeField, SET_NULL, CASCADE, CharField
 )
+from django.conf import settings
+
 from api.exceptions import (
     CartIsEmpty, CartCheckoutNeedsUser, CartHasMultipleSubscriptions,
     MemberProfileRequired
 )
-
-CHECKOUT_INTENT = 'checkout_intent'
-CHECKOUT_NEEDED = 'checkout_needed'
-CHECKOUT_READY = 'checkout_ready'
-PAYMENT_FAILED = 'payment_failed'
+from api.stripe import IntentStatus
 
 
-CART_STATES = (
-    (CHECKOUT_INTENT, CHECKOUT_INTENT),
-    (CHECKOUT_READY, CHECKOUT_READY),
-    (PAYMENT_FAILED, PAYMENT_FAILED)
-)
+cart_checkout = dispatch.Signal(providing_args=['cart'])
+
+
+SUCCEEDED_PAYMENTS = [IntentStatus.SUCCESS, IntentStatus.NOT_NEEDED]
 
 
 class CartItems(Model):
@@ -46,7 +43,6 @@ class Cart(Model):
                                blank=True, null=True)
     checkout_details = JSONField(blank=True, null=True)
     checkout_hash = CharField(blank=True, max_length=128)
-    state = CharField(max_length=20, blank=True, choices=CART_STATES)
 
     def delete(self, using=None, keep_parents=False):
         self.item_variants.clear()
@@ -137,12 +133,25 @@ class Cart(Model):
             return self.subscriptions[0]
         return None
 
+    @property
+    def events(self):
+        return [
+            x.item.subscription for x in self.item_variants.all() if
+            x.item.is_event()
+        ]
+
+    @property
+    def articles(self):
+        return [
+            x.item.subscription for x in self.item_variants.all() if
+            x.item.is_article()
+        ]
+
     def has_multiple_subscriptions(self):
         return len(self.subscriptions) > 1
 
     def has_changed(self):
         if self.checkout_hash != self.get_hash():
-            self.state = CHECKOUT_NEEDED
             self.save()
             return True
         return False
@@ -157,20 +166,49 @@ class Cart(Model):
         if self.subscription and not self.user.has_member_profile():
             raise MemberProfileRequired
 
-    def checkout(self, checkout_details):
-        self.checkout_details = checkout_details
+    def checkout(self):
+        self.is_checkout_able()
+        # Create sync with payment platform and write details
+        cart_checkout.send(sender=self.__class__, cart=self)
         self.checkout_hash = self.get_hash()
         self.save()
 
-    def checkout_start(self):
-        self.state = CHECKOUT_INTENT
-        self.save()
-        self.is_checkout_able()
-
-    def checkout_finish(self):
-        self.state = CHECKOUT_READY
+    def set_checkout_details(self, checkout_details):
+        self.checkout_details = checkout_details
         self.save()
 
-    def payment_not_succeeded(self):
-        self.state = PAYMENT_FAILED
-        self.save()
+    def has_user(self):
+        return self.user and True or False
+
+    def has_member_profile(self):
+        if self.has_user():
+            return self.user.has_member_profile()
+        return False
+
+    def has_memberships(self):
+        if self.has_user() and self.has_member_profile():
+            return len(self.user.member.memberships.all()) > 0
+        return False
+
+    @property
+    def state(self):
+        return dict(
+            is_payment_succeeded=self.is_payment_succeeded(),
+            has_user=self.has_user(),
+            has_member_profile=self.has_member_profile(),
+            has_memberships=self.has_memberships(),
+            has_articles=len(self.articles),
+            has_events=len(self.events),
+            has_subscriptions=len(self.subscriptions),
+            needs_checkout=self.has_changed()
+        )
+
+    def is_payment_succeeded(self):
+        if not self.checkout_details:
+            return False
+        elif 'payment_intent' not in self.checkout_details:
+            return False
+        elif self.checkout_details['payment_intent']['status']\
+          not in SUCCEEDED_PAYMENTS and not settings.DEBUG:
+            return False
+        return True
