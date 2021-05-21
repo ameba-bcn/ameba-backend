@@ -207,4 +207,48 @@ automágicamente.
 
 ### Forma no autenticada (sin bearer token):
 - Hay que saber el id del carro previamente e incluirlo en la url.
+
+
+### Atributo "state" del carro
+El estado del carro es un diccionario no almacenado que se computa 
+dinámicamente "on the fly". De esta forma siempre está actualizado y sólo 
+depende de variables internas del carro. Este estado debe contener toda la 
+información necesaria para implementar cualquier flujo de carro en el frontend.
+La estructura del diccionario es:
+```
+"state" = {
+    "has_user": <bool>,
+    "has_member_profile": <bool>,
+    "has_memberships": <integer>,
+    "has_articles": <integer>,
+    "has_events": <integer>,
+    "has_subscriptions": <bool>,
+    "needs_checkout": <bool>
+}
+```
+
+Significado de cada atributo de estado:
+
+- has_user: indica si el carro está asociado a un usuario o es anónimo.
+- has_member_profile: en caso de tener usuario asociado, indica si el 
+usuario tiene un perfil de socio o no.
+- has_memberships: indica si el usuario es o ha sido miembro de la 
+asociación en algún momento. Implicaría que las dos anteriores son true.
+- has_articles: indica si el carro tiene items del tipo article (tienda).
+- has_events: indica si el carro tiene items del tipo event (agenda).
+- has_subscriptions: indica si el carro tiene items del tipo subscripción (socios)
+- needs_checkout: indica si el carro necesita checkout antes de finalizar el proceso de compra o no. Este valor será true cuando nunca se ha hecho un checkout o cuando se han modificado los artículos del carro.
+
+De esta forma, se pueden usar los atributos en flujos de compra para saber 
+el estado del flujo después del login. Por ejemplo:
+
+- needs_checkout==false && has_subscriptions==1 && has_memberships==False 
+indica que el usuario ha iniciado un proceso de compra, ya que ha hecho 
+checkout, y que el proceso pertenece a una subscripción nueva, ya que no 
+tiene ni ha tenido memberships.
+
+- needs_checkout==false && has_subscriptions==1 && has_memberships==True 
+como en el ejemplo anterior pero en este caso siendo una renovación de 
+socio, ya que el usuario tiene o ha tenido memberships. 
+
 """

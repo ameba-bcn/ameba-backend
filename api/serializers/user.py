@@ -35,7 +35,7 @@ class UserSerializer(serializers.ModelSerializer):
         if models.Cart.objects.filter(id=cart_id):
             cart = models.Cart.objects.get(id=cart_id)
             cart.user = user
-            cart.save()
+            cart.checkout()
         elif cart_id:
             raise exceptions.WrongCartId
         return user
