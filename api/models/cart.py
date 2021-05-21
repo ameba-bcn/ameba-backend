@@ -193,7 +193,6 @@ class Cart(Model):
     @property
     def state(self):
         return dict(
-            is_payment_succeeded=self.is_payment_succeeded(),
             has_user=self.has_user(),
             has_member_profile=self.has_member_profile(),
             has_memberships=self.has_memberships(),

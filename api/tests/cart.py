@@ -112,7 +112,6 @@ class TestGetCart(BaseCartTest):
             "item_variant_ids": [],
             "discount_code": None,
             "state": {
-                "is_payment_succeeded": False,
                 "has_user": False,
                 "has_member_profile": False,
                 "has_memberships": False,
@@ -601,7 +600,6 @@ class TestCartStateFlow(BaseCartTest):
 
         cart_state = response.data.get('state')
 
-        self.assertFalse(cart_state['is_payment_succeeded'])
         self.assertTrue(cart_state['has_user'])
         self.assertFalse(cart_state['has_member_profile'])
         self.assertFalse(cart_state['has_memberships'])

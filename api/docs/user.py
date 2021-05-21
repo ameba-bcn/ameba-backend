@@ -23,4 +23,10 @@ habrá un link a la siguiente url:
 
 Desde esa página hay que hacer una request a éste endpoint y handlear la 
 respuesta.
+
+* __IMPORTANTE__: Si el POST a /users/ se hace con el parámetro opcional 
+cart_id y éste id es correcto, se hará automáticamente un checkout del 
+carro, por lo que este endpoint podría devolver los errores típicos del 
+checkout de carro (carro vacío, subscripciones múltiples... etc)
+
 """

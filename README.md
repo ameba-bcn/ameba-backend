@@ -2,6 +2,14 @@
 
 ### Release notes
 
+#### 0.20
+##### Features
+- AW-176: Cart state is a dictionary with computed-on-the-fly cart state
+ attributes.
+- AW-176: Cart state docs in GET /cart/current/
+- AW-176: /api/member_register/ docs
+- AW-176: /api/users/ with cart_id docs
+
 #### 0.19
 ##### Features
 - AW-173: Cart now have state attribute with cart process state flow.
