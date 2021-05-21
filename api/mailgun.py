@@ -23,7 +23,8 @@ logger = logging.getLogger(__name__)
 
 
 def is_test_mailing_list(list_address):
-    mailing_list = MailingList.objects.get(address=list_address)
+    mailing_list, created = MailingList.objects.get_or_create(
+        address=list_address)
     return mailing_list.is_test
 
 

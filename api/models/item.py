@@ -7,17 +7,6 @@ EXPIRE_HOURS_BEFORE_EVENT = 1
 EXPIRE_BEFORE_EVENT = timedelta(hours=EXPIRE_HOURS_BEFORE_EVENT)
 
 
-ARTICLE = 'article'
-SUBSCRIPTION = 'subscription'
-EVENT = 'event'
-
-ITEM_TYPES = (
-    (ARTICLE, 'Article'),
-    (SUBSCRIPTION, 'Subscription'),
-    (EVENT, 'Event')
-)
-
-
 class Item(models.Model):
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField(max_length=1000)
@@ -80,6 +69,12 @@ class Item(models.Model):
 
     def is_subscription(self):
         return hasattr(self, 'subscription')
+
+    def is_article(self):
+        return hasattr(self, 'article')
+
+    def is_event(self):
+        return hasattr(self, 'event')
 
 
 class ItemAttributeType(models.Model):

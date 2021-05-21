@@ -111,7 +111,16 @@ class TestGetCart(BaseCartTest):
             "item_variants": [],
             "item_variant_ids": [],
             "discount_code": None,
-            "state": ""
+            "state": {
+                "is_payment_succeeded": False,
+                "has_user": False,
+                "has_member_profile": False,
+                "has_memberships": False,
+                "has_articles": False,
+                "has_events": False,
+                "has_subscriptions": False,
+                "needs_checkout": True
+            }
         }
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -569,7 +578,7 @@ class TestCartCheckout(BaseCartTest):
         response = self._get(pk=cart.id, token=token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_cart_from_user_without_member_profile_returns_400(self):
+    def test_subscription_from_user_without_member_profile_returns_400(self):
         user = self.get_user(1, member_profile=False)
         token = self.get_token(user).access_token
         cart = self.get_cart(
@@ -589,21 +598,17 @@ class TestCartStateFlow(BaseCartTest):
         cart = self.get_cart(user=user, item_variants=[1, 2])
         response = self._get(pk=cart.id, token=token)
         self.assertIn('state', response.data)
-        self.assertFalse(response.data.get('state'))
 
-    def test_unsuccessful_try_change_state_checkout_intent(self):
-        user = self.get_user(1)
-        token = self.get_token(user).access_token
-        response = self._get(pk='current', token=token)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        cart_state = response.data.get('state')
 
-        response = self.checkout(token=token)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-        response = self._get(pk='current', token=token)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn('state', response.data)
-        self.assertEqual(response.data.get('state'), 'checkout_intent')
+        self.assertFalse(cart_state['is_payment_succeeded'])
+        self.assertTrue(cart_state['has_user'])
+        self.assertFalse(cart_state['has_member_profile'])
+        self.assertFalse(cart_state['has_memberships'])
+        self.assertFalse(cart_state['has_articles'])
+        self.assertFalse(cart_state['has_events'])
+        self.assertFalse(cart_state['has_subscriptions'])
+        self.assertTrue(cart_state['needs_checkout'])
 
     def test_changed_cart_requires_checkout_before_payment(self):
         user = self.get_user(1)
@@ -621,23 +626,7 @@ class TestCartStateFlow(BaseCartTest):
 
         response = self._get(pk='current', token=token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data.get('state'), 'checkout_needed')
-
-    def test_payment_failed_reflected_in_state(self):
-        user = self.get_user(1)
-        token = self.get_token(user).access_token
-        cart = self.get_cart(user=user, item_variants=[1, 2, 3])
-
-        response = self.checkout(token=token)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        response = self._delete(pk='current', token=token)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-        response = self._get(pk='current', token=token)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data.get('state'), 'payment_failed')
-
+        self.assertTrue(response.data.get('state')['needs_checkout'])
 
 class TestRegisterWithCart(BaseCartTest):
 
