@@ -1,7 +1,7 @@
 from drf_yasg.generators import OpenAPISchemaGenerator
 
 from api.docs import carts, recovery, activate, covers, subscriber, \
-    articles, events, subscriptions, user
+    articles, events, subscriptions, user, member_register
 
 
 class CustomOpenAPISchemaGenerator(OpenAPISchemaGenerator):
@@ -46,6 +46,10 @@ class CustomOpenAPISchemaGenerator(OpenAPISchemaGenerator):
             {
                 "name": "subscriptions",
                 "description": subscriptions.SubscriptionsDocs.common
+            },
+            {
+                "name": "member_register",
+                "description": member_register.MemberRegisterDocs.common
             },
         ]
 

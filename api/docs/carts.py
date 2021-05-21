@@ -229,26 +229,33 @@ La estructura del diccionario es:
 
 Significado de cada atributo de estado:
 
-- has_user: indica si el carro está asociado a un usuario o es anónimo.
-- has_member_profile: en caso de tener usuario asociado, indica si el 
+- __has_user__: indica si el carro está asociado a un usuario o es anónimo.
+- __has_member_profile__: en caso de tener usuario asociado, indica si el 
 usuario tiene un perfil de socio o no.
-- has_memberships: indica si el usuario es o ha sido miembro de la 
+- __has_memberships__: indica si el usuario es o ha sido miembro de la 
 asociación en algún momento. Implicaría que las dos anteriores son true.
-- has_articles: indica si el carro tiene items del tipo article (tienda).
-- has_events: indica si el carro tiene items del tipo event (agenda).
-- has_subscriptions: indica si el carro tiene items del tipo subscripción (socios)
-- needs_checkout: indica si el carro necesita checkout antes de finalizar el proceso de compra o no. Este valor será true cuando nunca se ha hecho un checkout o cuando se han modificado los artículos del carro.
+- __has_articles__: indica si el carro tiene items del tipo article (tienda).
+- __has_events__: indica si el carro tiene items del tipo event (agenda).
+- __has_subscriptions__: indica si el carro tiene items del tipo subscripción (
+socios)
+- __needs_checkout__: indica si el carro necesita checkout antes de finalizar 
+el proceso de compra o no. Este valor será true cuando nunca se ha hecho un checkout o cuando se han modificado los artículos del carro.
 
 De esta forma, se pueden usar los atributos en flujos de compra para saber 
 el estado del flujo después del login. Por ejemplo:
 
-- needs_checkout==false && has_subscriptions==1 && has_memberships==False 
+- `needs_checkout==false && has_subscriptions==1 && has_memberships==False` 
 indica que el usuario ha iniciado un proceso de compra, ya que ha hecho 
 checkout, y que el proceso pertenece a una subscripción nueva, ya que no 
 tiene ni ha tenido memberships.
-
-- needs_checkout==false && has_subscriptions==1 && has_memberships==True 
+- `needs_checkout==false && has_subscriptions==1 && has_memberships==True` 
 como en el ejemplo anterior pero en este caso siendo una renovación de 
 socio, ya que el usuario tiene o ha tenido memberships. 
+- `needs_checkout==false && has_article==1` 
+indica que el usuario ha iniciado un proceso de compra, ya que ha hecho 
+checkout, y que el proceso pertenece a compra de articulos de la tienda.
+
+El hecho de que por ejemplo coexistan `has_article > 0 && has_subscriptions > 0` dependerá de cómo el frontend gestione los flujos de compra de los 
+diferentes tipos.
 
 """
