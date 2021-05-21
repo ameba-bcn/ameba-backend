@@ -16,7 +16,11 @@ class TestSubscriptionPurchase(BaseCartTest):
     DETAIL_ENDPOINT = '/api/carts/{pk}/'
 
     @mock.patch('api.signals.payments.get_payment_intent', return_value={'status': stripe.IntentStatus.NOT_NEEDED})
-    def test_cart_with_one_subscription_returns_200(self, get_payment_intent):
+    @mock.patch('api.signals.payments.get_create_update_payment_intent',
+                return_value={'status': stripe.IntentStatus.NOT_NEEDED})
+    def test_cart_with_one_subscription_returns_200(
+        self, get_payment_intent, get_create_update_intent
+    ):
         user = self.get_user(1, member_profile=True)
         token = self.get_token(user).access_token
         cart = self.get_cart(
@@ -28,7 +32,8 @@ class TestSubscriptionPurchase(BaseCartTest):
             payment_intent={'amount': cart.amount}
         )
         checkout_details['payment_intent'].update(valid_payment_intent)
-        cart.checkout(checkout_details)
+        cart.set_checkout_details(checkout_details)
+        cart.checkout()
 
         # Check has not active membership
         self.assertFalse(user.member.active_membership)
@@ -41,7 +46,11 @@ class TestSubscriptionPurchase(BaseCartTest):
         # Check user included in group
         self.assertTrue(user.groups.filter(name='ameba_member'))
 
-    def test_update_checked_out_cart_with_same_price_subscription_not_allowed(self):
+    @mock.patch('api.signals.payments.get_create_update_payment_intent',
+                return_value={'status': stripe.IntentStatus.NOT_NEEDED})
+    def test_update_checked_out_cart_with_same_price_subscription_not_allowed(
+        self, get_create_intent
+    ):
         user = self.get_user(1, member_profile=True)
         token = self.get_token(user).access_token
         cart = self.get_cart(user=user)
@@ -65,7 +74,8 @@ class TestSubscriptionPurchase(BaseCartTest):
             payment_intent={'amount': cart.amount}
         )
         checkout_details['payment_intent'].update(valid_payment_intent)
-        cart.checkout(checkout_details)
+        cart.set_checkout_details(checkout_details)
+        cart.checkout()
 
         cart.item_variants.set([subscription_variant.id])
 

@@ -58,7 +58,7 @@ class MailgunSignalsTest(BaseTest):
 
     @mock.patch('api.mailgun.delete_mailing_list')
     def test_del_default_list_not_allowed(self, del_mailing_list_mock):
-        mailing_list = MailingList.objects.get(
+        mailing_list, created = MailingList.objects.get_or_create(
             address=settings.DEFAULT_MAILING_LIST
         )
 

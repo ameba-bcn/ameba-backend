@@ -4,20 +4,19 @@ from django.conf import settings
 from django.utils import timezone
 
 from api.stripe import get_payment_intent, get_create_update_payment_intent,\
-    InvalidRequestError, IntentStatus, NO_PAYMENT_NEEDED_ID
-from api.models import Payment, Cart
+    InvalidRequestError
+from api.models import Payment
+from api.models.cart import cart_checkout
 from api.exceptions import StripeSyncError, CheckoutNeeded, PaymentIsNotSucceed
 from api.email_factories import PaymentSuccessfulEmail
 from api.signals.memberships import subscription_purchased
 
-cart_checkout = django.dispatch.Signal(providing_args=['cart'])
-cart_processed = django.dispatch.Signal(providing_args=['cart', 'request'])
 
-SUCCEEDED_PAYMENTS = [IntentStatus.SUCCESS, IntentStatus.NOT_NEEDED]
+cart_processed = django.dispatch.Signal(providing_args=['cart', 'request'])
 
 
 @receiver(cart_checkout)
-def sync_payment_intent(sender, cart, request, **kwargs):
+def sync_payment_intent(sender, cart, **kwargs):
     try:
         checkout_details = {"date_time": str(timezone.now())}
         if cart.amount > 0:
@@ -27,7 +26,7 @@ def sync_payment_intent(sender, cart, request, **kwargs):
                 checkout_details=cart.checkout_details
             )
             checkout_details['payment_intent'] = payment_intent
-        cart.checkout(checkout_details)
+        cart.set_checkout_details(checkout_details)
 
     except InvalidRequestError as StripeError:
         if not cart.checkout_details:
@@ -53,8 +52,13 @@ def on_cart_deleted(sender, cart, request, **kwargs):
 
     payment_intent = get_payment_intent(checkout_details=cart.checkout_details)
 
-    if payment_intent['status'] not in SUCCEEDED_PAYMENTS and not settings.DEBUG:
-        cart.payment_not_succeeded()
+    if type(cart.checkout_details) is dict:
+        cart.checkout_details['payment_intent'] = payment_intent
+    else:
+        cart.checkout_details = {'payment_intent': payment_intent}
+    cart.save()
+
+    if not cart.is_payment_succeeded():
         raise PaymentIsNotSucceed
 
     if cart.subscription:

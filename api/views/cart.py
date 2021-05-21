@@ -11,7 +11,7 @@ from rest_framework.exceptions import MethodNotAllowed
 from api.permissions import CartPermission
 from api.serializers import CartSerializer, CartCheckoutSerializer
 from api.models import Cart
-from api.signals import cart_checkout, cart_processed
+from api.signals import cart_processed
 from api.docs.carts import CartsDocs
 
 CURRENT_LABEL = 'current'
@@ -79,11 +79,9 @@ class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
     @action(detail=True, methods=['GET'])
     def checkout(self, request, *args, **kwargs):
         cart = self.get_object()
-        cart.checkout_start()
-        cart_checkout.send(sender=self, cart=cart, request=self.request)
+        cart.checkout()
         serializer_class = self.get_serializer_class()
         cart_data = serializer_class(cart).data
-        cart.checkout_finish()
         return Response(cart_data)
 
     # Documentation
