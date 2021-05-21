@@ -1,4 +1,4 @@
-# ameba-site backend v0.19
+# ameba-site backend v0.20
 
 ### Release notes
 
@@ -9,6 +9,7 @@
 - AW-176: Cart state docs in GET /cart/current/
 - AW-176: /api/member_register/ docs
 - AW-176: /api/users/ with cart_id docs
+- AW-177: email links to frontend with /ameba-site/ in url root
 
 #### 0.19
 ##### Features
