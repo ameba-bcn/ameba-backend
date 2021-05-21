@@ -65,11 +65,12 @@ class MemberRegisterSerializer(serializers.Serializer):
         user = User.objects.create(**user_data)
 
         cart_id = validated_data.pop('cart_id')
+        member_profile = Member.objects.create(user=user, **validated_data)
+
         if not Cart.objects.filter(id=cart_id):
             raise WrongCartId
         cart = Cart.objects.get(id=cart_id)
         cart.user = user
-        cart.save()
+        cart.checkout()
 
-        member_profile = Member.objects.create(user=user, **validated_data)
         return member_profile
