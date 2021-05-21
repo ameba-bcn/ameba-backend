@@ -36,7 +36,7 @@ class ApiMailgunUnsubscriptionTest(BaseTest):
     def test_existing_email_unsubscribes(self, remove_member_mock):
         email = 'patient1@jacoti.com'
         subscriber = Subscriber.objects.create(email=email)
-        mailing_list = MailingList.objects.get(
+        mailing_list, created = MailingList.objects.get_or_create(
             address=settings.DEFAULT_MAILING_LIST
         )
         subscriber.mailing_lists.add(mailing_list)
@@ -62,7 +62,7 @@ class ApiMailgunUnsubscriptionTest(BaseTest):
     def test_unsubscribe_from_non_existing_address(self, remove_member_mock):
         email = 'patient1@jacoti.com'
         subscriber = Subscriber.objects.create(email=email)
-        mailing_list = MailingList.objects.get(
+        mailing_list, created = MailingList.objects.get_or_create(
             address=settings.DEFAULT_MAILING_LIST
         )
         subscriber.mailing_lists.add(mailing_list)
@@ -88,7 +88,7 @@ class ApiMailgunUnsubscriptionTest(BaseTest):
     ):
         email = 'patient1@jacoti.com'
         subscriber = Subscriber.objects.create(email=email)
-        mailing_list = MailingList.objects.get(
+        mailing_list, created = MailingList.objects.get_or_create(
             address=settings.DEFAULT_MAILING_LIST
         )
         subscriber.mailing_lists.add(mailing_list)
