@@ -3,7 +3,7 @@ from rest_framework import status
 from django.conf import settings
 
 from api import exceptions
-from api.models import Payment
+from api.models import Payment, Subscription, Member
 from api.tests.cart import BaseCartTest
 
 
@@ -229,3 +229,21 @@ class PaymentFlowTest(BaseCartTest):
         self.assertEqual(checkout_response.status_code, status.HTTP_200_OK)
         response = self._delete(pk='current', token=token)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    @mock.patch('django.conf.settings.DEBUG', True)
+    def test_delete_subscription_cart_creates_membership(self):
+        item_variants = [1]
+        user = self.get_user(member_profile=True)
+        token = self.get_token(user).access_token
+        cart = self.get_cart(user=user, item_variants=item_variants,
+                             item_class=Subscription)
+
+        self.assertFalse(user.member.memberships.all())
+
+        self.checkout(token=token)
+        delete_response = self._delete(pk='current', token=token)
+
+        self.assertEqual(delete_response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertTrue(Payment.objects.filter(id=cart.id))
+
+        self.assertTrue(user.member.memberships.all())
