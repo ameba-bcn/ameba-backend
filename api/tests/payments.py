@@ -1,6 +1,7 @@
 from unittest import mock
 from rest_framework import status
 from django.conf import settings
+from django.contrib.auth.models import Group
 
 from api import exceptions
 from api.models import Payment, Subscription, Member
@@ -239,6 +240,8 @@ class PaymentFlowTest(BaseCartTest):
                              item_class=Subscription)
 
         self.assertFalse(user.member.memberships.all())
+        group = Group.objects.get(name='ameba_member')
+        self.assertNotIn(group, user.groups.all())
 
         self.checkout(token=token)
         delete_response = self._delete(pk='current', token=token)
@@ -247,3 +250,4 @@ class PaymentFlowTest(BaseCartTest):
         self.assertTrue(Payment.objects.filter(id=cart.id))
 
         self.assertTrue(user.member.memberships.all())
+        self.assertIn(group, user.groups.all())
