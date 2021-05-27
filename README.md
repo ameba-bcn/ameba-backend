@@ -2,6 +2,10 @@
 
 ### Release notes
 
+#### 0.21
+##### Features
+- AW-186: group is mandatory FK in models.Subscription
+
 #### 0.20
 ##### Features
 - AW-176: Cart state is a dictionary with computed-on-the-fly cart state
