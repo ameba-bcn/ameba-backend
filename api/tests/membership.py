@@ -1,6 +1,7 @@
 from django.utils import timezone
 from rest_framework import status
 from unittest import mock
+from django.contrib.auth.models import Group
 
 from api.tests.cart import BaseCartTest
 from api.models import Subscription, Article, ItemVariant
@@ -64,7 +65,8 @@ class TestSubscriptionPurchase(BaseCartTest):
         cart.item_variants.set([article_variant.id])
 
         subscription = Subscription.objects.create(
-            name='Subscription 1', description='None', is_active=True
+            name='Subscription 1', description='None', is_active=True,
+            group=Group.objects.get(name='ameba_member')
         )
         subscription_variant = ItemVariant.objects.create(
             item=subscription, price=10, stock=10
