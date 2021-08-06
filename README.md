@@ -2,6 +2,11 @@
 
 ### Release notes
 
+#### 0.22
+##### Features
+- AW-216: added relevant info to member_profile
+
+
 #### 0.21
 ##### Features
 - AW-186: group is mandatory FK in models.Subscription
