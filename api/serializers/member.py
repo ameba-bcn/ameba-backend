@@ -4,7 +4,6 @@ from api.models import Member, User, Cart, Membership
 from api.exceptions import (
     EmailAlreadyExists, WrongCartId, CartNeedOneSubscription
 )
-from api.serializers import SubscriptionDetailSerializer
 
 
 class DocMemberSerializer(serializers.ModelSerializer):
@@ -15,13 +14,15 @@ class DocMemberSerializer(serializers.ModelSerializer):
 
 
 class MembershipSerializer(serializers.ModelSerializer):
-    subscription = SubscriptionDetailSerializer
+    subscription_type = serializers.SlugRelatedField(
+        slug_field='name', source='subscription', read_only=True
+    )
 
     class Meta:
         model = Membership
         fields = (
             'created', 'duration', 'starts', 'expires', 'subscription',
-            'state'
+            'state', 'subscription_type'
         )
 
 

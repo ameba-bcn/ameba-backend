@@ -7,6 +7,13 @@ class MembershipInLine(admin.TabularInline):
     model = Membership
     extra = 0
     verbose_name = 'Membership'
+    fields = ('member', 'created', 'duration', 'starts', 'expires',
+              'subscription', 'expires_soon', 'state', 'is_active',
+              'is_expired')
+    readonly_fields = (
+        'created', 'duration', 'expires_soon', 'state', 'is_active',
+        'is_expired'
+    )
 
 
 class MemberAdmin(admin.ModelAdmin):
@@ -17,7 +24,9 @@ class MemberAdmin(admin.ModelAdmin):
         'address',
         'first_name',
         'last_name',
-        'phone_number'
+        'phone_number',
+        'status',
+        'type'
     )
     list_display_links = ('number', )
     inlines = [MembershipInLine]
