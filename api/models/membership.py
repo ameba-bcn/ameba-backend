@@ -3,6 +3,14 @@ from django.utils import timezone
 
 
 DURATION = 365
+ABOUT_TO_EXPIRE_DAYS = 30
+
+
+class MembershipStates:
+    expires_soon = 'expires_soon'
+    expired = 'expired'
+    active = 'active'
+    not_active_yet = 'not_active_yet'
 
 
 class Membership(models.Model):
@@ -24,8 +32,25 @@ class Membership(models.Model):
 
     @property
     def is_expired(self):
-        return timezone.now() >= self.expires
+        if self.id:
+            return timezone.now() >= self.expires
 
     @property
     def is_active(self):
-        return self.starts < timezone.now() < self.expires
+        if self.id:
+            return self.starts < timezone.now() < self.expires
+
+    @property
+    def expires_soon(self):
+        if self.id:
+            return self.starts < self.expires - timezone.timedelta(days=ABOUT_TO_EXPIRE_DAYS) < timezone.now()
+
+    @property
+    def state(self):
+        if self.expires_soon:
+            return MembershipStates.expires_soon
+        elif self.is_expired:
+            return MembershipStates.expired
+        elif not self.is_active:
+            return MembershipStates.not_active_yet
+        return MembershipStates.active

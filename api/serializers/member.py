@@ -1,7 +1,9 @@
 from rest_framework import serializers
 
-from api.models import Member, User, Cart
-from api.exceptions import EmailAlreadyExists, WrongCartId, CartNeedOneSubscription
+from api.models import Member, User, Cart, Membership
+from api.exceptions import (
+    EmailAlreadyExists, WrongCartId, CartNeedOneSubscription
+)
 
 
 class DocMemberSerializer(serializers.ModelSerializer):
@@ -11,13 +13,27 @@ class DocMemberSerializer(serializers.ModelSerializer):
                   'phone_number')
 
 
+class MembershipSerializer(serializers.ModelSerializer):
+    subscription_type = serializers.SlugRelatedField(
+        slug_field='name', source='subscription', read_only=True
+    )
+
+    class Meta:
+        model = Membership
+        fields = (
+            'created', 'duration', 'starts', 'expires', 'subscription',
+            'state', 'subscription_type'
+        )
+
+
 class MemberSerializer(serializers.ModelSerializer):
+    memberships = MembershipSerializer(many=True, read_only=True)
 
     class Meta:
         model = Member
         fields = ('number', 'address', 'first_name', 'last_name',
-                  'phone_number', 'user')
-        read_only_fields = ('number', )
+                  'phone_number', 'user', 'status', 'type', 'memberships')
+        read_only_fields = ('number', 'status', 'type', 'memberships')
 
 
 class MemberRegisterSerializer(serializers.Serializer):
