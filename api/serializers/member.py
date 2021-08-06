@@ -27,13 +27,13 @@ class MembershipSerializer(serializers.ModelSerializer):
 
 
 class MemberSerializer(serializers.ModelSerializer):
-    memberships = MembershipSerializer(many=True)
+    memberships = MembershipSerializer(many=True, read_only=True)
 
     class Meta:
         model = Member
         fields = ('number', 'address', 'first_name', 'last_name',
                   'phone_number', 'user', 'status', 'type', 'memberships')
-        read_only_fields = ('number', 'status', 'type')
+        read_only_fields = ('number', 'status', 'type', 'memberships')
 
 
 class MemberRegisterSerializer(serializers.Serializer):
