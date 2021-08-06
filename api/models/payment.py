@@ -1,13 +1,12 @@
 from django.db import models
 from django.db.models import UUIDField
 
-from api.serializers.cart import CartSerializer
-
 
 class PaymentManager(models.Manager):
 
     @staticmethod
     def create_payment(cart, payment_intent):
+        from api.serializers.cart import CartSerializer
         user = cart.user
         cart_record = CartSerializer(instance=cart).data
         payment = Payment.objects.create(

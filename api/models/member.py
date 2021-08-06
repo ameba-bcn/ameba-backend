@@ -1,7 +1,7 @@
 from django.core import exceptions
 from django.contrib.auth import get_user_model
 from django.db import models
-from api.models.membership import Membership
+from api.models.membership import MembershipStates
 
 
 # Get current user model
@@ -24,8 +24,21 @@ class Member(models.Model):
     last_name = models.CharField(max_length=20)
     phone_number = models.CharField(max_length=10)
 
-    @property
-    def active_membership(self):
+    def get_newest_membership(self):
         if self.memberships.all():
-            return not self.memberships.order_by('-expires').first().is_expired
+            return self.memberships.order_by('-expires').first()
+        return None
+
+    @property
+    def status(self):
+        if newest_membership := self.get_newest_membership():
+            if newest_membership.state == MembershipStates.not_active_yet:
+                return MembershipStates.active
+            return newest_membership.state
+        return None
+
+    @property
+    def type(self):
+        if newest_membership := self.get_newest_membership():
+            return newest_membership.subscription.name
         return None
