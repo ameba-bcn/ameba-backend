@@ -93,3 +93,4 @@ class UserViewSet(
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     create.__doc__ = UserDocs.create
+    member_profile.__doc__ = UserDocs.get_member_profile
