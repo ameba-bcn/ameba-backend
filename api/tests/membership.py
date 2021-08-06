@@ -37,13 +37,13 @@ class TestSubscriptionPurchase(BaseCartTest):
         cart.checkout()
 
         # Check has not active membership
-        self.assertFalse(user.member.is_active_member)
+        self.assertIn(user.member.status, [None, 'expired'])
         self.assertFalse(user.groups.filter(name='ameba_member'))
         # Purchase membership
         response = self._delete(pk=cart.id, token=token)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         # Check has membership
-        self.assertTrue(user.member.is_active_member)
+        self.assertIn(user.member.status, ['active'])
         # Check user included in group
         self.assertTrue(user.groups.filter(name='ameba_member'))
 
