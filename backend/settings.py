@@ -72,7 +72,8 @@ INSTALLED_APPS = [
     'location_field.apps.DefaultConfig',
     'anymail',
     'django_inlinecss',
-    'django_extensions'
+    'django_extensions',
+    'modeltranslation'
 ]
 
 MIDDLEWARE = [
