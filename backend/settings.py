@@ -58,6 +58,7 @@ AUTH_USER_MODEL = 'api.User'
 
 # Application definition
 INSTALLED_APPS = [
+    'modeltranslation',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -72,8 +73,7 @@ INSTALLED_APPS = [
     'location_field.apps.DefaultConfig',
     'anymail',
     'django_inlinecss',
-    'django_extensions',
-    'modeltranslation'
+    'django_extensions'
 ]
 
 MIDDLEWARE = [
@@ -144,7 +144,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-es'
 
 TIME_ZONE = 'UTC'
 
@@ -154,6 +154,12 @@ USE_L10N = True
 
 USE_TZ = True
 
+gettext = lambda s: s
+LANGUAGES = (
+    ('es-es', gettext('Español')),
+    ('ca-es', gettext('Catalá')),
+    ('en-es', gettext('English'))
+)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
