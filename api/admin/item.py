@@ -2,6 +2,7 @@ from django.forms.models import BaseInlineFormSet
 from django.utils.html import mark_safe
 from django.utils.translation import gettext as _
 from django.contrib import admin
+from modeltranslation.admin import TranslationAdmin
 
 from api.models import (
     Discount, Item, ItemVariant, ItemAttribute, ItemAttributeType
@@ -44,7 +45,7 @@ class ImageChoiceInLine(admin.TabularInline):
     preview.allow_tags = True
 
 
-class BaseItemAdmin(admin.ModelAdmin):
+class BaseItemAdmin(TranslationAdmin):
     fields = [
         'name', 'description', 'is_active', 'price_range', 'created',
         'updated', 'has_stock'
@@ -76,7 +77,7 @@ class ItemAttributeAdmin(admin.ModelAdmin):
 admin.site.register(ItemAttribute, ItemAttributeAdmin)
 
 
-class ItemAttributeTypeAdmin(admin.ModelAdmin):
+class ItemAttributeTypeAdmin(TranslationAdmin):
     fields = ('name', )
     list_display = ('name', )
 

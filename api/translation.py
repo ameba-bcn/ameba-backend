@@ -1,5 +1,8 @@
 from modeltranslation.translator import register, TranslationOptions
-from .models import About, Artist, Interview, Item, Subscription
+from .models import (
+    About, Artist, Interview, Item, Subscription, Article,
+    Event, ItemAttributeType
+)
 
 
 @register(About)
@@ -25,3 +28,18 @@ class ItemTranslationOptions(TranslationOptions):
 @register(Subscription)
 class SubscriptionTranslationOptions(TranslationOptions):
     fields = ('benefits', )
+
+
+@register(Article)
+class ArticleTranslationOptions(TranslationOptions):
+    pass
+
+
+@register(Event)
+class EventTranslationOptions(TranslationOptions):
+    pass
+
+
+@register(ItemAttributeType)
+class ItemAttributeTypeTranslationOptions(TranslationOptions):
+    fields = ('name', )
