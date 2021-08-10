@@ -31,6 +31,7 @@ class User(AbstractUser):
     username = models.CharField(_('name'), max_length=150)
     email = models.EmailField(_('email'), unique=True)
     is_active = models.BooleanField(_('active'), default=False)
+    language = models.CharField(max_length=5, blank=True)
     # Attributes
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
