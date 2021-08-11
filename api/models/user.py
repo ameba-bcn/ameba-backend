@@ -1,11 +1,18 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth import hashers
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _, gettext_noop
 from django.core import signing
 from django.conf import settings
 
 from api import models as api_models
+
+
+LANGUAGES = (
+    ('es', gettext_noop('Spanish')),
+    ('ca', gettext_noop('Catalan')),
+    ('en', gettext_noop('English')),
+)
 
 
 class InvalidActivationToken(Exception):
@@ -30,8 +37,9 @@ class User(AbstractUser):
     username = models.CharField(_('name'), max_length=150)
     email = models.EmailField(_('email'), unique=True)
     is_active = models.BooleanField(_('active'), default=False)
-    language = models.ForeignKey('Language', on_delete=models.CASCADE,
-                                 blank=True, null=True)
+    language = models.CharField(
+        max_length=7, choices=settings.LANGUAGES, blank=True
+    )
     # Attributes
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
