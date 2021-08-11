@@ -1,4 +1,3 @@
-from django.core import exceptions
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth import hashers
@@ -31,7 +30,8 @@ class User(AbstractUser):
     username = models.CharField(_('name'), max_length=150)
     email = models.EmailField(_('email'), unique=True)
     is_active = models.BooleanField(_('active'), default=False)
-    language = models.CharField(max_length=5, blank=True)
+    language = models.ForeignKey('Language', on_delete=models.CASCADE,
+                                 blank=True, null=True)
     # Attributes
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
