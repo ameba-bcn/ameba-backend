@@ -85,7 +85,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
-    # 'api.middleware.user_based_language_middleware'
+    'api.middleware.user_based_language_middleware'
 ]
 
 ROOT_URLCONF = 'backend.urls'
