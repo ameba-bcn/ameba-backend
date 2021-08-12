@@ -32,15 +32,19 @@ class BaseUserTest(_helpers.BaseTest):
 
     def get_profile(self, pk, token):
         self._authenticate(token)
-        return self.client.get(f'/api/users/{pk}/member_profile/')
+        return self.client.get(f'/api/users/{pk}/member_profile/', follow=True)
 
     def update_profile(self, pk, token, props):
         self._authenticate(token)
-        return self.client.patch(f'/api/users/{pk}/member_profile/',data=props)
+        return self.client.patch(
+            f'/api/users/{pk}/member_profile/', data=props, follow=True
+        )
 
     def post_profile(self, pk, token, props):
         self._authenticate(token)
-        return self.client.post(f'/api/users/{pk}/member_profile/',data=props)
+        return self.client.post(
+            f'/api/users/{pk}/member_profile/', data=props, follow=True
+        )
 
 
 class UserTest(BaseUserTest):
