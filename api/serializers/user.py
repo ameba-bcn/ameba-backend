@@ -22,7 +22,8 @@ class UserSerializer(serializers.ModelSerializer):
             'password': {'write_only': True}
         }
         fields = [
-            'username', 'password', 'email', 'member', 'date_joined', 'cart_id'
+            'username', 'password', 'email', 'member', 'date_joined',
+            'cart_id', 'language'
         ]
 
     def validate(self, attrs):
