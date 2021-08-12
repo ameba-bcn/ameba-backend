@@ -21,15 +21,18 @@ from drf_yasg import openapi
 from rest_framework import permissions
 from django.conf import settings
 from django.conf.urls.static import static
+from django.conf.urls.i18n import i18n_patterns
 
 from api import urls
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/', include(urls)),
     path('trumbowyg/', include('trumbowyg.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
+urlpatterns += i18n_patterns(
+    path('admin/', admin.site.urls),
+    path('api/', include(urls)),
+)
 
 if settings.DEBUG:
     from api.docs.schema_generator import CustomOpenAPISchemaGenerator

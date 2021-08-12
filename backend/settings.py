@@ -85,7 +85,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
-    'user_based_language_middleware'
+    # 'api.middleware.user_based_language_middleware'
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -146,7 +146,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
-LANGUAGE_CODE = 'es-es'
+LANGUAGE_CODE = 'es'
 
 TIME_ZONE = 'UTC'
 
@@ -158,9 +158,9 @@ USE_TZ = True
 
 gettext = lambda s: s
 LANGUAGES = (
-    ('es-es', gettext('Español')),
-    ('ca-es', gettext('Catalá')),
-    ('en-es', gettext('English'))
+    ('es', gettext('Español')),
+    ('ca', gettext('Catalá')),
+    ('en', gettext('English'))
 )
 
 # Static files (CSS, JavaScript, Images)
