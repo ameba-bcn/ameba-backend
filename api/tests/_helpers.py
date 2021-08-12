@@ -28,15 +28,20 @@ class BaseTest(APITestCase):
 
     def _update(self, pk, token, props):
         self._authenticate(token)
-        return self.client.put(self.DETAIL_ENDPOINT.format(pk=pk), data=props)
+        return self.client.put(
+            self.DETAIL_ENDPOINT.format(pk=pk), data=props, follow=True
+        )
 
     def _get(self, pk, token=None):
         self._authenticate(token)
-        return self.client.get(self.DETAIL_ENDPOINT.format(pk=pk))
+        return self.client.get(
+            self.DETAIL_ENDPOINT.format(pk=pk), follow=True
+        )
 
     def _delete(self, pk, token=None):
         self._authenticate(token)
-        return self.client.delete(self.DETAIL_ENDPOINT.format(pk=pk))
+        return self.client.delete(self.DETAIL_ENDPOINT.format(pk=pk),
+                                  follow=True)
 
     def _partial_update(self, pk, token, props):
         if props:
@@ -45,17 +50,25 @@ class BaseTest(APITestCase):
             json_obj = json.dumps({})
 
         self._authenticate(token)
-        return self.client.patch(self.DETAIL_ENDPOINT.format(pk=pk),
-                                 data=json_obj, content_type='application/json')
+        return self.client.patch(
+            self.DETAIL_ENDPOINT.format(pk=pk),
+            data=json_obj,
+            content_type='application/json',
+            follow=True
+        )
 
     def _create(self, props, token=None, format='json'):
         self._authenticate(token)
-        return self.client.post(self.LIST_ENDPOINT, props, format=format)
+        return self.client.post(
+            self.LIST_ENDPOINT, props, format=format, follow=True
+        )
 
     def _list(self, props=None, token=None):
         props = props or {}
         self._authenticate(token)
-        return self.client.get(self.LIST_ENDPOINT, props)
+        return self.client.get(
+            self.LIST_ENDPOINT, props, follow=True
+        )
 
 
 def iter_iter(iterable):

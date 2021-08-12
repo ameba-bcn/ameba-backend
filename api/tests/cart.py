@@ -629,7 +629,7 @@ class TestCartStateFlow(BaseCartTest):
 class TestRegisterWithCart(BaseCartTest):
 
     def register_user(self, props):
-        return self.client.post('/api/users/', props)
+        return self.client.post('/api/users/', props, follow=True)
 
     def test_passing_cart_to_register_form(self):
         cart = self.get_cart(item_variants=[1, 2])
