@@ -48,6 +48,9 @@ class UserViewSet(
     def _is_current_user(pk):
         return type(pk) is str and pk == 'current'
 
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+
     def create(self, request, *args, **kwargs):
         response = super().create(request, *args, **kwargs)
         if response.status_code == status.HTTP_201_CREATED:
@@ -93,4 +96,5 @@ class UserViewSet(
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     create.__doc__ = UserDocs.create
+    retrieve.__doc__ = UserDocs.retrieve
     member_profile.__doc__ = UserDocs.get_member_profile
