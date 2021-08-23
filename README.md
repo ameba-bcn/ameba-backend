@@ -179,6 +179,22 @@ python manage.py loaddata demo.json
 python manage.py dumpdata --indent 2 > demo.json
 ```
 
+### Localización
+La localización depende únicamente del cliente, aunque se puede guardar un 
+lenguage preferido en ```/api/users/current/```
+
+El lenguage preferido se puede cambiar haciendo un PATCH e indicando el 
+código de lenguage "es" (español), "ca" (catalán) o "en" (inglés):
+```
+PATCH /api/users/current/ 
+--form "language": "es"
+```
+
+Para consultar el lenguage preferido por el usuario si lo hubiese:
+```
+GET /api/users/current/
+```
+
 ### Documentación
 Documentación SWAGGER de la API:
 ```
