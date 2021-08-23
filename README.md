@@ -2,6 +2,14 @@
 
 ### Release notes
 
+#### 0.23
+##### Features
+- AW-220: added dynamic localization via Accept-Language header (es/ca/en)
+- AW-220: editable user's preferred language (PATCH /api/users/current/) 
+
+##### Bugfixes
+- AW-220: User email and password can not be updated anymore.
+
 #### 0.22
 ##### Features
 - AW-216: added relevant info to member_profile
