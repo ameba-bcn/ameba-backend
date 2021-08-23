@@ -26,13 +26,14 @@ from django.conf.urls.i18n import i18n_patterns
 from api import urls
 
 urlpatterns = [
-    path('trumbowyg/', include('trumbowyg.urls'))
+    path('trumbowyg/', include('trumbowyg.urls')),
+    path('api/', include(urls))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += i18n_patterns(
-    path('admin/', admin.site.urls),
-    path('api/', include(urls)),
+    path('admin/', admin.site.urls)
 )
+
 
 if settings.DEBUG:
     from api.docs.schema_generator import CustomOpenAPISchemaGenerator
