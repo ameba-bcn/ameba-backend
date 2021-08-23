@@ -14,3 +14,4 @@ stripe==2.55.1
 django-inlinecss >= 0.2.0
 gunicorn
 django-anymail[mailgun]
+django-modeltranslation

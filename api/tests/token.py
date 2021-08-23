@@ -18,13 +18,14 @@ class TestSessions(_helpers.BaseTest):
 
     def refresh(self, refresh_token=''):
         props = dict(refresh=refresh_token)
-        return self.client.post(self.REFRESH_ENDPOINT, data=props)
+        return self.client.post(self.REFRESH_ENDPOINT, data=props, follow=True)
 
     def delete(self, pk, token=''):
         self.client.credentials(
             HTTP_AUTHORIZATION='Bearer {}'.format(token)
         )
-        return self.client.delete(self.DETAIL_ENDPOINT.format(id=pk))
+        return self.client.delete(self.DETAIL_ENDPOINT.format(id=pk),
+                                  follow=True)
 
     @staticmethod
     def get_token(user):
