@@ -72,6 +72,7 @@ class UserTest(BaseUserTest):
             'username': user_props.get('username'),
             'email': user_props.get('email'),
             'date_joined': None,
+            'language': None,
             'member': None
         }
 

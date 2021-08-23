@@ -30,9 +30,16 @@ class UserViewSet(
     mixins.UpdateModelMixin,
     viewsets.GenericViewSet
 ):
-    serializer_class = serializers.UserSerializer
+    serializer_class = serializers.CreateUserSerializer
     queryset = User.objects.all()
     permission_classes = [permissions.CustomModelUserPermission]
+
+    def get_serializer_class(self):
+        if self.action == 'update' or self.action == 'partial_update':
+            return serializers.UpdateUserSerializer
+        elif self.action == 'retrieve':
+            return serializers.ReadUserSerializer
+        return super().get_serializer_class()
 
     def get_permissions(self):
         if self.action == 'create':
