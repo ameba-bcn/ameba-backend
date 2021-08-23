@@ -1,4 +1,6 @@
-from api.serializers.user import UserSerializer
+from api.serializers.user import (
+    CreateUserSerializer, ReadUserSerializer, UpdateUserSerializer
+)
 from api.serializers.token import DeleteTokenSerializer, SingleUseTokenSerializer
 from api.serializers.interview import (
     InterviewListSerializer, InterviewDetailSerializer

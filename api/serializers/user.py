@@ -9,9 +9,21 @@ from api import exceptions
 User = get_user_model()
 
 
-class UserSerializer(serializers.ModelSerializer):
+class ReadUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'member', 'date_joined', 'language')
+        read_only_fields = fields
+
+
+class UpdateUserSerializer(ReadUserSerializer):
+    class Meta(ReadUserSerializer.Meta):
+        read_only_fields = ('email', 'date_joined', 'member')
+
+
+class CreateUserSerializer(serializers.ModelSerializer):
     member = serializers.PrimaryKeyRelatedField(read_only=True)
-    date_joined = serializers.DateTimeField(required=False)
+    date_joined = serializers.DateTimeField(required=False, read_only=True)
     cart_id = serializers.CharField(
         max_length=64, write_only=True, required=False
     )
