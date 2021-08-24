@@ -5,6 +5,7 @@ from api.models import Event
 
 
 class EventListSerializer(ItemListSerializer):
+    type = serializers.SlugRelatedField(slug_field='name', read_only=True)
 
     class Meta:
         model = Event
@@ -14,6 +15,7 @@ class EventListSerializer(ItemListSerializer):
 
 
 class EventDetailSerializer(ItemDetailSerializer):
+    type = serializers.SlugRelatedField(slug_field='name', read_only=True)
 
     class Meta:
         model = Event
