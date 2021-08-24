@@ -12,14 +12,14 @@ EXPIRE_HOURS_BEFORE_EVENT = 1
 EXPIRE_BEFORE_EVENT = timedelta(hours=EXPIRE_HOURS_BEFORE_EVENT)
 
 
-class EventTag(Model):
+class EventType(Model):
     name = CharField(max_length=20, blank=False)
 
 
 class Event(Item):
     datetime = DateTimeField()
     address = CharField(max_length=255)
-    tag = ForeignKey(to="EventTag", on_delete=CASCADE, blank=True, null=True)
+    tag = ForeignKey(to="EventType", on_delete=CASCADE, blank=True, null=True)
     artists = ManyToManyField(to='Artist', related_name='events', blank=True)
 
     def expire(self):

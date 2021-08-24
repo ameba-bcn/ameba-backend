@@ -1,14 +1,13 @@
 from django.contrib import admin
+from modeltranslation.admin import TranslationAdmin
 
 from api.admin.item import BaseItemAdmin
-from api.models import Event
+from api.models import Event, EventType
 
 
-from api.models import Event, EventTag
-
-
-class EventTagAdmin(admin.ModelAdmin):
-    fields = ['name']
+class EventTypeAdmin(TranslationAdmin):
+    fields = ('name', )
+    list_display = ('name', )
 
 
 class EventAdmin(BaseItemAdmin):
@@ -16,4 +15,4 @@ class EventAdmin(BaseItemAdmin):
 
 
 admin.site.register(Event, EventAdmin)
-admin.site.register(EventTag, EventTagAdmin)
+admin.site.register(EventType, EventTypeAdmin)
