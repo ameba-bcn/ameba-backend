@@ -1,7 +1,7 @@
 from modeltranslation.translator import register, TranslationOptions
 from .models import (
     About, Artist, Interview, Item, Subscription, Article,
-    Event, ItemAttributeType
+    Event, ItemAttributeType, EventType
 )
 
 
@@ -33,6 +33,11 @@ class SubscriptionTranslationOptions(TranslationOptions):
 @register(Article)
 class ArticleTranslationOptions(TranslationOptions):
     pass
+
+
+@register(EventType)
+class EventTypeTranslationOptions(TranslationOptions):
+    fields = ('name', )
 
 
 @register(Event)
