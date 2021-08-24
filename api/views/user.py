@@ -30,9 +30,16 @@ class UserViewSet(
     mixins.UpdateModelMixin,
     viewsets.GenericViewSet
 ):
-    serializer_class = serializers.UserSerializer
+    serializer_class = serializers.CreateUserSerializer
     queryset = User.objects.all()
     permission_classes = [permissions.CustomModelUserPermission]
+
+    def get_serializer_class(self):
+        if self.action == 'update' or self.action == 'partial_update':
+            return serializers.UpdateUserSerializer
+        elif self.action == 'retrieve':
+            return serializers.ReadUserSerializer
+        return super().get_serializer_class()
 
     def get_permissions(self):
         if self.action == 'create':
@@ -47,6 +54,9 @@ class UserViewSet(
     @staticmethod
     def _is_current_user(pk):
         return type(pk) is str and pk == 'current'
+
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
         response = super().create(request, *args, **kwargs)
@@ -93,4 +103,5 @@ class UserViewSet(
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     create.__doc__ = UserDocs.create
+    retrieve.__doc__ = UserDocs.retrieve
     member_profile.__doc__ = UserDocs.get_member_profile

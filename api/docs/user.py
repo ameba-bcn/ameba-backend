@@ -15,6 +15,13 @@ Endpoint para crear un perfil de socio al usuario logeado.
 Endpoint para modificar perfil de usuario. Se accede a través de:
 """
 
+    retrieve = """
+Devuelve datos de usuario web, incluído el atributo `language`
+
+- `language`: es la última preferencia de idioma del usuario y debería 
+pedirse al iniciar cualquier flujo autenticado. 
+"""
+
     create = """
 Después de un usuario registrarse, se enviará un email de activación donde 
 habrá un link a la siguiente url:
