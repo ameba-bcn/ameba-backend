@@ -15,10 +15,12 @@ class ArtistSerializer(serializers.ModelSerializer):
                                               read_only=True)
     images = serializers.SlugRelatedField(many=True, slug_field='url',
                                           read_only=True)
+    tags = serializers.SlugRelatedField(many=True, slug_field='name',
+                                        read_only=True)
 
     class Meta:
         model = Artist
-        fields = ['id', 'name', 'biography', 'images', 'media_urls']
+        fields = ['id', 'name', 'biography', 'images', 'media_urls', 'tags']
 
 
 class ArtistListSerializer(serializers.ModelSerializer):
@@ -26,7 +28,9 @@ class ArtistListSerializer(serializers.ModelSerializer):
                                               read_only=True)
     images = serializers.SlugRelatedField(many=True, slug_field='url',
                                           read_only=True)
+    tags = serializers.SlugRelatedField(many=True, slug_field='name',
+                                        read_only=True)
 
     class Meta:
         model = Artist
-        fields = ['id', 'name', 'bio_preview', 'images', 'media_urls']
+        fields = ['id', 'name', 'bio_preview', 'images', 'media_urls', 'tags']
