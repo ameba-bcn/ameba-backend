@@ -15,6 +15,9 @@ EXPIRE_BEFORE_EVENT = timedelta(hours=EXPIRE_HOURS_BEFORE_EVENT)
 class EventType(Model):
     name = CharField(max_length=20, blank=False)
 
+    def __str__(self):
+        return f"{self.name}"
+
 
 class Event(Item):
     datetime = DateTimeField()

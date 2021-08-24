@@ -11,7 +11,7 @@ from api.models.item import Item, ItemVariant, ItemAttribute, ItemAttributeType
 from api.models.subscription import Subscription
 from api.models.member import Member
 from api.models.membership import Membership
-from api.models.artist import Artist, ArtistMediaUrl
+from api.models.artist import Artist, ArtistMediaUrl, ArtistTag
 from api.models.interview import Interview, Answer, Question
 from api.models.article import Article
 from api.models.discount import Discount, DiscountCode
