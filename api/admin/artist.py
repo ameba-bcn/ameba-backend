@@ -1,8 +1,14 @@
 from django.contrib import admin
 from django.utils.html import mark_safe
+from modeltranslation.admin import TranslationAdmin
 
-from api.models import Artist, ArtistMediaUrl, Image
+from api.models import Artist, ArtistMediaUrl, ArtistTag
 from api.admin.image import get_image_preview
+
+
+class ArtistTagAdmin(TranslationAdmin):
+    fields = ('name', )
+    list_display = ('name', )
 
 
 class MediaUrlsInLine(admin.StackedInline):
@@ -52,3 +58,4 @@ class ArtistAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Artist, ArtistAdmin)
+admin.site.register(ArtistTag, ArtistTagAdmin)
