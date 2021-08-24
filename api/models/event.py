@@ -19,7 +19,7 @@ class EventType(Model):
 class Event(Item):
     datetime = DateTimeField()
     address = CharField(max_length=255)
-    tag = ForeignKey(to="EventType", on_delete=CASCADE, blank=True, null=True)
+    type = ForeignKey(to="EventType", on_delete=CASCADE, blank=True, null=True)
     artists = ManyToManyField(to='Artist', related_name='events', blank=True)
 
     def expire(self):
