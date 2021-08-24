@@ -4,6 +4,10 @@ from django.db import models
 BIO_PREVIEW = 160
 
 
+class ArtistTag(models.Model):
+    name = models.CharField(max_length=20)
+
+
 class ArtistMediaUrl(models.Model):
     url = models.URLField()
     created = models.DateTimeField(auto_now_add=True)
@@ -19,6 +23,7 @@ class Artist(models.Model):
     name = models.CharField(max_length=50)
     biography = models.TextField(max_length=2500)
     images = models.ManyToManyField(to='Image', blank=True)
+    tags = models.ManyToManyField(to='ArtistTag', blank=True)
 
     def __str__(self):
         return self.name
