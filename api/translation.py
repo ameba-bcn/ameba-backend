@@ -41,7 +41,7 @@ class EventTranslationOptions(TranslationOptions):
 
 
 @register(EventTag)
-class EventTypeTranslationOptions(TranslationOptions):
+class EventTagTranslationOptions(TranslationOptions):
     fields = ('name', )
 
 
