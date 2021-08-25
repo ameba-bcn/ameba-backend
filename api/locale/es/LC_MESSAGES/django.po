@@ -807,14 +807,14 @@ msgstr "NEWSLETTER"
 msgid "SUBCRÍBETE"
 msgstr "SUBCRÍBETE"
 
-#~ msgid "Español"
-#~ msgstr "Español"
+msgid "Español"
+msgstr "Español"
 
-#~ msgid "Catalá"
-#~ msgstr "Catalán"
+msgid "Catalá"
+msgstr "Catalán"
 
-#~ msgid "AMEBA Admin Site"
-#~ msgstr "Portal admin de AMEBA"
+msgid "AMEBA admin panel"
+msgstr "Admin panel de AMEBA"
 
-#~ msgid "AMEBA Admin"
-#~ msgstr "Admin de AMEBA"
+msgid "AMEBA Admin"
+msgstr "Admin de AMEBA"
