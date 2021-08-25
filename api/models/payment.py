@@ -1,3 +1,4 @@
+from django.utils.translation import gettext as _
 from django.db import models
 from django.db.models import UUIDField
 
@@ -19,10 +20,15 @@ class PaymentManager(models.Manager):
 
 
 class Payment(models.Model):
+    class Meta:
+        verbose_name = _('Payment')
+        verbose_name_plural = _('Payments')
+
     id = UUIDField(primary_key=True, editable=True)
-    user = models.ForeignKey('User', on_delete=models.CASCADE)
-    cart_record = models.JSONField()
-    details = models.JSONField()
+    user = models.ForeignKey('User', on_delete=models.CASCADE,
+                             verbose_name=_('user'))
+    cart_record = models.JSONField(verbose_name=_('cart record'))
+    details = models.JSONField(verbose_name=_('details'))
     timestamp = models.DateTimeField(auto_now_add=True)
 
     objects = PaymentManager()
