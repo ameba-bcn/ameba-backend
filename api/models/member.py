@@ -25,7 +25,8 @@ class Member(models.Model):
         verbose_name=_('number')
     )
     user = models.OneToOneField(
-        to='User', on_delete=models.CASCADE, verbose_name=_('user')
+        to='User', on_delete=models.CASCADE, verbose_name=_('user'),
+        related_name='member'
     )
     address = models.CharField(
         max_length=255, blank=True, verbose_name=_('address')
