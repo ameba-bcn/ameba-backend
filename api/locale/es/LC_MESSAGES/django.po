@@ -1,0 +1,820 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <jonrivala@gmail.com>, 2021
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-08-25 14:54+0000\n"
+"PO-Revision-Date: 2021-08-25 14:48+0000\n"
+"Last-Translator: FULL NAME <jonrivala@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: api/admin/cart.py:19 api/admin/interview.py:69 api/admin/item.py:44
+#: api/admin/item.py:65
+msgid "Preview"
+msgstr "Previsualización"
+
+#: api/admin/cart.py:31
+msgid "Price"
+msgstr "Precio"
+
+#: api/models/about.py:8
+msgid "About"
+msgstr "Sobre AMEBA"
+
+#: api/models/about.py:9
+msgid "Abouts"
+msgstr "Sobre AMEBA"
+
+#: api/models/about.py:11
+msgid "text"
+msgstr "texto"
+
+#: api/models/about.py:12
+msgid "is_active"
+msgstr "activo"
+
+#: api/models/about.py:14 api/models/artist.py:26 api/models/cart.py:53
+#: api/models/covers.py:14 api/models/discount.py:31 api/models/discount.py:104
+#: api/models/interview.py:21 api/models/item.py:35 api/models/membership.py:26
+#: api/models/subscriber.py:26
+msgid "created"
+msgstr "creado en"
+
+#: api/models/about.py:16 api/models/cart.py:54 api/models/interview.py:19
+#: api/models/item.py:37
+msgid "updated"
+msgstr "actualizado en"
+
+#: api/models/article.py:7
+msgid "Article"
+msgstr "Artículo"
+
+#: api/models/article.py:8
+msgid "Articles"
+msgstr "Artículos"
+
+#: api/models/artist.py:10
+msgid "Artist tag"
+msgstr "Etiqueta de artista"
+
+#: api/models/artist.py:11
+msgid "Artist tags"
+msgstr "Etiquetas de artista"
+
+#: api/models/artist.py:13 api/models/artist.py:42 api/models/discount.py:40
+#: api/models/event.py:21 api/models/item.py:17 api/models/user.py:42
+msgid "name"
+msgstr "nombre"
+
+#: api/models/artist.py:21
+msgid "Artist media url"
+msgstr "Media url de artista"
+
+#: api/models/artist.py:22
+msgid "Artist media urls"
+msgstr "Media urls de artista"
+
+#: api/models/artist.py:24
+msgid "url"
+msgstr "url"
+
+#: api/models/artist.py:30 api/models/interview.py:14
+msgid "artist"
+msgstr "artista"
+
+#: api/models/artist.py:39
+#| msgid "artist"
+msgid "Artist"
+msgstr "Artista"
+
+#: api/models/artist.py:40
+#| msgid "artists"
+msgid "Artists"
+msgstr "Artistas"
+
+#: api/models/artist.py:43
+msgid "biography"
+msgstr "biografía"
+
+#: api/models/artist.py:45 api/models/item.py:23
+msgid "images"
+msgstr "imágenes"
+
+#: api/models/artist.py:48
+msgid "tags"
+msgstr "etiquetas"
+
+#: api/models/cart.py:26 api/models/cart.py:27
+msgid "Cart items"
+msgstr "Items del carrito"
+
+#: api/models/cart.py:30
+msgid "item variant"
+msgstr "variante de ítem"
+
+#: api/models/cart.py:32 api/models/cart.py:45
+msgid "cart"
+msgstr "carrito"
+
+#: api/models/cart.py:51
+msgid "item variants"
+msgstr "variantes de ítem"
+
+#: api/models/cart.py:57
+msgid "discount code"
+msgstr "código de descuento"
+
+#: api/models/cart.py:60
+msgid "checkout details"
+msgstr "detalles del pedido"
+
+#: api/models/cart.py:63
+msgid "checkout hash"
+msgstr "hash del pedido"
+
+#: api/models/covers.py:7
+msgid "Cover"
+msgstr "Portada"
+
+#: api/models/covers.py:8
+msgid "Covers"
+msgstr "Portadas"
+
+#: api/models/covers.py:10
+msgid "file"
+msgstr "archivo"
+
+#: api/models/covers.py:11 api/models/interview.py:66 api/models/item.py:33
+msgid "is active"
+msgstr "activo"
+
+#: api/models/covers.py:12
+msgid "index"
+msgstr "posición"
+
+#: api/models/discount.py:21
+msgid "Discount usage"
+msgstr "Uso de descuento"
+
+#: api/models/discount.py:22
+msgid "Discount usages"
+msgstr "Usos de descuentos"
+
+#: api/models/discount.py:25 api/models/discount.py:99 api/models/member.py:28
+#: api/models/payment.py:29
+msgid "user"
+msgstr "usuario"
+
+#: api/models/discount.py:28 api/models/discount.py:103
+msgid "discount"
+msgstr "descuento"
+
+#: api/models/discount.py:37
+msgid "Discount"
+msgstr "Descuento"
+
+#: api/models/discount.py:38
+msgid "Discounts"
+msgstr "Descuentos"
+
+#: api/models/discount.py:41
+msgid "Value (%)"
+msgstr "Valor (%)"
+
+#: api/models/discount.py:43
+msgid "items"
+msgstr "ítems"
+
+#: api/models/discount.py:45
+msgid "groups"
+msgstr "grupos"
+
+#: api/models/discount.py:46
+msgid "need code"
+msgstr "necesita código"
+
+#: api/models/discount.py:47
+msgid "number of uses"
+msgstr "número de usos"
+
+#: api/models/discount.py:52
+msgid "usages"
+msgstr "usos"
+
+#: api/models/discount.py:92
+msgid "Discount code"
+msgstr "Código de descuento"
+
+#: api/models/discount.py:93
+msgid "Discount codes"
+msgstr "Códigos de descuentos"
+
+#: api/models/discount.py:97
+msgid "code"
+msgstr "código"
+
+#: api/models/discount.py:106
+msgid "days period"
+msgstr "Periodo en días"
+
+#: api/models/discount.py:108
+msgid "is expired"
+msgstr "caducado"
+
+#: api/models/event.py:18
+msgid "Event type"
+msgstr "Tipo de evento"
+
+#: api/models/event.py:19
+msgid "Event types"
+msgstr "Tipos de eventos"
+
+#: api/models/event.py:29
+msgid "Event"
+msgstr "Evento"
+
+#: api/models/event.py:30
+msgid "Events"
+msgstr "Eventos"
+
+#: api/models/event.py:32
+msgid "datetime"
+msgstr "fecha y hora"
+
+#: api/models/event.py:33 api/models/mailing_list.py:17 api/models/member.py:31
+msgid "address"
+msgstr "dirección"
+
+#: api/models/event.py:36
+msgid "type"
+msgstr "tipo"
+
+#: api/models/event.py:39
+msgid "artists"
+msgstr "artistas"
+
+#: api/models/images.py:7
+msgid "Image"
+msgstr "Imágen"
+
+#: api/models/images.py:8
+msgid "Images"
+msgstr "Imágenes"
+
+#: api/models/images.py:10 api/models/interview.py:23
+msgid "image"
+msgstr "imágen"
+
+#: api/models/interview.py:10
+msgid "Interview"
+msgstr "Entrevista"
+
+#: api/models/interview.py:11
+msgid "Interviews"
+msgstr "Entrevistas"
+
+#: api/models/interview.py:16
+msgid "title"
+msgstr "título"
+
+#: api/models/interview.py:18
+msgid "introduction"
+msgstr "introducción"
+
+#: api/models/interview.py:39
+msgid "Question"
+msgstr "Pregunta"
+
+#: api/models/interview.py:40
+msgid "Questions"
+msgstr "Preguntas"
+
+#: api/models/interview.py:42 api/models/interview.py:64
+msgid "question"
+msgstr "pregunta"
+
+#: api/models/interview.py:43
+msgid "is default"
+msgstr "por defecto"
+
+#: api/models/interview.py:51
+msgid "Answer"
+msgstr "Respuesta"
+
+#: api/models/interview.py:52
+msgid "Answers"
+msgstr "Respuestas"
+
+#: api/models/interview.py:58
+msgid "interview"
+msgstr "entrevista"
+
+#: api/models/interview.py:60
+msgid "answer"
+msgstr "respuesta"
+
+#: api/models/item.py:13
+msgid "Item"
+msgstr "Ítem"
+
+#: api/models/item.py:14
+msgid "Items"
+msgstr "Ítems"
+
+#: api/models/item.py:20
+msgid "description"
+msgstr "descripción"
+
+#: api/models/item.py:27
+msgid "acquired by"
+msgstr "adquirido por"
+
+#: api/models/item.py:31
+msgid "saved by"
+msgstr "guardado por"
+
+#: api/models/item.py:99
+msgid "Item attribute type"
+msgstr "Tipo de atributo de ítem"
+
+#: api/models/item.py:100
+msgid "Item attribute types"
+msgstr "Tipos de atributos de ítem"
+
+#: api/models/item.py:110
+msgid "Item attribute"
+msgstr "Atributo de ítem"
+
+#: api/models/item.py:111
+msgid "Item attributes"
+msgstr "Atributos de ítem"
+
+#: api/models/item.py:115
+msgid "attribute"
+msgstr "atributo"
+
+#: api/models/item.py:118
+msgid "value"
+msgstr "valor"
+
+#: api/models/item.py:126
+msgid "Item variant"
+msgstr "Variante de ítem"
+
+#: api/models/item.py:127
+msgid "Item variants"
+msgstr "Variantes de ítem"
+
+#: api/models/item.py:130
+msgid "item"
+msgstr "ítem"
+
+#: api/models/item.py:132
+msgid "attributes"
+msgstr "atributo"
+
+#: api/models/item.py:135
+msgid "price"
+msgstr "precio"
+
+#: api/models/mailing_list.py:13
+msgid "Mailing list"
+msgstr "Lista de emails"
+
+#: api/models/mailing_list.py:14
+msgid "Mailing lists"
+msgstr "Listas de emails"
+
+#: api/models/mailing_list.py:19
+msgid "is test"
+msgstr "de prueba"
+
+#: api/models/member.py:20
+msgid "Member"
+msgstr "Socio"
+
+#: api/models/member.py:21
+msgid "Members"
+msgstr "Socios"
+
+#: api/models/member.py:25
+msgid "number"
+msgstr "número"
+
+#: api/models/member.py:33
+msgid "first name"
+msgstr "Nombre"
+
+#: api/models/member.py:34
+msgid "last name"
+msgstr "Apellidos"
+
+#: api/models/member.py:36
+msgid "phone number"
+msgstr "número de teléfono"
+
+#: api/models/membership.py:19
+msgid "Membership"
+msgstr "Membresía"
+
+#: api/models/membership.py:20
+msgid "Memberships"
+msgstr "Membresías"
+
+#: api/models/membership.py:24
+msgid "member"
+msgstr "socio"
+
+#: api/models/membership.py:27
+msgid "duration"
+msgstr "duración"
+
+#: api/models/membership.py:28
+msgid "starts"
+msgstr "comienza"
+
+#: api/models/membership.py:29
+msgid "expires"
+msgstr "caduca"
+
+#: api/models/membership.py:32
+msgid "subscription"
+msgstr "subscripción"
+
+#: api/models/payment.py:24
+msgid "Payment"
+msgstr "Pago"
+
+#: api/models/payment.py:25
+msgid "Payments"
+msgstr "Pagos"
+
+#: api/models/payment.py:30
+msgid "cart record"
+msgstr "registro de carrito"
+
+#: api/models/payment.py:31
+msgid "details"
+msgstr "detalles"
+
+#: api/models/subscriber.py:14
+msgid "Subscriber"
+msgstr "Subscriptor"
+
+#: api/models/subscriber.py:15
+msgid "Subscribers"
+msgstr "Subscriptores"
+
+#: api/models/subscriber.py:17 api/models/user.py:43
+msgid "email"
+msgstr "email"
+
+#: api/models/subscriber.py:22
+msgid "mailing lists"
+msgstr "listas de emails"
+
+#: api/models/subscription.py:11
+msgid "Subscription"
+msgstr "Subscripción"
+
+#: api/models/subscription.py:12
+msgid "Subscriptions"
+msgstr "Subscripciones"
+
+#: api/models/subscription.py:15
+msgid "benefits"
+msgstr "beneficios"
+
+#: api/models/subscription.py:18
+msgid "group"
+msgstr "grupo"
+
+#: api/models/user.py:13
+msgid "Spanish"
+msgstr "Español"
+
+#: api/models/user.py:14
+msgid "Catalan"
+msgstr "Catalán"
+
+#: api/models/user.py:15
+msgid "English"
+msgstr "Inglés"
+
+#: api/models/user.py:36
+msgid "User"
+msgstr "Usuario"
+
+#: api/models/user.py:37
+msgid "Users"
+msgstr "Usuarios"
+
+#: api/models/user.py:44
+msgid "active"
+msgstr "activo"
+
+#: api/models/user.py:47
+msgid "language"
+msgstr "lenguaje"
+
+#: api/serializers/token.py:16
+msgid "Token is invalid or expired"
+msgstr "El token es inválido o ha caducado"
+
+#: api/templates/html_body_templates/activated.html:10
+#: api/templates/html_body_templates/member.html:10
+#, python-format
+msgid "¡BIENVENIDO %(user_name)s!"
+msgstr "¡BIENVENIDO %(user_name)s!"
+
+#: api/templates/html_body_templates/activated.html:12
+#, python-format
+msgid ""
+"\n"
+"            Ya puedes usar tu cuenta en %(site_name)s\n"
+"        "
+msgstr ""
+
+#: api/templates/html_body_templates/activated.html:17
+#, python-format
+msgid ""
+"\n"
+"            Entérate de todos nuestros talleres, conciertos, entrevistas y\n"
+"            más en %(site_name)s\n"
+"        "
+msgstr ""
+
+#: api/templates/html_body_templates/activated.html:23
+#, python-format
+msgid ""
+"\n"
+"            Para formar parte de la asociación, colaborar con nosotros y\n"
+"            beneficiarte de descuentos, hazte socio <a href="
+"\"%(new_soci_link)s\">aquí</a>\n"
+"        "
+msgstr ""
+
+#: api/templates/html_body_templates/member.html:12
+msgid ""
+"\n"
+"            ¡Ya eres socio de AMEBA!\n"
+"        "
+msgstr ""
+
+#: api/templates/html_body_templates/member.html:17
+#, python-format
+msgid ""
+"\n"
+"            Entérate de todos los eventos que organizamos, aprovecha tus\n"
+"            descuentos de socio y mucho más en <a href=\"%(site_name)s\">"
+"%(site_name)s</a>\n"
+"        "
+msgstr ""
+
+#: api/templates/html_body_templates/password_changed.html:10
+#: api/templates/html_body_templates/recovery.html:10
+#: api/templates/html_body_templates/registered.html:10
+#, python-format
+msgid "¡HOLA %(user_name)s!"
+msgstr ""
+
+#: api/templates/html_body_templates/password_changed.html:12
+#, python-format
+msgid ""
+"\n"
+"            Tu password en <a href=\"%(site_name)s\">%(site_name)s</a> se "
+"acaba de\n"
+"            actualizar.\n"
+"        "
+msgstr ""
+
+#: api/templates/html_body_templates/password_changed.html:18
+#, python-format
+msgid ""
+"\n"
+"            ¿No has solicitado este cambio de password?<br><br>\n"
+"            Ponte en contacto con nosotros a en\n"
+"            <a href=\"%(protocol)s://%(site_name)s/contact/\">%(site_name)s/"
+"contact/</a>\n"
+"        "
+msgstr ""
+
+#: api/templates/html_body_templates/payment.html:11
+#, python-format
+msgid "¡GRACIAS %(user_name)s, HEMOS RECIBIDO TU PEDIDO!"
+msgstr ""
+
+#: api/templates/html_body_templates/payment.html:14
+msgid ""
+"\n"
+"            Tu pedido está siendo revisado por nuestros compañeros.<br>\n"
+"            En breve recibirás un email de confirmación.\n"
+"        "
+msgstr ""
+
+#: api/templates/html_body_templates/recovery.html:12
+#, python-format
+msgid ""
+"\n"
+"            Para cambiar tu password en\n"
+"            <a href=\"%(protocol)s://%(site_name)s\">%(site_name)s</a>\n"
+"            , click\n"
+"            <a href=\"%(protocol)s://%(site_name)s/ameba-site/recovery/?"
+"token=%(recovery_token)s\">aquí.</a>\n"
+"        "
+msgstr ""
+
+#: api/templates/html_body_templates/registered.html:12
+#, python-format
+msgid ""
+"\n"
+"            Acabas de registrarte en <a href=\"%(site_name)s\">"
+"%(site_name)s</a>, la web\n"
+"            de L'Associació de Musica Electrònica de Barcelona.\n"
+"        "
+msgstr ""
+
+#: api/templates/html_body_templates/registered.html:18
+#, python-format
+msgid ""
+"\n"
+"            Por favor, haz click <a href=\"%(protocol)s://%(site_name)s/"
+"ameba-site/activate/?token=%(activation_token)s\">aquí</a> para\n"
+"            activar tu cuenta.\n"
+"        "
+msgstr ""
+
+#: api/templates/plain_body_templates/activated.txt:3
+#, python-format
+msgid ""
+"\n"
+"    ¡Hola %(user_name)s!\n"
+msgstr ""
+
+#: api/templates/plain_body_templates/activated.txt:7
+#, python-format
+msgid ""
+"\n"
+"    Ya puedes usar tu cuenta en %(site_name)s\n"
+msgstr ""
+
+#: api/templates/plain_body_templates/activated.txt:11
+#, python-format
+msgid ""
+"\n"
+"    Entérate de todos nuestros talleres, conciertos, entrevistas y\n"
+"    más en %(site_name)s\n"
+msgstr ""
+
+#: api/templates/plain_body_templates/activated.txt:16
+#, python-format
+msgid ""
+"\n"
+"    Para formar parte de la asociación, colaborar con nosotros y "
+"beneficiarte de descuentos, hazte socio en\n"
+"    %(new_soci_link)s\n"
+msgstr ""
+
+#: api/templates/plain_body_templates/member.txt:3
+#, python-format
+msgid "¡Bienvenido %(user_name)s!"
+msgstr ""
+
+#: api/templates/plain_body_templates/member.txt:5
+msgid ""
+"\n"
+"    ¡Ya eres socio de AMEBA!\n"
+msgstr ""
+
+#: api/templates/plain_body_templates/member.txt:9
+#, python-format
+msgid ""
+"\n"
+"    Entérate de todos los eventos que organizamos, aprovecha tus\n"
+"    descuentos de socio y mucho más en %(site_name)s\n"
+msgstr ""
+
+#: api/templates/plain_body_templates/password_changed.txt:3
+#: api/templates/plain_body_templates/registered.txt:3
+#, python-format
+msgid "¡Hola %(user_name)s!"
+msgstr ""
+
+#: api/templates/plain_body_templates/password_changed.txt:5
+#, python-format
+msgid ""
+"\n"
+"    Tu password en %(site_name)s se acaba de actualizar.\n"
+msgstr ""
+
+#: api/templates/plain_body_templates/password_changed.txt:9
+#, python-format
+msgid ""
+"\n"
+"    ¿No has solicitado este cambio de password?\n"
+"    Ponte en contacto con nosotros en %(protocol)s://%(site_name)s/contact/"
+"\"\n"
+msgstr ""
+
+#: api/templates/plain_body_templates/payment.txt:3
+#, python-format
+msgid ""
+"\n"
+"    ¡Gracias %(user_name)s, hemos recibido tu pedido!\n"
+msgstr ""
+
+#: api/templates/plain_body_templates/payment.txt:7
+msgid ""
+"\n"
+"    Tu pedido está siendo revisado por nuestros compañeros.\n"
+"    En breve recibirás un email de confirmación.\n"
+msgstr ""
+
+#: api/templates/plain_body_templates/recovery.txt:3
+#, python-format
+msgid ""
+"\n"
+"    ¡Hola %(username)s!\n"
+msgstr ""
+
+#: api/templates/plain_body_templates/recovery.txt:7
+#, python-format
+msgid ""
+"\n"
+"Para cambiar tu password en %(site_name)s, click en el siguiente link:\n"
+"\n"
+"    %(protocol)s://%(site_name)s/ameba-site/recovery/?token="
+"%(recovery_token)s\n"
+msgstr ""
+
+#: api/templates/plain_body_templates/registered.txt:5
+#, python-format
+msgid ""
+"\n"
+"    Acabas de registrarte en %(site_name)s, la web\n"
+"de L'Associació de Musica Electrònica de Barcelona.\n"
+msgstr ""
+
+#: api/templates/plain_body_templates/registered.txt:10
+msgid ""
+"\n"
+"Por favor, haz click en el siguiente link para activar tu cuenta.\n"
+msgstr ""
+
+#: api/templates/plain_subject_templates/activated.txt:2
+#, python-format
+msgid "¡Cuenta activada en %(site_name)s!"
+msgstr ""
+
+#: api/templates/plain_subject_templates/member.txt:2
+msgid "¡Bienvenido! Ya eres miembro de AMEBA"
+msgstr ""
+
+#: api/templates/plain_subject_templates/password_changed.txt:2
+#, python-format
+msgid "Password actualizado en %(site_name)s"
+msgstr ""
+
+#: api/templates/plain_subject_templates/payment.txt:2
+#, python-format
+msgid "Hemos recibido tu pedido en %(site_name)s"
+msgstr ""
+
+#: api/templates/plain_subject_templates/recovery.txt:2
+#, python-format
+msgid "¿Has soliticado cambiar tu password en %(site_name)s?"
+msgstr ""
+
+#: api/templates/plain_subject_templates/registered.txt:2
+#, python-format
+msgid "Activa tu cuenta en %(site_name)s"
+msgstr ""
+
+#: api/templates/template_blocks/newsletter.html:5
+msgid "NEWSLETTER"
+msgstr "NEWSLETTER"
+
+#: api/templates/template_blocks/subscribe.html:7
+msgid "SUBCRÍBETE"
+msgstr "SUBCRÍBETE"
+
+msgid "Español"
+msgstr "Español"
+
+msgid "Catalá"
+msgstr "Catalán"
+
+msgid "AMEBA admin panel"
+msgstr "Admin panel de AMEBA"
+
+msgid "AMEBA Admin"
+msgstr "Admin de AMEBA"
