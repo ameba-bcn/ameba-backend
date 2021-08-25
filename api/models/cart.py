@@ -1,4 +1,6 @@
 import uuid
+
+from django.utils.translation import ugettext_lazy as _
 from django import dispatch
 from django.db.models import (
     Model, ForeignKey, ManyToManyField, JSONField, OneToOneField,
@@ -20,8 +22,14 @@ SUCCEEDED_PAYMENTS = [IntentStatus.SUCCESS, IntentStatus.NOT_NEEDED]
 
 
 class CartItems(Model):
-    item_variant = ForeignKey(to='ItemVariant', on_delete=CASCADE)
-    cart = ForeignKey(to='Cart', on_delete=CASCADE)
+    class Meta:
+        verbose_name = _('Cart items')
+        verbose_name_plural = _('Cart items')
+
+    item_variant = ForeignKey(
+        to='ItemVariant', on_delete=CASCADE, verbose_name=_('item variant')
+    )
+    cart = ForeignKey(to='Cart', on_delete=CASCADE, verbose_name=_('cart'))
 
     @property
     def discount(self):
@@ -33,16 +41,27 @@ class CartItems(Model):
 
 
 class Cart(Model):
+    class Meta:
+        verbose_name = _('cart')
+
     id = UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = OneToOneField(to='User', on_delete=CASCADE, blank=True,
-                         null=True, related_name='_cart')
-    item_variants = ManyToManyField(to='ItemVariant', through='CartItems')
-    created = DateTimeField(auto_now_add=True)
-    updated = DateTimeField(auto_now=True)
-    discount_code = ForeignKey(to='DiscountCode', on_delete=SET_NULL,
-                               blank=True, null=True)
-    checkout_details = JSONField(blank=True, null=True)
-    checkout_hash = CharField(blank=True, max_length=128)
+                         null=True, related_name='_cart', verbose_name='user')
+    item_variants = ManyToManyField(
+        to='ItemVariant', through='CartItems', verbose_name=_('item variants')
+    )
+    created = DateTimeField(auto_now_add=True, verbose_name=_('created'))
+    updated = DateTimeField(auto_now=True, verbose_name=_('updated'))
+    discount_code = ForeignKey(
+        to='DiscountCode', on_delete=SET_NULL, blank=True, null=True,
+        verbose_name=_('discount code')
+    )
+    checkout_details = JSONField(
+        blank=True, null=True, verbose_name=_('checkout details')
+    )
+    checkout_hash = CharField(
+        blank=True, max_length=128, verbose_name=_('checkout hash')
+    )
 
     def delete(self, using=None, keep_parents=False):
         self.item_variants.clear()

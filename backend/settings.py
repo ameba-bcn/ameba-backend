@@ -37,15 +37,19 @@ def raise_debug():
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
-DEV_SECRET_KEY = 'f!e(2rsmnoiyy@+#s$&lg-m7xp3@-+8fveja$plau=ir--13f('
+DEV_SECRET_KEY = env(
+    'DJANGO_SECRET',
+    'f!e(2rsmnoiyy@+#s$&lg-m7xp3@-+8fveja$plau=ir--13f(',
+    'string'
+)
 
 SECRET_KEY = env(
     "DJANGO_SECRET",
-    DEBUG and DEV_SECRET_KEY or raise_debug(),
+    DEBUG or DEV_SECRET_KEY or raise_debug(),
     var_type='string'
 )
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost']
 
 BACKEND_HOST = env("BACKEND_HOST", '', 'string')
 if BACKEND_HOST:
@@ -59,6 +63,7 @@ AUTH_USER_MODEL = 'api.User'
 # Application definition
 INSTALLED_APPS = [
     'modeltranslation',
+    'api.apps.ApiConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -68,7 +73,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
-    'api.apps.ApiConfig',
     'trumbowyg',
     'location_field.apps.DefaultConfig',
     'anymail',
@@ -208,7 +212,7 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 
-MEDIA_ROOT = 'media/'
+MEDIA_ROOT = '/src/media'
 MEDIA_URL = 'media/'
 
 

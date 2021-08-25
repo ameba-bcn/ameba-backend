@@ -1,8 +1,14 @@
 from django.contrib import admin
 from django.utils.html import mark_safe
+from modeltranslation.admin import TranslationAdmin
 
-from api.models import Artist, ArtistMediaUrl, Image
+from api.models import Artist, ArtistMediaUrl, ArtistTag
 from api.admin.image import get_image_preview
+
+
+class ArtistTagAdmin(TranslationAdmin):
+    fields = ('name', )
+    list_display = ('name', )
 
 
 class MediaUrlsInLine(admin.StackedInline):
@@ -24,7 +30,7 @@ class ArtistImages(admin.StackedInline):
 
 class ArtistAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None, {'fields': ['id', 'name', 'biography']})
+        (None, {'fields': ['id', 'name', 'biography', 'tags']})
     ]
     readonly_fields = ['id', 'bio_preview']
     list_display = ['name', 'bio_preview', 'list_preview']
@@ -52,3 +58,4 @@ class ArtistAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Artist, ArtistAdmin)
+admin.site.register(ArtistTag, ArtistTagAdmin)

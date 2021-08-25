@@ -5,20 +5,22 @@ from api.models import Event
 
 
 class EventListSerializer(ItemListSerializer):
+    type = serializers.SlugRelatedField(slug_field='name', read_only=True)
 
     class Meta:
         model = Event
         fields = ItemListSerializer.Meta.fields + [
-            'datetime', 'saved', 'purchased'
+            'datetime', 'saved', 'purchased', 'type'
         ]
 
 
 class EventDetailSerializer(ItemDetailSerializer):
+    type = serializers.SlugRelatedField(slug_field='name', read_only=True)
 
     class Meta:
         model = Event
         fields = ItemDetailSerializer.Meta.fields + [
-            'datetime', 'address', 'purchased', 'saved'
+            'datetime', 'address', 'purchased', 'saved', 'type'
         ]
 
 

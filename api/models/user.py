@@ -1,3 +1,4 @@
+from django.utils.translation import gettext as _
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth import hashers
@@ -31,14 +32,19 @@ class UserManager(models.Manager):
 
 
 class User(AbstractUser):
+    class Meta:
+        verbose_name = _('User')
+        verbose_name_plural = _('Users')
+
     # Fields
     first_name = None
     last_name = None
-    username = models.CharField(_('name'), max_length=150)
-    email = models.EmailField(_('email'), unique=True)
-    is_active = models.BooleanField(_('active'), default=False)
+    username = models.CharField(verbose_name=_('name'), max_length=150)
+    email = models.EmailField(verbose_name=_('email'), unique=True)
+    is_active = models.BooleanField(verbose_name=_('active'), default=False)
     language = models.CharField(
-        max_length=7, choices=settings.LANGUAGES, blank=True
+        max_length=7, choices=settings.LANGUAGES, blank=True,
+        verbose_name=_('language')
     )
     # Attributes
     USERNAME_FIELD = 'email'

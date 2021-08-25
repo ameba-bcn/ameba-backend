@@ -1,11 +1,18 @@
+from django.utils.translation import ugettext_lazy as _
 from django.db import models
 
 
 class Cover(models.Model):
-    file = models.FileField(upload_to='covers')
-    is_active = models.BooleanField()
-    index = models.IntegerField()
-    created = models.DateTimeField(auto_now_add=True)
+    class Meta:
+        verbose_name = _('Cover')
+        verbose_name_plural = _('Covers')
+
+    file = models.FileField(upload_to='covers', verbose_name=_('file'))
+    is_active = models.BooleanField(verbose_name=_('is active'))
+    index = models.IntegerField(verbose_name=_('index'))
+    created = models.DateTimeField(
+        auto_now_add=True, verbose_name=_('created')
+    )
 
     @property
     def url(self):
