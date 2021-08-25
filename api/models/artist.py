@@ -35,6 +35,10 @@ class ArtistMediaUrl(models.Model):
 
 
 class Artist(models.Model):
+    class Meta:
+        verbose_name = _('Artist')
+        verbose_name_plural = _('Artists')
+
     name = models.CharField(max_length=50, verbose_name=_('name'))
     biography = models.TextField(max_length=2500, verbose_name=_('biography'))
     images = models.ManyToManyField(
