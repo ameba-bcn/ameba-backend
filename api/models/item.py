@@ -1,23 +1,40 @@
 from datetime import timedelta
+
 from django.db.models import Sum
 from django.db import models
-
+from django.utils.translation import gettext as _
 
 EXPIRE_HOURS_BEFORE_EVENT = 1
 EXPIRE_BEFORE_EVENT = timedelta(hours=EXPIRE_HOURS_BEFORE_EVENT)
 
 
 class Item(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    description = models.TextField(max_length=1000)
-    images = models.ManyToManyField(to='Image', blank=False)
-    acquired_by = models.ManyToManyField(to='User', blank=True,
-                                         related_name='acquired_items')
-    saved_by = models.ManyToManyField(to='User', blank=True,
-                                      related_name='saved_items')
-    is_active = models.BooleanField(default=True)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    class Meta:
+        verbose_name = _('Item')
+        verbose_name_plural = _('Items')
+
+    name = models.CharField(
+        max_length=100, unique=True, verbose_name=_('name')
+    )
+    description = models.TextField(
+        max_length=1000, verbose_name=_('description')
+    )
+    images = models.ManyToManyField(
+        to='Image', blank=False, verbose_name=_('images')
+    )
+    acquired_by = models.ManyToManyField(
+        to='User', blank=True, related_name='acquired_items',
+        verbose_name=_('acquired by')
+    )
+    saved_by = models.ManyToManyField(
+        to='User', blank=True, related_name='saved_items',
+        verbose_name=_('saved by')
+    )
+    is_active = models.BooleanField(default=True, verbose_name=_('is active'))
+    created = models.DateTimeField(
+        auto_now_add=True, verbose_name=_('created')
+    )
+    updated = models.DateTimeField(auto_now=True, verbose_name=_('updated'))
 
     @property
     def price_range(self):
@@ -78,6 +95,10 @@ class Item(models.Model):
 
 
 class ItemAttributeType(models.Model):
+    class Meta:
+        verbose_name = _('Item attribute type')
+        verbose_name_plural = _('Item attribute types')
+
     name = models.CharField(max_length=15)
 
     def __str__(self):
@@ -85,21 +106,33 @@ class ItemAttributeType(models.Model):
 
 
 class ItemAttribute(models.Model):
+    class Meta:
+        verbose_name = _('Item attribute')
+        verbose_name_plural = _('Item attributes')
+
     attribute = models.ForeignKey(
-        'ItemAttributeType', on_delete=models.CASCADE
+        'ItemAttributeType', on_delete=models.CASCADE, verbose_name=_(
+            'attribute'
+        )
     )
-    value = models.CharField(max_length=15)
+    value = models.CharField(max_length=15, verbose_name=_('value'))
 
     def __str__(self):
         return f'{self.attribute.name}: {self.value}'
 
 
 class ItemVariant(models.Model):
+    class Meta:
+        verbose_name = _('Item variant')
+        verbose_name_plural = _('Item variants')
+
     item = models.ForeignKey('Item', on_delete=models.CASCADE,
-                             related_name='variants')
-    attributes = models.ManyToManyField('ItemAttribute', blank=False)
+                             related_name='variants', verbose_name=_('item'))
+    attributes = models.ManyToManyField('ItemAttribute', blank=False,
+                                        verbose_name=_('attributes'))
     stock = models.IntegerField()
-    price = models.DecimalField(max_digits=8, decimal_places=2)
+    price = models.DecimalField(max_digits=8, decimal_places=2,
+                                verbose_name=_('price'))
 
     def get_valid_discounts(self, user, code=None):
         return self.item.get_valid_discounts(user, code)

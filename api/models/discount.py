@@ -1,9 +1,8 @@
-import random
-import string
 import hashlib
 import datetime
-
 from datetime import date, timedelta
+
+from django.utils.translation import ugettext_lazy as _
 from django.db import models
 
 
@@ -18,22 +17,39 @@ def get_random_code():
 
 
 class DiscountUsage(models.Model):
-    user = models.ForeignKey('User', on_delete=models.CASCADE)
-    discount = models.ForeignKey('Discount', on_delete=models.CASCADE)
-    created = models.DateTimeField(auto_now_add=True)
+    class Meta:
+        verbose_name = _('Discount usage')
+        verbose_name_plural = _('Discount usages')
+
+    user = models.ForeignKey(
+        'User', on_delete=models.CASCADE, verbose_name=_('user')
+    )
+    discount = models.ForeignKey(
+        'Discount', on_delete=models.CASCADE, verbose_name=_('discount')
+    )
+    created = models.DateTimeField(
+        auto_now_add=True, verbose_name=_('created')
+    )
 
 
 class Discount(models.Model):
-    name = models.CharField(max_length=25)
-    value = models.IntegerField(verbose_name='Value (%)')
-    items = models.ManyToManyField(to='Item', related_name='discounts')
-    groups = models.ManyToManyField(to='auth.Group')
-    need_code = models.BooleanField()
-    number_of_uses = models.IntegerField()
+    class Meta:
+        verbose_name = _('Discount')
+        verbose_name_plural = _('Discounts')
+
+    name = models.CharField(max_length=25, verbose_name=_('name'))
+    value = models.IntegerField(verbose_name=_('Value (%)'))
+    items = models.ManyToManyField(
+        to='Item', related_name='discounts', verbose_name=_('items')
+    )
+    groups = models.ManyToManyField(to='auth.Group', verbose_name=_('groups'))
+    need_code = models.BooleanField(verbose_name=_('need code'))
+    number_of_uses = models.IntegerField(verbose_name=_('number of uses'))
     usages = models.ManyToManyField(
         to='User',
         through='DiscountUsage',
-        related_name='used_discounts'
+        related_name='used_discounts',
+        verbose_name=_('usages')
     )
 
     def __str__(self):
@@ -72,16 +88,25 @@ class Discount(models.Model):
 
 
 class DiscountCode(models.Model):
-    code = models.CharField(max_length=6, default=get_random_code,
-                            primary_key=True)
+    class Meta:
+        verbose_name = _('Discount code')
+        verbose_name_plural = _('Discount codes')
+
+    code = models.CharField(
+        max_length=6, default=get_random_code,
+        primary_key=True, verbose_name=_('code'))
     user = models.ForeignKey(to='User', on_delete=models.CASCADE,
-                             blank=True)
+                             blank=True, verbose_name=_('user'))
     discount = models.ForeignKey(to='Discount',
                                  on_delete=models.CASCADE,
-                                 related_name='user_discounts')
-    created = models.DateField(auto_now_add=True)
-    days_period = models.IntegerField(default=30, blank=True)
-    is_expired = models.BooleanField(default=False)
+                                 related_name='user_discounts',
+                                 verbose_name=_('discount'))
+    created = models.DateField(auto_now_add=True, verbose_name=_('created'))
+    days_period = models.IntegerField(default=30, blank=True,
+                                      verbose_name=_('days period'))
+    is_expired = models.BooleanField(
+        default=False, verbose_name=_('is expired')
+    )
 
     def __str__(self):
         return '{code} ({discount})'.format(code=self.code,

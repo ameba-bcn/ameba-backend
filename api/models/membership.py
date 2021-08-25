@@ -1,3 +1,4 @@
+from django.utils.translation import gettext as _
 from django.db import models
 from django.utils import timezone
 
@@ -14,15 +15,22 @@ class MembershipStates:
 
 
 class Membership(models.Model):
+    class Meta:
+        verbose_name = _('Membership')
+        verbose_name_plural = _('Memberships')
+
     member = models.ForeignKey(
-        'Member', on_delete=models.CASCADE, related_name='memberships'
+        'Member', on_delete=models.CASCADE, related_name='memberships',
+        verbose_name=_('member')
     )
-    created = models.DateTimeField(auto_now_add=True)
-    duration = models.IntegerField(default=DURATION)
-    starts = models.DateTimeField(default=timezone.now)
-    expires = models.DateTimeField(blank=True)
+    created = models.DateTimeField(auto_now_add=True, verbose_name=_('created'))
+    duration = models.IntegerField(default=DURATION, verbose_name=_('duration'))
+    starts = models.DateTimeField(default=timezone.now, verbose_name=_('starts'))
+    expires = models.DateTimeField(blank=True, verbose_name=_('expires'))
     subscription = models.ForeignKey(
-        'Subscription', on_delete=models.DO_NOTHING, related_name='memberships'
+        'Subscription', on_delete=models.DO_NOTHING,
+        related_name='memberships', verbose_name=_('subscription')
+
     )
 
     def save(self, *args, **kwargs):
