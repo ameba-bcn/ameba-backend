@@ -30,6 +30,10 @@ urlpatterns = [
     path('api/', include(urls))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
+admin.site.site_header = "AMEBA Admin Site"
+admin.site.site_title = "AMEBA Admin"
+admin.site.index_title = "AMEBA Admin"
+
 urlpatterns += i18n_patterns(
     path('admin/', admin.site.urls)
 )
