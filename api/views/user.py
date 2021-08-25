@@ -91,7 +91,7 @@ class UserViewSet(
     @member_profile.mapping.patch
     def update_member_profile(self, request, *args, **kwargs):
         user = self.get_object()
-        if not user.member:
+        if not hasattr(user, 'member') or not user.member:
             raise UserHasNotMemberProfile
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(
