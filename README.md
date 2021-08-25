@@ -2,8 +2,12 @@
 
 ### Release notes
 
-#### 0.23
+#### 1.0
 ##### Features
+- AW-228: copy translations for admin panel to spanish and english
+- AW-227: customised admin panel
+- AW-226: added tags to artists
+- AW-205: added event type to event models
 - AW-220: added dynamic localization via Accept-Language header (es/ca/en)
 - AW-220: editable user's preferred language (PATCH /api/users/current/) 
 
@@ -164,6 +168,7 @@ python manage.py test
 Para poner en marcha la API, ejecutar al menos una vez:
 ```
 python manage.py migrate
+python manage.py compilemessages
 python manage.py collectstatic
 python manage.py runserver
 ```
