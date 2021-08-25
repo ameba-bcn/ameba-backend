@@ -3,12 +3,11 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <jonrivala@gmail.com>, 2021
 #
-
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-25 14:23+0000\n"
+"POT-Creation-Date: 2021-08-25 14:54+0000\n"
 "PO-Revision-Date: 2021-08-25 14:48+0000\n"
 "Last-Translator: FULL NAME <jonrivala@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -71,7 +70,7 @@ msgstr "Etiqueta de artista"
 msgid "Artist tags"
 msgstr "Etiquetas de artista"
 
-#: api/models/artist.py:13 api/models/artist.py:38 api/models/discount.py:40
+#: api/models/artist.py:13 api/models/artist.py:42 api/models/discount.py:40
 #: api/models/event.py:21 api/models/item.py:17 api/models/user.py:42
 msgid "name"
 msgstr "nombre"
@@ -93,14 +92,24 @@ msgid "artist"
 msgstr "artista"
 
 #: api/models/artist.py:39
+#| msgid "artist"
+msgid "Artist"
+msgstr "Artista"
+
+#: api/models/artist.py:40
+#| msgid "artists"
+msgid "Artists"
+msgstr "Artistas"
+
+#: api/models/artist.py:43
 msgid "biography"
 msgstr "biografía"
 
-#: api/models/artist.py:41 api/models/item.py:23
+#: api/models/artist.py:45 api/models/item.py:23
 msgid "images"
 msgstr "imágenes"
 
-#: api/models/artist.py:44
+#: api/models/artist.py:48
 msgid "tags"
 msgstr "etiquetas"
 
@@ -497,7 +506,7 @@ msgstr "Español"
 msgid "Catalan"
 msgstr "Catalán"
 
-#: api/models/user.py:15 backend/settings.py:166
+#: api/models/user.py:15
 msgid "English"
 msgstr "Inglés"
 
@@ -798,18 +807,14 @@ msgstr "NEWSLETTER"
 msgid "SUBCRÍBETE"
 msgstr "SUBCRÍBETE"
 
-#: backend/settings.py:164
-msgid "Español"
-msgstr "Español"
+#~ msgid "Español"
+#~ msgstr "Español"
 
-#: backend/settings.py:165
-msgid "Catalá"
-msgstr "Catalán"
+#~ msgid "Catalá"
+#~ msgstr "Catalán"
 
-#: backend/urls.py:34
-msgid "AMEBA Admin Site"
-msgstr "Portal admin de AMEBA"
+#~ msgid "AMEBA Admin Site"
+#~ msgstr "Portal admin de AMEBA"
 
-#: backend/urls.py:35 backend/urls.py:36
-msgid "AMEBA Admin"
-msgstr "Admin de AMEBA"
+#~ msgid "AMEBA Admin"
+#~ msgstr "Admin de AMEBA"

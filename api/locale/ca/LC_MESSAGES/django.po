@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-25 14:46+0000\n"
+"POT-Creation-Date: 2021-08-25 14:54+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
 #: api/admin/cart.py:19 api/admin/interview.py:69 api/admin/item.py:44
 #: api/admin/item.py:65
 msgid "Preview"
@@ -70,7 +71,7 @@ msgstr ""
 msgid "Artist tags"
 msgstr ""
 
-#: api/models/artist.py:13 api/models/artist.py:38 api/models/discount.py:40
+#: api/models/artist.py:13 api/models/artist.py:42 api/models/discount.py:40
 #: api/models/event.py:21 api/models/item.py:17 api/models/user.py:42
 msgid "name"
 msgstr ""
@@ -92,14 +93,22 @@ msgid "artist"
 msgstr ""
 
 #: api/models/artist.py:39
+msgid "Artist"
+msgstr ""
+
+#: api/models/artist.py:40
+msgid "Artists"
+msgstr ""
+
+#: api/models/artist.py:43
 msgid "biography"
 msgstr ""
 
-#: api/models/artist.py:41 api/models/item.py:23
+#: api/models/artist.py:45 api/models/item.py:23
 msgid "images"
 msgstr ""
 
-#: api/models/artist.py:44
+#: api/models/artist.py:48
 msgid "tags"
 msgstr ""
 
