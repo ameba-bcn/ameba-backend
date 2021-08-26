@@ -2,10 +2,11 @@ from django.utils.translation import gettext as _
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth import hashers
+from django.contrib.postgres.fields import CIEmailField
+
 from django.utils.translation import ugettext_lazy as _, gettext_noop
 from django.core import signing
 from django.conf import settings
-
 from api import models as api_models
 
 
@@ -18,6 +19,14 @@ LANGUAGES = (
 
 class InvalidActivationToken(Exception):
     pass
+
+
+class LowerCaseEmail(models.EmailField):
+    def get_prep_value(self, value):
+        value = super(models.EmailField, self).get_prep_value(value)
+        if value is not None:
+            value = value.lower()
+        return value
 
 
 class UserManager(models.Manager):
@@ -40,7 +49,7 @@ class User(AbstractUser):
     first_name = None
     last_name = None
     username = models.CharField(verbose_name=_('name'), max_length=150)
-    email = models.EmailField(verbose_name=_('email'), unique=True)
+    email = LowerCaseEmail(verbose_name=_('email'), unique=True)
     is_active = models.BooleanField(verbose_name=_('active'), default=False)
     language = models.CharField(
         max_length=7, choices=settings.LANGUAGES, blank=True,
