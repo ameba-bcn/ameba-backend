@@ -70,6 +70,6 @@ def get_payment_intent(checkout_details):
         except stripe.error.InvalidRequestError:
             raise WrongPaymentIntent
     elif no_payment_intent_needed(checkout_details):
-        return {'status': IntentStatus.NOT_NEEDED}
+        return EMPTY_PAYMENT_INTENT
     else:
         raise WrongPaymentIntent
