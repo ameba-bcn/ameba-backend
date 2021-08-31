@@ -4,7 +4,7 @@ from api.views.interview import InterviewViewSet
 from api.views.articles import ArticleViewSet
 from api.views.cart import CartViewSet
 from api.views.event import EventViewSet
-from api.views.event import UserSavedEventsViewSet
+from api.views.event import UserSavedEventsViewSet, UserSignedUpEventsViewSet
 from api.views.subscription import SubscriptionViewSet
 from api.views.activate import activate
 from api.views.version import current_version
