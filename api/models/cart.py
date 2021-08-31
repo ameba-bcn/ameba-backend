@@ -176,7 +176,7 @@ class Cart(Model):
                 self.get_cart_items() if cart_item.item_variant.item.id ==event.id
             ]) > 1:
                 return True
-            if self.user and event.acquired_by.filter(user=self.user):
+            if self.user and event.acquired_by.filter(pk=self.user.pk):
                 return True
         return False
 

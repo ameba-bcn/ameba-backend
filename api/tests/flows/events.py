@@ -12,8 +12,8 @@ from api.models import Event, User, Image, Item
 
 
 class TestSavedUserEvents(BaseTest):
-    LIST_ENDPOINT = '/api/users/current/events/saved/'
-    DETAIL_ENDPOINT = '/api/users/current/events/saved/{pk}/'
+    LIST_ENDPOINT = '/api/users/current/events/signed_up/'
+    DETAIL_ENDPOINT = '/api/users/current/events/signed_up/{pk}/'
 
     CART_ENDPOINT = '/api/carts/current/'
     CART_CHECKOUT = '/api/carts/current/checkout/'
@@ -36,4 +36,23 @@ class TestSavedUserEvents(BaseTest):
             token=token,
             props={'item_variant_ids': [1]}
         )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response = self.request(
+            url=self.CART_CHECKOUT,
+            method='get',
+            token=token,
+            props={}
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response = self.request(
+            url=self.CART_ENDPOINT,
+            method='delete',
+            token=token,
+            props={}
+        )
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        response = self._list(token=token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
