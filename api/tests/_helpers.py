@@ -26,6 +26,11 @@ class BaseTest(APITestCase):
                 HTTP_AUTHORIZATION='Bearer {}'.format(token)
             )
 
+    def request(self, url, method, token=None, props=None):
+        self._authenticate(token)
+        method = getattr(self.client, method.lower())
+        return method(url, data=props or {}, follow=True)
+
     def _update(self, pk, token, props):
         self._authenticate(token)
         return self.client.put(
