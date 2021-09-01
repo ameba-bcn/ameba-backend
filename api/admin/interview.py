@@ -53,7 +53,7 @@ class ChoiceInline(admin.TabularInline):
 class InterviewAdmin(admin.ModelAdmin):
     # form = InterviewAdminForm
     fieldsets = [
-        (None, {'fields': ['title', 'artist', 'thumbnail_preview']}),
+        (None, {'fields': ['title', 'artist', 'is_active','thumbnail_preview']}),
     ]
     readonly_fields = ('thumbnail_preview', 'list_preview')
     inlines = [ChoiceInline]
