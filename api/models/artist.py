@@ -47,6 +47,7 @@ class Artist(models.Model):
     tags = models.ManyToManyField(
         to='ArtistTag', blank=True, verbose_name=_('tags')
     )
+    is_ameba_dj = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -54,3 +55,7 @@ class Artist(models.Model):
     @property
     def bio_preview(self):
         return self.biography[:BIO_PREVIEW]
+
+    @property
+    def has_interview(self):
+        return bool(self.interview_set.filter(is_active=True))
