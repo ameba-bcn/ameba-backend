@@ -32,8 +32,9 @@ class ArtistAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {'fields': ['id', 'name', 'biography', 'tags']})
     ]
-    readonly_fields = ['id', 'bio_preview']
-    list_display = ['name', 'bio_preview', 'list_preview']
+    readonly_fields = ['id', 'bio_preview', 'has_interview']
+    list_display = ['name', 'bio_preview', 'list_preview', 'is_ameba_dj',
+                    'has_interview']
     inlines = (MediaUrlsInLine, ArtistImages)
 
     def preview(self, obj):
