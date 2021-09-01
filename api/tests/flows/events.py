@@ -12,6 +12,7 @@ from api.models import Event, User, Image, Item
 
 
 class TestSavedUserEvents(BaseTest):
+    """ Events """
     LIST_ENDPOINT = '/api/users/current/events/signed_up/'
     DETAIL_ENDPOINT = '/api/users/current/events/signed_up/{pk}/'
 
