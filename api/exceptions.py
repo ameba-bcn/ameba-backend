@@ -69,6 +69,12 @@ class CartHasMultipleSubscriptions(APIException):
     default_code = 'cart_has_multiple_subscriptions'
 
 
+class UserCanNotAcquireTwoIdenticalEvents(APIException):
+    status_code = HTTP_400_BAD_REQUEST
+    default_detail = 'User can not acquire two or more identical events.'
+    default_code = 'user_can_not_acquire_identical_events'
+
+
 class MemberProfileRequired(APIException):
     status_code = HTTP_400_BAD_REQUEST
     default_detail = 'Member profile is needed before purchasing subscription.'

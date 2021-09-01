@@ -18,6 +18,7 @@ class IntentStatus:
 
 
 EMPTY_PAYMENT_INTENT = {
+    'payment_intent': {'status': IntentStatus.SUCCESS},
     'status': IntentStatus.NOT_NEEDED,
     'amount': 0,
     'id': NO_PAYMENT_NEEDED_ID

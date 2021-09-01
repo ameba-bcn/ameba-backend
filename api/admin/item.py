@@ -48,7 +48,7 @@ class ImageChoiceInLine(admin.TabularInline):
 class BaseItemAdmin(TranslationAdmin):
     fields = [
         'name', 'description', 'is_active', 'price_range', 'created',
-        'updated', 'has_stock'
+        'updated', 'has_stock', 'saved_by', 'acquired_by'
     ]
     inlines = [ImageChoiceInLine, ItemVariantInline, DiscountChoiceInLine]
     readonly_fields = ['created', 'updated', 'price_range', 'has_stock']
