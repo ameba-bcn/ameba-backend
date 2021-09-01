@@ -30,7 +30,8 @@ class ArtistImages(admin.StackedInline):
 
 class ArtistAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None, {'fields': ['id', 'name', 'biography', 'tags']})
+        (None, {'fields': ['id', 'name', 'is_ameba_dj',
+                           'has_interview', 'biography', 'tags']})
     ]
     readonly_fields = ['id', 'bio_preview', 'has_interview']
     list_display = ['name', 'bio_preview', 'list_preview', 'is_ameba_dj',
