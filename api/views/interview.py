@@ -11,7 +11,7 @@ class InterviewViewSet(
 ):
     serializer_class = serializers.InterviewListSerializer
     permission_classes = (drf_permissions.AllowAny, )
-    queryset = models.Interview.objects.all()
+    queryset = models.Interview.objects.filter(is_active=True)
 
     def get_serializer_class(self):
         if self.action == 'retrieve':
