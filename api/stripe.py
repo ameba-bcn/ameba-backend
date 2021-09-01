@@ -18,6 +18,7 @@ class IntentStatus:
 
 
 EMPTY_PAYMENT_INTENT = {
+    'payment_intent': {'status': IntentStatus.SUCCESS},
     'status': IntentStatus.NOT_NEEDED,
     'amount': 0,
     'id': NO_PAYMENT_NEEDED_ID
@@ -70,6 +71,6 @@ def get_payment_intent(checkout_details):
         except stripe.error.InvalidRequestError:
             raise WrongPaymentIntent
     elif no_payment_intent_needed(checkout_details):
-        return {'status': IntentStatus.NOT_NEEDED}
+        return EMPTY_PAYMENT_INTENT
     else:
         raise WrongPaymentIntent

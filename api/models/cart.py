@@ -10,7 +10,7 @@ from django.conf import settings
 
 from api.exceptions import (
     CartIsEmpty, CartCheckoutNeedsUser, CartHasMultipleSubscriptions,
-    MemberProfileRequired
+    MemberProfileRequired, UserCanNotAcquireTwoIdenticalEvents
 )
 from api.stripe import IntentStatus
 
@@ -155,7 +155,7 @@ class Cart(Model):
     @property
     def events(self):
         return [
-            x.item.subscription for x in self.item_variants.all() if
+            x.item.event for x in self.item_variants.all() if
             x.item.is_event()
         ]
 
@@ -168,6 +168,17 @@ class Cart(Model):
 
     def has_multiple_subscriptions(self):
         return len(self.subscriptions) > 1
+
+    def has_identical_events(self):
+        for event in self.events:
+            if len([
+                cart_item.item_variant.item for cart_item in
+                self.get_cart_items() if cart_item.item_variant.item.id ==event.id
+            ]) > 1:
+                return True
+            if self.user and event.acquired_by.filter(pk=self.user.pk):
+                return True
+        return False
 
     def has_changed(self):
         if self.checkout_hash != self.get_hash():
@@ -182,6 +193,8 @@ class Cart(Model):
             raise CartCheckoutNeedsUser
         if self.has_multiple_subscriptions():
             raise CartHasMultipleSubscriptions
+        if self.has_identical_events():
+            raise UserCanNotAcquireTwoIdenticalEvents
         if self.subscription and not self.user.has_member_profile():
             raise MemberProfileRequired
 

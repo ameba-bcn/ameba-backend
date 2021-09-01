@@ -149,10 +149,7 @@ class ItemVariant(models.Model):
 
     @property
     def name(self):
-        item_name = self.item.name
-        attrs = self.attributes.all()
-        variants = [f'{attr.attribute.name}={attr.value}' for attr in attrs]
-        return f'{item_name}(' + ','.join(variants) + ')'
+        return f'ItemVariant(item=\'{self.item.name}\')'
 
     def __str__(self):
         return self.name
