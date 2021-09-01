@@ -2,6 +2,16 @@
 
 ### Release notes
 
+#### 1.1
+##### Features
+- AW-231: Added has_interview and is_ameba_dj tags to artists.
+- AW-259: Removed english language from site
+
+##### Bugfixes
+- AW-217: Missing purchased by artist Event information
+- AW-230: Email case sensitive
+
+
 #### 1.0
 ##### Features
 - AW-228: copy translations for admin panel to spanish and english
