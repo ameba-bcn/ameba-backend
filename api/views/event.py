@@ -1,6 +1,6 @@
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import (
-    ListModelMixin, DestroyModelMixin, CreateModelMixin
+    ListModelMixin, DestroyModelMixin, CreateModelMixin, RetrieveModelMixin
 )
 from rest_framework.permissions import IsAuthenticated
 
@@ -25,3 +25,13 @@ class UserSavedEventsViewSet(CreateModelMixin, DestroyModelMixin,
 
     def get_queryset(self):
         return Event.saved_by.through.objects.filter(user=self.request.user)
+
+
+class UserSignedUpEventsViewSet(
+    RetrieveModelMixin, ListModelMixin, GenericViewSet
+):
+    serializer_class = UserSavedEventsListSerializer
+    permission_classes = (IsAuthenticated, )
+
+    def get_queryset(self):
+        return Event.acquired_by.through.objects.filter(user=self.request.user)

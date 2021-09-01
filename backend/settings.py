@@ -160,10 +160,10 @@ USE_L10N = True
 USE_TZ = True
 
 gettext = lambda s: s
+
 LANGUAGES = (
     ('es', gettext('Español')),
-    ('ca', gettext('Catalá')),
-    ('en', gettext('English'))
+    ('ca', gettext('Catalá'))
 )
 
 # Static files (CSS, JavaScript, Images)
