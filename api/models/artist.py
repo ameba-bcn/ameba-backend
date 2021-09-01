@@ -54,3 +54,7 @@ class Artist(models.Model):
     @property
     def bio_preview(self):
         return self.biography[:BIO_PREVIEW]
+
+    @property
+    def has_interview(self):
+        return bool(self.interview_set.filter(is_active=True))

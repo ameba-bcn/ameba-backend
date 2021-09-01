@@ -21,6 +21,7 @@ class Interview(models.Model):
         'created'))
     image = models.ImageField(upload_to='interviews', blank=True,
                               verbose_name=_('image'))
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return f'{self.title}'
