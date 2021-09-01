@@ -17,10 +17,17 @@ class ArtistSerializer(serializers.ModelSerializer):
                                           read_only=True)
     tags = serializers.SlugRelatedField(many=True, slug_field='name',
                                         read_only=True)
+    has_interview = serializers.SerializerMethodField()
 
     class Meta:
         model = Artist
-        fields = ['id', 'name', 'biography', 'images', 'media_urls', 'tags']
+        fields = ['id', 'name', 'biography', 'images', 'media_urls', 'tags',
+                  'has_interview']
+        read_only_fields = ['has_interview']
+
+    @staticmethod
+    def get_has_interview(artist):
+        return artist.has_interview
 
 
 class ArtistListSerializer(serializers.ModelSerializer):
@@ -33,4 +40,12 @@ class ArtistListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Artist
-        fields = ['id', 'name', 'bio_preview', 'images', 'media_urls', 'tags']
+        fields = [
+            'id', 'name', 'bio_preview', 'images', 'media_urls', 'tags',
+            'has_interview'
+        ]
+        read_only_fields = ['has_interview']
+
+    @staticmethod
+    def get_has_interview(artist):
+        return artist.has_interview
