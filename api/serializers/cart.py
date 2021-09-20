@@ -20,7 +20,11 @@ class CartItemSerializer(Serializer):
 
     @staticmethod
     def get_name(cart_item):
-        return cart_item['item_variant'].name
+        item_variant = cart_item['item_variant']
+        item_name = item_variant.item.name
+        attrs = item_variant.attributes.all()
+        variants = [f'{attr.attribute.name}={attr.value}' for attr in attrs]
+        return f'{item_name}(' + ','.join(variants) + ')'
 
     @staticmethod
     def get_discount_name(cart_item):
