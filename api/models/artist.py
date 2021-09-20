@@ -48,6 +48,7 @@ class Artist(models.Model):
         to='ArtistTag', blank=True, verbose_name=_('tags')
     )
     is_ameba_dj = models.BooleanField(default=False)
+    featured = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
