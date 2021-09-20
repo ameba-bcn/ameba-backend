@@ -1,8 +1,7 @@
 from rest_framework.serializers import ModelSerializer, \
-    SerializerMethodField, Serializer, PrimaryKeyRelatedField, SlugRelatedField
+    SerializerMethodField, Serializer, SlugRelatedField
 
 from api.models import Cart, ItemVariant
-from api.exceptions import CartCheckoutNeedsUser
 
 
 class CartItemSerializer(Serializer):
@@ -13,6 +12,11 @@ class CartItemSerializer(Serializer):
     price = SerializerMethodField()
     preview = SerializerMethodField()
     subtotal = SerializerMethodField()
+    is_subscription = SerializerMethodField()
+
+    @staticmethod
+    def get_is_subscription(cart_item):
+        return cart_item['item_variant'].item.is_subscription()
 
     @staticmethod
     def get_name(cart_item):
