@@ -2,6 +2,18 @@
 
 ### Release notes
 
+#### 1.2
+##### Features
+- AW-266: Added featured field to artists
+- AW-267: Added is_subscription field to cart items 
+- AW-270: Added variant_details field to cart items
+- AW-268: Subscriptions history on member_profile checked
+
+##### Bugfixes
+- AW-272: Solved security deps warnings
+- AW-269: Backend served files with abs url and http protocol
+- AW-270: Item variant names in cart appeared as ItemVariant(item='item_name')
+
 #### 1.1
 ##### Features
 - AW-231: Added has_interview and is_ameba_dj tags to artists.
