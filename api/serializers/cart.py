@@ -13,11 +13,6 @@ class CartItemSerializer(Serializer):
     preview = SerializerMethodField()
     subtotal = SerializerMethodField()
     is_subscription = SerializerMethodField()
-    is_event = SerializerMethodField()
-
-    @staticmethod
-    def get_is_event(cart_item):
-        return cart_item['item_variant'].item.is_event()
 
     @staticmethod
     def get_is_subscription(cart_item):
