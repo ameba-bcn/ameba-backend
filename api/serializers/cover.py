@@ -4,6 +4,7 @@ from api.models import Cover
 
 
 class CoverSerializer(serializers.ModelSerializer):
+    file = serializers.SlugRelatedField(slug_field='url', read_only=True)
 
     class Meta:
         model = Cover
