@@ -1,5 +1,4 @@
 import requests
-import threading
 import logging
 from background_task import background
 from django.conf import settings
