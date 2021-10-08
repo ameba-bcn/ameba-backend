@@ -1,0 +1,3 @@
+
+#*/5 * * * * python /src/manage.py process_tasks --duration 5
+* * * * * echo "Hello world" >> /src/cron.log 2>&1
