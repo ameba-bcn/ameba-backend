@@ -1,7 +1,7 @@
 import requests
 import threading
 import logging
-
+from background_task import background
 from django.conf import settings
 from rest_framework.status import HTTP_400_BAD_REQUEST
 
@@ -68,11 +68,9 @@ def perform_request(method, endpoint, attributes=None):
             ))
 
 
+@background(schedule=0)
 def single_async_request(method, endpoint, attributes=None):
-    args = (method, endpoint)
-    kwargs = dict(attributes=attributes)
-    t = threading.Thread(target=perform_request, args=args, kwargs=kwargs)
-    t.start()
+    perform_request(method, endpoint, attributes)
 
 
 def list_members():
