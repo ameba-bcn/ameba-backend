@@ -1,6 +1,9 @@
 from django import dispatch
+import django.db.models.signals as signals
 
 from api.models import Membership
+from api.tasks.memberships import schedule_reminders
+from api.signals import new_member
 
 subscription_purchased = dispatch.Signal(
     providing_args=['member', 'subscription']
@@ -8,7 +11,7 @@ subscription_purchased = dispatch.Signal(
 
 
 @dispatch.receiver(subscription_purchased)
-def on_new_subscription(sender, member, subscription, **kwargs):
+def create_membership(sender, member, subscription, **kwargs):
     active_ms = Membership.objects.filter(member=member).order_by(
         '-expires').first()
     attrs = dict(member=member, subscription=subscription)
@@ -17,3 +20,11 @@ def on_new_subscription(sender, member, subscription, **kwargs):
     membership = Membership.objects.create(**attrs)
     membership.member.user.groups.add(subscription.group)
 
+
+@dispatch.receiver(signals.post_save, sender=Membership)
+def trigger_notifications(sender, member, subscription, **kwargs)
+    # Trigger reminders
+    schedule_reminders(schedule=0)
+
+    # Trigger new member signal
+    new_member.send(sender=Membership)
