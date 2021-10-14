@@ -30,6 +30,20 @@ class UserEmailFactoryBase(object):
         self.context_data = context
 
     @classmethod
+    def send_to(cls, user, **context):
+        from_email = getattr(conf.settings, 'DEFAULT_FROM_EMAIL', '')
+        email_object = cls(
+            from_email=from_email,
+            user=user,
+            domain='unknown',
+            site_name='unknown',
+            protocol='https',
+            user_name=user.username,
+            **context
+        ).create()
+        return email_object.send()
+
+    @classmethod
     def from_request(cls, request, user=None, from_email=None, **context):
         site = shortcuts.get_current_site(request)
         from_email = from_email or getattr(
