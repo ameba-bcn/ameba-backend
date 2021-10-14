@@ -24,7 +24,7 @@ def create_membership(sender, member, subscription, **kwargs):
 
 
 @dispatch.receiver(signals.post_save, sender=Membership)
-def trigger_notifications(sender, member, created, **kwargs):
+def trigger_new_member_notifications(sender, member, created, **kwargs):
     if created:
         # Trigger reminders
         notify_member_about_to_expire(schedule=0)
