@@ -15,3 +15,5 @@ django-inlinecss >= 0.2.0
 gunicorn
 django-anymail[mailgun]
 django-modeltranslation
+django-background-tasks~=1.2.5
+requests
