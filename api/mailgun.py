@@ -69,7 +69,8 @@ def perform_request(method, endpoint, attributes=None):
 
 @background(schedule=0)
 def single_async_request(method, endpoint, attributes=None):
-    perform_request(method, endpoint, attributes)
+    response = perform_request(method, endpoint, attributes)
+    response.raise_for_exceptions()
 
 
 def list_members():
