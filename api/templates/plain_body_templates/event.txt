@@ -1,0 +1,22 @@
+{% load i18n %}{% autoescape off %}
+
+{% blocktrans with user_name=user.username|upper %}¡HOLA {{ user_name }}!{% endblocktrans %}
+
+{% blocktrans with event_name=event.name event_date=event.date event_location=event.address %}
+Gracias por reservar tus entradas para:
+{% endblocktrans %}
+
+{{ event.name }}
+
+{{ event.datetime }}
+
+{{ event.address }}
+
+{% blocktrans %}
+Encontrarás tu entrada en PDF adjunta en este correo. No hace falta que la imprimas, puedes traerla en tu móvil el día delevento.
+{% endblocktrans %}
+
+
+L'Associació de Musica Electrònica de Barcelona
+
+{% endautoescape %}

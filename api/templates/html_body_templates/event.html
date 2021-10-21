@@ -1,0 +1,57 @@
+{% extends "template_blocks/base.html" %}
+{% load i18n %}
+
+{% block header %}
+    {% include "template_blocks/header.html" %}
+{% endblock %}
+
+{% block content %}
+<td>
+    <h1>{% blocktrans with user_name=user.username|upper %}¡HOLA {{ user_name }}!{% endblocktrans %}</h1>
+    <p>
+        {% blocktrans with event_name=event.name %}
+            Gracias por reservar tus entradas para:
+        {% endblocktrans %}
+    </p>
+    <h3>
+            {{ event.name }}
+    </h3>
+    <h4>
+            {{ event.datetime }}
+    </h4>
+    <h4>
+            {{ event.address }}
+    </h4>
+    <p>
+        {% blocktrans %}
+            Encontrarás tu entrada en PDF adjunta en este correo. No hace
+            falta que la imprimas, puedes traerla en tu móvil el día del
+            evento.
+        {% endblocktrans %}
+    </p>
+</td>
+{% endblock %}
+
+{% block marquee %}
+    {% include "template_blocks/marquee.html" %}
+{% endblock %}
+
+
+{% block newsletter %}
+    {% include "template_blocks/newsletter.html" %}
+{% endblock %}
+
+
+{% block subscribe %}
+    {% include "template_blocks/subscribe.html" %}
+{% endblock %}
+
+
+{% block media %}
+    {% include "template_blocks/media.html" %}
+{% endblock %}
+
+
+{% block marquee_2 %}
+    {% include "template_blocks/marquee.html" %}
+{% endblock %}
