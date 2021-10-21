@@ -4,7 +4,7 @@ from django import dispatch
 import django.db.models.signals as signals
 
 from api.models import Membership
-from api.signals import new_member
+from api.signals import new_membership
 from api.tasks import memberships
 
 subscription_purchased = dispatch.Signal(
@@ -38,5 +38,9 @@ def trigger_new_member_notifications(sender, instance, created, **kwargs):
         )
 
         # Trigger new member signal
-        new_member.send(sender=Membership, user=instance.member.user)
+        new_membership.send(
+            ender=Membership,
+            user=instance.member.user,
+            membership=instance
+        )
 
