@@ -1,0 +1,49 @@
+{% extends "template_blocks/base.html" %}
+{% load i18n %}
+
+{% block header %}
+    {% include "template_blocks/header.html" %}
+{% endblock %}
+
+{% block content %}
+<td>
+    <h1>{% blocktrans with user_name=user.username|upper %}¡HOLA {{ user_name }}!{% endblocktrans %}</h1>
+    <p>
+        {% blocktrans with subscription=subscription.name renewal_date=membership.expires %}
+            Te recordamos que tu subscripción como {{ subscription }} se
+            renovará automáticamente el {{ renewal_date }}
+        {% endblocktrans %}
+    </p>
+    <p>
+        {% blocktrans %}
+            Si no quieres seguir formando parte de AMEBA, siempre puedes
+            cancelar tu subscripción de socio desde tu área personal de
+            ameba.cat
+        {% endblocktrans %}
+    </p>
+</td>
+{% endblock %}
+
+{% block marquee %}
+    {% include "template_blocks/marquee.html" %}
+{% endblock %}
+
+
+{% block newsletter %}
+    {% include "template_blocks/newsletter.html" %}
+{% endblock %}
+
+
+{% block subscribe %}
+    {% include "template_blocks/subscribe.html" %}
+{% endblock %}
+
+
+{% block media %}
+    {% include "template_blocks/media.html" %}
+{% endblock %}
+
+
+{% block marquee_2 %}
+    {% include "template_blocks/marquee.html" %}
+{% endblock %}

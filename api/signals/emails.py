@@ -6,7 +6,7 @@ from api import email_factories
 
 user_registered = django.dispatch.Signal(providing_args=['user', 'request'])
 account_activated = django.dispatch.Signal(providing_args=['user', 'request'])
-new_member = django.dispatch.Signal(providing_args=['user'])
+new_membership = django.dispatch.Signal(providing_args=['user', 'membership'])
 account_recovery = django.dispatch.Signal(providing_args=['user', 'request'])
 password_changed = django.dispatch.Signal(providing_args=['user', 'request'])
 event_confirmation = django.dispatch.Signal(
@@ -28,9 +28,20 @@ def on_account_activated(sender, user, request, **kwargs):
     email.send()
 
 
-@receiver(new_member)
-def on_new_member(sender, user, **context):
-    email_factories.NewMembershipEmail.send_to(user, **context)
+@receiver(new_membership)
+def on_new_membership(sender, user, membership, **context):
+    # todo: enviar bienvenida o renovación en función de las memberships que
+    #  tenga el usuario.
+
+    if user.member.memberships.filter(subscription=membership.subscription):
+        # todo: enviar email de confirmacion de renovación
+        pass
+    else:
+        email_factories.NewMembershipEmail.send_to(
+            user,
+            membership=membership,
+            **context
+        )
 
 
 @receiver(account_recovery)
