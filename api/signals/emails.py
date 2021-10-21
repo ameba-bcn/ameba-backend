@@ -52,6 +52,6 @@ def on_password_changed(sender, user, request, **kwargs):
 @receiver(event_confirmation)
 def on_event_confirmation(sender, item_variant, user, request, **kwargs):
     email = email_factories.EventConfirmationEmail.from_request(
-        request, user=user, event=item_variant.item
+        request, user=user, event=item_variant.item.event
     )
     email.send()

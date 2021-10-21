@@ -9,8 +9,15 @@
 <td>
     <h1>{% blocktrans with user_name=user.username|upper %}¡HOLA {{ user_name }}!{% endblocktrans %}</h1>
     <p>
-        {% blocktrans with event_name=event.name event_date=event.date event_location=event.address %}
-            Gracias por reservar tu plaza para el evento {{ event_name }}
+        {% blocktrans with event_name=event.name %}
+            Gracias por reservar tus entradas.
+        {% endblocktrans %}
+    </p>
+    <p>
+        {% blocktrans with event_name=event.name event_date=event.datetime event_address=event.address %}
+            {{ event_name }}
+            {{ event_date }}
+            {{ event_address }}
         {% endblocktrans %}
     </p>
     <p>
