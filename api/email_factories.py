@@ -137,3 +137,9 @@ class EventConfirmationEmail(UserEmailFactoryBase):
     subject_template = 'plain_subject_templates/event.txt'
     plain_body_template = 'plain_body_templates/event.txt'
     html_body_template = 'html_body_templates/event.html'
+
+
+class BeforeRenewal(UserEmailFactoryBase):
+    subject_template = 'plain_subject_templates/before_renewal.txt'
+    plain_body_template = 'plain_body_templates/before_renewal.txt'
+    html_body_template = 'html_body_templates/before_renewal.html'
