@@ -131,6 +131,8 @@ class Cart(Model):
         return sorted(queryset, key=lambda x: x.item_variant.price, reverse=True)
 
     def get_cart_items(self):
+        """ Return cart_items objects which relates item_variants with
+        carts."""
         return self.item_variants.through.objects.filter(cart=self)
 
     def is_empty(self):
