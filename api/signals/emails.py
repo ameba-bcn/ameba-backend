@@ -29,14 +29,19 @@ def on_account_activated(sender, user, request, **kwargs):
 
 
 @receiver(new_membership)
-def on_new_member(sender, user, membership, **context):
+def on_new_membership(sender, user, membership, **context):
     # todo: enviar bienvenida o renovación en función de las memberships que
     #  tenga el usuario.
-    email_factories.NewMembershipEmail.send_to(
-        user,
-        membership=membership,
-        **context
-    )
+
+    if user.member.memberships.filter(subscription=membership.subscription):
+        # todo: enviar email de confirmacion de renovación
+        pass
+    else:
+        email_factories.NewMembershipEmail.send_to(
+            user,
+            membership=membership,
+            **context
+        )
 
 
 @receiver(account_recovery)
