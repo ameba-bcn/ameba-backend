@@ -3,19 +3,18 @@
 {% blocktrans with user_name=user.username|upper %}¡HOLA {{ user_name }}!{% endblocktrans %}
 
 {% blocktrans with event_name=event.name event_date=event.date event_location=event.address %}
-    Gracias por reservar tu plaza para el evento {{ event_name }}
+Gracias por reservar tus entradas para:
 {% endblocktrans %}
+
+{{ event.name }}
+
+{{ event.datetime }}
+
+{{ event.address }}
 
 {% blocktrans %}
-    Encontrarás una entrada en PDF con un QR adjuntada a este correo.
-    Por favor, enséñanosla el día del evento.
+Encontrarás tu entrada en PDF adjunta en este correo. No hace falta que la imprimas, puedes traerla en tu móvil el día delevento.
 {% endblocktrans %}
-
-{% blocktrans %}
-    Para formar parte de la asociación, colaborar con nosotros y
-    beneficiarte de descuentos, hazte socio <a href="{{ new_soci_link }}">aquí</a>
-{% endblocktrans %}
-
 
 
 L'Associació de Musica Electrònica de Barcelona
