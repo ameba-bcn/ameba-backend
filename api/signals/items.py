@@ -7,14 +7,15 @@ items_acquired = django.dispatch.Signal(providing_args=['cart', 'request'])
 
 
 @django.dispatch.receiver(items_acquired)
-def process_cart_items(sender, cart, **kwargs):
+def process_cart_items(sender, cart, request, **kwargs):
     for cart_item in cart.get_cart_items():
         item_variant = cart_item.item_variant
         item_variant.item.acquired_by.add(cart.user)
 
         if item_variant.item.is_event():
             event_signals.event_acquired.send(
-                sender=sender, item_variant=item_variant, user=cart.user
+                sender=sender, item_variant=item_variant, user=cart.user,
+                request=request
             )
 
         elif item_variant.item.is_subscription():

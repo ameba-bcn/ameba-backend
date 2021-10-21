@@ -64,7 +64,7 @@ def on_cart_deleted(sender, cart, request, **kwargs):
         raise PaymentIsNotSucceed
 
     # Add items to acquired lists
-    items_acquired.send(sender=sender, cart=cart)
+    items_acquired.send(sender=sender, cart=cart, request=request)
 
     # Create payment object
     payment = Payment.objects.create_payment(cart=cart, payment_intent=payment_intent)
