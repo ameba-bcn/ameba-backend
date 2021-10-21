@@ -9,6 +9,9 @@ account_activated = django.dispatch.Signal(providing_args=['user', 'request'])
 new_member = django.dispatch.Signal(providing_args=['user'])
 account_recovery = django.dispatch.Signal(providing_args=['user', 'request'])
 password_changed = django.dispatch.Signal(providing_args=['user', 'request'])
+event_confirmation = django.dispatch.Signal(
+    providing_args=['item_variant', 'user', 'request']
+)
 
 
 @receiver(user_registered)
@@ -45,3 +48,10 @@ def on_password_changed(sender, user, request, **kwargs):
     )
     email.send()
 
+
+@receiver(event_confirmation)
+def on_event_confirmation(sender, item_variant, user, request, **kwargs):
+    email = email_factories.EventConfirmationEmail.from_request(
+        request, user=user, event=item_variant.item.event
+    )
+    email.send()
