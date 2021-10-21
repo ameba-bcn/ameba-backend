@@ -6,7 +6,7 @@ from api import email_factories
 
 user_registered = django.dispatch.Signal(providing_args=['user', 'request'])
 account_activated = django.dispatch.Signal(providing_args=['user', 'request'])
-new_member = django.dispatch.Signal(providing_args=['user'])
+new_member = django.dispatch.Signal(providing_args=['user', 'subscription'])
 account_recovery = django.dispatch.Signal(providing_args=['user', 'request'])
 password_changed = django.dispatch.Signal(providing_args=['user', 'request'])
 event_confirmation = django.dispatch.Signal(
@@ -29,8 +29,10 @@ def on_account_activated(sender, user, request, **kwargs):
 
 
 @receiver(new_member)
-def on_new_member(sender, user, **context):
-    email_factories.NewMembershipEmail.send_to(user, **context)
+def on_new_member(sender, user, subscription, **context):
+    email_factories.NewMembershipEmail.send_to(
+        user, subscription=subscription, **context
+    )
 
 
 @receiver(account_recovery)
