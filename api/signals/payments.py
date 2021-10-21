@@ -9,7 +9,6 @@ from api.models import Payment
 from api.models.cart import cart_checkout
 from api.exceptions import StripeSyncError, CheckoutNeeded, PaymentIsNotSucceed
 from api.email_factories import PaymentSuccessfulEmail
-from api.signals.memberships import subscription_purchased
 from api.signals.items import items_acquired
 
 
@@ -64,13 +63,6 @@ def on_cart_deleted(sender, cart, request, **kwargs):
     if not cart.is_payment_succeeded():
         raise PaymentIsNotSucceed
 
-    # Reach here if the payment has been succeeded.
-    if cart.subscription:
-        subscription_purchased.send(
-            sender=sender,
-            member=cart.user.member,
-            subscription=cart.subscription
-        )
     # Add items to acquired lists
     items_acquired.send(sender=sender, cart=cart)
 
