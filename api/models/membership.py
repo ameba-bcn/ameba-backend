@@ -32,6 +32,7 @@ class Membership(models.Model):
         related_name='memberships', verbose_name=_('subscription')
 
     )
+    auto_renew = models.BooleanField(default=True)
 
     def save(self, *args, **kwargs):
         if not self.id:
