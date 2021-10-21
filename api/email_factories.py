@@ -6,6 +6,8 @@ import django.utils.http as http
 import django.template.loader as loader
 from rest_framework_simplejwt.tokens import RefreshToken
 
+site_name = getattr(conf.settings, 'HOST_NAME', '')
+
 
 def user_token_generator(user):
     refresh = RefreshToken.for_user(user)
@@ -35,9 +37,9 @@ class UserEmailFactoryBase(object):
         email_object = cls(
             from_email=from_email,
             user=user,
-            domain='unknown',
-            site_name='unknown',
-            protocol='https',
+            domain=site_name,
+            site_name=site_name,
+            protocol='http',
             user_name=user.username,
             **context
         ).create()
