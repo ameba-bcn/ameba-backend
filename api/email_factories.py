@@ -6,6 +6,8 @@ import django.utils.http as http
 import django.template.loader as loader
 from rest_framework_simplejwt.tokens import RefreshToken
 
+site_name = getattr(conf.settings, 'HOST_NAME', '')
+
 
 def user_token_generator(user):
     refresh = RefreshToken.for_user(user)
@@ -28,6 +30,20 @@ class UserEmailFactoryBase(object):
         self.protocol = protocol
         self.site_name = site_name
         self.context_data = context
+
+    @classmethod
+    def send_to(cls, user, **context):
+        from_email = getattr(conf.settings, 'DEFAULT_FROM_EMAIL', '')
+        email_object = cls(
+            from_email=from_email,
+            user=user,
+            domain=site_name,
+            site_name=site_name,
+            protocol='http',
+            user_name=user.username,
+            **context
+        ).create()
+        return email_object.send()
 
     @classmethod
     def from_request(cls, request, user=None, from_email=None, **context):
@@ -116,3 +132,8 @@ class UserRegisteredEmail(UserEmailFactoryBase):
     plain_body_template = 'plain_body_templates/registered.txt'
     html_body_template = 'html_body_templates/registered.html'
 
+
+class EventConfirmationEmail(UserEmailFactoryBase):
+    subject_template = 'plain_subject_templates/event.txt'
+    plain_body_template = 'plain_body_templates/event.txt'
+    html_body_template = 'html_body_templates/event.html'

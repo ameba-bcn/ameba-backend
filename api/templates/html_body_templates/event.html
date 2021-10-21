@@ -7,23 +7,28 @@
 
 {% block content %}
 <td>
-    <h1>{% blocktrans with user_name=user.username|upper %}¡BIENVENIDO {{ user_name }}!{% endblocktrans %}</h1>
+    <h1>{% blocktrans with user_name=user.username|upper %}¡HOLA {{ user_name }}!{% endblocktrans %}</h1>
     <p>
-        {% blocktrans with subscription=subscription.name|upper %}
-            ¡Ya eres {{ subscription }} de AMEBA!
+        {% blocktrans with event_name=event.name %}
+            Gracias por reservar tus entradas para:
         {% endblocktrans %}
     </p>
-    <p>
-        {{ subscription.description }}
-    </p>
-
+    <h3>
+            {{ event.name }}
+    </h3>
+    <h4>
+            {{ event.datetime }}
+    </h4>
+    <h4>
+            {{ event.address }}
+    </h4>
     <p>
         {% blocktrans %}
-            Encontrarás tu carnet digital de socio adjunto en PDF a este correo.
+            Encontrarás tu entrada en PDF adjunta en este correo. No hace
+            falta que la imprimas, puedes traerla en tu móvil el día del
+            evento.
         {% endblocktrans %}
     </p>
-
-
 </td>
 {% endblock %}
 
