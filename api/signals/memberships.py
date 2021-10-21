@@ -31,4 +31,5 @@ def trigger_new_member_notifications(sender, instance, created, **kwargs):
         notify_member_expired(schedule=0)
 
         # Trigger new member signal
-        new_member.send(sender=Membership, user=instance.member.user)
+        new_member.send(sender=Membership, user=instance.member.user,
+                        subscription=instance.subscription)
