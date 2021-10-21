@@ -94,7 +94,7 @@ img.g-img + div {
 /* GENERAL AND BODY */
 body {
     font-family: 'Roboto', sans-serif;
-    background-color: white;
+    background-color: #f8f6f1;
     color: #1D1D1B;
     margin: 0 !important;
     padding: 0 !important;
@@ -127,9 +127,11 @@ a {
 }
 
 .header img {
-    height: 62px;
+    height: 52px;
     vertical-align: text-bottom;
-    margin: 15px auto 15px;
+    margin: 15px auto 20px;
+    object-fit: cover;
+    width: 120px;
 }
 
 /*CONTENT*/
@@ -193,7 +195,7 @@ a {
 .newsletter h1 {
     margin: 40px auto 20px;
     transform: scaleY(1.75);
-    font-size: 36px;
+    font-size:30px;
     font-weight: 600;
 }
 

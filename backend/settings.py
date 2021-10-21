@@ -35,6 +35,8 @@ class MissingSecretKey(Exception):
 def raise_debug():
     raise MissingSecretKey
 
+# Avoid auto field warning on upgrade to Django 3.2
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # SECURITY WARNING: keep the secret key used in production secret!
 DEV_SECRET_KEY = env(
@@ -49,11 +51,12 @@ SECRET_KEY = env(
     var_type='string'
 )
 
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = []
 
-BACKEND_HOST = env("BACKEND_HOST", '', 'string')
-if BACKEND_HOST:
-    ALLOWED_HOSTS.append(BACKEND_HOST)
+DEFAULT_HOST_NAME = 'ameba.jaguarintheloop.live'
+HOST_NAME = env("HOST_NAME", '', 'string') or DEFAULT_HOST_NAME
+if HOST_NAME:
+    ALLOWED_HOSTS.append(HOST_NAME)
 
 
 # Auth User
@@ -78,7 +81,8 @@ INSTALLED_APPS = [
     'anymail',
     'django_inlinecss',
     'django_extensions',
-    'background_task'
+    'background_task',
+    'naomi'
 ]
 
 MIDDLEWARE = [
@@ -272,3 +276,5 @@ DEFAULT_MAILING_LIST = env(
 STAFF_DOMAINS = ['jaguarintheloop.live', 'ameba.cat']
 TEST_MAILING_LIST_PREFIXES = ['test', 'dev', 'stag', 'sand', 'debug', 'local']
 TEST_TEMPLATE = 'unsubscribe.test'
+
+EMAIL_FILE_PATH = "/src/emails"
