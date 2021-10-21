@@ -13,23 +13,20 @@
             Gracias por reservar tus entradas.
         {% endblocktrans %}
     </p>
-    <p>
-        {% blocktrans with event_name=event.name event_date=event.datetime event_address=event.address %}
-            {{ event_name }}
-            {{ event_date }}
-            {{ event_address }}
-        {% endblocktrans %}
-    </p>
-    <p>
-        {% blocktrans %}
-            Encontrarás una entrada en PDF con un QR adjuntada a este correo.
-            Por favor, enséñanosla el día del evento.
-        {% endblocktrans %}
-    </p>
+    <h3>
+            {{ event.name }}
+    </h3>
+    <h4>
+            {{ event.datetime }}
+    </h4>
+    <h4>
+            {{ event.address }}
+    </h4>
     <p>
         {% blocktrans %}
-            Para formar parte de la asociación, colaborar con nosotros y
-            beneficiarte de descuentos, hazte socio <a href="{{ new_soci_link }}">aquí</a>
+            Encontrarás tu entrada en PDF adjunta en este correo. No hace
+            falta que la imprimas, puedes traerla en tu móvil el día del
+            evento.
         {% endblocktrans %}
     </p>
 </td>
