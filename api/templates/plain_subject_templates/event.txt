@@ -1,0 +1,3 @@
+{% load i18n %}{% autoescape off %}
+{% blocktrans event_name=event.name%}Tus entradas para {{ event_name }}!{% endblocktrans %}
+{% endautoescape %}
