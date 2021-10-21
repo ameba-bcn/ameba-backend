@@ -71,7 +71,9 @@ def on_cart_deleted(sender, cart, request, **kwargs):
     # Send payment confirmation email
     cart_record = payment.cart_record
     user = payment.user
-    email = PaymentSuccessfulEmail.from_request(
-        request=request, cart_record=cart_record, user=user
-    )
-    email.send()
+
+    if payment.amount > 0:
+        email = PaymentSuccessfulEmail.from_request(
+            request=request, cart_record=cart_record, user=user
+        )
+        email.send()
