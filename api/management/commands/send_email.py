@@ -7,7 +7,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('--template', dest='template')
         parser.add_argument('--mail_to', dest='mail_to',
-                            default='jonatan@jacoti.com')
+                            default='jonrivala@gmail.com')
 
     def handle(self, *args, **options):
         template = options.get('template')
