@@ -1,6 +1,6 @@
 from background_task import background
 
-from api.email_factories import BeforeRenewal
+from api.email_factories import BeforeRenewalNotification
 from api.models import Membership
 
 
@@ -13,7 +13,7 @@ def check_and_notify_before_renewal(membership_id):
     user = membership.member.user
 
     if membership.is_active and user.is_active:
-        BeforeRenewal.send_to(user=user, membership=membership)
+        BeforeRenewalNotification.send_to(user=user, membership=membership)
 
 
 @background(schedule=0)

@@ -1,6 +1,6 @@
 import django.dispatch
 from django.dispatch import receiver
-
+from django.db.models import Q
 from api import email_factories
 
 
@@ -33,13 +33,18 @@ def on_new_membership(sender, user, membership, **context):
     # todo: enviar bienvenida o renovación en función de las memberships que
     #  tenga el usuario.
 
-    if user.member.memberships.filter(subscription=membership.subscription):
-        # todo: enviar email de confirmacion de renovación
-        pass
+    if user.member.memberships.filter(
+        ~Q(pk=membership.pk), subscription=membership.subscription
+    ):
+        email_factories.RenewalConfirmation.send_to(
+            user,
+            subscription=membership.subscription,
+            **context
+        )
     else:
         email_factories.NewMembershipEmail.send_to(
             user,
-            membership=membership,
+            subscription=membership.subscription,
             **context
         )
 
