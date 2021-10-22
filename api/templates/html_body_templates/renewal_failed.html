@@ -1,0 +1,53 @@
+{% extends "template_blocks/base.html" %}
+{% load i18n %}
+
+{% block header %}
+    {% include "template_blocks/header.html" %}
+{% endblock %}
+
+{% block content %}
+<td>
+    <h1>{% blocktrans with user_name=user.username|upper %}¡HOLA {{ user_name }}!{% endblocktrans %}</h1>
+    <p>
+        {% blocktrans with subscription=subscription.name|upper %}
+            Hemos intentado renovar tu subscripción como {{ subscription }}
+            de AMEBA pero parece que ha habido un problema con el pago.
+        {% endblocktrans %}
+    </p>
+    <p>
+        {% blocktrans %}
+            Si sigues queriendo formar parte de la asociación, puedes vovler
+            a renovar tu subscripción desde nuestra web ameba.cat
+        {% endblocktrans %}
+    </p>
+    <p>
+        {% blocktrans %}
+            Si no deseas continuar siendo socio, no hace falta que hagas nada.
+        {% endblocktrans %}
+    </p>
+</td>
+{% endblock %}
+
+{% block marquee %}
+    {% include "template_blocks/marquee.html" %}
+{% endblock %}
+
+
+{% block newsletter %}
+    {% include "template_blocks/newsletter.html" %}
+{% endblock %}
+
+
+{% block subscribe %}
+    {% include "template_blocks/subscribe.html" %}
+{% endblock %}
+
+
+{% block media %}
+    {% include "template_blocks/media.html" %}
+{% endblock %}
+
+
+{% block marquee_2 %}
+    {% include "template_blocks/marquee.html" %}
+{% endblock %}
