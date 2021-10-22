@@ -2,6 +2,7 @@ from background_task import background
 
 from api.email_factories import BeforeRenewalNotification
 from api.models import Membership
+from api.signals import emails
 
 
 @background(schedule=0)
@@ -23,11 +24,24 @@ def renew_membership(membership_id):
 
     membership = Membership.objects.get(id=membership_id)
 
+    if not membership.member.user.is_active:
+        return
+
     # todo: Payment renewal here!
+    payment_successful = True
+
+    if not payment_successful:
+        emails.failed_renewal.send(
+            sender=Membership,
+            user=membership.member.user,
+            membership=membership
+        )
+        return
 
     # If renewal payment is successful...
     if membership.auto_renew:
         member = membership.member
-        member.memberships.add(
+        Membership.objects.create(
+            member=member,
             subscription=membership.subscription
         )
