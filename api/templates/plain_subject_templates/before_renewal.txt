@@ -1,0 +1,3 @@
+{% load i18n %}{% autoescape off %}
+{% blocktrans with event_name=event.name %}Tu subscripción a AMEBA se va a renovar {% endblocktrans %}
+{% endautoescape %}

@@ -1,0 +1,21 @@
+{% load i18n %}{% autoescape off %}
+
+{% blocktrans %}¡Hola {{ user_name }}!{% endblocktrans %}
+
+{% blocktrans with subscription=subscription.name|upper %}
+    Hemos intentado renovar tu subscripción como {{ subscription }}
+    de AMEBA pero parece que ha habido un problema con el pago.
+{% endblocktrans %}
+
+{% blocktrans %}
+    Si sigues queriendo formar parte de la asociación, puedes vovler a renovar tu subscripción desde nuestra web ameba.cat
+{% endblocktrans %}
+
+{% blocktrans %}
+    Si no deseas continuar siendo socio, no hace falta que hagas nada.
+{% endblocktrans %}
+
+
+L'Associació de Musica Electrònica de Barcelona
+
+{% endautoescape %}

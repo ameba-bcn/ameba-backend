@@ -1,17 +1,18 @@
 import django.dispatch
 from django.dispatch import receiver
-
+from django.db.models import Q
 from api import email_factories
 
 
 user_registered = django.dispatch.Signal(providing_args=['user', 'request'])
 account_activated = django.dispatch.Signal(providing_args=['user', 'request'])
-new_member = django.dispatch.Signal(providing_args=['user', 'subscription'])
+new_membership = django.dispatch.Signal(providing_args=['user', 'membership'])
 account_recovery = django.dispatch.Signal(providing_args=['user', 'request'])
 password_changed = django.dispatch.Signal(providing_args=['user', 'request'])
 event_confirmation = django.dispatch.Signal(
     providing_args=['item_variant', 'user', 'request']
 )
+failed_renewal = django.dispatch.Signal(providing_args=['user', 'membership'])
 
 
 @receiver(user_registered)
@@ -28,11 +29,22 @@ def on_account_activated(sender, user, request, **kwargs):
     email.send()
 
 
-@receiver(new_member)
-def on_new_member(sender, user, subscription, **context):
-    email_factories.NewMembershipEmail.send_to(
-        user, subscription=subscription, **context
-    )
+@receiver(new_membership)
+def on_new_membership(sender, user, membership, **context):
+    if user.member.memberships.filter(
+        ~Q(pk=membership.pk), subscription=membership.subscription
+    ):
+        email_factories.RenewalConfirmation.send_to(
+            user,
+            subscription=membership.subscription,
+            **context
+        )
+    else:
+        email_factories.NewMembershipEmail.send_to(
+            user,
+            subscription=membership.subscription,
+            **context
+        )
 
 
 @receiver(account_recovery)
@@ -57,3 +69,11 @@ def on_event_confirmation(sender, item_variant, user, request, **kwargs):
         request, user=user, event=item_variant.item.event
     )
     email.send()
+
+
+@receiver(failed_renewal)
+def on_failed_renewal(sender, user, membership, **kwargs):
+    email_factories.RenewalFailedNotification.send_to(
+        user=user,
+        membership=membership
+    )

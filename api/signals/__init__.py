@@ -5,7 +5,7 @@ from django.contrib.auth.models import Group
 
 from api import models
 from api.groups import DEFAULT_GROUP, MEMBER_GROUP
-from api.signals.emails import user_registered, new_member
+from api.signals.emails import user_registered, new_membership
 from api.signals.payments import cart_checkout, cart_processed
 from api.signals.user import on_new_user
 from api.signals.mailing_lists import create_mailing_lists

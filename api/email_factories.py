@@ -137,3 +137,21 @@ class EventConfirmationEmail(UserEmailFactoryBase):
     subject_template = 'plain_subject_templates/event.txt'
     plain_body_template = 'plain_body_templates/event.txt'
     html_body_template = 'html_body_templates/event.html'
+
+
+class BeforeRenewalNotification(UserEmailFactoryBase):
+    subject_template = 'plain_subject_templates/before_renewal.txt'
+    plain_body_template = 'plain_body_templates/before_renewal.txt'
+    html_body_template = 'html_body_templates/before_renewal.html'
+
+
+class RenewalConfirmation(UserEmailFactoryBase):
+    subject_template = 'plain_subject_templates/renewal.txt'
+    plain_body_template = 'plain_body_templates/renewal.txt'
+    html_body_template = 'html_body_templates/renewal.html'
+
+
+class RenewalFailedNotification(UserEmailFactoryBase):
+    subject_template = 'plain_subject_templates/renewal_failed.txt'
+    plain_body_template = 'plain_body_templates/renewal_failed.txt'
+    html_body_template = 'html_body_templates/renewal_failed.html'

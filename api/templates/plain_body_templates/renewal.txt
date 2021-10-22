@@ -1,0 +1,18 @@
+{% load i18n %}{% autoescape off %}
+
+{% blocktrans %}¡Hola {{ user_name }}!{% endblocktrans %}
+
+{% blocktrans with subscription=subscription.name|upper %}
+    ¡Se ha renovado tu subscripción como {{ subscription }} de AMEBA!
+{% endblocktrans %}
+
+
+{% blocktrans %}
+    Recuerda que puedes descargar tu carnet digital a traves de
+    nuestra tu area personal en ameba.cat
+{% endblocktrans %}
+
+
+L'Associació de Musica Electrònica de Barcelona
+
+{% endautoescape %}

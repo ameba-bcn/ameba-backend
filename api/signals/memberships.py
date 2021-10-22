@@ -1,11 +1,11 @@
+from datetime import timedelta
+
 from django import dispatch
 import django.db.models.signals as signals
 
 from api.models import Membership
-from api.bg_tasks.notifications import (
-    notify_member_about_to_expire, notify_member_expired
-)
-from api.signals import new_member
+from api.signals import new_membership
+from api.tasks import memberships
 
 subscription_purchased = dispatch.Signal(
     providing_args=['member', 'subscription']
@@ -27,9 +27,20 @@ def create_membership(sender, member, subscription, **kwargs):
 def trigger_new_member_notifications(sender, instance, created, **kwargs):
     if created:
         # Trigger reminders
-        notify_member_about_to_expire(schedule=0)
-        notify_member_expired(schedule=0)
+        # Schedule before renewal notification
+        before_renewal_time = instance.expires - timedelta(days=30)
+        memberships.check_and_notify_before_renewal(
+            membership_id=instance.id,
+            schedule=before_renewal_time
+        )
+        memberships.renew_membership(
+            membership_id=instance.id, schedule=instance.expires
+        )
 
         # Trigger new member signal
-        new_member.send(sender=Membership, user=instance.member.user,
-                        subscription=instance.subscription)
+        new_membership.send(
+            sender=Membership,
+            user=instance.member.user,
+            membership=instance
+        )
+
