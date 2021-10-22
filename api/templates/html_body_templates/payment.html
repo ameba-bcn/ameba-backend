@@ -8,32 +8,45 @@
 {% block content %}
 <td>
     <h1>
-        {% blocktrans with user_name=user.username|upper %}¡GRACIAS {{ user_name }}, HEMOS RECIBIDO TU PEDIDO!{% endblocktrans %}
+        {% blocktrans with user_name=user.username|upper %}
+            ¡GRACIAS {{ user_name }}, TU PEDIDO SE HA PROCESADO CORRECTAMENTE!
+        {% endblocktrans %}
     </h1>
     <p>
         {% blocktrans %}
-            Tu pedido está siendo revisado por nuestros compañeros.<br>
-            En breve recibirás un email de confirmación.
+            Te recordamos que actualmente no hacemos envíos. Para recogerlo
+            puedes dirigirte a <a href="https://goo.gl/maps/RSAfNpoG8zjhSMNF9">
+            RHYTHM CONTROL</a> de lunes a viernes de 15 a 20, o sábados de
+            12 a 20.
+        {% endblocktrans %}
+    </p>
+    <p>
+        {% blocktrans %}
+            A continuación encontrarás los detalles del pedido.
         {% endblocktrans %}
     </p>
     <table class="checkout-summary">
         <tr>
-            <th>CONCEPTO</th>
+            <th>ARTÍCULO</th>
             <th>DESCUENTO</th>
-            <th>PRECIO</th>
-            <th>TOTAL</th>
+            <th>VALOR</th>
         </tr>
-        {% for item in cart_record.cart_items %}
+        {% for item in cart_record.item_variants %}
         <tr>
             <td>{{ item.name }}</td>
-            <td>{{ item.discount_name }} ({{ item.discount_value }}%)</td>
-            <td>{{ item.price }}</td>
+            <td>
+                {% if item.discount_value %}
+                    {{ item.discount_name }} ({{ item.discount_value }}% de {{ item.price }})
+                {% else %}
+                    -
+                {% endif %}
+            </td>
             <td>{{ item.subtotal }}</td>
         </tr>
         {% endfor %}
         <tr>
             <td style="border: 0 solid transparent!important;"></td>
-            <td style="border: 0 solid transparent!important;"></td>
+{#            <td style="border: 0 solid transparent!important;"></td>#}
             <td style="font-weight: 400;">TOTAL</td>
             <td style="font-weight: 400;">{{ cart_record.total }}</td>
         </tr>
