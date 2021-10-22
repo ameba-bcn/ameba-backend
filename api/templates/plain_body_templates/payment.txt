@@ -5,9 +5,25 @@
 {% endblocktrans %}
 
 {% blocktrans %}
-    Tu pedido está siendo revisado por nuestros compañeros.
-    En breve recibirás un email de confirmación.
+    Te recordamos que actualmente no hacemos envíos. Para recogerlo
+    puedes dirigirte a RHYTHM CONTROL de lunes a viernes de 15 a 20, o
+    sábados de 12 a 20.
 {% endblocktrans %}
+
+
+{% blocktrans %}
+    A continuación encontrarás los detalles del pedido.
+{% endblocktrans %}
+
+
+{% for item in cart_record.item_variants %}
+
+{{ item.name }}\t\t{% if item.discount_value %} {{ item.discount_name }} ({{ item.discount_value }}% de {{ item.price }}){% else %} - {% endif %}\t\t{{ item.subtotal }}
+
+{% endfor %}
+
+TOTAL: {{ cart_record.total }}
+
 
 L'Associació de Musica Electrònica de Barcelona
 
