@@ -39,7 +39,7 @@ def trigger_new_member_notifications(sender, instance, created, **kwargs):
 
         # Trigger new member signal
         new_membership.send(
-            ender=Membership,
+            sender=Membership,
             user=instance.member.user,
             membership=instance
         )
