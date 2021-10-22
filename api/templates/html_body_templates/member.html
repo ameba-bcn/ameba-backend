@@ -9,16 +9,21 @@
 <td>
     <h1>{% blocktrans with user_name=user.username|upper %}¡BIENVENIDO {{ user_name }}!{% endblocktrans %}</h1>
     <p>
-        {% blocktrans %}
-            ¡Ya eres socio de AMEBA!
+        {% blocktrans with subscription=subscription.name|upper %}
+            ¡Ya eres {{ subscription }} de AMEBA!
         {% endblocktrans %}
     </p>
     <p>
+        {{ subscription.description }}
+    </p>
+
+    <p>
         {% blocktrans %}
-            Entérate de todos los eventos que organizamos, aprovecha tus
-            descuentos de socio y mucho más en <a href="{{ site_name }}">{{ site_name }}</a>
+            Encontrarás tu carnet digital de socio adjunto en PDF a este correo.
         {% endblocktrans %}
     </p>
+
+
 </td>
 {% endblock %}
 
