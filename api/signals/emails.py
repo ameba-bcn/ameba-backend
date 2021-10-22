@@ -12,6 +12,7 @@ password_changed = django.dispatch.Signal(providing_args=['user', 'request'])
 event_confirmation = django.dispatch.Signal(
     providing_args=['item_variant', 'user', 'request']
 )
+failed_renewal = django.dispatch.Signal(providing_args=['user', 'membership'])
 
 
 @receiver(user_registered)
@@ -68,3 +69,8 @@ def on_event_confirmation(sender, item_variant, user, request, **kwargs):
         request, user=user, event=item_variant.item.event
     )
     email.send()
+
+
+@receiver(failed_renewal)
+def on_failed_renewal(sender, user, membership, **kwargs):
+    pass
