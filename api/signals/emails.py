@@ -73,4 +73,7 @@ def on_event_confirmation(sender, item_variant, user, request, **kwargs):
 
 @receiver(failed_renewal)
 def on_failed_renewal(sender, user, membership, **kwargs):
-    pass
+    email_factories.RenewalFailedNotification.send_to(
+        user=user,
+        membership=membership
+    )
