@@ -30,9 +30,6 @@ def on_account_activated(sender, user, request, **kwargs):
 
 @receiver(new_membership)
 def on_new_membership(sender, user, membership, **context):
-    # todo: enviar bienvenida o renovación en función de las memberships que
-    #  tenga el usuario.
-
     if user.member.memberships.filter(
         ~Q(pk=membership.pk), subscription=membership.subscription
     ):
