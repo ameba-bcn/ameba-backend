@@ -2,14 +2,16 @@
 
 {% blocktrans %}¡Bienvenido {{ user_name }}!{% endblocktrans %}
 
-{% blocktrans %}
-    ¡Ya eres socio de AMEBA!
+{% blocktrans with subscription=subscription.name|upper %}
+    ¡Ya eres {{ subscription }} de AMEBA!
 {% endblocktrans %}
 
+{{ subscription.description }}
+
 {% blocktrans %}
-    Entérate de todos los eventos que organizamos, aprovecha tus
-    descuentos de socio y mucho más en {{ site_name }}
+    Encontrarás tu carnet digital de socio adjunto en PDF a este correo.
 {% endblocktrans %}
+
 
 L'Associació de Musica Electrònica de Barcelona
 
