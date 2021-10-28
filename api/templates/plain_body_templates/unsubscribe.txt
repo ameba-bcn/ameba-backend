@@ -1,0 +1,13 @@
+{% load i18n %}{% autoescape off %}
+
+{% blocktrans %}¡Hola!{% endblocktrans %}
+
+{% blocktrans %}
+    Te hemos dado de baja de nuestas newsletters. En un periodo de
+    24 horas, dejarás de recibirlas.
+{% endblocktrans %}
+
+
+L'Associació de Musica Electrònica de Barcelona
+
+{% endautoescape %}
