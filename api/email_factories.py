@@ -155,3 +155,15 @@ class RenewalFailedNotification(UserEmailFactoryBase):
     subject_template = 'plain_subject_templates/renewal_failed.txt'
     plain_body_template = 'plain_body_templates/renewal_failed.txt'
     html_body_template = 'html_body_templates/renewal_failed.html'
+
+
+class NewsletterSubscribeNotification(UserEmailFactoryBase):
+    subject_template = 'plain_subject_templates/subscribe.txt'
+    plain_body_template = 'plain_body_templates/subscribe.txt'
+    html_body_template = 'html_body_templates/subscribe.html'
+
+
+class NewsletterUnsubscribeNotification(UserEmailFactoryBase):
+    subject_template = 'plain_subject_templates/unsubscribe.txt'
+    plain_body_template = 'plain_body_templates/unsubscribe.txt'
+    html_body_template = 'html_body_templates/unsubscribe.html'
