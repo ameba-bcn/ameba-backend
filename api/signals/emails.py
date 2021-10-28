@@ -77,3 +77,13 @@ def on_failed_renewal(sender, user, membership, **kwargs):
         user=user,
         membership=membership
     )
+
+
+def send_newsletter_subscription_notification(sender, email, **kwargs):
+    email_factories.NewsletterSubscribeNotification.send_to(
+        email=email
+    )
+
+
+def send_newsletter_unsubscription_notification(sender, email, **kwargs):
+    pass
