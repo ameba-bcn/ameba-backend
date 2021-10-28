@@ -23,24 +23,35 @@ class UserEmailFactoryBase(object):
     plain_body_template = None
     html_body_template = None
 
-    def __init__(self, from_email, user, protocol, domain, site_name, **context):
-        self.from_email = from_email
-        self.user = user
-        self.domain = domain
-        self.protocol = protocol
-        self.site_name = site_name
-        self.context_data = context
+    def __init__(self, mail_to, user=None, from_email=None, request=None,
+                 **context):
+        self._mail_to = mail_to
+        self._user = user
+        self._from_email = from_email or conf.settings.DEFAULT_FROM_EMAIL
+        self._request = request
+        self._context = context
+
+    @property
+    def mail_to(self):
+        return self._user and self._user.email or self._mail_to
+
+    @property
+    def token_url(self):
+        if self._user:
+            token = user_token_generator(self._user)
+            return conf.settings.ACTIVATION_URL.format(token=token)
+
+    @property
+    def site(self):
+        if self._request:
+            return shortcuts.get_current_site(self._request)
+        return conf.settings.HOST_NAME
 
     @classmethod
-    def send_to(cls, user, **context):
-        from_email = getattr(conf.settings, 'DEFAULT_FROM_EMAIL', '')
+    def send_to(cls, mail_to, from_email=None, **context):
         email_object = cls(
+            mail_to=mail_to,
             from_email=from_email,
-            user=user,
-            domain=site_name,
-            site_name=site_name,
-            protocol='http',
-            user_name=user.username,
             **context
         ).create()
         return email_object.send()
@@ -62,6 +73,9 @@ class UserEmailFactoryBase(object):
             **context
         )
         return factory_object.create()
+
+    def token_url(self):
+        if self.
 
     def get_context(self):
         context = {
@@ -86,7 +100,7 @@ class UserEmailFactoryBase(object):
             self.plain_body_template, context
         )
         email_message = mail.EmailMultiAlternatives(
-            subject, plain_body, self.from_email, [self.user.email]
+            subject, plain_body, self.get_from_email(), [self.mail_to]
         )
 
         if self.html_body_template:
