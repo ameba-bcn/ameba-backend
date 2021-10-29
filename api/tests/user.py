@@ -173,7 +173,7 @@ class UserTest(BaseUserTest):
         user.save()
 
         profile_props = {
-            'address': 'My user address',
+            'identity_card': '12345678A',
             'first_name': 'First Name',
             'last_name': 'Last Name',
             'phone_number': '661839816'
@@ -202,7 +202,7 @@ class UserTest(BaseUserTest):
 
         member = Member.objects.create(
             user=user,
-            address='Address',
+            identity_card='12345678A',
             first_name='First Name',
             last_name='Last Name',
             phone_number='661839816'
@@ -237,7 +237,7 @@ class UserTest(BaseUserTest):
 
         member = Member.objects.create(
             user=user,
-            address='Address',
+            identity_card='12345678A',
             first_name='First Name',
             last_name='Last Name',
             phone_number='654321987'

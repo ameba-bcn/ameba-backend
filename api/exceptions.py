@@ -158,3 +158,13 @@ class UserHasNotMemberProfile(APIException):
 class EmailAlreadyExists(APIException):
     status_code = HTTP_400_BAD_REQUEST
     default_detail = 'Email passed already exists.'
+
+
+class IdentityCardIsTooShort(APIException):
+    status_code = HTTP_400_BAD_REQUEST
+    default_detail = 'Identity card number must be 9 characters length.'
+
+
+class WrongIdentityCardFormat(APIException):
+    status_code = HTTP_400_BAD_REQUEST
+    default_detail = 'Identity card numer has wrong format.'

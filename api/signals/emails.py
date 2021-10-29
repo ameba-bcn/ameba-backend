@@ -15,6 +15,9 @@ event_confirmation = django.dispatch.Signal(
     providing_args=['item_variant', 'user', 'request']
 )
 failed_renewal = django.dispatch.Signal(providing_args=['user', 'membership'])
+payment_successful = django.dispatch.Signal(
+    providing_args=['user', 'request', 'cart_record']
+)
 
 
 @receiver(user_registered)
@@ -120,4 +123,17 @@ def send_newsletter_unsubscription_notification(sender, email, **kwargs):
         mail_to=email,
         site_name=settings.HOST_NAME,
         protocol=settings.DEBUG and 'http' or 'https'
+    )
+
+
+def send_payment_successful_notification(
+    sender, user, request, cart_record, **kwargs
+):
+    email_factories.PaymentSuccessfulEmail.send_to(
+        mail_to=user.email,
+        user=user,
+        request=request,
+        site_name=shortcuts.get_current_site(request),
+        protocol=request.is_secure() and 'https' or 'http',
+        cart_record=cart_record
     )
