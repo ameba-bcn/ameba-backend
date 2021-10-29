@@ -23,7 +23,8 @@ class UserEmailFactoryBase(object):
     plain_body_template = None
     html_body_template = None
 
-    def __init__(self, mail_to, user=None, request=None, **context):
+    def __init__(self, mail_to=None, user=None, request=None, **context):
+        assert mail_to or user or (request and request.user.email)
         self.mail_to = user and user.email or mail_to
         self.user = self.get_user(user, request)
         self.from_email = conf.settings.DEFAULT_FROM_EMAIL
@@ -57,8 +58,9 @@ class UserEmailFactoryBase(object):
         return conf.settings.HOST_NAME
 
     @classmethod
-    def send_to(cls, mail_to, **context):
-        email_object = cls(mail_to=mail_to, **context)
+    def send_to(cls, mail_to=None, user=None, **context):
+        assert mail_to or user
+        email_object = cls(mail_to=mail_to, user=user, **context)
         return email_object.send()
 
     @classmethod
