@@ -2,14 +2,15 @@ from rest_framework import serializers
 
 from api.models import Member, User, Cart, Membership
 from api.exceptions import (
-    EmailAlreadyExists, WrongCartId, CartNeedOneSubscription
+    EmailAlreadyExists, WrongCartId, CartNeedOneSubscription,
+    IdentityCardIsTooShort, WrongIdentityCardFormat
 )
 
 
 class DocMemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = Member
-        fields = ('address', 'first_name', 'last_name',
+        fields = ('identity_card', 'first_name', 'last_name',
                   'phone_number')
 
 
@@ -31,13 +32,13 @@ class MemberSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Member
-        fields = ('number', 'address', 'first_name', 'last_name',
+        fields = ('number', 'first_name', 'last_name', 'identity_card',
                   'phone_number', 'user', 'status', 'type', 'memberships')
         read_only_fields = ('number', 'status', 'type', 'memberships')
 
 
 class MemberRegisterSerializer(serializers.Serializer):
-    address = serializers.CharField(max_length=255, required=True,
+    identity_card = serializers.CharField(max_length=9, required=True,
                                     allow_blank=False)
     first_name = serializers.CharField(max_length=20, required=True,
                                        allow_blank=False)
@@ -53,7 +54,7 @@ class MemberRegisterSerializer(serializers.Serializer):
     cart_id = serializers.CharField(required=True, write_only=True)
 
     class Meta:
-        fields = ('address', 'first_name', 'last_name', 'phone_number',
+        fields = ('first_name', 'last_name', 'identity_card', 'phone_number',
                   'username', 'password', 'email')
 
     @staticmethod
@@ -65,6 +66,17 @@ class MemberRegisterSerializer(serializers.Serializer):
             if item_variant.item.is_subscription():
                 return cart_id
         raise CartNeedOneSubscription
+
+    @staticmethod
+    def validate_identity_card(identity_card):
+        if len(identity_card) == 9:
+            if (
+                all(c.isdigit() for c in identity_card[1:-1]) and
+                identity_card[-1].isalpha()
+            ):
+                return identity_card
+            raise WrongIdentityCardFormat
+        raise IdentityCardIsTooShort
 
     @staticmethod
     def validate_email(email):

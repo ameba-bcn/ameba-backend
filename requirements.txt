@@ -18,3 +18,4 @@ django-modeltranslation
 django-background-tasks~=1.2.5
 requests
 django-naomi
+django-localflavor

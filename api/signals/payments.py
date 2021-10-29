@@ -10,7 +10,7 @@ from api.models.cart import cart_checkout
 from api.exceptions import StripeSyncError, CheckoutNeeded, PaymentIsNotSucceed
 from api.email_factories import PaymentSuccessfulEmail
 from api.signals.items import items_acquired
-
+from api.signals.emails import payment_successful
 
 cart_processed = django.dispatch.Signal(providing_args=['cart', 'request'])
 
@@ -73,7 +73,6 @@ def on_cart_deleted(sender, cart, request, **kwargs):
     user = payment.user
 
     if payment.amount > 0:
-        email = PaymentSuccessfulEmail.from_request(
-            request=request, cart_record=cart_record, user=user
+        payment_successful.send(
+            sender=sender, user=user, request=request, cart_record=cart_record
         )
-        email.send()

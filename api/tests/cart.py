@@ -30,7 +30,7 @@ class BaseCartTest(BaseTest):
         if member_profile:
             Member.objects.create(
                 user=user,
-                address='whatever address is the place',
+                identity_card='12345678A',
                 first_name='Obvious',
                 last_name='Lee',
                 phone_number='123456789'
