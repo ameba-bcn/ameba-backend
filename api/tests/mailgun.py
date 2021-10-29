@@ -25,4 +25,4 @@ class TestMailgunApi(BaseTest):
         MailingList.objects.create(address=address)
 
         mailgun.send_unsubscribe_mail_to_mailing_list(list_address=address)
-        self.assertEqual(call_count + 2, perform_request_mock.call_count)
+        self.assertEqual(call_count + 1, perform_request_mock.call_count)

@@ -10,8 +10,8 @@ from api import email_factories
 class FullRegistrationTest(BaseUserTest):
     LIST_ENDPOINT = '/api/member_register/'
 
-    @mock.patch.object(email_factories.UserRegisteredEmail, 'from_request')
-    def test_register_new_user_and_member(self, from_request):
+    @mock.patch.object(email_factories.UserRegisteredEmail, 'send_to')
+    def test_register_new_user_and_member(self, send_to):
         base_cart_test = BaseCartTest()
         cart = base_cart_test.get_cart(item_variants=[1],
                                        item_class=Subscription)
@@ -34,10 +34,10 @@ class FullRegistrationTest(BaseUserTest):
 
         user = User.objects.get(email='user11@ameba.cat')
         self.assertTrue(Member.objects.filter(user=user))
-        from_request.assert_called()
+        send_to.assert_called()
 
-    @mock.patch.object(email_factories.UserRegisteredEmail, 'from_request')
-    def test_register_new_user_and_member_no_subscription(self, from_request):
+    @mock.patch.object(email_factories.UserRegisteredEmail, 'send_to')
+    def test_register_new_user_and_member_no_subscription(self, send_to):
         base_cart_test = BaseCartTest()
         cart = base_cart_test.get_cart(item_variants=[1])
 
@@ -55,8 +55,8 @@ class FullRegistrationTest(BaseUserTest):
         response = self._create(props=form_props)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    @mock.patch.object(email_factories.UserRegisteredEmail, 'from_request')
-    def test_register_new_user_and_member_no_cart_id(self, from_request):
+    @mock.patch.object(email_factories.UserRegisteredEmail, 'send_to')
+    def test_register_new_user_and_member_no_cart_id(self, send_to):
         form_props = {
             'username': 'User2',
             'password': 'ameba12345',
