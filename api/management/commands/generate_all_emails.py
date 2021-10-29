@@ -100,6 +100,14 @@ EMAILS = {
             }
         }
     },
+    'NewslettersSubscription': {
+        'factory': ef.NewsletterSubscribeNotification,
+        'context': {}
+    },
+    'NewslettersUnsubscription': {
+        'factory': ef.NewsletterUnsubscribeNotification,
+        'context': {}
+    }
 }
 
 
@@ -115,5 +123,14 @@ class Command(BaseCommand):
             user = User.objects.get(email=mail_to)
             mail_class = email_data['factory']
             context = email_data['context']
-            mail_class.send_to(user=user, **context)
+            self.update_context(context, user=user)
+            mail_class.send_to(mail_to=user.email, **context)
             time.sleep(1)
+
+    @staticmethod
+    def update_context(context, **plus):
+        context.update({
+            'site_name': 'localhost',
+            'protocol': 'http'
+        })
+        context.update(plus)
