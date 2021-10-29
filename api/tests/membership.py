@@ -9,16 +9,18 @@ from api import stripe
 
 valid_payment_intent = {
     'status': stripe.IntentStatus.SUCCESS,
-    'id': 'whatever'
+    'id': 'whatever',
+    'amount': 1000
 }
 
 
 class TestSubscriptionPurchase(BaseCartTest):
     DETAIL_ENDPOINT = '/api/carts/{pk}/'
 
-    @mock.patch('api.signals.payments.get_payment_intent', return_value={'status': stripe.IntentStatus.NOT_NEEDED})
+    @mock.patch('api.signals.payments.get_payment_intent',
+                return_value=valid_payment_intent)
     @mock.patch('api.signals.payments.get_create_update_payment_intent',
-                return_value={'status': stripe.IntentStatus.NOT_NEEDED})
+                return_value=valid_payment_intent)
     def test_cart_with_one_subscription_returns_200(
         self, get_payment_intent, get_create_update_intent
     ):
