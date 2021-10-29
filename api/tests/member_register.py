@@ -20,7 +20,7 @@ class FullRegistrationTest(BaseUserTest):
             'username': 'User2',
             'password': 'ameba12345',
             'email': 'user11@ameba.cat',
-            'address': 'My user address',
+            'identity_card': '12345678A',
             'first_name': 'First Name',
             'last_name': 'Last Name',
             'phone_number': '661839816',
@@ -35,6 +35,26 @@ class FullRegistrationTest(BaseUserTest):
         user = User.objects.get(email='user11@ameba.cat')
         self.assertTrue(Member.objects.filter(user=user))
         send_to.assert_called()
+
+    @mock.patch.object(email_factories.UserRegisteredEmail, 'send_to')
+    def test_register_member_wrong_identity_card(self, send_to):
+        base_cart_test = BaseCartTest()
+        cart = base_cart_test.get_cart(item_variants=[1],
+                                       item_class=Subscription)
+
+        form_props = {
+            'username': 'User2',
+            'password': 'ameba12345',
+            'email': 'user11@ameba.cat',
+            'identity_card': 'A1234',
+            'first_name': 'First Name',
+            'last_name': 'Last Name',
+            'phone_number': '661839816',
+            'cart_id': cart.id
+        }
+
+        response = self._create(props=form_props)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     @mock.patch.object(email_factories.UserRegisteredEmail, 'send_to')
     def test_register_new_user_and_member_no_subscription(self, send_to):

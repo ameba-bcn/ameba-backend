@@ -2,7 +2,8 @@ from rest_framework import serializers
 
 from api.models import Member, User, Cart, Membership
 from api.exceptions import (
-    EmailAlreadyExists, WrongCartId, CartNeedOneSubscription
+    EmailAlreadyExists, WrongCartId, CartNeedOneSubscription,
+    IdentityCardIsTooShort, WrongIdentityCardFormat
 )
 
 
@@ -65,6 +66,17 @@ class MemberRegisterSerializer(serializers.Serializer):
             if item_variant.item.is_subscription():
                 return cart_id
         raise CartNeedOneSubscription
+
+    @staticmethod
+    def validate_identity_card(identity_card):
+        if len(identity_card) == 9:
+            if (
+                all(c.isdigit() for c in identity_card[1:-1]) and
+                identity_card[-1].isalpha()
+            ):
+                return identity_card
+            raise WrongIdentityCardFormat
+        raise IdentityCardIsTooShort
 
     @staticmethod
     def validate_email(email):
