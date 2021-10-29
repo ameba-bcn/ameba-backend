@@ -1,6 +1,8 @@
 from django.utils.translation import gettext as _
 from django.contrib.auth import get_user_model
 from django.db import models
+from localflavor.es.models import ESIdentityCardNumberField
+
 from api.models.membership import MembershipStates
 
 
@@ -28,9 +30,7 @@ class Member(models.Model):
         to='User', on_delete=models.CASCADE, verbose_name=_('user'),
         related_name='member'
     )
-    address = models.CharField(
-        max_length=255, blank=True, verbose_name=_('address')
-    )
+    identity_card = ESIdentityCardNumberField(verbose_name='dni/nie')
     first_name = models.CharField(max_length=20, verbose_name=_('first name'))
     last_name = models.CharField(max_length=20, verbose_name=_('last name'))
     phone_number = models.CharField(

@@ -82,7 +82,8 @@ INSTALLED_APPS = [
     'django_inlinecss',
     'django_extensions',
     'background_task',
-    'naomi'
+    'naomi',
+    'localflavor'
 ]
 
 MIDDLEWARE = [
