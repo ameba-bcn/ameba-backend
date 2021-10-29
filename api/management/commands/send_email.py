@@ -16,4 +16,7 @@ class Command(BaseCommand):
             mail_to = options.get('mail_to')
             user = User.objects.get(email=mail_to)
             mail_template = getattr(email_factories, template)
-            mail_template.send_to(user=user)
+            mail_template.send_to(
+                send_to=user.email,
+                user=user
+            )
