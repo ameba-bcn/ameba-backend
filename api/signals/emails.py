@@ -1,4 +1,5 @@
 import django.dispatch
+from django.conf import settings
 from django.dispatch import receiver
 from django.db.models import Q
 from api import email_factories
@@ -48,6 +49,8 @@ def on_new_membership(sender, user, membership, **context):
             mail_to=user.email,
             user=user,
             subscription=membership.subscription,
+            site_name=settings.HOST_NAME,
+            protocol=settings.DEBUG and 'http' or 'https',
             **context
         )
     else:
@@ -55,6 +58,8 @@ def on_new_membership(sender, user, membership, **context):
             mail_to=user.email,
             user=user,
             subscription=membership.subscription,
+            site_name=settings.HOST_NAME,
+            protocol=settings.DEBUG and 'http' or 'https',
             **context
         )
 
@@ -85,7 +90,9 @@ def on_event_confirmation(sender, item_variant, user, request, **kwargs):
     email_factories.EventConfirmationEmail.send_to(
         mail_to=user.email,
         user=user,
-        event=item_variant.item.event
+        event=item_variant.item.event,
+        site_name=settings.HOST_NAME,
+        protocol=settings.DEBUG and 'http' or 'https'
     )
 
 
@@ -94,17 +101,23 @@ def on_failed_renewal(sender, user, membership, **kwargs):
     email_factories.RenewalFailedNotification.send_to(
         mail_to=user.email,
         user=user,
-        subscription=membership.subscription
+        subscription=membership.subscription,
+        site_name=settings.HOST_NAME,
+        protocol=settings.DEBUG and 'http' or 'https'
     )
 
 
 def send_newsletter_subscription_notification(sender, email, **kwargs):
     email_factories.NewsletterSubscribeNotification.send_to(
-        mail_to=email
+        mail_to=email,
+        site_name=settings.HOST_NAME,
+        protocol=settings.DEBUG and 'http' or 'https'
     )
 
 
 def send_newsletter_unsubscription_notification(sender, email, **kwargs):
     email_factories.NewsletterUnsubscribeNotification.send_to(
-        mail_to=email
+        mail_to=email,
+        site_name=settings.HOST_NAME,
+        protocol=settings.DEBUG and 'http' or 'https'
     )

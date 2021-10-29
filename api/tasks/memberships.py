@@ -14,7 +14,12 @@ def check_and_notify_before_renewal(membership_id):
     user = membership.member.user
 
     if membership.is_active and user.is_active:
-        BeforeRenewalNotification.send_to(user=user, membership=membership)
+        BeforeRenewalNotification.send_to(
+            mail_to=user.email,
+            user=user,
+            subscription=membership.subscription,
+            membership=membership
+        )
 
 
 @background(schedule=0)
