@@ -9,7 +9,7 @@ from api.exceptions import (
 class DocMemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = Member
-        fields = ('address', 'first_name', 'last_name',
+        fields = ('identity_card', 'first_name', 'last_name',
                   'phone_number')
 
 
@@ -31,13 +31,13 @@ class MemberSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Member
-        fields = ('number', 'address', 'first_name', 'last_name',
+        fields = ('number', 'first_name', 'last_name', 'identity_card',
                   'phone_number', 'user', 'status', 'type', 'memberships')
         read_only_fields = ('number', 'status', 'type', 'memberships')
 
 
 class MemberRegisterSerializer(serializers.Serializer):
-    address = serializers.CharField(max_length=255, required=True,
+    identity_card = serializers.CharField(max_length=9, required=True,
                                     allow_blank=False)
     first_name = serializers.CharField(max_length=20, required=True,
                                        allow_blank=False)
@@ -53,7 +53,7 @@ class MemberRegisterSerializer(serializers.Serializer):
     cart_id = serializers.CharField(required=True, write_only=True)
 
     class Meta:
-        fields = ('address', 'first_name', 'last_name', 'phone_number',
+        fields = ('first_name', 'last_name', 'identity_card', 'phone_number',
                   'username', 'password', 'email')
 
     @staticmethod
