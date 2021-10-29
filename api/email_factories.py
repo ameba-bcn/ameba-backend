@@ -23,90 +23,65 @@ class UserEmailFactoryBase(object):
     plain_body_template = None
     html_body_template = None
 
-    def __init__(self, mail_to, user=None, from_email=None, request=None,
-                 **context):
-        self._mail_to = mail_to
-        self._user = user
-        self._from_email = from_email or conf.settings.DEFAULT_FROM_EMAIL
-        self._request = request
-        self._context = context
+    def __init__(self, mail_to, user=None, request=None, **context):
+        self.mail_to = user and user.email or mail_to
+        self.user = self.get_user(user, request)
+        self.from_email = conf.settings.DEFAULT_FROM_EMAIL
+        self.request = request
+        self.context = context
+        self.token_url = self.get_token_url(self.user)
+        self.site = self.get_site(request)
+        self.context.update({'site': self.site, 'token_url': self.token_url})
+        self.email_message = self.create()
 
-    @property
-    def mail_to(self):
-        return self._user and self._user.email or self._mail_to
+    def send(self):
+        return self.email_message.send()
 
-    @property
-    def token_url(self):
-        if self._user:
-            token = user_token_generator(self._user)
+    @staticmethod
+    def get_user(user, request):
+        if user:
+            return user
+        elif request:
+            return request.user
+
+    @staticmethod
+    def get_token_url(user):
+        if user:
+            token = user_token_generator(user)
             return conf.settings.ACTIVATION_URL.format(token=token)
 
-    @property
-    def site(self):
-        if self._request:
-            return shortcuts.get_current_site(self._request)
+    @staticmethod
+    def get_site(request):
+        if request:
+            return shortcuts.get_current_site(request)
         return conf.settings.HOST_NAME
 
     @classmethod
-    def send_to(cls, mail_to, from_email=None, **context):
-        email_object = cls(
-            mail_to=mail_to,
-            from_email=from_email,
-            **context
-        ).create()
+    def send_to(cls, mail_to, **context):
+        email_object = cls(mail_to=mail_to, **context)
         return email_object.send()
 
     @classmethod
-    def from_request(cls, request, user=None, from_email=None, **context):
-        site = shortcuts.get_current_site(request)
-        from_email = from_email or getattr(
-            conf.settings, 'DEFAULT_FROM_EMAIL', ''
-        )
-
+    def from_request(cls, request, user=None, **context):
         factory_object = cls(
-            from_email=from_email,
-            user=user or request.user,
-            domain=site.domain or 'unknown',
-            site_name=site.name or 'unknown',
-            protocol=request.is_secure() and 'https' or 'http',
-            user_name=user.username,
+            request=request,
+            user=user,
             **context
         )
         return factory_object.create()
 
-    def token_url(self):
-        if self.
-
-    def get_context(self):
-        context = {
-            'user': self.user,
-            'domain': self.domain,
-            'site_name': self.site_name,
-            'uid': encode_uid(self.user.pk),
-            'token': user_token_generator(self.user),
-            'protocol': self.protocol,
-        }
-        context.update(self.context_data)
-        context['url'] = conf.settings.ACTIVATION_URL.format(**context)
-        return context
-
     def create(self):
         assert self.plain_body_template and self.html_body_template
-        context = self.get_context()
+        context = self.context
         subject = loader.render_to_string(self.subject_template, context)
         subject = ''.join(subject.splitlines())
 
-        plain_body = loader.render_to_string(
-            self.plain_body_template, context
-        )
+        plain_body = loader.render_to_string(self.plain_body_template, context)
         email_message = mail.EmailMultiAlternatives(
-            subject, plain_body, self.get_from_email(), [self.mail_to]
+            subject, plain_body, self.from_email, [self.mail_to]
         )
-
-        if self.html_body_template:
-            html_body = loader.render_to_string(
-                self.html_body_template, context)
-            email_message.attach_alternative(html_body, "text/html")
+        html_body = loader.render_to_string(self.html_body_template, context)
+        email_message.attach_alternative(html_body, "text/html")
 
         return email_message
 
