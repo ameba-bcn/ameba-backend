@@ -21,7 +21,6 @@ class MemberAdmin(admin.ModelAdmin):
     list_display = (
         'number',
         'user',
-        'address',
         'first_name',
         'last_name',
         'phone_number',
