@@ -7,12 +7,11 @@ class ArtistMediaUrlSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ArtistMediaUrl
-        fields = ['url']
+        fields = ['url', 'embedded']
 
 
 class ArtistSerializer(serializers.ModelSerializer):
-    media_urls = serializers.SlugRelatedField(many=True, slug_field='url',
-                                              read_only=True)
+    media = ArtistMediaUrlSerializer(many=True, read_only=True)
     images = serializers.SlugRelatedField(many=True, slug_field='url',
                                           read_only=True)
     tags = serializers.SlugRelatedField(many=True, slug_field='name',
