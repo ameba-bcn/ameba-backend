@@ -22,6 +22,7 @@ class ArtistMediaUrl(models.Model):
         verbose_name_plural = _('Artist media urls')
 
     url = models.URLField(verbose_name=_('url'))
+    embedded = models.TextField(max_length=2000)
     created = models.DateTimeField(
         auto_now_add=True, verbose_name=_('created')
     )
