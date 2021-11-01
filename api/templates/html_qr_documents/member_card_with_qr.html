@@ -7,8 +7,9 @@
 
 {% block content %}
 <td>
+    <h2>{% blocktrans with user_name=member.user.username|upper %} CARNET DE SOCIO{% endblocktrans %}</h2>
     <h2>{% blocktrans with user_name=member.user.username|upper %}{{ user_name }}{% endblocktrans %}</h2>
-    <h2>{% blocktrans with number=member.number|upper %}Socio: {{ number }}{% endblocktrans %}</h2>
+    <h2>{% blocktrans with number=member.number|upper %}Socio número {{ number }}{% endblocktrans %}</h2>
     <img src="./{{ qr_path }}" alt="qr_code">
 </td>
 {% endblock %}
