@@ -1,11 +1,8 @@
 import os
 import urllib.parse
 
+from django.conf import settings
 import qrcode
-
-
-QR_DIR = "api/tmp/html/qr/"
-HTML_DIR = "api/tmp/html/"
 
 
 def create_qr_code(url, qr_id):
@@ -13,9 +10,9 @@ def create_qr_code(url, qr_id):
     qr.add_data(url)
     qr.make(fit=True)
     img = qr.make_image(fill='black', back_color='white')
-    qr_path = os.path.join(QR_DIR, f'{qr_id}.png')
+    qr_path = os.path.join(settings.QR_TMP_DIR, f'{qr_id}.png')
     img.save(qr_path)
-    return os.path.relpath(qr_path, HTML_DIR)
+    return os.path.relpath(qr_path, settings.HTML_TMP_DIR)
 
 
 def generate_member_card_qr(member, protocol, site_name):

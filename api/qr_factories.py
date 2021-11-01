@@ -1,14 +1,12 @@
 import django.utils.encoding as encoding
-import django.core.mail as mail
-import django.conf as conf
+from django.conf import settings
 import django.utils.http as http
 import django.template.loader as loader
 from rest_framework_simplejwt.tokens import RefreshToken
-import pdfkit
 import weasyprint
 
 
-site_name = getattr(conf.settings, 'HOST_NAME', '')
+site_name = getattr(settings, 'HOST_NAME', '')
 
 
 def user_token_generator(user):
@@ -36,8 +34,8 @@ class UserEmailFactoryBase(object):
     def create(identifier, html_body, context):
         assert html_body
         html_body = loader.render_to_string(html_body, context)
-        pdf_file_path = f'api/tmp/pdf/{identifier}.pdf'
-        html_doc = weasyprint.HTML(string=html_body, base_url="api/tmp/html")
+        pdf_file_path = f'{settings.PDF_TMP_DIR}/{identifier}.pdf'
+        html_doc = weasyprint.HTML(string=html_body, base_url=settings.HTML_TMP_DIR)
         pdf = html_doc.write_pdf()
         with open(pdf_file_path,  'wb') as pdf_file:
             pdf_file.write(pdf)
