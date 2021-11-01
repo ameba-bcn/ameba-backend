@@ -4,6 +4,7 @@ from django.dispatch import receiver
 from django.db.models import Q
 from api import email_factories
 from api import qr_generator
+from api import qr_factories
 import django.contrib.sites.shortcuts as shortcuts
 
 
@@ -52,11 +53,17 @@ def on_new_membership(sender, user, membership, **context):
         protocol=settings.DEBUG and 'http' or 'https',
         site_name=settings.HOST_NAME
     )
+    pdf_card = qr_factories.MemberCardWithQr(
+        identifier=membership.member.pk,
+        member=membership.member,
+        qr_path=qr_path
+    )
 
     if user.member.memberships.filter(
         ~Q(pk=membership.pk), subscription=membership.subscription
     ):
         email_factories.RenewalConfirmation.send_to(
+            attachment=pdf_card.attachment,
             mail_to=user.email,
             user=user,
             subscription=membership.subscription,
@@ -66,6 +73,7 @@ def on_new_membership(sender, user, membership, **context):
         )
     else:
         email_factories.NewMembershipEmail.send_to(
+            attachment=pdf_card.attachment,
             mail_to=user.email,
             user=user,
             subscription=membership.subscription,
