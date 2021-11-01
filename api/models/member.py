@@ -1,8 +1,13 @@
+import datetime
+
 from django.utils.translation import gettext as _
 from django.contrib.auth import get_user_model
+from django.conf import settings
+from django.core import signing
 from django.db import models
 from localflavor.es.models import ESIdentityCardNumberField
 
+from api import qr_generator
 from api.models.membership import MembershipStates
 
 
@@ -12,7 +17,7 @@ User = get_user_model()
 
 def get_default_number():
     if not Member.objects.all():
-        return 100
+        return 1
     else:
         return Member.objects.all().order_by('-number').first().number + 1
 
@@ -36,6 +41,7 @@ class Member(models.Model):
     phone_number = models.CharField(
         max_length=10, verbose_name=_('phone number')
     )
+    qr_date = models.DateTimeField(auto_now_add=True)
 
     def get_newest_membership(self):
         if self.memberships.all():
@@ -55,3 +61,8 @@ class Member(models.Model):
         if newest_membership := self.get_newest_membership():
             return newest_membership.subscription.name
         return None
+
+    def get_member_card_token(self):
+        self.qr_date = datetime.datetime.now()
+        signature = (self.id, self.user.id, self.qr_date)
+        return signing.dumps(signature, salt=settings.QR_MEMBER_SALT)

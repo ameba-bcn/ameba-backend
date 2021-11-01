@@ -3,6 +3,7 @@ from django.conf import settings
 from django.dispatch import receiver
 from django.db.models import Q
 from api import email_factories
+from api import qr_generator
 import django.contrib.sites.shortcuts as shortcuts
 
 
@@ -45,6 +46,13 @@ def on_account_activated(sender, user, request, **kwargs):
 
 @receiver(new_membership)
 def on_new_membership(sender, user, membership, **context):
+    # Generate pdf with qr here
+    qr_path = qr_generator.generate_member_card_qr(
+        member=membership.member,
+        protocol=settings.DEBUG and 'http' or 'https',
+        site_name=settings.HOST_NAME
+    )
+
     if user.member.memberships.filter(
         ~Q(pk=membership.pk), subscription=membership.subscription
     ):
