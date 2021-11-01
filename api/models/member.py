@@ -64,5 +64,9 @@ class Member(models.Model):
 
     def get_member_card_token(self):
         self.qr_date = datetime.datetime.now()
-        signature = (self.id, self.user.id, self.qr_date)
+        signature = (
+            self.pk,
+            self.user.id,
+            self.qr_date.strftime('%Y-%m-%d %H:%M:%S')
+        )
         return signing.dumps(signature, salt=settings.QR_MEMBER_SALT)

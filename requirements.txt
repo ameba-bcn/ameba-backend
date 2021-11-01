@@ -20,3 +20,5 @@ requests
 django-naomi
 django-localflavor
 qrcode[pil]
+pdfkit
+weasyprint
