@@ -11,6 +11,7 @@ User = get_user_model()
 class MemberCardSerializer(SingleUseTokenSerializer):
     model = Member
     signature = ('pk', 'qr_date')
+    age = None
     salt = settings.QR_MEMBER_SALT
     token = serializers.CharField(
         max_length=120, required=True, write_only=True

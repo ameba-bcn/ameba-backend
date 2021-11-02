@@ -1,0 +1,252 @@
+
+/* What it does: Stops email clients resizing small text. */
+* {
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+    font-family: sans-serif;
+    font-weight: 200;
+}
+
+/* What it does: Stops Outlook from adding extra spacing to tables. */
+table,
+td {
+    mso-table-lspace: 0 !important;
+    mso-table-rspace: 0 !important;
+}
+
+
+/* What it does: Fixes webkit padding issue. */
+table {
+    border: 0;
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+
+/* What it does: Uses a better rendering method when resizing images in IE. */
+img {
+    -ms-interpolation-mode:bicubic;
+}
+
+
+/* What it does: Prevents Windows 10 Mail from underlining links despite inline CSS. Styles for underlined links should be inline. */
+a {
+    text-decoration: none;
+}
+
+
+/* What it does: A work-around for email clients automatically linking certain text strings. */
+/* iOS */
+a[x-apple-data-detectors],
+.unstyle-auto-detected-links a,
+.aBn {
+    border-bottom: 0 !important;
+    cursor: default !important;
+    color: inherit !important;
+    text-decoration: none !important;
+    font-size: inherit !important;
+    font-family: inherit !important;
+    font-weight: inherit !important;
+    line-height: inherit !important;
+}
+
+/* What it does: Prevents Gmail from changing the text color in conversation threads. */
+.im {
+    color: inherit !important;
+}
+
+
+/* What it does: Prevents Gmail from displaying an download button on large, non-linked images. */
+.a6S {
+    display: none !important;
+    opacity: 0.01 !important;
+}
+
+/* If the above doesn't work, add a .g-img class to any image in question. */
+img.g-img + div {
+    display:none !important;
+}
+
+/* What it does: Removes right gutter in Gmail iOS app: https://github.com/TedGoas/Cerberus/issues/89  */
+/* Create one of these media queries for each additional viewport size you'd like to fix */
+
+ /*iPhone 4, 4S, 5, 5S, 5C, and 5SE */
+@media only screen and (min-device-width: 320px) and (max-device-width: 374px) {
+    u ~ div .email-container {
+        min-width: 320px !important;
+    }
+}
+
+/* iPhone 6, 6S, 7, 8, and X */
+@media only screen and (min-device-width: 375px) and (max-device-width: 413px) {
+    u ~ div .email-container {
+        min-width: 375px !important;
+    }
+}
+
+/* iPhone 6+, 7+, and 8+ */
+@media only screen and (min-device-width: 414px) {
+    u ~ div .email-container {
+        min-width: 414px !important;
+    }
+}
+
+/* GENERAL AND BODY */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f8f6f1;
+    color: #1D1D1B;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+}
+
+a {
+    color: inherit;
+    text-decoration: None;
+    font-weight: 600;
+}
+
+/* HTML BODY WRAP */
+.body-wrap {
+    padding: 15px;
+    max-width: 500px;
+    margin: auto;
+    width: 100%
+}
+
+/*!* CONTAINER *!*/
+
+/* EMAIL HEADER */
+
+
+.header {
+    text-align: center;
+    background-color: #1d1d1b !important;
+}
+
+.header img {
+    height: 52px;
+    vertical-align: text-bottom;
+    margin: 15px auto 20px;
+    object-fit: cover;
+    width: 140px;
+}
+
+.qr {
+    text-align: center;
+    background-color: #EB5E3E !important;
+}
+.qr img {
+    vertical-align: text-bottom;
+    margin: 20px auto 20px;
+}
+
+/*CONTENT*/
+.content {
+    background-color: #EB5E3E;
+    color: #1d1d1b;
+    text-align: center;
+}
+
+.content h1 {
+    color: #FAE6C5;
+    margin: 50px 10% 50px;
+    transform: scaleY(1.75);
+    font-size: 20px;
+}
+
+
+.content p {
+    font-size: 18px;
+    margin: 50px 10% 50px;
+}
+
+.checkout-summary {
+    margin: 20px auto 40px;
+    font-size: 16px;
+}
+
+.checkout-summary th {
+    border: 1px solid #1d1d1b;
+    padding: 5px 10px 5px;
+    font-weight: 400;
+}
+
+.checkout-summary td {
+    border: 1px solid #1d1d1b;
+    padding: 5px;
+}
+
+/*MARQUEE*/
+.marquee td {
+    height: 30px;
+    /* Property overwritten in template as inlinecss doesn't resolve relative paths and can not use variables in css. */
+    /*background-image: url("/media/icons/marquee.gif");*/
+    background-position: center;
+}
+.clickable-marquee {
+    display: inline-block;
+    width: 100%;
+}
+
+
+/*FOOTER*/
+.newsletter {
+    color: #1d1d1b;
+    background-color: #FAE6C5;
+    text-align: center;
+    margin: auto;
+    font-size: 40px;
+}
+
+.newsletter h1 {
+    margin: 40px auto 20px;
+    transform: scaleY(1.75);
+    font-size:30px;
+    font-weight: 600;
+}
+
+/*SUBSCRIBE BUTTON*/
+.subscribe {
+    color: #1d1d1b;
+    background-color: #FAE6C5;
+}
+.subscribe {
+    text-align: center;
+}
+
+.button {
+    display: inline-block;
+    color: #FAE6C5;
+    background-color: #1d1d1b;
+    /*border: 1px solid #fae6c5;*/
+    box-shadow: -1px 0 0 0 #8b816e;
+    cursor:pointer;
+    vertical-align:middle;
+    max-width: 80%;
+    padding: 3px 15px 1px;
+    text-align: center;
+    margin: 20px auto 20px;
+    transform: scaleY(1.5);
+    font-size: 16px;
+    font-weight: 500;
+}
+
+
+/*MEDIA*/
+.media {
+    color: #1d1d1b;
+    background-color: #FAE6C5;
+}
+
+.media table {
+    margin: 20px auto 40px;
+}
+
+.media img {
+    height: 20px;
+    padding-left: 15px;
+    padding-right: 10px;
+}
