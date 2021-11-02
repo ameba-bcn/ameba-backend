@@ -13,3 +13,4 @@ class MemberCardSerializer(SingleUseTokenSerializer):
     signature = ('pk', 'qr_date')
     salt = settings.QR_MEMBER_SALT
     token = serializers.CharField(max_length=120, required=True)
+    number = serializers.SerializerMethodField(read_only=True)

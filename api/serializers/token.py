@@ -56,11 +56,11 @@ class SingleUseTokenSerializer(serializers.Serializer):
         return is_valid
 
     @property
-    def user(self):
-        return get_object_or_404(User, id=self.user_id)
+    def obj(self):
+        return get_object_or_404(self.model, id=self.obj_id)
 
     @property
-    def user_id(self):
+    def obj_id(self):
         return signing.loads(self.validated_data['token'], salt=self.salt)[0]
 
     def perform_action(self):
