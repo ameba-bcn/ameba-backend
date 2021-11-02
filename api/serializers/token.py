@@ -26,7 +26,7 @@ class DeleteTokenSerializer(serializers.Serializer):
 class SingleUseTokenSerializer(serializers.Serializer):
     model = User
     age = 24 * 60 * 60
-    signature = ('id', )
+    signature = ('pk', )
     salt = ''
     token = serializers.CharField(max_length=250, required=True)
 
