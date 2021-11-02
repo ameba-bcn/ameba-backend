@@ -24,6 +24,7 @@ class DeleteTokenSerializer(serializers.Serializer):
 
 
 class SingleUseTokenSerializer(serializers.Serializer):
+    model = User
     age = 24 * 60 * 60
     signature = ('id', )
     salt = ''
@@ -32,8 +33,8 @@ class SingleUseTokenSerializer(serializers.Serializer):
     def validate_token(self, token):
         try:
             signature = signing.loads(token, max_age=self.age, salt=self.salt)
-            user = User.objects.get(id=signature[0])
-            assert signature == self.get_signature(user)
+            obj = self.model.objects.get(pk=signature[0])
+            assert signature == self.get_signature(obj)
         except signing.SignatureExpired:
             raise TokenExpired
         except User.DoesNotExist:
@@ -42,11 +43,11 @@ class SingleUseTokenSerializer(serializers.Serializer):
             raise InvalidToken
         return token
 
-    def get_signature(self, user):
+    def get_signature(self, obj):
         sig_list = []
         for key in self.signature:
-            if hasattr(user, key):
-                sig_list.append(getattr(user, key))
+            if hasattr(obj, key):
+                sig_list.append(getattr(obj, key))
         return sig_list
 
     def is_valid(self, raise_exception=False):
