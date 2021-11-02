@@ -12,6 +12,6 @@ def activate(request):
     serializer = ActivationSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     emails.account_activated.send(
-        sender=serializer.user.__class__, user=serializer.user, request=request
+        sender=serializer.obj.__class__, user=serializer.obj, request=request
     )
-    return ActivationResponse(username=serializer.user.username)
+    return ActivationResponse(username=serializer.obj.username)

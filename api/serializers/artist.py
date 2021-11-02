@@ -20,7 +20,7 @@ class ArtistSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Artist
-        fields = ['id', 'name', 'biography', 'images', 'media_urls', 'tags',
+        fields = ['id', 'name', 'biography', 'images', 'media', 'tags',
                   'has_interview', 'is_ameba_dj', 'featured']
         read_only_fields = ['has_interview']
 
