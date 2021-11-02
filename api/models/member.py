@@ -15,7 +15,7 @@ from api.models.membership import MembershipStates
 User = get_user_model()
 
 
-QR_DATE_FORMAT = 'Y%m%d%H%M%S'
+QR_DATE_FORMAT = '%Y%m%d%H%M%S'
 
 
 def get_default_number():
@@ -69,8 +69,12 @@ class Member(models.Model):
             return newest_membership.subscription.name
         return None
 
-    def get_member_card_token(self):
+    def update_qr_date(self):
         self.qr_date = datetime.datetime.now().strftime(QR_DATE_FORMAT)
+        self.save()
+
+    def get_member_card_token(self):
+        self.update_qr_date()
         signature = (
             self.pk,
             self.qr_date
