@@ -1,12 +1,10 @@
 import django.dispatch
 from django.conf import settings
 from django.dispatch import receiver
-from django.db.models import Q
-from api import email_factories
-from api import qr_generator
-from api import qr_factories
 import django.contrib.sites.shortcuts as shortcuts
 
+from api import email_factories
+from api.tasks import memberships as membership_tasks
 
 user_registered = django.dispatch.Signal(providing_args=['user', 'request'])
 account_activated = django.dispatch.Signal(providing_args=['user', 'request'])
@@ -47,40 +45,9 @@ def on_account_activated(sender, user, request, **kwargs):
 
 @receiver(new_membership)
 def on_new_membership(sender, user, membership, **context):
-    # Generate pdf with qr here
-    qr_path = qr_generator.generate_member_card_qr(
-        member=membership.member,
-        protocol=settings.DEBUG and 'http' or 'https',
-        site_name=settings.HOST_NAME
+    membership_tasks.generate_email_with_qr_and_notify(
+        membership_id=membership.pk
     )
-    pdf_card = qr_factories.MemberCardWithQr(
-        identifier=membership.member.pk,
-        member=membership.member,
-        qr_path=qr_path
-    )
-
-    if user.member.memberships.filter(
-        ~Q(pk=membership.pk), subscription=membership.subscription
-    ):
-        email_factories.RenewalConfirmation.send_to(
-            attachment=pdf_card.attachment,
-            mail_to=user.email,
-            user=user,
-            subscription=membership.subscription,
-            site_name=settings.HOST_NAME,
-            protocol=settings.DEBUG and 'http' or 'https',
-            **context
-        )
-    else:
-        email_factories.NewMembershipEmail.send_to(
-            attachment=pdf_card.attachment,
-            mail_to=user.email,
-            user=user,
-            subscription=membership.subscription,
-            site_name=settings.HOST_NAME,
-            protocol=settings.DEBUG and 'http' or 'https',
-            **context
-        )
 
 
 @receiver(account_recovery)
