@@ -15,11 +15,18 @@ from api.models.membership import MembershipStates
 User = get_user_model()
 
 
+QR_DATE_FORMAT = 'Y%m%d%H%M%S'
+
+
 def get_default_number():
     if not Member.objects.all():
         return 1
     else:
         return Member.objects.all().order_by('-number').first().number + 1
+
+
+def get_default_qr_date():
+    return datetime.datetime.now().strftime(QR_DATE_FORMAT)
 
 
 class Member(models.Model):
@@ -41,7 +48,7 @@ class Member(models.Model):
     phone_number = models.CharField(
         max_length=10, verbose_name=_('phone number')
     )
-    qr_date = models.DateTimeField(auto_now_add=True)
+    qr_date = models.CharField(max_length=14, default=get_default_qr_date)
 
     def get_newest_membership(self):
         if self.memberships.all():
@@ -63,10 +70,9 @@ class Member(models.Model):
         return None
 
     def get_member_card_token(self):
-        self.qr_date = datetime.datetime.now()
+        self.qr_date = datetime.datetime.now().strftime(QR_DATE_FORMAT)
         signature = (
             self.pk,
-            self.user.id,
-            self.qr_date.strftime('%Y-%m-%d %H:%M:%S')
+            self.qr_date
         )
         return signing.dumps(signature, salt=settings.QR_MEMBER_SALT)
