@@ -35,6 +35,7 @@ urlpatterns = [
     path('version/', views.current_version),
     path('render/', views.mail_template),
     path('activate/', views.activate),
+    path('member_card/', views.member_card),
     path('subscribe/', views.subscribe),
     path('mailgun_unsubscribe/', views.mailgun_unsubscribe_hook),
     path('member_register/', views.member_register),
