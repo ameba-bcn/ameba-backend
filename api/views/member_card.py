@@ -3,7 +3,6 @@ from drf_yasg.utils import swagger_auto_schema
 
 from api.serializers import MemberCardSerializer
 from api.responses import MemberCardResponse
-from api.signals import emails
 
 
 @swagger_auto_schema(method='get', request_body=MemberCardSerializer)
