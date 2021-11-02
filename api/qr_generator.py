@@ -17,7 +17,7 @@ def create_qr_code(url, qr_id):
 
 def generate_member_card_qr(member, protocol, site_name):
     token = member.get_member_card_token()
-    url_path = f'ameba-site/?token={token}'
+    url_path = settings.FE_MEMBERSHIP_CARD_PATH.format(token=token)
     url = urllib.parse.urljoin(f'{protocol}://{site_name}', url_path)
     qr_code_path = create_qr_code(url, member.pk)
     return qr_code_path
