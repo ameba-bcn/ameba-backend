@@ -3,11 +3,13 @@ from django.contrib.auth import get_user_model
 from django.conf import settings
 
 from api.serializers import SingleUseTokenSerializer
+from api.models import Member
 
 User = get_user_model()
 
 
 class MemberCardSerializer(SingleUseTokenSerializer):
+    model = Member
     token = serializers.CharField(max_length=120, required=True)
-    signature = ('id', 'is_active')
-    salt = settings.ACTIVATION_SALT
+    signature = ('pk', 'qr_date')
+    salt = settings.QR_MEMBER_SALT
