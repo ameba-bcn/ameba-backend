@@ -272,6 +272,13 @@ QR_TMP_DIR = "tmp/html/qr/"
 HTML_TMP_DIR = "tmp/html/"
 PDF_TMP_DIR = "tmp/pdf"
 
+# FRONTEND MEMBERSHIP CARD PATH
+FE_MEMBERSHIP_CARD_PATH = env(
+    'FE_MEMBERSHIP_CARD_PATH',
+    'ameba-site/membership_card/?token={token}',
+    var_type='string'
+)
+
 # MAILING LISTS
 DEFAULT_MAILING_LIST = env(
     'DEFAULT_MAILING_LIST',
