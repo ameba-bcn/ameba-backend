@@ -57,7 +57,7 @@ class SingleUseTokenSerializer(serializers.Serializer):
 
     @property
     def obj(self):
-        return get_object_or_404(self.model, id=self.obj_id)
+        return get_object_or_404(self.model, pk=self.obj_id)
 
     @property
     def obj_id(self):
