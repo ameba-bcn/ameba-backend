@@ -10,7 +10,7 @@ from api.models import (
 
 
 class ItemVariantInline(admin.TabularInline):
-    fields = ['id', 'attributes', 'stock', 'price']
+    fields = ['id', 'attributes', 'stock', 'price', 'acquired_by']
     readonly_fields = ('id', )
     model = ItemVariant
     extra = 0
@@ -51,7 +51,8 @@ class BaseItemAdmin(TranslationAdmin):
         'updated', 'has_stock', 'saved_by', 'acquired_by'
     ]
     inlines = [ImageChoiceInLine, ItemVariantInline, DiscountChoiceInLine]
-    readonly_fields = ['created', 'updated', 'price_range', 'has_stock']
+    readonly_fields = ['created', 'updated', 'price_range', 'has_stock',
+                       'acquired_by']
     list_display = ['name', 'price_range', 'preview', 'has_stock']
 
     def preview(self, obj):
