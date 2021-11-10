@@ -56,3 +56,14 @@
     <img src="./{{ qr_path }}" alt="qr_code">
 </td>
 {% endblock %}
+
+
+{%  block footer %}
+<td>
+    <p>{% blocktrans %}Éste código QR permite el acceso directo a algunos de
+        tus datos personales. En caso de perderlo, puedes anular su validez
+        generando un nuevo carnet desde tu página de usuario de la web de
+        AMEBA.
+    {% endblocktrans %}</p>
+</td>
+{% endblock %}
