@@ -46,3 +46,7 @@ class NewMemberResponse(Response):
 
 class MemberCardResponse(Response):
     pass
+
+
+class EventTicketResponse(Response):
+    pass
