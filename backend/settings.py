@@ -265,6 +265,19 @@ ACTIVATION_SALT = 'aCtiV4TiONtoKeN'
 RECOVERY_EXPIRE_DAYS = .5
 RECOVERY_SALT = 'rEc0VErit0kn'
 
+QR_MEMBER_CARD_DAYS = -1
+QR_MEMBER_SALT = 'tuC4rNetde4mEbA'
+
+QR_TMP_DIR = "tmp/html/qr/"
+HTML_TMP_DIR = "tmp/html/"
+PDF_TMP_DIR = "tmp/pdf"
+
+# FRONTEND MEMBERSHIP CARD PATH
+FE_MEMBERSHIP_CARD_PATH = env(
+    'FE_MEMBERSHIP_CARD_PATH',
+    'ameba-site/membership_card/?token={token}',
+    var_type='string'
+)
 
 # MAILING LISTS
 DEFAULT_MAILING_LIST = env(
