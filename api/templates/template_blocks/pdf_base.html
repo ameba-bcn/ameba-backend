@@ -19,16 +19,28 @@
         {% block header %}
         {% endblock %}
     </tr>
+    <tr class="title">
+        {% block title %}
+        {% endblock %}
+    </tr>
+    <tr class="subtitle">
+        {% block subtitle %}
+        {% endblock %}
+    </tr>
     <tr class="content">
         {% block content %}
+        {% endblock %}
+    </tr>
+    <tr class="button">
+        {% block button %}
         {% endblock %}
     </tr>
     <tr class="qr">
         {% block qr %}
         {% endblock %}
     </tr>
-    <tr class="marquee">
-        {% block marquee %}
+    <tr class="footer">
+        {% block footer %}
         {% endblock %}
     </tr>
 </table>
