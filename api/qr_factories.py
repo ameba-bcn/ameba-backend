@@ -45,7 +45,9 @@ class BaseQrFactory:
 
 class MemberCardWithQr(BaseQrFactory):
     html_body_template = 'html_qr_documents/member_card_with_qr.html'
+    file_name_template = 'card-member-ameba-{identifier}.pdf'
 
 
 class EventTicketWithQr(BaseQrFactory):
     html_body_template = 'html_qr_documents/event_ticket_with_qr.html'
+    file_name_template = 'event-ticket-ameba-{identifier}.pdf'
