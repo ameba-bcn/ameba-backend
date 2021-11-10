@@ -36,6 +36,9 @@ class UserEmailFactoryBase(object):
         html_body = loader.render_to_string(html_body, context)
         pdf_file_path = f'{settings.PDF_TMP_DIR}/{identifier}.pdf'
         html_doc = weasyprint.HTML(string=html_body, base_url=settings.HTML_TMP_DIR)
+        with open(pdf_file_path.replace('pdf', 'html'), 'w') as html:
+            html.write(html_body)
+
         pdf = html_doc.write_pdf()
         with open(pdf_file_path,  'wb') as pdf_file:
             pdf_file.write(pdf)

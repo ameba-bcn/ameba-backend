@@ -57,7 +57,7 @@ def renew_membership(membership_id):
         )
 
 
-@background(schedule=0)
+# @background(schedule=0)
 def generate_email_with_qr_and_notify(membership_id):
     membership = Membership.objects.get(pk=membership_id)
     user = membership.member.user
