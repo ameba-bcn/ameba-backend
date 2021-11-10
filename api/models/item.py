@@ -22,19 +22,21 @@ class Item(models.Model):
     images = models.ManyToManyField(
         to='Image', blank=False, verbose_name=_('images')
     )
-    acquired_by = models.ManyToManyField(
-        to='User', blank=True, related_name='acquired_items',
-        verbose_name=_('acquired by')
-    )
-    saved_by = models.ManyToManyField(
-        to='User', blank=True, related_name='saved_items',
-        verbose_name=_('saved by')
-    )
     is_active = models.BooleanField(default=True, verbose_name=_('is active'))
     created = models.DateTimeField(
         auto_now_add=True, verbose_name=_('created')
     )
     updated = models.DateTimeField(auto_now=True, verbose_name=_('updated'))
+    saved_by = models.ManyToManyField(
+        to='User', blank=True, related_name='saved_items',
+        verbose_name=_('saved by')
+    )
+
+    @property
+    def acquired_by(self):
+        return ItemVariant.acquired_by.through.objects.filter(
+            itemvariant__in=self.variants.all()
+        ).select_related('user')
 
     @property
     def price_range(self):
@@ -133,6 +135,10 @@ class ItemVariant(models.Model):
     stock = models.IntegerField()
     price = models.DecimalField(max_digits=8, decimal_places=2,
                                 verbose_name=_('price'))
+    acquired_by = models.ManyToManyField(
+        to='User', blank=True, related_name='item_variants',
+        verbose_name=_('acquired by')
+    )
 
     def get_valid_discounts(self, user, code=None):
         return self.item.get_valid_discounts(user, code)
