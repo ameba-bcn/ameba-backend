@@ -1,17 +1,55 @@
-{% extends "template_blocks/pdf_base.html" %}
+{% extends "template_blocks/base_member_card.html" %}
 {% load i18n %}
 
 {% block header %}
     {% include "template_blocks/pdf_header.html" %}
 {% endblock %}
 
-{% block content %}
+
+{% block title %}
 <td>
-    <h2>{% blocktrans with user_name=member.user.username|upper %} CARNET DE SOCIO{% endblocktrans %}</h2>
-    <h2>{% blocktrans with user_name=member.user.username|upper %}{{ user_name }}{% endblocktrans %}</h2>
-    <h2>{% blocktrans with number=member.number|upper %}Socio número {{ number }}{% endblocktrans %}</h2>
+    <p>{% blocktrans with number=member.number|upper %} CARNET Nº <b> {{ number }}</b>{% endblocktrans %}</p>
 </td>
 {% endblock %}
+
+{%  block div1 %}
+    {% include "template_blocks/division_line.html" %}
+{%  endblock %}
+
+{% block subtitle %}
+    <td>
+    <p>
+       {% blocktrans with expire_date=member.expires %}RENOVACIÓN | {{ expire_date }}{% endblocktrans %}
+    </p>
+    </td>
+{% endblock %}
+
+{%  block div2 %}
+    {% include "template_blocks/division_line.html" %}
+{%  endblock %}
+
+{% block member_name %}
+<td>
+<p>
+    <b>
+    {% blocktrans with first=member.first_name|upper last=member.last_name|upper %}{{ first }} {{ last }}{% endblocktrans %}
+    </b>
+</p>
+</td>
+{% endblock %}
+
+{%  block div3 %}
+    {% include "template_blocks/division_line.html" %}
+{%  endblock %}
+
+
+{%  block button_like %}
+    {% include "template_blocks/button_like.html" with button_text=member.type|upper %}
+{% endblock %}
+
+{%  block div4 %}
+    {% include "template_blocks/division_line.html" %}
+{%  endblock %}
 
 {%  block qr %}
 <td>
@@ -19,6 +57,6 @@
 </td>
 {% endblock %}
 
-{% block marquee %}
-    {% include "template_blocks/pdf_marquee.html" %}
-{% endblock %}
+{%  block div5 %}
+    {% include "template_blocks/division_line.html" %}
+{%  endblock %}

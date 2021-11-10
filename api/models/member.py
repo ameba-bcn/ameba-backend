@@ -69,6 +69,11 @@ class Member(models.Model):
             return newest_membership.subscription.name
         return None
 
+    @property
+    def expires(self):
+        if membership := self.get_newest_membership():
+            return membership.expires.strftime('%d/%m/%Y')
+
     def update_qr_date(self):
         self.qr_date = datetime.datetime.now().strftime(QR_DATE_FORMAT)
         self.save()
