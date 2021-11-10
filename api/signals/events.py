@@ -1,17 +1,15 @@
 import django.dispatch
 
-import api.signals.emails as email_signals
+import api.tasks.events as event_tasks
 
 event_acquired = django.dispatch.Signal(
-    providing_args=['item_variant', 'user', 'request']
+    providing_args=['item_variant', 'user']
 )
 
 
 @django.dispatch.receiver(event_acquired)
-def generate_event_ticket(sender, item_variant, user, request, **kwargs):
-    # todo: generate QR and attach to email
+def generate_event_ticket_and_notify(sender, item_variant, user, **kwargs):
     # Send email notification with qr
-    email_signals.event_confirmation.send(
-        sender=sender, item_variant=item_variant, user=user,
-        request=request
+    event_tasks.generate_event_ticket_and_send_confirmation_email(
+        item_variant_id=item_variant.pk, user_id=user.pk
     )

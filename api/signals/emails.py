@@ -12,7 +12,7 @@ new_membership = django.dispatch.Signal(providing_args=['user', 'membership'])
 account_recovery = django.dispatch.Signal(providing_args=['user', 'request'])
 password_changed = django.dispatch.Signal(providing_args=['user', 'request'])
 event_confirmation = django.dispatch.Signal(
-    providing_args=['item_variant', 'user', 'request']
+    providing_args=['item_variant', 'user']
 )
 failed_renewal = django.dispatch.Signal(providing_args=['user', 'membership'])
 payment_successful = django.dispatch.Signal(
@@ -72,7 +72,7 @@ def on_password_changed(sender, user, request, **kwargs):
 
 
 @receiver(event_confirmation)
-def on_event_confirmation(sender, item_variant, user, request, **kwargs):
+def on_event_confirmation(sender, item_variant, user, **kwargs):
     email_factories.EventConfirmationEmail.send_to(
         mail_to=user.email,
         user=user,
