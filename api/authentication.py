@@ -1,10 +1,10 @@
 from rest_framework.authentication import get_authorization_header
-from rest_framework import HTTP_HEADER_ENCODING, exceptions
+from rest_framework import HTTP_HEADER_ENCODING, exceptions, authentication
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from django.core import signing
 from django.contrib.auth import get_user_model
-from api.models import Member
+from api.models import Member, ItemVariant
 from rest_framework_simplejwt.authentication import JWTAuthentication
 User = get_user_model()
 
@@ -49,3 +49,10 @@ class MemberCardAuthentication(JWTAuthentication):
 
     def authenticate_header(self, request):
         return 'Basic realm="%s"' % self.www_authenticate_realm
+
+
+class EventTicketAuthentication(authentication.TokenAuthentication):
+    model = ItemVariant.acquired_by.through
+    salt = settings.QR_EVENT_SALT
+    signature = ('user_id', 'item_variant_id')
+    keyword = 'Bearer'
