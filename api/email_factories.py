@@ -22,29 +22,32 @@ class UserEmailFactoryBase(object):
     plain_body_template = None
     html_body_template = None
 
-    def __init__(self, mail_to, **context):
+    def __init__(self, mail_to, attachment=None, **context):
         self.mail_to = mail_to
         self.from_email = conf.settings.DEFAULT_FROM_EMAIL
         self.context = context
+        self.attachment = attachment
         self.email_message = self.create(
             self.plain_body_template,
             self.html_body_template,
             self.subject_template,
             self.context,
             self.mail_to,
-            self.from_email
+            self.from_email,
+            self.attachment
         )
 
     def send(self):
         return self.email_message.send()
 
     @classmethod
-    def send_to(cls, mail_to, **context):
-        email_object = cls(mail_to=mail_to, **context)
+    def send_to(cls, mail_to, attachment=None, **context):
+        email_object = cls(mail_to=mail_to, attachment=attachment, **context)
         return email_object.send()
 
     @staticmethod
-    def create(plain_body, html_body, subject, context, mail_to, from_email):
+    def create(plain_body, html_body, subject, context, mail_to, from_email,
+               attachment=None):
         assert plain_body and html_body and subject
         subject = loader.render_to_string(subject, context)
         subject = ''.join(subject.splitlines())
@@ -54,6 +57,8 @@ class UserEmailFactoryBase(object):
         )
         html_body = loader.render_to_string(html_body, context)
         email_message.attach_alternative(html_body, "text/html")
+        if attachment:
+            email_message.attach_file(attachment)
         return email_message
 
 

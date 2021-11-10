@@ -30,3 +30,4 @@ from api.serializers.member import (
 )
 # from api.serializers.membership import MembershipSerializer
 from api.serializers.about import AboutSerializer
+from api.serializers.member_card import MemberCardSerializer

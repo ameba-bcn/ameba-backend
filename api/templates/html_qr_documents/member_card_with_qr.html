@@ -1,0 +1,69 @@
+{% extends "template_blocks/base_member_card.html" %}
+{% load i18n %}
+
+{% block header %}
+    {% include "template_blocks/pdf_header.html" %}
+{% endblock %}
+
+
+{% block title %}
+<td>
+    <p>{% blocktrans with number=member.number|upper %} CARNET Nº <b> {{ number }}</b>{% endblocktrans %}</p>
+</td>
+{% endblock %}
+
+{%  block div1 %}
+    {% include "template_blocks/division_line.html" %}
+{%  endblock %}
+
+{% block subtitle %}
+    <td>
+    <p>
+       {% blocktrans with expire_date=member.expires %}RENOVACIÓN | {{ expire_date }}{% endblocktrans %}
+    </p>
+    </td>
+{% endblock %}
+
+{%  block div2 %}
+    {% include "template_blocks/division_line.html" %}
+{%  endblock %}
+
+{% block member_name %}
+<td>
+<p>
+    <b>
+    {% blocktrans with first=member.first_name|upper last=member.last_name|upper %}{{ first }} {{ last }}{% endblocktrans %}
+    </b>
+</p>
+</td>
+{% endblock %}
+
+{%  block div3 %}
+    {% include "template_blocks/division_line.html" %}
+{%  endblock %}
+
+
+{%  block button_like %}
+    {% include "template_blocks/button_like.html" with button_text=member.type|upper %}
+{% endblock %}
+
+{%  block div4 %}
+    {% include "template_blocks/division_line.html" %}
+{%  endblock %}
+
+{%  block qr %}
+<td>
+    <img src="./{{ qr_path }}" alt="qr_code">
+</td>
+{% endblock %}
+
+
+{%  block footer %}
+<td>
+    <p>{% blocktrans %}Éste código QR permite el acceso directo a algunos de
+        tus datos personales. En caso de perderlo, puedes anular su validez
+        generando un nuevo carnet desde tu página de usuario de la web de
+        AMEBA.
+    {% endblocktrans %}</p>
+</td>
+{% endblock %}
