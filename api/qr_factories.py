@@ -1,3 +1,5 @@
+import os
+
 import django.utils.encoding as encoding
 from django.conf import settings
 import django.utils.http as http
@@ -18,27 +20,23 @@ def encode_uid(pk):
     return http.urlsafe_base64_encode(encoding.force_bytes(pk))
 
 
-class UserEmailFactoryBase(object):
+class UserEmailFactoryBase:
     html_body_template = None
+    file_name_template = 'ameba_soci_{identifier}.pdf'
 
     def __init__(self, identifier, **context):
-        self.context = context
-        self.identifier = identifier
         self.attachment = self.create(
-            self.identifier,
+            self.file_name_template.format(identifier=identifier),
             self.html_body_template,
-            self.context,
+            context
         )
 
     @staticmethod
-    def create(identifier, html_body, context):
+    def create(file_name, html_body, context):
         assert html_body
         html_body = loader.render_to_string(html_body, context)
-        pdf_file_path = f'{settings.PDF_TMP_DIR}/{identifier}.pdf'
+        pdf_file_path = os.path.join(settings.PDF_TMP_DIR, file_name)
         html_doc = weasyprint.HTML(string=html_body, base_url=settings.HTML_TMP_DIR)
-        with open(pdf_file_path.replace('pdf', 'html'), 'w') as html:
-            html.write(html_body)
-
         pdf = html_doc.write_pdf()
         with open(pdf_file_path,  'wb') as pdf_file:
             pdf_file.write(pdf)
