@@ -20,7 +20,7 @@ def encode_uid(pk):
     return http.urlsafe_base64_encode(encoding.force_bytes(pk))
 
 
-class UserEmailFactoryBase:
+class BaseQrFactory:
     html_body_template = None
     file_name_template = 'ameba_soci_{identifier}.pdf'
 
@@ -43,5 +43,9 @@ class UserEmailFactoryBase:
         return pdf_file_path
 
 
-class MemberCardWithQr(UserEmailFactoryBase):
+class MemberCardWithQr(BaseQrFactory):
     html_body_template = 'html_qr_documents/member_card_with_qr.html'
+
+
+class EventTicketWithQr(BaseQrFactory):
+    html_body_template = 'html_qr_documents/event_ticket_with_qr.html'
