@@ -149,7 +149,7 @@ a {
 .qr img {
     vertical-align: text-bottom;
     margin: 20px 20px 20px;
-    width: 70%;
+    width: 60%;
 }
 
 /* DIVISION LINE */
@@ -224,4 +224,9 @@ a {
 .separator {
     height: 20px;
     /*border-bottom: 6px solid #1d1d1b;*/
+}
+
+.footer {
+    text-align: center;
+    font-size: 10px;
 }
