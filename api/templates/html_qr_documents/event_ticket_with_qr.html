@@ -19,7 +19,8 @@
 {% block subtitle %}
     <td>
     <p>
-       {% blocktrans with location=event.address time=event.str_datetime %}{{ location }} | {{ time }}{% endblocktrans %}
+       {% blocktrans with location=event.address time=event.str_datetime %}{{ location }}
+           <br>{{ time }}{% endblocktrans %}
     </p>
     </td>
 {% endblock %}
@@ -44,11 +45,9 @@
 
 
 {%  block button_like %}
-    {% include "template_blocks/button_like.html" with button_text=member.type|upper %}
 {% endblock %}
 
 {%  block div4 %}
-    {% include "template_blocks/division_line.html" %}
 {%  endblock %}
 
 {%  block qr %}
