@@ -12,11 +12,12 @@ from api.docs.member_card import MemberCardDocs
 class EventTicketView(ListModelMixin, GenericViewSet):
     authentication_classes = (authentication.EventTicketAuthentication, )
     permission_classes = (IsAuthenticated, )
-    serializer_class = MemberCardSerializer
+    serializer_class = EventTicketSerializer
 
     def list(self, request, *args, **kwargs):
         user_to_item_variant = request.user
-        serializer = EventTicketSerializer(instance=user_to_item_variant)
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(instance=user_to_item_variant)
         return EventTicketResponse(serializer.data)
 
     list.__doc__ = MemberCardDocs.list
