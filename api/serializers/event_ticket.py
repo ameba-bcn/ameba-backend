@@ -10,11 +10,11 @@ User = get_user_model()
 
 class EventTicketSerializer(ModelSerializer):
     event = serializers.SlugRelatedField(
-        source='item_variant.item', slug_field='name', read_only=True
+        source='itemvariant.item', slug_field='name', read_only=True
     )
     variants = serializers.SerializerMethodField()
     user_name = serializers.SlugRelatedField(
-        source='user', slug_field='username'
+        source='user', slug_field='username', read_only=True
     )
     first_name = serializers.SerializerMethodField()
     last_name = serializers.SerializerMethodField()
@@ -38,5 +38,5 @@ class EventTicketSerializer(ModelSerializer):
     def get_variants(item_variant_user):
         return ' '.join(
             [f'{attribute.attribute.name}: {attribute.value}' for attribute in
-                item_variant_user.item_variant.attributes.all()]
+                item_variant_user.itemvariant.attributes.all()]
         )

@@ -27,5 +27,5 @@ def generate_event_ticket_qr(item_variant, user, protocol, site_name):
     token = user.get_event_token(item_variant_id=item_variant.pk)
     url_path = settings.FE_EVENT_TICKET_PATH.format(token=token)
     url = urllib.parse.urljoin(f'{protocol}://{site_name}', url_path)
-    qr_code_path = create_qr_code(url, f'e{item_variant}u{user.id}')
+    qr_code_path = create_qr_code(url, f'e{item_variant.id}u{user.id}')
     return qr_code_path
