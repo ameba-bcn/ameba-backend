@@ -14,6 +14,7 @@ class MemberCardAuthentication(JWTAuthentication):
     salt = settings.QR_MEMBER_SALT
     age = None
     signature = ('pk', 'qr_date')
+    keyword = 'Bearer'
 
     def authenticate(self, request):
         auth = get_authorization_header(request).split()
@@ -54,5 +55,21 @@ class MemberCardAuthentication(JWTAuthentication):
 class EventTicketAuthentication(authentication.TokenAuthentication):
     model = ItemVariant.acquired_by.through
     salt = settings.QR_EVENT_SALT
+    age = None
     signature = ('user_id', 'item_variant_id')
     keyword = 'Bearer'
+
+    def authenticate(self, request):
+        instance = super().authenticate(request)
+        request.instance = instance
+
+    def authenticate_credentials(self, key):
+        user_id, item_variant_id = self.get_signature(token=key)
+        instance = self.model.objects.get(
+            user_id=user_id, itemvariant_id=item_variant_id
+        )
+        return instance
+
+    def get_signature(self, token):
+        signature = signing.loads(token, max_age=self.age, salt=self.salt)
+        return signature
