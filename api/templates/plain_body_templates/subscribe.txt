@@ -1,0 +1,19 @@
+{% load i18n %}{% autoescape off %}
+
+{% blocktrans %}¡Hola!{% endblocktrans %}
+
+{% blocktrans %}
+Te has suscrito a la newsletter de AMEBA. Te enviaremos información sobre
+conciertos, tallers y otros eventos relacionados con la asociación.
+{% endblocktrans %}
+
+{% blocktrans %}
+    Puedes dejar de recibir newsletters en cualquier momento
+    haciendo click en el botón de UNSUBSCRIBE que encontrarás en
+    cualquiera de ellas.
+{% endblocktrans %}
+
+
+L'Associació de Musica Electrònica de Barcelona
+
+{% endautoescape %}

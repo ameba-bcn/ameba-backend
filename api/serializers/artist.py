@@ -7,12 +7,11 @@ class ArtistMediaUrlSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ArtistMediaUrl
-        fields = ['url']
+        fields = ['url', 'embedded']
 
 
 class ArtistSerializer(serializers.ModelSerializer):
-    media_urls = serializers.SlugRelatedField(many=True, slug_field='url',
-                                              read_only=True)
+    media = ArtistMediaUrlSerializer(many=True, read_only=True)
     images = serializers.SlugRelatedField(many=True, slug_field='url',
                                           read_only=True)
     tags = serializers.SlugRelatedField(many=True, slug_field='name',
@@ -21,7 +20,7 @@ class ArtistSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Artist
-        fields = ['id', 'name', 'biography', 'images', 'media_urls', 'tags',
+        fields = ['id', 'name', 'biography', 'images', 'media', 'tags',
                   'has_interview', 'is_ameba_dj', 'featured']
         read_only_fields = ['has_interview']
 

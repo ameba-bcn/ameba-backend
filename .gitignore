@@ -134,3 +134,7 @@ dmypy.json
 */.idea/*
 *.DS_Store
 static/
+
+.tmp/qr/*
+.tmp/pdf/*
+

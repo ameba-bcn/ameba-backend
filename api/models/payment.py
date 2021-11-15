@@ -2,6 +2,8 @@ from django.utils.translation import gettext as _
 from django.db import models
 from django.db.models import UUIDField
 
+from api import stripe
+
 
 class PaymentManager(models.Manager):
 

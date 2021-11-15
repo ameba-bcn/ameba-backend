@@ -1,0 +1,65 @@
+{% load inlinecss %}
+{% inlinecss "pdf/base.css" %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="x-apple-disable-message-reformatting">
+    <meta name="format-detection" content="telephone=no,address=no,email=no,date=no,url=no">
+    <title></title>
+</head>
+
+<body>
+
+<table class="body-wrap">
+    <tr class="header">
+        {% block header %}
+        {% endblock %}
+    </tr>
+    <tr class="title">
+        {% block title %}
+        {% endblock %}
+    </tr>
+    <tr class="division">
+        {% block div1 %}
+        {% endblock %}
+    </tr>
+    <tr class="subtitle">
+        {% block subtitle %}
+        {% endblock %}
+    </tr>
+    <tr class="division">
+        {% block div2 %}
+        {% endblock %}
+    </tr>
+    <tr class="member_name">
+        {% block member_name %}
+        {% endblock %}
+    </tr>
+    <tr class="division">
+        {% block div3 %}
+        {% endblock %}
+    </tr>
+    <tr class="button_like">
+        {% block button_like %}
+        {% endblock %}
+    </tr>
+    <tr class="division">
+        {% block div4 %}
+        {% endblock %}
+    </tr>
+    <tr class="qr">
+        {% block qr %}
+        {% endblock %}
+    </tr>
+    <tr class="footer">
+        {% block footer %}
+        {% endblock %}
+    </tr>
+</table>
+</body>
+</html>
+{% endinlinecss %}

@@ -7,7 +7,7 @@ drf-yasg==1.20.0
 Pillow>=8.1.1
 python-dateutil>=2.8.2
 django-fs-trumbowyg @ git+https://github.com/jon-alamo/django-fs-trumbowyg.git@7dc233d53713ca6724fdf29fb1c7d0c2970f1adc
-PyYAML==5.4.1
+PyYAML>=5.4.1
 django-location-field==2.1.0
 envs==1.3
 stripe>=2.60.0
@@ -18,3 +18,7 @@ django-modeltranslation
 django-background-tasks~=1.2.5
 requests
 django-naomi
+django-localflavor
+qrcode[pil]
+pdfkit
+weasyprint
