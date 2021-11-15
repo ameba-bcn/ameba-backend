@@ -1,5 +1,5 @@
 from rest_framework.authentication import get_authorization_header
-from rest_framework import HTTP_HEADER_ENCODING, exceptions, authentication
+from rest_framework import exceptions, authentication
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from django.core import signing
@@ -64,11 +64,14 @@ class EventTicketAuthentication(authentication.TokenAuthentication):
         request.instance = instance
 
     def authenticate_credentials(self, key):
-        user_id, item_variant_id = self.get_signature(token=key)
-        instance = self.model.objects.get(
-            user_id=user_id, itemvariant_id=item_variant_id
-        )
-        return instance
+        try:
+            user_id, item_variant_id = self.get_signature(token=key)
+            instance = self.model.objects.get(
+                user_id=user_id, itemvariant_id=item_variant_id
+            )
+            return instance
+        except Exception as e:
+            raise exceptions.AuthenticationFailed(_('Invalid token.'))
 
     def get_signature(self, token):
         signature = signing.loads(token, max_age=self.age, salt=self.salt)
