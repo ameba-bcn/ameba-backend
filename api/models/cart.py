@@ -172,14 +172,13 @@ class Cart(Model):
         return len(self.subscriptions) > 1
 
     def has_identical_events(self):
+        current_events = []
         for event in self.events:
-            if len([
-                cart_item.item_variant.item for cart_item in
-                self.get_cart_items() if cart_item.item_variant.item.id ==event.id
-            ]) > 1:
+            if event.id in current_events:
                 return True
             if self.user and event.acquired_by.filter(pk=self.user.pk):
                 return True
+            current_events.append(event.id)
         return False
 
     def has_changed(self):

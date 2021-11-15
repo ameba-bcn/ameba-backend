@@ -97,3 +97,9 @@ class User(AbstractUser):
             (self.id, self.email, self.password),
             salt=settings.RECOVERY_SALT
         )
+
+    def get_event_token(self, item_variant_id):
+        return signing.dumps(
+            (self.id, item_variant_id),
+            salt=settings.QR_EVENT_SALT
+        )
