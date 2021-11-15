@@ -2,6 +2,20 @@
 
 ### Release notes
 
+#### 1.3
+- AW-290: added embedded field to artist media url
+- AW-279: added DNI to member profile
+- AW-294: Improved payment email
+- AW-295: Added event email confirmation
+- AW-297: Added email soci-pro
+- AW-298: added email auto-renew notification
+- AW-299: added member card with QR
+- AW-300: added evnt tickets with QR
+- AW-301: added auto-renewal email confirmation
+- AW-302: added unable to renew notification
+- AW-303: added email backgroun and width
+
+
 #### 1.2
 ##### Features
 - AW-266: Added featured field to artists
