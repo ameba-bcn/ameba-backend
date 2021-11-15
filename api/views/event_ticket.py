@@ -5,7 +5,7 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import ListModelMixin
 
 from api import authentication
-from api.docs.member_card import MemberCardDocs
+from api.docs.event_ticket import EventTicket
 
 
 class EventTicketView(ListModelMixin, GenericViewSet):
@@ -18,4 +18,4 @@ class EventTicketView(ListModelMixin, GenericViewSet):
         serializer = serializer_class(instance=user_to_item_variant)
         return EventTicketResponse(serializer.data)
 
-    list.__doc__ = MemberCardDocs.list
+    list.__doc__ = EventTicket.list
