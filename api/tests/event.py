@@ -7,7 +7,8 @@ from django.contrib.auth.models import Group
 from api.tests._helpers import BaseTest, check_structure
 from api.tests.user import BaseUserTest
 from api.models import Article, Image
-from api.models import Event, User, Image, Item
+from api.models import Event, User, Image, Item, ItemAttributeType, \
+    ItemVariant, ItemAttribute
 
 
 class BaseEventTest(BaseTest):
@@ -31,12 +32,22 @@ class BaseEventTest(BaseTest):
         return event_data
 
     def populate_data(self):
+        attribute = ItemAttributeType.objects.create(name='size')
+        item_attribute = ItemAttribute.objects.create(
+            attribute=attribute, value='unique'
+        )
+
         for i in range(10):
             event_data = self.get_event_data(i)
             event = Event.objects.create(**event_data)
             event.images.add(Image.objects.create(image=ImageFile(
                 open('api/tests/fixtures/media/item-image.jpg', 'rb')
             )))
+            variant = ItemVariant.objects.create(
+                item=event, stock=-1, price='15.50'
+            )
+            variant.attributes.add(item_attribute)
+            event.variants.add(variant)
 
 
 class TestSavedUserEvents(BaseEventTest):
@@ -360,3 +371,37 @@ class TestEvents(BaseEventTest):
         response = self._list(token=token)
         for event in response.data:
             self.assertFalse(event['saved'])
+
+
+class TestEventTicket(BaseEventTest):
+    LIST_ENDPOINT = '/api/ticket/'
+
+    def test_event_token_can_access_event_user_info(self):
+        user_data = {
+            'username': 'manolilto',
+            'email': 'man@olito.com',
+            'password': 'ameba12345'
+        }
+        user, token = BaseUserTest._insert_user(user_data)
+        event_obj = Event.objects.all()[0]
+        variant = event_obj.variants.all()[0]
+        variant.acquired_by.add(user)
+
+        token = user.get_event_token(variant.pk)
+        response = self._list(token=token)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_event_wrong_token_can_not_access_event_user_info(self):
+        user_data = {
+            'username': 'manolilto',
+            'email': 'man@olito.com',
+            'password': 'ameba12345'
+        }
+        user, token = BaseUserTest._insert_user(user_data)
+        event_obj = Event.objects.all()[0]
+        variant = event_obj.variants.all()[0]
+        variant.acquired_by.add(user)
+
+        token = user.get_event_token(variant.pk)[:-1]
+        response = self._list(token=token)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
