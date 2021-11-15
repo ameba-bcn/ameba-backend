@@ -1,6 +1,13 @@
+import datetime
+
 from django.utils.translation import gettext as _
 from django.contrib.auth import get_user_model
+from django.conf import settings
+from django.core import signing
 from django.db import models
+from localflavor.es.models import ESIdentityCardNumberField
+
+from api import qr_generator
 from api.models.membership import MembershipStates
 
 
@@ -8,11 +15,18 @@ from api.models.membership import MembershipStates
 User = get_user_model()
 
 
+QR_DATE_FORMAT = '%Y%m%d%H%M%S'
+
+
 def get_default_number():
     if not Member.objects.all():
-        return 100
+        return 1
     else:
         return Member.objects.all().order_by('-number').first().number + 1
+
+
+def get_default_qr_date():
+    return datetime.datetime.now().strftime(QR_DATE_FORMAT)
 
 
 class Member(models.Model):
@@ -28,14 +42,13 @@ class Member(models.Model):
         to='User', on_delete=models.CASCADE, verbose_name=_('user'),
         related_name='member'
     )
-    address = models.CharField(
-        max_length=255, blank=True, verbose_name=_('address')
-    )
+    identity_card = ESIdentityCardNumberField(verbose_name='dni/nie')
     first_name = models.CharField(max_length=20, verbose_name=_('first name'))
     last_name = models.CharField(max_length=20, verbose_name=_('last name'))
     phone_number = models.CharField(
         max_length=10, verbose_name=_('phone number')
     )
+    qr_date = models.CharField(max_length=14, default=get_default_qr_date)
 
     def get_newest_membership(self):
         if self.memberships.all():
@@ -55,3 +68,20 @@ class Member(models.Model):
         if newest_membership := self.get_newest_membership():
             return newest_membership.subscription.name
         return None
+
+    @property
+    def expires(self):
+        if membership := self.get_newest_membership():
+            return membership.expires.strftime('%d/%m/%Y')
+
+    def update_qr_date(self):
+        self.qr_date = datetime.datetime.now().strftime(QR_DATE_FORMAT)
+        self.save()
+
+    def get_member_card_token(self):
+        self.update_qr_date()
+        signature = (
+            self.pk,
+            self.qr_date
+        )
+        return signing.dumps(signature, salt=settings.QR_MEMBER_SALT)

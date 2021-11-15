@@ -42,3 +42,11 @@ class NewMemberResponse(Response):
         super().__init__(
             status=status.HTTP_201_CREATED
         )
+
+
+class MemberCardResponse(Response):
+    pass
+
+
+class EventTicketResponse(Response):
+    pass

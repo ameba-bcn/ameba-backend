@@ -8,9 +8,10 @@ User = get_user_model()
 
 
 class ActivationSerializer(SingleUseTokenSerializer):
+    model = User
     token = serializers.CharField(max_length=120, required=True)
     signature = ('id', 'is_active')
     salt = settings.ACTIVATION_SALT
 
     def perform_action(self):
-        self.user.activate()
+        self.obj.activate()
