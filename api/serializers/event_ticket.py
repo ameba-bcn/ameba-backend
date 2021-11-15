@@ -36,7 +36,9 @@ class EventTicketSerializer(ModelSerializer):
 
     @staticmethod
     def get_variants(item_variant_user):
-        return ' '.join(
-            [f'{attribute.attribute.name}: {attribute.value}' for attribute in
+        if item_variant_user.itemvariant.item.variants.all().count() > 1:
+            return ' '.join(
+                [f'{attribute.attribute.name}: {attribute.value}' for attribute in
                 item_variant_user.itemvariant.attributes.all()]
-        )
+            )
+        return None

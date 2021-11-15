@@ -7,7 +7,7 @@ from api import email_factories
 from api import models as api_models
 
 
-@background(schedule=0)
+#@background(schedule=0)
 def generate_event_ticket_and_send_confirmation_email(item_variant_id,
                                                       user_id):
     user = api_models.User.objects.get(pk=user_id)
