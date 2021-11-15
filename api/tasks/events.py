@@ -7,10 +7,15 @@ from api import email_factories
 from api import models as api_models
 
 
-#@background(schedule=0)
+@background(schedule=0)
 def generate_event_ticket_and_send_confirmation_email(item_variant_id,
                                                       user_id):
     user = api_models.User.objects.get(pk=user_id)
+    if user.has_member_profile():
+        name = f'{user.member.first_name} {user.member.last_name}'
+    else:
+        name = user.username
+
     item_variant = api_models.ItemVariant.objects.get(pk=item_variant_id)
 
     # Generate pdf with qr here
@@ -23,7 +28,7 @@ def generate_event_ticket_and_send_confirmation_email(item_variant_id,
     pdf_card = qr_factories.EventTicketWithQr(
         identifier=f'{item_variant.pk}_{user.pk}',
         event=item_variant.item.event,
-        useR=user,
+        name=name,
         qr_path=qr_path
     )
     email_factories.EventConfirmationEmail.send_to(
