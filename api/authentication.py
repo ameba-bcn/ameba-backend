@@ -1,10 +1,10 @@
 from rest_framework.authentication import get_authorization_header
-from rest_framework import HTTP_HEADER_ENCODING, exceptions
+from rest_framework import exceptions, authentication
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from django.core import signing
 from django.contrib.auth import get_user_model
-from api.models import Member
+from api.models import Member, ItemVariant
 from rest_framework_simplejwt.authentication import JWTAuthentication
 User = get_user_model()
 
@@ -14,6 +14,7 @@ class MemberCardAuthentication(JWTAuthentication):
     salt = settings.QR_MEMBER_SALT
     age = None
     signature = ('pk', 'qr_date')
+    keyword = 'Bearer'
 
     def authenticate(self, request):
         auth = get_authorization_header(request).split()
@@ -49,3 +50,29 @@ class MemberCardAuthentication(JWTAuthentication):
 
     def authenticate_header(self, request):
         return 'Basic realm="%s"' % self.www_authenticate_realm
+
+
+class EventTicketAuthentication(authentication.TokenAuthentication):
+    model = ItemVariant.acquired_by.through
+    salt = settings.QR_EVENT_SALT
+    age = None
+    signature = ('user_id', 'item_variant_id')
+    keyword = 'Bearer'
+
+    def authenticate(self, request):
+        instance = super().authenticate(request)
+        request.instance = instance
+
+    def authenticate_credentials(self, key):
+        try:
+            user_id, item_variant_id = self.get_signature(token=key)
+            instance = self.model.objects.get(
+                user_id=user_id, itemvariant_id=item_variant_id
+            )
+            return instance
+        except Exception as e:
+            raise exceptions.AuthenticationFailed(_('Invalid token.'))
+
+    def get_signature(self, token):
+        signature = signing.loads(token, max_age=self.age, salt=self.salt)
+        return signature

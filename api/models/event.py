@@ -46,3 +46,7 @@ class Event(Item):
     def get_is_active(self):
         self.is_active = timezone.now() > self.datetime - EXPIRE_BEFORE_EVENT
         return self.is_active
+
+    @property
+    def str_datetime(self):
+        return self.datetime.strftime('%d/%m/%Y - %H:%M')

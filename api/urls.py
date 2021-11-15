@@ -12,6 +12,7 @@ router.register(r'interviews', views.InterviewViewSet, basename='interview')
 router.register(r'articles', views.ArticleViewSet, basename='article')
 router.register(r'events', views.EventViewSet, basename='event')
 router.register(r'member_card', views.MemberCard, basename='member_card')
+router.register(r'ticket', views.EventTicketView, basename='ticket')
 
 router.register(r'carts', views.CartViewSet, basename='cart')
 

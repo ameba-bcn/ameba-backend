@@ -260,13 +260,15 @@ STRIPE_PUBLIC = env("STRIPE_PUBLIC", '', var_type='string')
 
 # TOKENS EXPIRE TIMES
 ACTIVATION_EXPIRE_DAYS = 30
-ACTIVATION_SALT = 'aCtiV4TiONtoKeN'
+ACTIVATION_SALT = 'activation_salt'
 
 RECOVERY_EXPIRE_DAYS = .5
-RECOVERY_SALT = 'rEc0VErit0kn'
+RECOVERY_SALT = 'recovery_salt'
 
 QR_MEMBER_CARD_DAYS = -1
-QR_MEMBER_SALT = 'tuC4rNetde4mEbA'
+QR_MEMBER_SALT = 'qr_member_salt'
+
+QR_EVENT_SALT = 'qr_event_salt'
 
 QR_TMP_DIR = "tmp/html/qr/"
 HTML_TMP_DIR = "tmp/html/"
@@ -275,9 +277,15 @@ PDF_TMP_DIR = "tmp/pdf"
 # FRONTEND MEMBERSHIP CARD PATH
 FE_MEMBERSHIP_CARD_PATH = env(
     'FE_MEMBERSHIP_CARD_PATH',
-    'ameba-site/membership_card/?token={token}',
+    'ameba-site/membership-card/?token={token}',
     var_type='string'
 )
+FE_EVENT_TICKET_PATH = env(
+    'FE_EVENT_TICKET_PATH',
+    'ameba-site/event-ticket/?token={token}',
+    var_type='string'
+)
+
 
 # MAILING LISTS
 DEFAULT_MAILING_LIST = env(
