@@ -46,6 +46,7 @@ class BaseEventTest(BaseTest):
             variant = ItemVariant.objects.create(
                 item=event, stock=-1, price='15.50'
             )
+            variant.attributes.add(item_attribute)
             event.variants.add(variant)
 
 
@@ -390,3 +391,17 @@ class TestEventTicket(BaseEventTest):
         response = self._list(token=token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+    def test_event_wrong_token_can_not_access_event_user_info(self):
+        user_data = {
+            'username': 'manolilto',
+            'email': 'man@olito.com',
+            'password': 'ameba12345'
+        }
+        user, token = BaseUserTest._insert_user(user_data)
+        event_obj = Event.objects.all()[0]
+        variant = event_obj.variants.all()[0]
+        variant.acquired_by.add(user)
+
+        token = user.get_event_token(variant.pk)[:-1]
+        response = self._list(token=token)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
