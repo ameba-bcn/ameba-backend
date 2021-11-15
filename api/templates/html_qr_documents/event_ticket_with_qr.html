@@ -1,0 +1,67 @@
+{% extends "template_blocks/base_member_card.html" %}
+{% load i18n %}
+
+{% block header %}
+    {% include "template_blocks/pdf_header.html" %}
+{% endblock %}
+
+
+{% block title %}
+<td>
+    <p>{% blocktrans with event=event.name|upper %}{{ event }}{% endblocktrans %}</p>
+</td>
+{% endblock %}
+
+{%  block div1 %}
+    {% include "template_blocks/division_line.html" %}
+{%  endblock %}
+
+{% block subtitle %}
+    <td>
+    <p>
+       {% blocktrans with location=event.address time=event.str_datetime %}{{ location }}
+           <br>{{ time }}{% endblocktrans %}
+    </p>
+    </td>
+{% endblock %}
+
+{%  block div2 %}
+    {% include "template_blocks/division_line.html" %}
+{%  endblock %}
+
+{% block member_name %}
+<td>
+<p>
+    <b>
+    {% blocktrans with name=name %}{{ name }}{% endblocktrans %}
+    </b>
+</p>
+</td>
+{% endblock %}
+
+{%  block div3 %}
+    {% include "template_blocks/division_line.html" %}
+{%  endblock %}
+
+
+{%  block button_like %}
+{% endblock %}
+
+{%  block div4 %}
+{%  endblock %}
+
+{%  block qr %}
+<td>
+    <img src="./{{ qr_path }}" alt="qr_code">
+</td>
+{% endblock %}
+
+
+{%  block footer %}
+<td>
+    <p>{% blocktrans %}Presenta este código QR en la entrada del evento. En
+        caso de perderlo o no cualquier otro problema, ponte en contacto con
+        AMEBA.
+    {% endblocktrans %}</p>
+</td>
+{% endblock %}
