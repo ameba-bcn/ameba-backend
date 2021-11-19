@@ -144,7 +144,8 @@ a {
 .content h1 {
     color: #FAE6C5;
     margin: 50px 10% 50px;
-    transform: scaleY(1.75);
+    font-family: Arial, sans-serif;
+    font-weight: bold;
     font-size: 20px;
 }
 
