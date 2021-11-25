@@ -139,6 +139,7 @@ a {
     background-color: #EB5E3E;
     color: #1d1d1b;
     text-align: center;
+    margin: 30px 0 30px;
 }
 
 .content h1 {
@@ -152,7 +153,10 @@ a {
 
 .content p {
     font-size: 18px;
-    margin: 50px 10% 50px;
+}
+
+.content tr {
+    margin: 15px 10% 15px;
 }
 
 .checkout-summary {
