@@ -161,7 +161,7 @@ a {
 }
 
 .content td {
-    padding-bottom: 40px;
+    padding-bottom: 60px;
 }
 
 .checkout-summary {
@@ -204,9 +204,9 @@ a {
 
 .newsletter h1 {
     margin: 40px auto 20px;
-    transform: scaleY(1.75);
-    font-size:30px;
-    font-weight: 600;
+    font-size:36px;
+    font-family: Arial, serif;
+    font-weight: bold;
 }
 
 /*SUBSCRIBE BUTTON*/
@@ -227,12 +227,12 @@ a {
     cursor:pointer;
     vertical-align:middle;
     max-width: 80%;
-    padding: 3px 15px 1px;
+    padding: 8px 10px 8px;
     text-align: center;
-    margin: 20px auto 20px;
-    transform: scaleY(1.5);
+    margin: 0 auto 20px;
+    font-family: Arial, serif;
+    /*font-weight: bold;*/
     font-size: 16px;
-    font-weight: 500;
 }
 
 
