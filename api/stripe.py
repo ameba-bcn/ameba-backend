@@ -74,3 +74,33 @@ def get_payment_intent(checkout_details):
         return EMPTY_PAYMENT_INTENT
     else:
         raise WrongPaymentIntent
+
+
+def get_or_create_subscription(identifier, name):
+    try:
+        stripe_product = stripe.Product.retrieve(id=str(identifier))
+    except stripe.error.InvalidRequestError as err:
+        stripe_product = stripe.Product.create(
+            id=str(identifier), name=name
+        )
+    return stripe_product
+
+
+def get_update_or_create_price(product, amount, period='year'):
+    prices = sorted(
+        stripe.Price.list(product=product)['data'], key=lambda x: x['created']
+    )
+    if not prices or prices[-1].unit_amount != amount:
+        return stripe.Price.create(
+            currency=CURRENCY,
+            product=product,
+            unit_amount=amount,
+            recurring=dict(interval=period)
+        )
+    return prices[-1]
+
+
+def create_subscription(identifier, name, amount, period):
+    stripe_product = get_or_create_subscription(identifier, name)
+    stripe_price = get_update_or_create_price(identifier, amount, period)
+    return stripe_product, stripe_price
