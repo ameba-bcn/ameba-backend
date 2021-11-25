@@ -153,10 +153,15 @@ a {
 
 .content p {
     font-size: 18px;
+    padding: 0 40px 0 40px;
 }
 
 .content tr {
     margin: 15px 10% 15px;
+}
+
+.content td {
+    padding-bottom: 40px;
 }
 
 .checkout-summary {
