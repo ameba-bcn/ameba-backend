@@ -39,5 +39,9 @@ def process_cart_items(sender, cart, request, **kwargs):
 
 @django.dispatch.receiver(signals.post_save, sender=api_models.ItemVariant)
 def add_product_to_stripe(sender, instance, created, **kwargs):
-    if created:
-        stripe
+    if instance.item.is_subscription():
+        stripe.create_or_update_subscription(
+            identifier=instance.id,
+            name=instance.get_variant_name(),
+            amount=instance.amount
+        )

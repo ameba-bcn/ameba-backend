@@ -100,7 +100,7 @@ def get_update_or_create_price(product, amount, period='year'):
     return prices[-1]
 
 
-def create_subscription(identifier, name, amount, period):
+def create_or_update_subscription(identifier, name, amount):
     stripe_product = get_or_create_subscription(identifier, name)
-    stripe_price = get_update_or_create_price(identifier, amount, period)
+    stripe_price = get_update_or_create_price(identifier, amount)
     return stripe_product, stripe_price
