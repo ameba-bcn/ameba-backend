@@ -159,3 +159,12 @@ class ItemVariant(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_attributes_set(self):
+        return ', '.join([
+            f'{attribute.attribute.name}: {attribute.value}'
+            for attribute in self.attributes.all()
+        ])
+
+    def get_variant_name(self):
+        return f'{self.item.name} ({self.get_attributes_set()})'
