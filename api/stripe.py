@@ -76,12 +76,12 @@ def get_payment_intent(checkout_details):
         raise WrongPaymentIntent
 
 
-def get_or_create_product(identifier, name):
+def _get_or_create_product(product_id, product_name):
     try:
-        stripe_product = stripe.Product.retrieve(id=str(identifier))
+        stripe_product = stripe.Product.retrieve(id=str(product_id))
     except stripe.error.InvalidRequestError as err:
         stripe_product = stripe.Product.create(
-            id=str(identifier), name=name
+            id=str(product_id), name=product_name
         )
     return stripe_product
 
@@ -95,21 +95,26 @@ def _get_product_price(product_id):
     return prices[-1]
 
 
-def get_update_or_create_price(product, amount, period='year'):
-    price = _get_product_price(product)
+def _get_update_or_create_price(product_id, amount, period):
+    price = _get_product_price(product_id)
     if not price or price.unit_amount != amount:
         return stripe.Price.create(
             currency=CURRENCY,
-            product=product,
+            product=product_id,
             unit_amount=amount,
             recurring=dict(interval=period)
         )
     return price
 
 
-def create_or_update_product_and_price(identifier, name, amount):
-    stripe_product = get_or_create_product(identifier, name)
-    stripe_price = get_update_or_create_price(identifier, amount)
+def create_or_update_product_and_price(item_variant):
+    product_id = item_variant.id
+    period = item_variant.get_payment_period()
+    product_name = item_variant.name
+    stripe_product = _get_or_create_product(product_id, product_name)
+    stripe_price = _get_update_or_create_price(
+        product_id, item_variant.amount, period
+    )
     return stripe_product, stripe_price
 
 
@@ -121,8 +126,8 @@ def _get_or_create_customer(customer_id, name):
     return customer
 
 
-def _get_stripe_subscription_id(item_variant_id, user_id):
-    return f'{item_variant_id}-{user_id}'
+def _get_stripe_subscription_id(product_id, customer_id):
+    return f'{product_id}-{customer_id}'
 
 
 def _get_or_create_subscription(product_id, customer_id):
