@@ -16,6 +16,7 @@ from api.tests.mailgun import TestMailgunApi
 from api.tests.item import TestItem
 from api.tests.member_register import FullRegistrationTest
 from api.tests.membership import TestSubscriptionPurchase
+from api.tests.integrations import StripeSynchronization
 
 from unittest import mock
 

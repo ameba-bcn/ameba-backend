@@ -9,7 +9,9 @@ EXPIRE_HOURS_BEFORE_EVENT = 1
 EXPIRE_BEFORE_EVENT = timedelta(hours=EXPIRE_HOURS_BEFORE_EVENT)
 
 
-INTERVALS = ('year', 'year')
+INTERVALS = (
+    ('year', 'year'),
+)
 
 
 if settings.DEBUG:
