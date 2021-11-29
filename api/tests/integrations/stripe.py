@@ -87,3 +87,35 @@ class TestStripeSynchronization(APITestCase):
             cart_items=cart.get_cart_items()
         )
         self.assertEqual(cart.amount, invoice.amount_due)
+
+    def test_stripe_subscription_and_articles_invoice_generation_from_cart(self):
+        user = user_helpers.get_user(
+            username='mingonilo',
+            email='mingonilo@mimail.si',
+            password='ameba12345'
+        )
+        cart = cart_helpers.get_cart(
+            user=user,
+            item_variants=[1, 2, 3],
+            item_class=api_models.Article
+        )
+
+        subs = item_helpers.create_item(
+            pk=4,
+            name='Socio',
+            item_class=api_models.Subscription
+        )
+        price = random.randint(15, 20)
+        subs_variant = item_helpers.create_item_variant(
+            pk=4,
+            item=subs,
+            price=price,
+            stock=-1,
+            recurrence='year'
+        )
+        cart.item_variants.add(subs_variant)
+        invoice = stripe.create_invoice(
+            user=user,
+            cart_items=cart.get_cart_items()
+        )
+        self.assertEqual(cart.amount, invoice.amount_due)
