@@ -79,6 +79,8 @@ def get_payment_intent(checkout_details):
 def _get_or_create_product(product_id, product_name):
     try:
         stripe_product = stripe.Product.retrieve(id=str(product_id))
+        if stripe_product.name != product_name:
+            stripe_product.update({'name': product_name})
     except stripe.error.InvalidRequestError as err:
         stripe_product = stripe.Product.create(
             id=str(product_id), name=product_name
@@ -95,9 +97,19 @@ def _get_product_price(product_id):
     return prices[-1]
 
 
+def _is_price_changed(price, amount, period):
+    if price.unit_amount != amount:
+        return True
+    elif bool(price.recurring) is not bool(period):
+        return True
+    elif price.recurring and price.recurring.period != period:
+        return True
+    return False
+
+
 def _get_update_or_create_price(product_id, amount, period):
     price = _get_product_price(product_id)
-    if not price or price.unit_amount != amount:
+    if not price or _is_price_changed(price, amount, period):
         return stripe.Price.create(
             currency=CURRENCY,
             product=product_id,
@@ -130,17 +142,13 @@ def _get_stripe_subscription_id(product_id, customer_id):
     return f'{product_id}-{customer_id}'
 
 
-def _get_or_create_subscription(product_id, customer_id):
-    try:
-        subscription = stripe.Subscription.retrieve(id=str(product_id))
-    except stripe.error.InvalidRequestError as err:
-        prices = [{'price': _get_product_price(product_id)}]
-        subscription = stripe.Subscription.create(
-            id=_get_stripe_subscription_id(product_id, customer_id),
-            customer=str(customer_id),
-            items=prices,
-            payment_behavior='default_incomplete'
-        )
+def _create_subscription(product_id, customer_id):
+    prices = [{'price': _get_product_price(product_id)}]
+    subscription = stripe.Subscription.create(
+        customer=str(customer_id),
+        items=prices,
+        payment_behavior='default_incomplete'
+    )
     return subscription
 
 
@@ -159,14 +167,22 @@ def create_invoice(user, cart_items):
         customer=customer.id,
         collection_method='charge_automatically'
     )
-    for cart_item in cart_items:
-        product = stripe.Product.retrieve(id=cart_item.item_variant.id)
-        if cart_item.item_variant.interval:
-            subscription = _get_or_create_subscription(
-                product_id=product.id,
-                customer_id=customer.id
-            )
-            invoice_props['subscription'] = subscription.id
+    cart_items = list(cart_items)
+    regular_items = filter(
+        lambda x: x.item_variant.get_recurrence() is None, cart_items
+    )
+    subscriptions = filter(
+        lambda x: x.item_variant.get_recurrence(), cart_items
+    )
+    for cart_item in regular_items:
         price = _get_product_price(product_id=cart_item.item_variant.id)
         _create_invoice_item(customer_id=customer.id, price_id=price.id)
+
+    for cart_item in subscriptions:
+        subscription = _create_subscription(
+            product_id=cart_item.item_variant.id,
+            customer_id=customer.id
+        )
+        return stripe.Invoice.retrieve(subscription.latest_invoice)
+
     return stripe.Invoice.create(**invoice_props)
