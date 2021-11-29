@@ -192,4 +192,4 @@ class ItemVariant(models.Model):
         return super().save(*args, **kwargs)
 
     def get_recurrence(self):
-        return str(self.recurrence)
+        return self.recurrence and str(self.recurrence) or None
