@@ -190,3 +190,6 @@ class ItemVariant(models.Model):
         elif self.recurrence is None and self.item.is_subscription():
             self.recurrence = 'year'
         return super().save(*args, **kwargs)
+
+    def get_recurrence(self):
+        return str(self.recurrence)
