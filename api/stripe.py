@@ -109,7 +109,7 @@ def _get_update_or_create_price(product_id, amount, period):
 
 def create_or_update_product_and_price(item_variant):
     product_id = item_variant.id
-    period = item_variant.get_payment_period()
+    period = item_variant.get_recurrence()
     product_name = item_variant.name
     stripe_product = _get_or_create_product(product_id, product_name)
     stripe_price = _get_update_or_create_price(

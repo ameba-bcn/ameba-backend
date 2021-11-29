@@ -52,8 +52,8 @@ def create_item_variant(item, price=None, stock=None, recurrence=None, pk=None):
     item_variant_data = dict(
         item=item,
         price=price or item.pk * 10,
-        stock=recurrence or get_item_variant_recurrence(item),
-        recurrence=stock or get_item_variant_recurrence(item)
+        stock=stock or get_item_variant_stock(item),
+        recurrence=recurrence or get_item_variant_recurrence(item)
     )
     if pk:
         item_variant_data['id'] = pk
