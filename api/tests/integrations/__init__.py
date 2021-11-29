@@ -1,1 +1,1 @@
-from api.tests.integrations.stripe import StripeSynchronization
+from api.tests.integrations.stripe import TestStripeSynchronization
