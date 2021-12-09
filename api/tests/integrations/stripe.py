@@ -146,15 +146,17 @@ class TestStripeSynchronization(APITestCase):
             recurrence='year'
         )
         cart.item_variants.add(subs_variant)
+
+        payment_method_id = stripe.create_payment_method(
+            number='4242424242424242',
+            exp_month=12,
+            exp_year=2024,
+            cvc=123
+        )
+        stripe.update_payment_method(user, payment_method_id)
         invoice = stripe.create_invoice(
             user=user,
             cart_items=cart.get_cart_items()
         )
-
-        payment_method = stripe.create_payment_method(
-            number='4242424242424242',
-            exp_month=12,
-            exp_year=2099,
-            cvc=123
-        )
-
+        invoice.pay(payment_method_id=payment_method_id)
+        self.assertEqual(invoice.status, 'paid')

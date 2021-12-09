@@ -191,7 +191,7 @@ def create_invoice(user, cart_items):
 def create_payment_method(number, exp_month, exp_year, cvc):
     return stripe.PaymentMethod.create(
         type='card',
-        cadr=dict(
+        card=dict(
             number=number,
             exp_month=exp_month,
             exp_year=exp_year,
@@ -200,20 +200,10 @@ def create_payment_method(number, exp_month, exp_year, cvc):
     ).id
 
 
-def detach_customer_payment_methods(customer_id):
-    payment_methods = stripe.PaymentMethod.list(
-        customer=customer_id,
-        type='card'
-    )
-    for payment_method in payment_methods.data:
-        stripe.PaymentMethod.detach(payment_method['id'])
-
-
 def attach_payment_method(customer_id, payment_method_id):
     stripe.PaymentMethod.attach(payment_method_id, customer=customer_id)
 
 
-def update_payment_method(payment_method_id, user):
+def update_payment_method(user, payment_method_id):
     customer = _get_or_create_customer(user.id, user.username)
-    detach_customer_payment_methods(customer.id)
     attach_payment_method(customer.id, payment_method_id)
