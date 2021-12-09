@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.exceptions import MethodNotAllowed
 from api.permissions import CartPermission
-from api.serializers import CartSerializer, CartCheckoutSerializer
+import api.serializers as api_serializers
 from api.models import Cart
 from api.signals import cart_processed
 from api.docs.carts import CartsDocs
@@ -20,12 +20,14 @@ CURRENT_LABEL = 'current'
 class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
                   DestroyModelMixin, CreateModelMixin):
     permission_classes = (CartPermission, )
-    serializer_class = CartSerializer
+    serializer_class = api_serializers.CartSerializer
     queryset = Cart.objects.all()
 
     def get_serializer_class(self):
         if self.action == 'checkout':
-            self.serializer_class = CartCheckoutSerializer
+            self.serializer_class = api_serializers.CartCheckoutSerializer
+        elif self.action == 'perform_payment':
+            self.serializer_class = api_serializers.PaymentSerializer
         return super().get_serializer_class()
 
     def get_permissions(self):
@@ -68,9 +70,18 @@ class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
     def partial_update(self, request, *args, **kwargs):
         return super().partial_update(request, *args, **kwargs)
 
-    def destroy(self, request, *args, **kwargs):
+    @action(detail=True, methods=['POST'])
+    def perform_payment(self, request, *args, **kwargs):
         cart = self.get_object()
-        cart_processed.send(sender=self, cart=cart, request=self.request)
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(request.data)
+        serializer.is_valid(raise_exception=True)
+        cart_processed.send(
+            sender=self,
+            cart=cart,
+            payment_method_id=serializer.data['payment_method_id'],
+            request=self.request
+        )
         return super().destroy(request, *args, **kwargs)
 
     def retrieve(self, request, *args, **kwargs):
@@ -87,5 +98,5 @@ class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
     # Documentation
     partial_update.__doc__ = CartsDocs.partial_update
     checkout.__doc__ = CartsDocs.checkout
-    destroy.__doc__ = CartsDocs.destroy
+    perform_payment.__doc__ = CartsDocs.destroy
     retrieve.__doc__ = CartsDocs.retrieve
