@@ -189,6 +189,7 @@ def create_invoice(user, cart_items):
 
 
 def create_payment_method(number, exp_month, exp_year, cvc):
+    # todo: check if same payment method can be created twice.
     return stripe.PaymentMethod.create(
         type='card',
         card=dict(
@@ -207,3 +208,7 @@ def attach_payment_method(customer_id, payment_method_id):
 def update_payment_method(user, payment_method_id):
     customer = _get_or_create_customer(user.id, user.username)
     attach_payment_method(customer.id, payment_method_id)
+
+
+def get_invoice(invoice_id):
+    return stripe.Invoice.retrieve(invoice_id)
