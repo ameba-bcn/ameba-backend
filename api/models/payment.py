@@ -8,7 +8,7 @@ from api import stripe
 class PaymentManager(models.Manager):
 
     @staticmethod
-    def create_payment(cart, payment_intent):
+    def create_payment(cart, invoice):
         from api.serializers.cart import CartSerializer
         user = cart.user
         cart_record = CartSerializer(instance=cart).data
@@ -16,7 +16,7 @@ class PaymentManager(models.Manager):
             id=cart.id,
             user=user,
             cart_record=cart_record,
-            details=dict(payment_intent)
+            details=dict(invoice)
         )
         return payment
 
