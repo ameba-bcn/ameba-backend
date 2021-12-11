@@ -24,9 +24,9 @@ def on_cart_deleted(sender, cart, payment_method_id, request, **kwargs):
     # Process payment
     payment_done = False
     if cart.amount > 0:
-        payment_method_id = stripe.get_payment_method(user, payment_method_id)
+        payment_method_id = stripe.get_payment_method_id(user, payment_method_id)
         invoice = stripe.get_or_create_invoice(cart)
-        invoice.pay(payment_method_id=payment_method_id)
+        invoice.pay(payment_method=payment_method_id)
         if invoice.status == 'paid':
             payment_done = True
     else:
