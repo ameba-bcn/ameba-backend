@@ -34,10 +34,14 @@ class TestStripeSynchronization(APITestCase):
         )
 
         stripe_subs_variant = stripe._get_product_price(subs_variant.id)
-        self.assertEqual(stripe_subs_variant.unit_amount,  price * 100)
 
-        subs_variant.delete()
-        subs.delete()
+        try:
+            self.assertEqual(stripe_subs_variant.unit_amount,  price * 100)
+        except Exception as e:
+            raise e
+        finally:
+            subs.delete()
+            subs_variant.delete()
 
     def test_new_item_variant_updates_stripe_product_price(self):
         subs = item_helpers.create_item(
@@ -54,14 +58,26 @@ class TestStripeSynchronization(APITestCase):
         )
 
         stripe_subs_variant = stripe._get_product_price(subs_variant.id)
-        self.assertEqual(stripe_subs_variant.unit_amount,  price * 100)
+
+        try:
+            self.assertEqual(stripe_subs_variant.unit_amount,  price * 100)
+        except Exception as e:
+            subs.delete()
+            subs_variant.delete()
+            raise e
 
         price = 20
         subs_variant.price = price
         subs_variant.save()
 
         stripe_subs_variant = stripe._get_product_price(subs_variant.id)
-        self.assertEqual(stripe_subs_variant.unit_amount,  price * 100)
+        try:
+            self.assertEqual(stripe_subs_variant.unit_amount,  price * 100)
+        except Exception as e:
+            raise e
+        finally:
+            subs.delete()
+            subs_variant.delete()
 
     def test_stripe_subscription_invoice_generation_from_cart(self):
         user = user_helpers.get_user(
@@ -128,7 +144,13 @@ class TestStripeSynchronization(APITestCase):
             user=user,
             cart_items=cart.get_cart_items()
         )
-        self.assertEqual(cart.amount, invoice.amount_due)
+        try:
+            self.assertEqual(cart.amount, invoice.amount_due)
+        except Exception as e:
+            raise e
+        finally:
+            subs.delete()
+            subs_variant.delete()
 
     def test_stripe_complete_flow(self):
         user = user_helpers.get_user(
@@ -169,4 +191,11 @@ class TestStripeSynchronization(APITestCase):
             cart_items=cart.get_cart_items()
         )
         invoice.pay(payment_method_id=payment_method_id)
-        self.assertEqual(invoice.status, 'paid')
+
+        try:
+            self.assertEqual(invoice.status, 'paid')
+        except Exception as e:
+            raise e
+        finally:
+            subs.delete()
+            subs_variant.delete()
