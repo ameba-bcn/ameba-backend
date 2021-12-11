@@ -14,36 +14,18 @@ cart_processed = django.dispatch.Signal(
 
 @receiver(cart_processed)
 def on_cart_deleted(sender, cart, payment_method_id, request, **kwargs):
-    # todo: use cart.checkout_details to store invoice in case there are
-    #  unsuccessful payment attempt.
-    if not cart.checkout_details:
-        # If the cart has not checkout details, it can be normally deleted.
-        return
+    # Get user
+    user = cart.user
 
+    # If the cart has changed, need to be checked-out before continue.
     if cart.has_changed():
-        # If the cart has changed, need to be checked-out before continue.
         raise CheckoutNeeded
 
     # Process payment
     payment_done = False
     if cart.amount > 0:
-        # todo: control duplicated payment methods
-        payment_method_id = stripe.create_payment_method(
-            number='4242424242424242',
-            exp_month=12,
-            exp_year=2024,
-            cvc=123
-        )
-        stripe.update_payment_method(cart.user, payment_method_id)
-
-        if 'invoice' in cart.checkout_details:
-            invoice_id = cart.checkout_details['invoice']['id']
-            invoice = stripe.get_invoice(invoice_id)
-        else:
-            invoice = stripe.create_invoice(
-                user=cart.user,
-                cart_items=cart.get_cart_items()
-            )
+        payment_method_id = stripe.get_payment_method(user, payment_method_id)
+        invoice = stripe.get_or_create_invoice(cart)
         invoice.pay(payment_method_id=payment_method_id)
         if invoice.status == 'paid':
             payment_done = True
