@@ -37,7 +37,7 @@ class MemberCardAuthentication(JWTAuthentication):
                 msg = _('Invalid token.')
                 raise exceptions.AuthenticationFailed(msg)
             return obj.user, None
-        except:
+        except Exception:
             msg = _('Invalid token.')
             raise exceptions.AuthenticationFailed(msg)
 
@@ -70,7 +70,7 @@ class EventTicketAuthentication(authentication.TokenAuthentication):
                 user_id=user_id, itemvariant_id=item_variant_id
             )
             return instance
-        except Exception as e:
+        except Exception:
             raise exceptions.AuthenticationFailed(_('Invalid token.'))
 
     def get_signature(self, token):
