@@ -15,6 +15,7 @@ class BaseCartTest(BaseTest):
     DETAIL_ENDPOINT = '/api/carts/{pk}/'
     LIST_ENDPOINT = '/api/carts/'
     CHECKOUT_ENDPOINT = '/api/carts/{pk}/checkout/'
+    PAYMENT_ENDPOINT = '/api/carts/{pk}/perform_payment/'
 
     @staticmethod
     def get_user(user_tag=None, member_profile=False):
@@ -44,6 +45,13 @@ class BaseCartTest(BaseTest):
     def checkout(self, pk='current', token=None):
         self._authenticate(token=token)
         return self.client.get(self.CHECKOUT_ENDPOINT.format(pk=pk))
+
+    def perform_payment(self, pk='current', props=None, token=None):
+        self._authenticate(token=token)
+        return self.client.post(
+            self.PAYMENT_ENDPOINT.format(pk=pk),
+            data=props
+        )
 
     def get_cart(self, user=None, item_variants=None, for_free=False,
                  item_class=Item):
@@ -184,8 +192,6 @@ class TestGetCart(BaseCartTest):
 
 
 class TestPostCarts(BaseCartTest):
-    DETAIL_ENDPOINT = '/api/carts/{pk}/'
-    LIST_ENDPOINT = '/api/carts/'
 
     def _get_body(self, items, other_keys):
         body = {}
@@ -588,8 +594,6 @@ class TestCartCheckout(BaseCartTest):
 
 
 class TestCartStateFlow(BaseCartTest):
-    DETAIL_ENDPOINT = '/api/carts/{pk}/'
-    LIST_ENDPOINT = '/api/carts/'
 
     def test_new_cart_has_no_state(self):
         user = self.get_user(1)
@@ -619,12 +623,13 @@ class TestCartStateFlow(BaseCartTest):
             pk='current', token=token, props={'item_variant_ids': [1, 2]}
         )
 
-        response = self._delete(pk='current', token=token)
+        response = self.perform_payment(pk='current', props={}, token=token)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         response = self._get(pk='current', token=token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(response.data.get('state')['needs_checkout'])
+
 
 class TestRegisterWithCart(BaseCartTest):
 

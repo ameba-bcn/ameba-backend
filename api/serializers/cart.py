@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer, \
-    SerializerMethodField, Serializer, SlugRelatedField
+    SerializerMethodField, Serializer, SlugRelatedField, CharField
 
 from api.models import Cart, ItemVariant
 
@@ -170,3 +170,7 @@ class CartCheckoutSerializer(CartSerializer):
                         "client_secret"]
             }
         return {}
+
+
+class PaymentSerializer(Serializer):
+    payment_method_id = CharField(write_only=True, allow_blank=False)

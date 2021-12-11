@@ -1,11 +1,24 @@
 from datetime import timedelta
 
+from django.conf import settings
 from django.db.models import Sum
 from django.db import models
 from django.utils.translation import gettext as _
 
 EXPIRE_HOURS_BEFORE_EVENT = 1
 EXPIRE_BEFORE_EVENT = timedelta(hours=EXPIRE_HOURS_BEFORE_EVENT)
+
+
+INTERVALS = (
+    ('year', 'year'),
+)
+
+
+if settings.DEBUG:
+    INTERVALS = (
+        ('year', 'year'),
+        ('minute', 'minute'),
+    )
 
 
 class Item(models.Model):
@@ -139,6 +152,8 @@ class ItemVariant(models.Model):
         to='User', blank=True, related_name='item_variants',
         verbose_name=_('acquired by')
     )
+    recurrence = models.CharField(max_length=10, choices=INTERVALS,
+                                  blank=True, null=True, default=None)
 
     def get_valid_discounts(self, user, code=None):
         return self.item.get_valid_discounts(user, code)
@@ -159,3 +174,22 @@ class ItemVariant(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_attributes_set(self):
+        return ', '.join([
+            f'{attribute.attribute.name}: {attribute.value}'
+            for attribute in self.attributes.all()
+        ])
+
+    def get_variant_name(self):
+        return f'{self.item.name} ({self.get_attributes_set()})'
+
+    def save(self, *args, **kwargs):
+        if self.recurrence is not None and not self.item.is_subscription():
+            self.recurrence = None
+        elif self.recurrence is None and self.item.is_subscription():
+            self.recurrence = 'year'
+        return super().save(*args, **kwargs)
+
+    def get_recurrence(self):
+        return self.recurrence and str(self.recurrence) or None

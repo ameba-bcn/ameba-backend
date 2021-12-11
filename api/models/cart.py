@@ -15,9 +15,6 @@ from api.exceptions import (
 from api.stripe import IntentStatus
 
 
-cart_checkout = dispatch.Signal(providing_args=['cart'])
-
-
 SUCCEEDED_PAYMENTS = [IntentStatus.SUCCESS, IntentStatus.NOT_NEEDED]
 
 
@@ -201,8 +198,6 @@ class Cart(Model):
 
     def checkout(self):
         self.is_checkout_able()
-        # Create sync with payment platform and write details
-        cart_checkout.send(sender=self.__class__, cart=self)
         self.checkout_hash = self.get_hash()
         self.save()
 
