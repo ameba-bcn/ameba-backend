@@ -25,7 +25,7 @@ class TestPaymentsFlow(test_helpers.BaseTest):
         conf.settings.STRIPE_SYNC = self.stripe_sync
 
     @mock.patch.object(email_factories.PaymentSuccessfulEmail, 'send_to')
-    def test_single_article_purchase_flow(self, send_to):
+    def test_one_time_payment_articles_purchase_flow(self, send_to):
         # Create user
         user_attrs = dict(
             email='one@user.com',
