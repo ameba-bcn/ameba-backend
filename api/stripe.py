@@ -25,6 +25,13 @@ EMPTY_PAYMENT_INTENT = {
 }
 
 
+def stripe_sync(func):
+    def wrapper(*args, **kwargs):
+        if settings.STRIPE_SYNC:
+            return func(*args, **kwargs)
+    return wrapper
+
+
 def create_payment_intent(amount, idempotency_key):
     return stripe.PaymentIntent.create(
         amount=amount,
