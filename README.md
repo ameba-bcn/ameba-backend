@@ -2,6 +2,11 @@
 
 ### Release notes
 
+#### 1.4
+- AW-232: Implemented new payment flow to enable periodic charges for 
+  subscriptions
+
+
 #### 1.3
 - AW-290: added embedded field to artist media url
 - AW-279: added DNI to member profile
