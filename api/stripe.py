@@ -189,7 +189,6 @@ def create_invoice(user, cart_items):
 
 
 def create_payment_method(number, exp_month, exp_year, cvc):
-    # todo: check if same payment method can be created twice.
     return stripe.PaymentMethod.create(
         type='card',
         card=dict(
@@ -201,14 +200,48 @@ def create_payment_method(number, exp_month, exp_year, cvc):
     ).id
 
 
-def attach_payment_method(customer_id, payment_method_id):
+def _attach_payment_method(customer_id, payment_method_id):
     stripe.PaymentMethod.attach(payment_method_id, customer=customer_id)
 
 
 def update_payment_method(user, payment_method_id):
     customer = _get_or_create_customer(user.id, user.username)
-    attach_payment_method(customer.id, payment_method_id)
+    _attach_payment_method(customer.id, payment_method_id)
 
 
 def get_invoice(invoice_id):
     return stripe.Invoice.retrieve(invoice_id)
+
+
+def _get_customer_payment_methods(customer_id):
+    return stripe.PaymentMethod.list(type='card', customer=customer_id)
+
+
+def _check_payment_methods_are_same(pm_1, pm_2):
+    return pm_1['card']['fingerprint'] == pm_2['card']['fingerprint']
+
+
+def _check_user_pm_exists(customer_id, pm):
+    for user_pm in _get_customer_payment_methods(customer_id)['data']:
+        if _check_payment_methods_are_same(pm, user_pm):
+            return user_pm
+    return False
+
+
+def get_or_create_user_pm(user, card_number, exp_month, exp_year, cvc):
+    customer = _get_or_create_customer(user.id, user.username)
+    card_data = dict(
+        number=card_number, exp_month=exp_month, exp_year=exp_year, cvc=cvc
+    )
+    new_pm = stripe.PaymentMethod.create(type='card', card=card_data)
+    if user_pm := _check_user_pm_exists(customer.id, new_pm):
+        return user_pm
+    _attach_payment_method(customer.id, new_pm.id)
+    return new_pm
+
+
+def get_actual_payment_method(customer_id, pm_id):
+    new_pm = stripe.PaymentMethod.retrieve(pm_id)
+    if user_pm := _check_user_pm_exists(customer_id, new_pm):
+        return user_pm
+    return new_pm
