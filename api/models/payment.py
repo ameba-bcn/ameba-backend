@@ -5,6 +5,10 @@ from django.db.models import UUIDField
 from api import stripe
 
 
+FP_STATUS = 'paid'
+FP_AMOUNT = 0
+
+
 class PaymentManager(models.Manager):
 
     @staticmethod
@@ -32,16 +36,15 @@ class Payment(models.Model):
     cart_record = models.JSONField(verbose_name=_('cart record'))
     details = models.JSONField(verbose_name=_('details'))
     timestamp = models.DateTimeField(auto_now_add=True)
-
     objects = PaymentManager()
 
     @property
     def amount(self):
-        return self.details['amount']
+        return self.details and self.details['amount_due'] or FP_AMOUNT
 
     @property
     def status(self):
-        return self.details['status']
+        return self.details and self.details['status'] or FP_STATUS
 
     @property
     def total(self):

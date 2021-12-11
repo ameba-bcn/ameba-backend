@@ -88,14 +88,6 @@ def _get_or_create_product(product_id, product_name):
     return stripe_product
 
 
-def _delete_product_if_exists(product_id):
-    try:
-        stripe.Product.delete(id=product_id)
-    except stripe.error.InvalidRequestError:
-        return False
-    return True
-
-
 def _get_product_price(product_id):
     prices = sorted(
         stripe.Price.list(product=product_id)['data'], key=lambda x: x['created']
@@ -110,7 +102,7 @@ def _is_price_changed(price, amount, period):
         return True
     elif bool(price.recurring) is not bool(period):
         return True
-    elif price.recurring and price.recurring.period != period:
+    elif price.recurring and price.recurring.interval != period:
         return True
     return False
 
@@ -136,10 +128,6 @@ def create_or_update_product_and_price(item_variant):
         product_id, item_variant.amount, period
     )
     return stripe_product, stripe_price
-
-
-def delete_product_if_exists(item_variant):
-    _delete_product_if_exists(item_variant.pk)
 
 
 def _get_or_create_customer(customer_id, name):

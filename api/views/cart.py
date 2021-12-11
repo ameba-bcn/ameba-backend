@@ -74,12 +74,12 @@ class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
     def perform_payment(self, request, *args, **kwargs):
         cart = self.get_object()
         serializer_class = self.get_serializer_class()
-        serializer = serializer_class(request.data)
+        serializer = serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         cart_processed.send(
             sender=self,
             cart=cart,
-            payment_method_id=serializer.data['payment_method_id'],
+            payment_method_id=request.data['payment_method_id'],
             request=self.request
         )
         return super().destroy(request, *args, **kwargs)
