@@ -42,3 +42,9 @@ def process_cart_items(sender, cart, request, **kwargs):
 def add_product_to_stripe(sender, instance, created, **kwargs):
     if settings.STRIPE_SYNC:
         stripe.create_or_update_product_and_price(item_variant=instance)
+
+
+@django.dispatch.receiver(signals.pre_delete, sender=api_models.ItemVariant)
+def delete_product_from_stripe(sender, instance, **kwargs):
+    if settings.STRIPE_SYNC:
+        stripe.delete_product_if_exists(item_variant=instance)

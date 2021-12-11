@@ -9,6 +9,7 @@ from api.tests.user import BaseUserTest
 from api.models import Article, Image
 from api.models import Event, User, Image, Item, ItemAttributeType, \
     ItemVariant, ItemAttribute
+import api.tests.helpers.items as item_helpers
 
 
 class BaseEventTest(BaseTest):
@@ -296,8 +297,9 @@ class TestEvents(BaseEventTest):
             'password': 'ameba12345'
         }
         user, token = BaseUserTest._insert_user(user_data)
-        event_obj = Event.objects.all()[0]
-        event_obj.acquired_by.add(user)
+        event_obj = item_helpers.create_item(99, 'Event', Event)
+        event_variant = item_helpers.create_item_variant(item=event_obj)
+        event_variant.acquired_by.add(user)
         response = self._list(token=token)
         for event in response.data:
             if event['id'] == event_obj.id:
@@ -313,8 +315,9 @@ class TestEvents(BaseEventTest):
             'password': 'ameba12345'
         }
         user, token = BaseUserTest._insert_user(user_data)
-        event_obj = Event.objects.all()[0]
-        event_obj.acquired_by.add(user)
+        event_obj = item_helpers.create_item(99, 'Event', Event)
+        event_variant = item_helpers.create_item_variant(item=event_obj)
+        event_variant.acquired_by.add(user)
         response = self._list(token=None)
         for event in response.data:
             self.assertFalse(event['purchased'])
@@ -327,8 +330,9 @@ class TestEvents(BaseEventTest):
             'password': 'ameba12345'
         }
         user, token = BaseUserTest._insert_user(user_data)
-        event_obj = Event.objects.all()[0]
-        event_obj.acquired_by.add(user)
+        event_obj = item_helpers.create_item(99, 'Event', Event)
+        event_variant = item_helpers.create_item_variant(item=event_obj)
+        event_variant.acquired_by.add(user)
         response = self._list(token=token)
         for event in response.data:
             if event['id'] == event_obj.id:
@@ -344,12 +348,9 @@ class TestEvents(BaseEventTest):
             'password': 'ameba12345'
         }
         user, token = BaseUserTest._insert_user(user_data)
-        item_data = {
-            'name': 'Item (note event)',
-            'description': 'Item description'
-        }
-        event_obj = Item.objects.create(**item_data)
-        event_obj.acquired_by.add(user)
+        item_obj = item_helpers.create_item(99, 'Item', Item)
+        item_variant = item_helpers.create_item_variant(item=item_obj)
+        item_variant.acquired_by.add(user)
         response = self._list(token=token)
         for event in response.data:
             self.assertFalse(event['purchased'])
@@ -367,7 +368,7 @@ class TestEvents(BaseEventTest):
             'description': 'Item description'
         }
         event_obj = Item.objects.create(**item_data)
-        event_obj.acquired_by.add(user)
+        event_obj.saved_by.add(user)
         response = self._list(token=token)
         for event in response.data:
             self.assertFalse(event['saved'])
