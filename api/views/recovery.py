@@ -24,9 +24,9 @@ class RecoveryViewSet(GenericViewSet):
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        password_changed.send(sender=User, user=serializer.user,
+        password_changed.send(sender=User, user=serializer.obj,
                               request=request)
-        return RecoveryRequestResponse(username=serializer.user.username)
+        return RecoveryRequestResponse(username=serializer.obj.username)
 
     @swagger_auto_schema(responses={200: ''}, query_serializer=RecoveryRequestSerializer)
     def list(self, request):

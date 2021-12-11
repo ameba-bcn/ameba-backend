@@ -4,7 +4,8 @@ from rest_framework.status import (
     HTTP_404_NOT_FOUND,
     HTTP_401_UNAUTHORIZED,
     HTTP_403_FORBIDDEN,
-    HTTP_424_FAILED_DEPENDENCY
+    HTTP_424_FAILED_DEPENDENCY,
+    HTTP_501_NOT_IMPLEMENTED
 )
 
 
@@ -168,3 +169,8 @@ class IdentityCardIsTooShort(APIException):
 class WrongIdentityCardFormat(APIException):
     status_code = HTTP_400_BAD_REQUEST
     default_detail = 'Identity card numer has wrong format.'
+
+
+class ProductPriceNotImplemented(APIException):
+    status_code = HTTP_501_NOT_IMPLEMENTED
+    default_detail = 'Product is not fully configured.'

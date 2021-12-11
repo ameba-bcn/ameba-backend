@@ -37,7 +37,10 @@ class ItemListSerializer(serializers.ModelSerializer):
 
     def get_purchased(self, event):
         user = self.context.get('request').user
-        return event.acquired_by.filter(id=user.id).exists()
+        for item_variant in event.variants.all():
+            if item_variant.acquired_by.filter(id=user.id).exists():
+                return True
+        return False
 
     class Meta:
         model = Item
