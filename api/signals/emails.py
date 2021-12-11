@@ -109,6 +109,7 @@ def send_newsletter_unsubscription_notification(sender, email, **kwargs):
     )
 
 
+@receiver(payment_successful)
 def send_payment_successful_notification(
     sender, user, request, cart_record, **kwargs
 ):
