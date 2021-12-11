@@ -256,7 +256,7 @@ PROFILE_VERSION = 8
 
 STRIPE_SECRET = env("STRIPE_SECRET", '', var_type='string')
 STRIPE_PUBLIC = env("STRIPE_PUBLIC", '', var_type='string')
-STRIPE_SYNC = env('STRIPE_SYNC', '', var_type='string')
+STRIPE_SYNC = env('STRIPE_SYNC', False, var_type='boolean')
 
 
 # TOKENS EXPIRE TIMES
