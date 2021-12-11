@@ -1,5 +1,6 @@
 import django.dispatch
 import django.db.models.signals as signals
+from django.conf import settings
 
 import api.signals.events as event_signals
 import api.signals.memberships as membership_signals
@@ -39,4 +40,5 @@ def process_cart_items(sender, cart, request, **kwargs):
 
 @django.dispatch.receiver(signals.post_save, sender=api_models.ItemVariant)
 def add_product_to_stripe(sender, instance, created, **kwargs):
-    stripe.create_or_update_product_and_price(item_variant=instance)
+    if settings.STRIPE_SYNC:
+        stripe.create_or_update_product_and_price(item_variant=instance)
