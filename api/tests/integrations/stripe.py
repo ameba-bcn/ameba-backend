@@ -190,7 +190,7 @@ class TestStripeSynchronization(APITestCase):
             user=user,
             cart_items=cart.get_cart_items()
         )
-        invoice.pay(payment_method_id=payment_method_id)
+        invoice.pay(payment_method=payment_method_id)
 
         try:
             self.assertEqual(invoice.status, 'paid')
