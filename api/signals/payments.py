@@ -42,11 +42,10 @@ def on_cart_deleted(sender, cart, payment_method_id, request, **kwargs):
 
     # Create payment object
     payment = Payment.objects.create_payment(cart=cart, invoice=invoice)
-    # Send payment confirmation email
-    cart_record = payment.cart_record
-    user = payment.user
 
+    # Send payment confirmation email
     if payment.amount > 0:
+        cart_record = payment.cart_record
         payment_successful.send(
             sender=sender, user=user, request=request, cart_record=cart_record
         )
