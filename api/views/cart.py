@@ -101,5 +101,5 @@ class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
     # Documentation
     partial_update.__doc__ = CartsDocs.partial_update
     checkout.__doc__ = CartsDocs.checkout
-    perform_payment.__doc__ = CartsDocs.destroy
+    perform_payment.__doc__ = CartsDocs.perform_payment
     retrieve.__doc__ = CartsDocs.retrieve
