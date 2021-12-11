@@ -214,7 +214,7 @@ def get_invoice(invoice_id):
 
 
 def get_or_create_invoice(cart):
-    if 'invoice' in cart.checkout_details:
+    if cart.checkout_details and 'invoice' in cart.checkout_details:
         invoice_id = cart.checkout_details['invoice']['id']
         invoice = get_invoice(invoice_id)
     else:
@@ -252,9 +252,9 @@ def get_or_create_user_pm(user, card_number, exp_month, exp_year, cvc):
     return new_pm
 
 
-def get_payment_method(user, pm_id):
+def get_payment_method_id(user, pm_id):
     new_pm = stripe.PaymentMethod.retrieve(pm_id)
     if user_pm := _check_user_pm_exists(user.id, new_pm):
-        return user_pm
+        return user_pm.id
     _attach_payment_method(user.id, new_pm.id)
-    return new_pm
+    return new_pm.id
