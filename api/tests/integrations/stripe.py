@@ -1,4 +1,5 @@
 import random
+from django.conf import settings
 from rest_framework.test import APITestCase
 
 from api import stripe
@@ -11,6 +12,12 @@ from api.tests.helpers import (
 
 
 class TestStripeSynchronization(APITestCase):
+    def setUp(self):
+        self.stripe_sync = settings.STRIPE_SYNC
+        settings.STRIPE_SYNC = True
+
+    def tearDown(self):
+        settings.STRIPE_SYNC = self.stripe_sync
 
     def test_new_item_variant_creates_stripe_product(self):
         subs = item_helpers.create_item(
@@ -28,6 +35,9 @@ class TestStripeSynchronization(APITestCase):
 
         stripe_subs_variant = stripe._get_product_price(subs_variant.id)
         self.assertEqual(stripe_subs_variant.unit_amount,  price * 100)
+
+        subs_variant.delete()
+        subs.delete()
 
     def test_new_item_variant_updates_stripe_product_price(self):
         subs = item_helpers.create_item(
