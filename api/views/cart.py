@@ -1,15 +1,17 @@
 from drf_yasg.utils import swagger_auto_schema
+import rest_framework.response as response
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import (
     RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, CreateModelMixin
 )
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import NotAuthenticated, MethodNotAllowed
-from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.exceptions import MethodNotAllowed
 from api.permissions import CartPermission
 import api.serializers as api_serializers
+import api.models as api_models
+import api.stripe as stripe
 from api.models import Cart
 from api.signals import cart_processed
 from api.docs.carts import CartsDocs
@@ -76,13 +78,10 @@ class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        cart_processed.send(
-            sender=self,
-            cart=cart,
-            payment_method_id=request.data['payment_method_id'],
-            request=self.request
+        response_data = stripe.payment_flow(
+            cart, request.data.get('payment_method_id', None)
         )
-        return super().destroy(request, *args, **kwargs)
+        return response.Response(response_data)
 
     def destroy(self, request, *args, **kwargs):
         raise MethodNotAllowed
@@ -96,11 +95,7 @@ class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
         cart.checkout()
         serializer_class = self.get_serializer_class()
         cart_data = serializer_class(cart).data
-        return Response(cart_data)
-
-    @action(detail=True, methods=['GET'])
-    def invoice(self, request, *args, **kwargs):
-        pass
+        return response.Response(cart_data)
 
     # Documentation
     partial_update.__doc__ = CartsDocs.partial_update

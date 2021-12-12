@@ -1,7 +1,6 @@
 import uuid
 
 from django.utils.translation import gettext_lazy as _
-from django import dispatch
 from django.db.models import (
     Model, ForeignKey, ManyToManyField, JSONField, OneToOneField,
     UUIDField, DateTimeField, SET_NULL, CASCADE, CharField
@@ -13,6 +12,7 @@ from api.exceptions import (
     MemberProfileRequired, UserCanNotAcquireTwoIdenticalEvents
 )
 from api.stripe import IntentStatus
+import api.signals.items as items
 
 
 SUCCEEDED_PAYMENTS = [IntentStatus.SUCCESS, IntentStatus.NOT_NEEDED]
@@ -239,3 +239,7 @@ class Cart(Model):
           not in SUCCEEDED_PAYMENTS and not settings.DEBUG:
             return False
         return True
+
+    def resolve(self):
+        items.items_acquired.send(self.__class__, self)
+        return super().delete()
