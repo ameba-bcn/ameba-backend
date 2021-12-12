@@ -33,18 +33,24 @@ class Payment(models.Model):
     id = UUIDField(primary_key=True, editable=True)
     user = models.ForeignKey('User', on_delete=models.CASCADE,
                              verbose_name=_('user'))
+    cart = models.ForeignKey('Cart', on_delete=models.PROTECT, blank=True,
+                             null=True)
     cart_record = models.JSONField(verbose_name=_('cart record'))
-    details = models.JSONField(verbose_name=_('details'))
+    invoice = models.JSONField(verbose_name=_('invoice'))
+    invoice_id = models.CharField(max_length=64, blank=False)
     timestamp = models.DateTimeField(auto_now_add=True)
     objects = PaymentManager()
 
     @property
     def amount(self):
-        return self.details and self.details['amount_due'] or FP_AMOUNT
+        return self.invoice and self.invoice['amount_due'] or FP_AMOUNT
 
     @property
     def status(self):
-        return self.details and self.details['status'] or FP_STATUS
+        if self.invoice is not None:
+            return self.invoice['status']
+        elif self.amount == 0:
+            return FP_STATUS
 
     @property
     def total(self):
