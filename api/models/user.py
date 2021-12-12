@@ -4,7 +4,7 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.auth import hashers
 from django.contrib.postgres.fields import CIEmailField
 
-from django.utils.translation import ugettext_lazy as _, gettext_noop
+from django.utils.translation import gettext_lazy as _, gettext_noop
 from django.core import signing
 from django.conf import settings
 from api import models as api_models
