@@ -7,7 +7,7 @@ import api.signals.memberships as membership_signals
 import api.models as api_models
 import api.stripe as stripe
 
-items_acquired = django.dispatch.Signal(providing_args=['cart', 'request'])
+items_acquired = django.dispatch.Signal(providing_args=['cart'])
 
 
 @django.dispatch.receiver(signals.m2m_changed,
@@ -32,7 +32,7 @@ def process_acquired_items(instance, pk_set, action, model, **kwargs):
 
 
 @django.dispatch.receiver(items_acquired)
-def process_cart_items(sender, cart, request, **kwargs):
+def process_cart_items(sender, cart, **kwargs):
     for cart_item in cart.get_cart_items():
         item_variant = cart_item.item_variant
         item_variant.acquired_by.add(cart.user)

@@ -2,7 +2,7 @@ from django.utils.translation import gettext as _
 from django.db import models
 from django.db.models import UUIDField
 
-from api import stripe
+import api.stripe as stripe_api
 
 
 FP_STATUS = 'paid'
@@ -17,12 +17,19 @@ class PaymentManager(models.Manager):
         user = cart.user
         cart_record = CartSerializer(instance=cart).data
         payment = Payment.objects.create(
-            id=cart.id,
+            cart=cart,
             user=user,
             cart_record=cart_record,
-            details=dict(invoice)
+            invoice=invoice,
+            invoice_id=invoice['id']
         )
         return payment
+
+    def get_or_create_payment(self, cart, invoice):
+        if cart.payment:
+            return cart.payment
+        else:
+            return self.create_payment(cart, invoice)
 
 
 class Payment(models.Model):
@@ -33,10 +40,10 @@ class Payment(models.Model):
     id = UUIDField(primary_key=True, editable=True)
     user = models.ForeignKey('User', on_delete=models.CASCADE,
                              verbose_name=_('user'))
-    cart = models.ForeignKey('Cart', on_delete=models.PROTECT, blank=True,
-                             null=True)
+    cart = models.OneToOneField('Cart', on_delete=models.PROTECT, null=True,
+                                related_name='payment')
     cart_record = models.JSONField(verbose_name=_('cart record'))
-    invoice = models.JSONField(verbose_name=_('invoice'))
+    invoice = models.JSONField(verbose_name=_('invoice'), blank=False)
     invoice_id = models.CharField(max_length=64, blank=False)
     timestamp = models.DateTimeField(auto_now_add=True)
     objects = PaymentManager()
@@ -62,3 +69,13 @@ class Payment(models.Model):
                     f"total='{self.total}', " \
                     f"status'={self.status}" \
                f")"
+
+    def finish_payment(self):
+        self.invoice = dict(stripe_api.get_invoice(self.invoice_id))
+        if self.status == 'paid':
+            cart = self.cart
+            self.cart = None
+            self.save()
+            cart.resolve()
+            return True
+        return False
