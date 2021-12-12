@@ -98,6 +98,10 @@ class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
         cart_data = serializer_class(cart).data
         return Response(cart_data)
 
+    @action(detail=True, methods=['GET'])
+    def invoice(self, request, *args, **kwargs):
+        pass
+
     # Documentation
     partial_update.__doc__ = CartsDocs.partial_update
     checkout.__doc__ = CartsDocs.checkout

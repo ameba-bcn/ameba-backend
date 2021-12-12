@@ -4,7 +4,7 @@ from api.models import Payment
 
 
 class PaymentAdmin(admin.ModelAdmin):
-    fields = ['user', 'total', 'status', 'cart_record', 'details',
+    fields = ['user', 'total', 'status', 'cart_record', 'invoice',
               'timestamp']
     readonly_fields = fields
     list_display = ['user', 'total', 'status', 'timestamp']
