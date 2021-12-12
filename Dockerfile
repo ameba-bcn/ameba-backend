@@ -16,7 +16,7 @@ COPY . .
 #RUN crontab /etc/cron.d/cron
 #RUN touch /src/cron.log
 
-RUN pip install -r requirements.txt
+RUN pip install -r requirements.txt --upgrade
 RUN python manage.py compilemessages
 RUN python manage.py collectstatic --noinput
 
