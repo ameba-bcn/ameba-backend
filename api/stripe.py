@@ -2,7 +2,9 @@ from django.conf import settings
 import stripe
 from stripe.error import InvalidRequestError
 
-from api.exceptions import WrongPaymentIntent, CartCheckoutNotProcessed
+import api.exceptions as api_exceptions
+import api.models as api_models
+import api.signals.items as items
 
 # Authenticate stripe
 stripe.api_key = settings.STRIPE_SECRET
@@ -214,8 +216,8 @@ def get_invoice(invoice_id):
 
 
 def get_or_create_invoice(cart):
-    if cart.checkout_details and 'invoice' in cart.checkout_details:
-        invoice_id = cart.checkout_details['invoice']['id']
+    if cart.payment:
+        invoice_id = cart.payment.invoice['id']
         invoice = get_invoice(invoice_id)
     else:
         invoice = create_invoice(
@@ -258,3 +260,34 @@ def get_payment_method_id(user, pm_id):
         return user_pm.id
     _attach_payment_method(user.id, new_pm.id)
     return new_pm.id
+
+
+def pay_invoice(invoice, payment_method_id):
+    if payment_method_id:
+        invoice = invoice.pay(payment_method=payment_method_id)
+    return invoice
+
+
+def process_payment(cart, payment_method_id):
+    invoice = get_or_create_invoice(cart)
+    invoice = pay_invoice(invoice, payment_method_id)
+    payment = api_models.Payment.objects.get_or_create_payment(cart, invoice)
+    return payment
+
+
+def payment_flow(cart, payment_method_id=None):
+    # If the cart has changed, need to be checked-out before continue.
+    if cart.has_changed():
+        raise api_exceptions.CheckoutNeeded
+
+    if cart.amount > 0:
+        payment = process_payment(cart, payment_method_id)
+        payment_data = dict(
+            status=payment.status
+        )
+        if payment.status != 'paid':
+            payment_data['hosted_invoice_url'] = payment.invoice['hosted_invoice_url']
+        return payment_data
+
+    cart.resolve()
+    return dict(status='paid')

@@ -173,4 +173,4 @@ class CartCheckoutSerializer(CartSerializer):
 
 
 class PaymentSerializer(Serializer):
-    payment_method_id = CharField(write_only=True, allow_blank=False)
+    payment_method_id = CharField(write_only=True, required=False)
