@@ -9,7 +9,7 @@ endpoint_secret = 'whsec_YXcUnODFG0oV6i0E2lzYV1yVbX9hgbTA'
 
 
 @decorators.api_view(['GET'])
-def about(request):
+def webhook(request):
     payload = request.data
     sig_header = request.headers['STRIPE_SIGNATURE']
 
