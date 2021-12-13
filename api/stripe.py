@@ -262,15 +262,15 @@ def get_payment_method_id(user, pm_id):
     return new_pm.id
 
 
-def pay_invoice(invoice, payment_method_id):
+def _try_to_pay(invoice, payment_method_id):
     if payment_method_id:
         invoice = invoice.pay(payment_method=payment_method_id)
     return invoice
 
 
-def process_payment(cart, payment_method_id):
+def _create_payment(cart, payment_method_id):
     invoice = get_or_create_invoice(cart)
-    invoice = pay_invoice(invoice, payment_method_id)
+    invoice = _try_to_pay(invoice, payment_method_id)
     payment = api_models.Payment.objects.get_or_create_payment(cart, invoice)
     return payment
 
@@ -281,7 +281,7 @@ def payment_flow(cart, payment_method_id=None):
         raise api_exceptions.CheckoutNeeded
 
     if cart.amount > 0:
-        payment = process_payment(cart, payment_method_id)
+        payment = _create_payment(cart, payment_method_id)
         payment_data = dict(
             status=payment.status
         )
