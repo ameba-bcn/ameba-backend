@@ -1,9 +1,9 @@
 from django.utils.translation import gettext as _
 from django.db import models
 from django.db.models import UUIDField
-
 import api.stripe as stripe_api
 
+from api.signals.emails import payment_closed
 
 FP_STATUS = 'paid'
 FP_AMOUNT = 0
@@ -70,10 +70,14 @@ class Payment(models.Model):
                     f"status'={self.status}" \
                f")"
 
-    def finish_payment(self):
+    def update_invoice(self):
         self.invoice = dict(stripe_api.get_invoice(self.invoice_id))
+
+    def close_payment(self):
+        self.update_invoice()
         if self.status == 'paid':
             cart = self.cart
+            payment_closed.send(sender=self.__class__, cart=cart)
             self.cart = None
             self.save()
             cart.resolve()
