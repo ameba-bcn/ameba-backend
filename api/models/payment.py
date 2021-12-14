@@ -76,10 +76,17 @@ class Payment(models.Model):
     def close_payment(self):
         self.update_invoice()
         if self.status == 'paid':
-            cart = self.cart
-            payment_closed.send(sender=self.__class__, cart=cart)
-            self.cart = None
-            self.save()
-            cart.resolve()
+            if self.cart:
+                self.detach_cart()
+            else:
+                # todo: check whether payment is a subscription renew
+                pass
             return True
         return False
+
+    def detach_cart(self):
+        cart = self.cart
+        payment_closed.send(sender=self.__class__, cart=cart)
+        self.cart = None
+        self.save()
+        cart.resolve()
