@@ -10,10 +10,8 @@ from rest_framework.decorators import action
 from rest_framework.exceptions import MethodNotAllowed
 from api.permissions import CartPermission
 import api.serializers as api_serializers
-import api.models as api_models
 import api.stripe as stripe
-from api.models import Cart
-from api.signals import cart_processed
+import api.models as api_models
 from api.docs.carts import CartsDocs
 
 CURRENT_LABEL = 'current'
@@ -23,7 +21,7 @@ class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
                   DestroyModelMixin, CreateModelMixin):
     permission_classes = (CartPermission, )
     serializer_class = api_serializers.CartSerializer
-    queryset = Cart.objects.all()
+    queryset = api_models.Cart.objects.all()
 
     def get_serializer_class(self):
         if self.action == 'checkout':
@@ -66,7 +64,7 @@ class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
     @staticmethod
     def _get_current_user_cart(user):
         if user.is_authenticated:
-            return Cart.objects.get_or_create(user=user)[0]
+            return api_models.Cart.objects.get_or_create(user=user)[0]
         raise NotAuthenticated
 
     def partial_update(self, request, *args, **kwargs):

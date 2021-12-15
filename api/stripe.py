@@ -216,7 +216,7 @@ def get_invoice(invoice_id):
 
 
 def get_or_create_invoice(cart):
-    if cart.payment:
+    if hasattr(cart, 'payment') and cart.payment is not None:
         invoice_id = cart.payment.invoice['id']
         invoice = get_invoice(invoice_id)
     else:
@@ -265,6 +265,8 @@ def get_payment_method_id(user, pm_id):
 def _try_to_pay(invoice, payment_method_id):
     if payment_method_id:
         invoice = invoice.pay(payment_method=payment_method_id)
+    else:
+        invoice = invoice.finalize_invoice()
     return invoice
 
 

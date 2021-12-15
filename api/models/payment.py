@@ -17,6 +17,7 @@ class PaymentManager(models.Manager):
         user = cart.user
         cart_record = CartSerializer(instance=cart).data
         payment = Payment.objects.create(
+            id=cart.id,
             cart=cart,
             user=user,
             cart_record=cart_record,
@@ -26,7 +27,7 @@ class PaymentManager(models.Manager):
         return payment
 
     def get_or_create_payment(self, cart, invoice):
-        if cart.payment:
+        if hasattr(cart, 'payment') and cart.payment is not None:
             return cart.payment
         else:
             return self.create_payment(cart, invoice)
