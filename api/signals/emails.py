@@ -112,7 +112,7 @@ def send_payment_successful_notification(
     sender, cart, **kwargs
 ):
     user = cart.user
-    cart_record = cart.cart_record
+    cart_record = cart.payment.cart_record
     email_factories.PaymentSuccessfulEmail.send_to(
         mail_to=user.email,
         user=user,
