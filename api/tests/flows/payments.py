@@ -120,19 +120,22 @@ class TestPaymentsFlow(test_helpers.BaseTest):
 
         # Create payment method for user
         payment_method_attrs = dict(
-            number='4242424242424242',
+            user=user,
+            card_number='4242424242424242',
             exp_year='2035',
             exp_month='12',
             cvc='333'
         )
-        pm_id = stripe.create_payment_method(**payment_method_attrs)
-        actual_pm_id = stripe.get_payment_method_id(user, pm_id)
+        pm = stripe.get_or_create_user_pm(**payment_method_attrs)
+        actual_pm_id = stripe.get_payment_method_id(user, pm.id)
         # Process payment without payment method
         url = self.PAYMENT.format(pk=cart.pk)
         response = self.request(url=url, method='post', token=token)
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        # Get payment
+        # Get invoice and pay
+        invoice = stripe.get_invoice(cart.payment.invoice_id)
+        invoice.pay(payment_method=actual_pm_id)
 
         # Check cart does not exist
         cart_url = self.DETAIL_ENDPOINT.format(pk=cart.pk)
