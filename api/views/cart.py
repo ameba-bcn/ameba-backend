@@ -70,15 +70,13 @@ class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
     def partial_update(self, request, *args, **kwargs):
         return super().partial_update(request, *args, **kwargs)
 
-    @action(detail=True, methods=['POST'])
-    def perform_payment(self, request, *args, **kwargs):
+    @action(detail=True, methods=['GET'])
+    def payment(self, request, *args, **kwargs):
         cart = self.get_object()
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        response_data = stripe.payment_flow(
-            cart, request.data.get('payment_method_id', None)
-        )
+        response_data = stripe.payment_flow(cart)
         return response.Response(response_data)
 
     def destroy(self, request, *args, **kwargs):
