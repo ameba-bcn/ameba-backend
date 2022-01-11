@@ -270,26 +270,34 @@ def _try_to_pay(invoice, payment_method_id):
     return invoice
 
 
-def _create_payment(cart, payment_method_id):
+def _create_payment(cart):
     invoice = get_or_create_invoice(cart)
-    invoice = _try_to_pay(invoice, payment_method_id)
     payment = api_models.Payment.objects.get_or_create_payment(cart, invoice)
     return payment
 
 
-def payment_flow(cart, payment_method_id=None):
+def get_payment_intent(payment_intent_id):
+    return stripe.PaymentIntent.retrieve(payment_intent_id)
+
+
+def payment_flow(cart):
     # If the cart has changed, need to be checked-out before continue.
     if cart.has_changed():
         raise api_exceptions.CheckoutNeeded
 
     if cart.amount > 0:
-        payment = _create_payment(cart, payment_method_id)
-        payment_data = dict(
-            status=payment.status
+        payment = _create_payment(cart)
+        payment_intent = stripe.PaymentIntent.retrieve(
+            payment.invoice['payment_intent']
         )
-        if payment.status != 'paid':
-            payment_data['hosted_invoice_url'] = payment.invoice['hosted_invoice_url']
+        payment_data = dict(
+            status=payment.status,
+            payment_intent=payment_intent.id,
+            client_secret=payment_intent.client_secret
+        )
         return payment_data
 
-    cart.resolve()
+    elif cart.amount == 0:
+        cart.resolve()
+
     return dict(status='paid')
