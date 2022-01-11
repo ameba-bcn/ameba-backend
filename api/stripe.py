@@ -64,20 +64,6 @@ def get_create_update_payment_intent(amount, idempotency_key, checkout_details):
     return payment_intent
 
 
-def get_payment_intent(checkout_details):
-    if payment_intent_exists(checkout_details):
-        pid = checkout_details["payment_intent"]["id"]
-        try:
-            payment_intent = stripe.PaymentIntent.retrieve(id=pid)
-            return payment_intent
-        except stripe.error.InvalidRequestError:
-            raise WrongPaymentIntent
-    elif no_payment_intent_needed(checkout_details):
-        return EMPTY_PAYMENT_INTENT
-    else:
-        raise WrongPaymentIntent
-
-
 def _get_or_create_product(product_id, product_name):
     try:
         stripe_product = stripe.Product.retrieve(id=str(product_id))

@@ -1,6 +1,7 @@
 import uuid
 
 from django.utils.translation import gettext_lazy as _
+from django import dispatch
 from django.db.models import (
     Model, ForeignKey, ManyToManyField, JSONField, OneToOneField,
     UUIDField, DateTimeField, SET_NULL, CASCADE, CharField
