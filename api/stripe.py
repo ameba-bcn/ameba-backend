@@ -281,6 +281,11 @@ def get_or_create_payment(cart):
     # When payment must be created
     invoice = get_or_create_invoice(cart) if cart.amount > 0 else None
     payment = api_models.Payment.objects.get_or_create_payment(cart, invoice)
+
+    if payment.amount == 0:
+        if payment.close_payment():
+            payment.refresh_from_db()
+
     return payment
 
 
