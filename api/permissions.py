@@ -32,7 +32,7 @@ class CustomModelUserPermission(permissions.DjangoModelPermissions):
 
 def get_or_create_permission(name, codename, model):
     content_type = ContentType.objects.get_for_model(model)
-    permission = Permission.objects.get_or_create(
+    permission = Permission.objects.get_or_create_payment(
         codename=codename,
         name=name,
         content_type=content_type

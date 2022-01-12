@@ -15,7 +15,7 @@ class BaseCartTest(BaseTest):
     DETAIL_ENDPOINT = '/api/carts/{pk}/'
     LIST_ENDPOINT = '/api/carts/'
     CHECKOUT_ENDPOINT = '/api/carts/{pk}/checkout/'
-    PAYMENT_ENDPOINT = '/api/carts/{pk}/perform_payment/'
+    PAYMENT_ENDPOINT = '/api/carts/{pk}/payment/'
 
     @staticmethod
     def get_user(user_tag=None, member_profile=False):
@@ -46,11 +46,10 @@ class BaseCartTest(BaseTest):
         self._authenticate(token=token)
         return self.client.get(self.CHECKOUT_ENDPOINT.format(pk=pk))
 
-    def perform_payment(self, pk='current', props=None, token=None):
+    def payment(self, pk='current', token=None):
         self._authenticate(token=token)
-        return self.client.post(
-            self.PAYMENT_ENDPOINT.format(pk=pk),
-            data=props
+        return self.client.get(
+            self.PAYMENT_ENDPOINT.format(pk=pk)
         )
 
     def get_cart(self, user=None, item_variants=None, for_free=False,
@@ -78,7 +77,7 @@ class BaseCartTest(BaseTest):
                 is_active=True
             )
             if item_class is Subscription:
-                group, created = Group.objects.get_or_create(
+                group, created = Group.objects.get_or_create_payment(
                     name='ameba_member'
                 )
                 attrs['group'] = group
@@ -623,7 +622,7 @@ class TestCartStateFlow(BaseCartTest):
             pk='current', token=token, props={'item_variant_ids': [1, 2]}
         )
 
-        response = self.perform_payment(pk='current', props={}, token=token)
+        response = self.payment(pk='current', token=token)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         response = self._get(pk='current', token=token)

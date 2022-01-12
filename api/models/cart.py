@@ -1,7 +1,6 @@
 import uuid
-
+import django.utils.timezone as timezone
 from django.utils.translation import gettext_lazy as _
-from django import dispatch
 from django.db.models import (
     Model, ForeignKey, ManyToManyField, JSONField, OneToOneField,
     UUIDField, DateTimeField, SET_NULL, CASCADE, CharField
@@ -14,7 +13,7 @@ from api.exceptions import (
 )
 from api.stripe import IntentStatus
 import api.signals.items as items
-
+import api.stripe as stripe
 
 SUCCEEDED_PAYMENTS = [IntentStatus.SUCCESS, IntentStatus.NOT_NEEDED]
 
@@ -199,7 +198,15 @@ class Cart(Model):
 
     def checkout(self):
         self.is_checkout_able()
+        # Get payment in case not exists or cart has changed
+        self.payment = stripe.get_or_create_payment(self)
+        # Update hash
         self.checkout_hash = self.get_hash()
+        # Set checkout details
+        self.checkout_details = {
+            'date_time': str(timezone.now()),
+            'payment_intent': self.payment.payment_intent
+        }
         self.save()
 
     def set_checkout_details(self, checkout_details):
@@ -243,5 +250,5 @@ class Cart(Model):
 
     def resolve(self):
         """ Directly process cart items without passing through payment. """
-        items.items_acquired.send(self.__class__, self)
+        items.items_acquired.send(sender=self.__class__, cart=self)
         return super().delete()

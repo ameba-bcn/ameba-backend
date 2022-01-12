@@ -16,13 +16,24 @@ class PaymentManager(models.Manager):
         from api.serializers.cart import CartSerializer
         user = cart.user
         cart_record = CartSerializer(instance=cart).data
+
+        if invoice['id'] != stripe_api.EMPTY_INVOICE_ID:
+            payment_intent = stripe_api.get_payment_intent(
+                invoice['payment_intent_id']
+            )
+        else:
+            payment_intent = stripe_api.EMPTY_PAYMENT_INTENT
+
         payment = Payment.objects.create(
             id=cart.id,
             cart=cart,
             user=user,
             cart_record=cart_record,
             invoice=invoice,
-            invoice_id=invoice['id']
+            invoice_id=invoice['id'],
+            payment_intent_id=payment_intent['id'],
+            payment_intent=payment_intent,
+            client_secret=payment_intent['client_secret']
         )
         return payment
 
@@ -46,6 +57,10 @@ class Payment(models.Model):
     cart_record = models.JSONField(verbose_name=_('cart record'))
     invoice = models.JSONField(verbose_name=_('invoice'), blank=False)
     invoice_id = models.CharField(max_length=64, blank=False)
+    payment_intent_id = models.CharField(max_length=128, blank=False)
+    payment_intent = models.JSONField(verbose_name=_('payment_intent'),
+                                      blank=False)
+    client_secret = models.CharField(max_length=128, blank=False)
     timestamp = models.DateTimeField(auto_now_add=True)
     objects = PaymentManager()
 

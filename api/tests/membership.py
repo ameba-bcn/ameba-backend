@@ -17,7 +17,7 @@ valid_payment_intent = {
 class TestSubscriptionPurchase(BaseCartTest):
     DETAIL_ENDPOINT = '/api/carts/{pk}/'
 
-    def test_cart_with_one_subscription_returns_200(self):
+    def test_cart_with_one_free_subscription_returns_200(self):
         user = self.get_user(1, member_profile=True)
         token = self.get_token(user).access_token
         cart = self.get_cart(
@@ -36,10 +36,8 @@ class TestSubscriptionPurchase(BaseCartTest):
         self.assertIn(user.member.status, [None, 'expired'])
         self.assertFalse(user.groups.filter(name='ameba_member'))
         # Purchase membership
-        response = self.perform_payment(
-            pk=cart.id, props=dict(payment_method_id='whatever'), token=token
-        )
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        response = self.payment(pk=cart.id, token=token)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         # Check has membership
         self.assertIn(user.member.status, ['active'])
         # Check user included in group
@@ -75,8 +73,8 @@ class TestSubscriptionPurchase(BaseCartTest):
 
         cart.item_variants.set([subscription_variant.id])
 
-        response = self.perform_payment(
-            pk=cart.id, props=dict(payment_method_id='whatever'), token=token
+        response = self.payment(
+            pk=cart.id, token=token
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data['detail'], 'Checkout needed before continue.')
