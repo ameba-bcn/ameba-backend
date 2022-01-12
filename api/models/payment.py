@@ -4,6 +4,7 @@ from django.db.models import UUIDField
 import api.stripe as stripe_api
 
 from api.signals.emails import payment_closed
+import api.signals.items as items_signals
 
 FP_STATUS = 'paid'
 FP_AMOUNT = 0
@@ -62,6 +63,9 @@ class Payment(models.Model):
                                       blank=False)
     client_secret = models.CharField(max_length=128, blank=False)
     timestamp = models.DateTimeField(auto_now_add=True)
+    purchasing_item_variants = models.ManyToManyField(
+        to='ItemVariant', related_name='active_payments', blank=False
+    )
     objects = PaymentManager()
 
     @property
@@ -92,6 +96,9 @@ class Payment(models.Model):
     def close_payment(self):
         self.update_invoice()
         if self.status == 'paid':
+            items_signals.items_acquired.send(sender=self.__class__, payment=self)
+            if self.amount > 0:
+                payment_closed.send(sender=self.__class__, payment=self)
             if self.cart:
                 self.detach_cart()
             else:
@@ -102,7 +109,6 @@ class Payment(models.Model):
 
     def detach_cart(self):
         cart = self.cart
-        payment_closed.send(sender=self.__class__, cart=cart)
         self.cart = None
+        cart.delete()
         self.save()
-        cart.resolve()
