@@ -77,7 +77,7 @@ class BaseCartTest(BaseTest):
                 is_active=True
             )
             if item_class is Subscription:
-                group, created = Group.objects.get_or_create_payment(
+                group, created = Group.objects.get_or_create(
                     name='ameba_member'
                 )
                 attrs['group'] = group
