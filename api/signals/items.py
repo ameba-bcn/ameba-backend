@@ -33,7 +33,7 @@ def process_acquired_items(instance, pk_set, action, model, **kwargs):
 
 @django.dispatch.receiver(items_acquired)
 def give_items_to_user(sender, payment, **kwargs):
-    for item_variant in payment.purchasing_item_variants.all():
+    for item_variant in payment.item_variants.all():
         item_variant.acquired_by.add(payment.user)
 
 

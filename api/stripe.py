@@ -267,18 +267,23 @@ def _try_to_pay(invoice, payment_method_id):
 
 
 def get_or_create_payment(cart):
-    if hasattr(cart, 'payment') and cart.payment and cart.has_changed():
+    # If cart has changed or never checked out
+    if cart.checkout_hash is None or cart.has_changed():
+        raise api_exceptions.CheckoutNeeded
+    # If cart has payment but hashes doesn't match
+    if hasattr(cart, 'payment') and cart.payment and cart.checkout_hash != \
+        cart.payment.cart_hash:
         cart.payment.delete()
-    elif hasattr(cart, 'payment') and cart.payment and not cart.has_changed():
+    # If cart has payment and hashes match
+    elif hasattr(cart, 'payment') and cart.payment and cart.checkout_hash ==\
+        cart.payment.cart_hash:
         return cart.payment
-
-    if cart.amount > 0:
-        invoice = get_or_create_invoice(cart)
-    else:
-        invoice = EMPTY_INVOICE
+    # When payment must be created
+    invoice = get_or_create_invoice(cart) if cart.amount > 0 else None
     payment = api_models.Payment.objects.get_or_create_payment(cart, invoice)
     return payment
 
 
 def get_payment_intent(payment_intent_id):
     return stripe.PaymentIntent.retrieve(payment_intent_id)
+

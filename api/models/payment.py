@@ -31,11 +31,14 @@ class PaymentManager(models.Manager):
             user=user,
             cart_record=cart_record,
             invoice=invoice,
+            cart_hash=cart.checkout_hash,
             invoice_id=invoice['id'],
-            payment_intent_id=payment_intent['id'],
-            payment_intent=payment_intent,
-            client_secret=payment_intent['client_secret']
+            payment_intent_id=payment_intent['id']
         )
+
+        for cart_item in cart.get_cart_items():
+            payment.item_variants.add(cart_item.item_variant)
+
         return payment
 
     def get_or_create_payment(self, cart, invoice):
@@ -56,15 +59,14 @@ class Payment(models.Model):
     cart = models.OneToOneField('Cart', on_delete=models.PROTECT, null=True,
                                 related_name='payment')
     cart_record = models.JSONField(verbose_name=_('cart record'))
-    invoice = models.JSONField(verbose_name=_('invoice'), blank=False)
-    invoice_id = models.CharField(max_length=64, blank=False)
-    payment_intent_id = models.CharField(max_length=128, blank=False)
-    payment_intent = models.JSONField(verbose_name=_('payment_intent'),
-                                      blank=False)
-    client_secret = models.CharField(max_length=128, blank=False)
+    cart_hash = models.CharField(blank=True, max_length=128,
+                                 verbose_name=_('cart checkout hash'))
+    details = models.JSONField(verbose_name=_('invoice'), null=True)
+    invoice_id = models.CharField(max_length=128, null=True)
+    payment_intent_id = models.CharField(max_length=128, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
-    purchasing_item_variants = models.ManyToManyField(
-        to='ItemVariant', related_name='active_payments', blank=False
+    item_variants = models.ManyToManyField(
+        to='ItemVariant', related_name='payments', blank=False
     )
     objects = PaymentManager()
 
@@ -90,24 +92,63 @@ class Payment(models.Model):
                     f"status'={self.status}" \
                f")"
 
-    def update_invoice(self):
-        self.invoice = dict(stripe_api.get_invoice(self.invoice_id))
+    @property
+    def invoice(self):
+        """ Stripe's invoice.
+        :return: invoice or None
+        """
+        if self.invoice_id:
+            return stripe_api.get_invoice(self.invoice_id)
+
+    @property
+    def payment_intent(self):
+        """ Stripe's payment intent.
+        :return: payment_intent or None
+        """
+        if self.payment_intent_id:
+            return stripe_api.get_payment_intent(self.payment_intent_id)
+
+    @property
+    def client_secret(self):
+        """ Retrieve payment_intent's client secret from stripe to be used
+        in stripe payment form to properly identify payment.
+        :return: client_secret string or None
+        """
+        if payment_intent := self.payment_intent:
+            return payment_intent['client_secret']
+
+    def update_details(self):
+        """ Update details for the record: invoice and payment_intent record
+        copies are saved here. Any other relevant information to be saved can
+        be added here.
+        :return:
+        """
+        self.details = {
+            'invoice': dict(self.invoice),
+            'payment_intent': dict(self.payment_intent)
+        }
 
     def close_payment(self):
-        self.update_invoice()
+        """ At this point, payment is expected to be done. Otherwise,
+        False is returned. In case payment is successful, items are attached
+        to the user and notifications sent.
+        :return: True/False if the payment was successful or not.
+        """
+        self.update_details()
         if self.status == 'paid':
             items_signals.items_acquired.send(sender=self.__class__, payment=self)
             if self.amount > 0:
                 payment_closed.send(sender=self.__class__, payment=self)
             if self.cart:
                 self.detach_cart()
-            else:
-                # todo: check whether payment is a subscription renew
-                pass
+            self.item_variants.clear()
             return True
         return False
 
     def detach_cart(self):
+        """ Cart is detached from payment and deleted.
+        :return: None
+        """
         cart = self.cart
         self.cart = None
         cart.delete()

@@ -198,15 +198,8 @@ class Cart(Model):
 
     def checkout(self):
         self.is_checkout_able()
-        # Get payment in case not exists or cart has changed
-        self.payment = stripe.get_or_create_payment(self)
         # Update hash
         self.checkout_hash = self.get_hash()
-        # Set checkout details
-        self.checkout_details = {
-            'date_time': str(timezone.now()),
-            'payment_intent': self.payment.payment_intent
-        }
         self.save()
 
     def set_checkout_details(self, checkout_details):

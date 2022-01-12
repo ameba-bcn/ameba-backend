@@ -26,8 +26,8 @@ class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
     def get_serializer_class(self):
         if self.action == 'checkout':
             self.serializer_class = api_serializers.CartCheckoutSerializer
-        elif self.action == 'perform_payment':
-            self.serializer_class = api_serializers.PaymentSerializer
+        elif self.action == 'payment':
+            self.serializer_class = api_serializers.PaymentDataSerializer
         return super().get_serializer_class()
 
     def get_permissions(self):
@@ -76,8 +76,10 @@ class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        response_data = stripe.payment_flow(cart)
-        return response.Response(response_data)
+        payment = stripe.get_or_create_payment(cart)
+        serializer_class = self.get_serializer_class()
+        payment_data = serializer_class(payment).data
+        return response.Response(payment_data)
 
     def destroy(self, request, *args, **kwargs):
         raise MethodNotAllowed(method=request.method)

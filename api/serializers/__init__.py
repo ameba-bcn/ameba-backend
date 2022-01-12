@@ -10,7 +10,7 @@ from api.serializers.article import (
     ArticleDetailSerializer, ArticleListSerializer
 )
 from api.serializers.cart import (
-    CartSerializer, CartCheckoutSerializer, PaymentSerializer
+    CartSerializer, CartCheckoutSerializer, PaymentDataSerializer
 )
 from api.serializers.event import (
     EventDetailSerializer, EventListSerializer, UserSavedEventsListSerializer
