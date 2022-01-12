@@ -1,7 +1,7 @@
 from rest_framework.serializers import ModelSerializer, \
     SerializerMethodField, Serializer, SlugRelatedField, CharField
 
-from api.models import Cart, ItemVariant
+import api.models as api_models
 
 
 class CartItemSerializer(Serializer):
@@ -74,12 +74,12 @@ class CartSerializer(ModelSerializer):
                                        source='computed_item_variants')
     count = SerializerMethodField()
     item_variant_ids = SlugRelatedField(
-        many=True, queryset=ItemVariant.objects.all(),
+        many=True, queryset=api_models.ItemVariant.objects.all(),
         slug_field='id', required=False, source='item_variants'
     )
 
     class Meta:
-        model = Cart
+        model = api_models.Cart
         fields = (
             'id', 'user', 'total', 'count', 'item_variant_ids', 'item_variants',
             'discount_code', 'state'
@@ -98,7 +98,7 @@ class CartSerializer(ModelSerializer):
         return cart.item_variants.all().count()
 
     def create(self, validated_data):
-        cart = Cart.objects.create()
+        cart = api_models.Cart.objects.create()
         return self.update(cart, validated_data)
 
     def update(self, instance, validated_data):
@@ -132,8 +132,8 @@ class CartSerializer(ModelSerializer):
 
     @staticmethod
     def _remove_existing_user_cart(user):
-        if Cart.objects.filter(user=user).exists():
-            old_cart = Cart.objects.get(user=user)
+        if api_models.Cart.objects.filter(user=user).exists():
+            old_cart = api_models.Cart.objects.get(user=user)
             old_cart.item_variants.clear()
             old_cart.delete()
 
@@ -149,7 +149,7 @@ class CartCheckoutSerializer(CartSerializer):
     checkout = SerializerMethodField()
 
     class Meta:
-        model = Cart
+        model = api_models.Cart
         fields = ('user', 'email', 'total', 'amount', 'item_variants',
                   'checkout')
 
@@ -174,5 +174,7 @@ class CartCheckoutSerializer(CartSerializer):
         return {}
 
 
-class PaymentSerializer(Serializer):
-    payment_method_id = CharField(write_only=True, required=False)
+class PaymentDataSerializer(ModelSerializer):
+    class Meta:
+        model = api_models.Payment
+        fields = ('client_secret', 'payment_intent_id')
