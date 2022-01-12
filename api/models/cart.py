@@ -250,5 +250,4 @@ class Cart(Model):
 
     def resolve(self):
         """ Directly process cart items without passing through payment. """
-        items.items_acquired.send(sender=self.__class__, cart=self)
         return super().delete()

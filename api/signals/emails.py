@@ -109,10 +109,10 @@ def send_newsletter_unsubscription_notification(sender, email, **kwargs):
 
 @receiver(payment_closed)
 def send_payment_successful_notification(
-    sender, cart, **kwargs
+    sender, payment, **kwargs
 ):
-    user = cart.user
-    cart_record = cart.payment.cart_record
+    user = payment.user
+    cart_record = payment.payment.cart_record
     email_factories.PaymentSuccessfulEmail.send_to(
         mail_to=user.email,
         user=user,
