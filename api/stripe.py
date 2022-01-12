@@ -11,7 +11,9 @@ stripe.api_key = settings.STRIPE_SECRET
 
 CURRENCY = 'eur'
 PAYMENT_METHOD_TYPES = ['card']
-NO_PAYMENT_NEEDED_ID = 'nopaymentneeded'
+EMPTY_PAYMENT_INTENT_ID = 'empty_payment'
+EMPTY_INVOICE_ID = 'empty_payment'
+EMPTY_PAYMENT_SECRET = 'empty_payment'
 
 
 class IntentStatus:
@@ -21,9 +23,17 @@ class IntentStatus:
 
 EMPTY_PAYMENT_INTENT = {
     'payment_intent': {'status': IntentStatus.SUCCESS},
+    'client_secret': EMPTY_PAYMENT_SECRET,
     'status': IntentStatus.NOT_NEEDED,
     'amount': 0,
-    'id': NO_PAYMENT_NEEDED_ID
+    'id': EMPTY_PAYMENT_INTENT_ID
+}
+
+EMPTY_INVOICE = {
+    'id': 'empty_invoice',
+    'status': 'paid',
+    'amount_due': 0,
+    'payment_intent_id': EMPTY_PAYMENT_INTENT_ID
 }
 
 
@@ -256,34 +266,19 @@ def _try_to_pay(invoice, payment_method_id):
     return invoice
 
 
-def _create_payment(cart):
-    invoice = get_or_create_invoice(cart)
+def get_or_create_payment(cart):
+    if hasattr(cart, 'payment') and cart.payment and cart.has_changed():
+        cart.payment.delete()
+    elif hasattr(cart, 'payment') and cart.payment and not cart.has_changed():
+        return cart.payment
+
+    if cart.amount > 0:
+        invoice = get_or_create_invoice(cart)
+    else:
+        invoice = EMPTY_INVOICE
     payment = api_models.Payment.objects.get_or_create_payment(cart, invoice)
     return payment
 
 
 def get_payment_intent(payment_intent_id):
     return stripe.PaymentIntent.retrieve(payment_intent_id)
-
-
-def payment_flow(cart):
-    # If the cart has changed, need to be checked-out before continue.
-    if cart.has_changed():
-        raise api_exceptions.CheckoutNeeded
-
-    if cart.amount > 0:
-        payment = _create_payment(cart)
-        payment_intent = stripe.PaymentIntent.retrieve(
-            payment.invoice['payment_intent']
-        )
-        payment_data = dict(
-            status=payment.status,
-            payment_intent=payment_intent.id,
-            client_secret=payment_intent.client_secret
-        )
-        return payment_data
-
-    elif cart.amount == 0:
-        cart.resolve()
-
-    return dict(status='paid')

@@ -80,7 +80,7 @@ class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
         return response.Response(response_data)
 
     def destroy(self, request, *args, **kwargs):
-        raise MethodNotAllowed
+        raise MethodNotAllowed(method=request.method)
 
     def retrieve(self, request, *args, **kwargs):
         return super().retrieve(request, *args, **kwargs)
@@ -96,5 +96,5 @@ class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
     # Documentation
     partial_update.__doc__ = CartsDocs.partial_update
     checkout.__doc__ = CartsDocs.checkout
-    perform_payment.__doc__ = CartsDocs.perform_payment
+    payment.__doc__ = CartsDocs.payment
     retrieve.__doc__ = CartsDocs.retrieve

@@ -17,6 +17,7 @@ from api.tests.item import TestItem
 from api.tests.member_register import FullRegistrationTest
 from api.tests.membership import TestSubscriptionPurchase
 from api.tests.integrations import TestStripeSynchronization
+from api.tests.payments import PaymentFlowTest
 
 from unittest import mock
 

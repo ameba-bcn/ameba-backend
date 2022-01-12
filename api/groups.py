@@ -43,7 +43,7 @@ def get_or_create_groups(group_definition):
     groups = []
     for group_name in group_definition:
         pk = group_definition[group_name]['pk']
-        groups.append(Group.objects.get_or_create(pk=pk, name=group_name)[0])
+        groups.append(Group.objects.get_or_create_payment(pk=pk, name=group_name)[0])
     return groups
 
 

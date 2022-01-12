@@ -25,7 +25,7 @@ def create_item(pk, name, item_class, is_active=True):
         is_active=is_active
     )
     if item_class is api_models.Subscription:
-        group, created = Group.objects.get_or_create(
+        group, created = Group.objects.get_or_create_payment(
             name='ameba_member'
         )
         attrs['group'] = group
