@@ -66,8 +66,8 @@ finalizar el proceso de pago.
 
     payment = """
 Para comenzar el pago hay que hacer un GET a este endpoint. 
-El endpoint devuelve el "status", el "payment_intent_id" y el 
-"client_secret" para utilizarlos en el formulario de pago.
+El endpoint devuelve el "client_secret" y el "payment_intent_id"  para
+ utilizarlos en el formulario de pago.
 
 - __Requiere autenticación__ de usuario y admite reemplazo del id del carro  
 por la etiqueta "current".
