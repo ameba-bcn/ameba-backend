@@ -13,30 +13,30 @@ FP_AMOUNT = 0
 class PaymentManager(models.Manager):
 
     @staticmethod
-    def create_payment(cart, invoice):
+    def create_payment(user, cart, invoice):
         from api.serializers.cart import CartSerializer
-        user = cart.user
-        cart_record = CartSerializer(instance=cart).data
 
         payment = Payment.objects.create(
-            id=cart.id,
+            id=cart.id if cart else None,
             cart=cart,
             user=user,
-            cart_record=cart_record,
+            cart_record=CartSerializer(instance=cart).data if cart else None,
             invoice_id=invoice['id'] if invoice else None,
             payment_intent_id=invoice['payment_intent'] if invoice else None
         )
 
-        for cart_item in cart.get_cart_items():
-            payment.item_variants.add(cart_item.item_variant)
+        if cart:
+            for cart_item in cart.get_cart_items():
+                payment.item_variants.add(cart_item.item_variant)
 
         return payment
 
-    def get_or_create_payment(self, cart, invoice):
+    def get_or_create_payment(self, user=None, cart=None, invoice=None):
         if hasattr(cart, 'payment') and cart.payment is not None:
             return cart.payment
         else:
-            return self.create_payment(cart, invoice)
+            user = cart.user if hasattr(cart, 'user') and cart.user else user
+            return self.create_payment(user, cart, invoice)
 
 
 class Payment(models.Model):
@@ -46,7 +46,7 @@ class Payment(models.Model):
 
     id = UUIDField(primary_key=True, editable=True)
     user = models.ForeignKey('User', on_delete=models.CASCADE,
-                             verbose_name=_('user'))
+                             verbose_name=_('user'), null=True)
     cart = models.OneToOneField('Cart', on_delete=models.PROTECT, null=True,
                                 related_name='payment')
     cart_record = models.JSONField(verbose_name=_('cart record'))
@@ -145,7 +145,7 @@ class Payment(models.Model):
                 'payment_intent': dict(self.payment_intent)
             }
 
-    def close_payment(self):
+    def close(self):
         """ At this point, payment is expected to be done. Otherwise,
         False is returned. In case payment is successful, items are attached
         to the user and notifications sent.
