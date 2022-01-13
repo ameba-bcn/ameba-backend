@@ -611,24 +611,6 @@ class TestCartStateFlow(BaseCartTest):
         self.assertFalse(cart_state['has_subscriptions'])
         self.assertTrue(cart_state['needs_checkout'])
 
-    def test_changed_cart_requires_checkout_before_payment(self):
-        user = self.get_user(1)
-        token = self.get_token(user).access_token
-        cart = self.get_cart(user=user, item_variants=[1, 2, 3])
-
-        response = self.checkout(token=token)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self._partial_update(
-            pk='current', token=token, props={'item_variant_ids': [1, 2]}
-        )
-
-        response = self.payment(pk='current', token=token)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-        response = self._get(pk='current', token=token)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertTrue(response.data.get('state')['needs_checkout'])
-
 
 class TestRegisterWithCart(BaseCartTest):
 
@@ -650,3 +632,39 @@ class TestRegisterWithCart(BaseCartTest):
 
         cart.refresh_from_db()
         self.assertTrue(cart.user)
+
+
+class TestCartPayment(BaseCartTest):
+
+    def test_payment_checked_out_cart_returns_info(self):
+        user = self.get_user(1)
+        token = self.get_token(user).access_token
+        cart = self.get_cart(user=user, item_variants=[10])
+
+        response = self.checkout(token=token)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response = self.payment(token=token)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('client_secret', response.data)
+        self.assertIn('payment_intent_id', response.data)
+        self.assertIsNotNone(response.data['client_secret'])
+        self.assertIsNotNone(response.data['payment_intent_id'])
+
+    def test_changed_cart_requires_checkout_before_payment(self):
+        user = self.get_user(1)
+        token = self.get_token(user).access_token
+        cart = self.get_cart(user=user, item_variants=[1, 2, 3])
+
+        response = self.checkout(token=token)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self._partial_update(
+            pk='current', token=token, props={'item_variant_ids': [1, 2]}
+        )
+
+        response = self.payment(pk='current', token=token)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        response = self._get(pk='current', token=token)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.data.get('state')['needs_checkout'])
