@@ -72,14 +72,32 @@ class Payment(models.Model):
 
     @property
     def amount(self):
+        """ Returns value of currency units representing total amount to be
+        paid.
+        :return: Integer
+        """
         return self.invoice and self.invoice['amount_due'] or FP_AMOUNT
 
     @property
     def status(self):
+        """ Returns status of the payment. It can be paid in case no payment
+        needed or payment already done. In case there's stripe's invoice,
+        state matches the invoice state. In case amount > 0 and no invoice
+        is attached to this payment, False is returned which means error.
+        :return:
+        """
         if self.invoice is not None:
             return self.invoice['status']
         elif self.amount == 0:
             return FP_STATUS
+        return False
+
+    def closed(self):
+        """ Returns whether the payment is closed and item variants attached to
+        its user.
+        :return: True/False
+        """
+        return not bool(self.item_variants.all())
 
     @property
     def total(self):
