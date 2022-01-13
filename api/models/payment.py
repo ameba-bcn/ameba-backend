@@ -18,22 +18,14 @@ class PaymentManager(models.Manager):
         user = cart.user
         cart_record = CartSerializer(instance=cart).data
 
-        if invoice['id'] != stripe_api.EMPTY_INVOICE_ID:
-            payment_intent = stripe_api.get_payment_intent(
-                invoice['payment_intent_id']
-            )
-        else:
-            payment_intent = stripe_api.EMPTY_PAYMENT_INTENT
-
         payment = Payment.objects.create(
             id=cart.id,
             cart=cart,
             user=user,
             cart_record=cart_record,
-            invoice=invoice,
             cart_hash=cart.checkout_hash,
-            invoice_id=invoice['id'],
-            payment_intent_id=payment_intent['id']
+            invoice_id=invoice['id'] if invoice else None,
+            payment_intent_id=invoice['payment_intent'] if invoice else None
         )
 
         for cart_item in cart.get_cart_items():
@@ -59,8 +51,6 @@ class Payment(models.Model):
     cart = models.OneToOneField('Cart', on_delete=models.PROTECT, null=True,
                                 related_name='payment')
     cart_record = models.JSONField(verbose_name=_('cart record'))
-    cart_hash = models.CharField(blank=True, max_length=128,
-                                 verbose_name=_('cart checkout hash'))
     details = models.JSONField(verbose_name=_('invoice'), null=True)
     invoice_id = models.CharField(max_length=128, null=True)
     payment_intent_id = models.CharField(max_length=128, null=True)
@@ -98,6 +88,12 @@ class Payment(models.Model):
         :return: True/False
         """
         return not bool(self.item_variants.all())
+
+    @property
+    def cart_hash(self):
+        return str(hash(tuple(
+            (iv.id, iv.price) for iv in self.item_variants.all().order_by('id')
+        ) + (self.amount, )))
 
     @property
     def total(self):
@@ -141,10 +137,11 @@ class Payment(models.Model):
         be added here.
         :return:
         """
-        self.details = {
-            'invoice': dict(self.invoice),
-            'payment_intent': dict(self.payment_intent)
-        }
+        if self.invoice:
+            self.details = {
+                'invoice': dict(self.invoice),
+                'payment_intent': dict(self.payment_intent)
+            }
 
     def close_payment(self):
         """ At this point, payment is expected to be done. Otherwise,
