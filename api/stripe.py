@@ -181,9 +181,15 @@ def create_invoice(user, cart_items):
             product_id=cart_item.item_variant.id,
             customer_id=customer.id
         )
-        return stripe.Invoice.retrieve(subscription.latest_invoice)
+        invoice = stripe.Invoice.retrieve(subscription.latest_invoice)
+        break
+    else:
+        invoice = stripe.Invoice.create(**invoice_props)
 
-    return stripe.Invoice.create(**invoice_props)
+    if invoice.status == 'draft':
+        return invoice.finalize_invoice()
+
+    return invoice
 
 
 def create_payment_method(number, exp_month, exp_year, cvc):
