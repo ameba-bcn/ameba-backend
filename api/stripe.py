@@ -286,10 +286,12 @@ def get_or_create_payment(cart):
         return cart.payment
     # When payment must be created
     invoice = get_or_create_invoice(cart) if cart.amount > 0 else None
-    payment = api_models.Payment.objects.get_or_create_payment(cart, invoice)
+    payment = api_models.Payment.objects.get_or_create_payment(
+        cart=cart, invoice=invoice
+    )
 
     if payment.amount == 0:
-        if payment.close_payment():
+        if payment.close():
             payment.refresh_from_db()
 
     return payment
@@ -298,3 +300,32 @@ def get_or_create_payment(cart):
 def get_payment_intent(payment_intent_id):
     return stripe.PaymentIntent.retrieve(payment_intent_id)
 
+
+def _get_user_from_customer_id(customer):
+    if customer.isdigit() and api_models.User.objects.filter(id=customer):
+        return api_models.User.objects.get(int(customer))
+
+
+def _get_item_variants_from_id(invoice):
+    for line in invoice.lines['data']:
+        item_variant_id = line['price']['product']
+        iv_matches = api_models.ItemVariant.objects.filter(id=item_variant_id)
+        if iv_matches:
+            yield iv_matches[0]
+
+
+def _create_payment_from_invoice(invoice):
+    user = _get_user_from_customer_id(invoice.customer)
+    payment = api_models.Payment.objects.get_or_create_payment(
+        user=user, invoice=invoice
+    )
+    for item_variant in _get_item_variants_from_id(invoice):
+        payment.item_variants.add(item_variant)
+    return payment
+
+
+def get_payment_from_invoice(invoice):
+    payments = api_models.Payment.objects.filter(invoice_id=invoice.id)
+    if payments:
+        return payments[0]
+    return _create_payment_from_invoice(invoice)
