@@ -2,14 +2,18 @@ from django.conf import settings
 import stripe
 from stripe.error import InvalidRequestError
 
-from api.exceptions import WrongPaymentIntent, CartCheckoutNotProcessed
+import api.exceptions as api_exceptions
+import api.models as api_models
+import api.signals.items as items
 
 # Authenticate stripe
 stripe.api_key = settings.STRIPE_SECRET
 
 CURRENCY = 'eur'
 PAYMENT_METHOD_TYPES = ['card']
-NO_PAYMENT_NEEDED_ID = 'nopaymentneeded'
+EMPTY_PAYMENT_INTENT_ID = 'empty_payment'
+EMPTY_INVOICE_ID = 'empty_payment'
+EMPTY_PAYMENT_SECRET = 'empty_payment'
 
 
 class IntentStatus:
@@ -19,9 +23,17 @@ class IntentStatus:
 
 EMPTY_PAYMENT_INTENT = {
     'payment_intent': {'status': IntentStatus.SUCCESS},
+    'client_secret': EMPTY_PAYMENT_SECRET,
     'status': IntentStatus.NOT_NEEDED,
     'amount': 0,
-    'id': NO_PAYMENT_NEEDED_ID
+    'id': EMPTY_PAYMENT_INTENT_ID
+}
+
+EMPTY_INVOICE = {
+    'id': 'empty_invoice',
+    'status': 'paid',
+    'amount_due': 0,
+    'payment_intent_id': EMPTY_PAYMENT_INTENT_ID
 }
 
 
@@ -60,20 +72,6 @@ def get_create_update_payment_intent(amount, idempotency_key, checkout_details):
             amount=amount, idempotency_key=str(idempotency_key)
         )
     return payment_intent
-
-
-def get_payment_intent(checkout_details):
-    if payment_intent_exists(checkout_details):
-        pid = checkout_details["payment_intent"]["id"]
-        try:
-            payment_intent = stripe.PaymentIntent.retrieve(id=pid)
-            return payment_intent
-        except stripe.error.InvalidRequestError:
-            raise WrongPaymentIntent
-    elif no_payment_intent_needed(checkout_details):
-        return EMPTY_PAYMENT_INTENT
-    else:
-        raise WrongPaymentIntent
 
 
 def _get_or_create_product(product_id, product_name):
@@ -183,9 +181,15 @@ def create_invoice(user, cart_items):
             product_id=cart_item.item_variant.id,
             customer_id=customer.id
         )
-        return stripe.Invoice.retrieve(subscription.latest_invoice)
+        invoice = stripe.Invoice.retrieve(subscription.latest_invoice)
+        break
+    else:
+        invoice = stripe.Invoice.create(**invoice_props)
 
-    return stripe.Invoice.create(**invoice_props)
+    if invoice.status == 'draft':
+        return invoice.finalize_invoice()
+
+    return invoice
 
 
 def create_payment_method(number, exp_month, exp_year, cvc):
@@ -214,8 +218,8 @@ def get_invoice(invoice_id):
 
 
 def get_or_create_invoice(cart):
-    if cart.checkout_details and 'invoice' in cart.checkout_details:
-        invoice_id = cart.checkout_details['invoice']['id']
+    if hasattr(cart, 'payment') and cart.payment is not None:
+        invoice_id = cart.payment.invoice['id']
         invoice = get_invoice(invoice_id)
     else:
         invoice = create_invoice(
@@ -258,3 +262,39 @@ def get_payment_method_id(user, pm_id):
         return user_pm.id
     _attach_payment_method(user.id, new_pm.id)
     return new_pm.id
+
+
+def _try_to_pay(invoice, payment_method_id):
+    if payment_method_id:
+        invoice = invoice.pay(payment_method=payment_method_id)
+    else:
+        invoice = invoice.finalize_invoice()
+    return invoice
+
+
+def get_or_create_payment(cart):
+    # If cart has changed or never checked out
+    if cart.checkout_hash is None or cart.has_changed():
+        raise api_exceptions.CheckoutNeeded
+    # If cart has payment but hashes doesn't match
+    if hasattr(cart, 'payment') and cart.payment and cart.checkout_hash != \
+        cart.payment.cart_hash:
+        cart.payment.delete()
+    # If cart has payment and hashes match
+    elif hasattr(cart, 'payment') and cart.payment and cart.checkout_hash ==\
+        cart.payment.cart_hash:
+        return cart.payment
+    # When payment must be created
+    invoice = get_or_create_invoice(cart) if cart.amount > 0 else None
+    payment = api_models.Payment.objects.get_or_create_payment(cart, invoice)
+
+    if payment.amount == 0:
+        if payment.close_payment():
+            payment.refresh_from_db()
+
+    return payment
+
+
+def get_payment_intent(payment_intent_id):
+    return stripe.PaymentIntent.retrieve(payment_intent_id)
+

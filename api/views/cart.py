@@ -1,17 +1,17 @@
 from drf_yasg.utils import swagger_auto_schema
+import rest_framework.response as response
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import (
     RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, CreateModelMixin
 )
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import NotAuthenticated, MethodNotAllowed
-from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.exceptions import MethodNotAllowed
 from api.permissions import CartPermission
 import api.serializers as api_serializers
-from api.models import Cart
-from api.signals import cart_processed
+import api.stripe as stripe
+import api.models as api_models
 from api.docs.carts import CartsDocs
 
 CURRENT_LABEL = 'current'
@@ -21,13 +21,13 @@ class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
                   DestroyModelMixin, CreateModelMixin):
     permission_classes = (CartPermission, )
     serializer_class = api_serializers.CartSerializer
-    queryset = Cart.objects.all()
+    queryset = api_models.Cart.objects.all()
 
     def get_serializer_class(self):
         if self.action == 'checkout':
             self.serializer_class = api_serializers.CartCheckoutSerializer
-        elif self.action == 'perform_payment':
-            self.serializer_class = api_serializers.PaymentSerializer
+        elif self.action == 'payment':
+            self.serializer_class = api_serializers.PaymentDataSerializer
         return super().get_serializer_class()
 
     def get_permissions(self):
@@ -64,28 +64,25 @@ class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
     @staticmethod
     def _get_current_user_cart(user):
         if user.is_authenticated:
-            return Cart.objects.get_or_create(user=user)[0]
+            return api_models.Cart.objects.get_or_create(user=user)[0]
         raise NotAuthenticated
 
     def partial_update(self, request, *args, **kwargs):
         return super().partial_update(request, *args, **kwargs)
 
-    @action(detail=True, methods=['POST'])
-    def perform_payment(self, request, *args, **kwargs):
+    @action(detail=True, methods=['GET'])
+    def payment(self, request, *args, **kwargs):
         cart = self.get_object()
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        cart_processed.send(
-            sender=self,
-            cart=cart,
-            payment_method_id=request.data['payment_method_id'],
-            request=self.request
-        )
-        return super().destroy(request, *args, **kwargs)
+        payment = stripe.get_or_create_payment(cart)
+        serializer_class = self.get_serializer_class()
+        payment_data = serializer_class(payment).data
+        return response.Response(payment_data)
 
     def destroy(self, request, *args, **kwargs):
-        raise MethodNotAllowed
+        raise MethodNotAllowed(method=request.method)
 
     def retrieve(self, request, *args, **kwargs):
         return super().retrieve(request, *args, **kwargs)
@@ -96,10 +93,10 @@ class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
         cart.checkout()
         serializer_class = self.get_serializer_class()
         cart_data = serializer_class(cart).data
-        return Response(cart_data)
+        return response.Response(cart_data)
 
     # Documentation
     partial_update.__doc__ = CartsDocs.partial_update
     checkout.__doc__ = CartsDocs.checkout
-    perform_payment.__doc__ = CartsDocs.perform_payment
+    payment.__doc__ = CartsDocs.payment
     retrieve.__doc__ = CartsDocs.retrieve
