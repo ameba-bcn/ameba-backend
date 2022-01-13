@@ -23,7 +23,6 @@ class PaymentManager(models.Manager):
             cart=cart,
             user=user,
             cart_record=cart_record,
-            cart_hash=cart.checkout_hash,
             invoice_id=invoice['id'] if invoice else None,
             payment_intent_id=invoice['payment_intent'] if invoice else None
         )
@@ -91,6 +90,9 @@ class Payment(models.Model):
 
     @property
     def cart_hash(self):
+        """ Returns hash of products to be purchased.
+        :return:
+        """
         return str(hash(tuple(
             (iv.id, iv.price) for iv in self.item_variants.all().order_by('id')
         ) + (self.amount, )))
@@ -166,5 +168,5 @@ class Payment(models.Model):
         """
         cart = self.cart
         self.cart = None
-        cart.delete()
         self.save()
+        cart.delete()
