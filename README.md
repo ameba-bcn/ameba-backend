@@ -2,6 +2,10 @@
 
 ### Release notes
 
+#### 1.5
+- AW-319: Changed payment flow to work with PaymentIntent and new payments 
+  form.
+
 #### 1.4
 - AW-232: Implemented new payment flow to enable periodic charges for 
   subscriptions
