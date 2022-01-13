@@ -5,7 +5,7 @@ from api.tests.user import UserTest
 from api.tests.event import TestEvents, TestSavedUserEvents
 from api.tests.cart import (
     TestGetCart, TestPatchCart, TestPostCarts, TestCartCheckout,
-    TestCartStateFlow
+    TestCartStateFlow, TestRegisterWithCart
 )
 from api.tests.activate import TestActivation
 from api.tests.recovery import TestRecoveryFlow
@@ -17,6 +17,7 @@ from api.tests.item import TestItem
 from api.tests.member_register import FullRegistrationTest
 from api.tests.membership import TestSubscriptionPurchase
 from api.tests.integrations import TestStripeSynchronization
+from api.tests.payments import PaymentFlowTest
 
 from unittest import mock
 

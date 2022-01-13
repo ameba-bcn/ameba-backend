@@ -64,34 +64,14 @@ Cada vez que se modifique el carro, hay que hacer un checkout antes de
 finalizar el proceso de pago.
 """
 
-    perform_payment = """
-Para finalizar el pago hay que hacer un POST a este este endpoint. Este 
-endpoint require que se envíe en el body el método de pago:
-
-```
-{ 'payment_method_id': 'pm_e23ijaodj23ijqd' }
-```
-
-Por lo tanto, antes de hacer esta request, el front-end deberá mostrar el 
-formulario de métodos de pago de Stripe, cuyo envío devolverá un objecto
-PaymentMethod.
-
-El id de éste PaymentMethod es el que hay que enviar en la request como 
-`payment_method_id`
-
-Éste endpoint también borra  el  carrito una vez haya sido  procesado (
-`/api/carts/current/checkout/`).
+    payment = """
+Para comenzar el pago hay que hacer un GET a este endpoint. 
+El endpoint devuelve el "status", el "payment_intent_id" y el 
+"client_secret" para utilizarlos en el formulario de pago.
 
 - __Requiere autenticación__ de usuario y admite reemplazo del id del carro  
-por 
-la etiqueta "current".
+por la etiqueta "current".
 
-- Es generar un método de pago en stripe antes del procesar el pago, excepto 
-cuando la cantidad total del carro es 0, que se debe hacer directamente 
-la request después del checkout.
-
-- Es __importante__ hacer una request de este tipo cuando un proceso de 
-compra ha terminado.
 """
 
     retrieve = """

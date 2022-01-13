@@ -1,7 +1,6 @@
 import uuid
-
+import django.utils.timezone as timezone
 from django.utils.translation import gettext_lazy as _
-from django import dispatch
 from django.db.models import (
     Model, ForeignKey, ManyToManyField, JSONField, OneToOneField,
     UUIDField, DateTimeField, SET_NULL, CASCADE, CharField
@@ -13,7 +12,8 @@ from api.exceptions import (
     MemberProfileRequired, UserCanNotAcquireTwoIdenticalEvents
 )
 from api.stripe import IntentStatus
-
+import api.signals.items as items
+import api.stripe as stripe
 
 SUCCEEDED_PAYMENTS = [IntentStatus.SUCCESS, IntentStatus.NOT_NEEDED]
 
@@ -198,6 +198,7 @@ class Cart(Model):
 
     def checkout(self):
         self.is_checkout_able()
+        # Update hash
         self.checkout_hash = self.get_hash()
         self.save()
 
@@ -239,3 +240,7 @@ class Cart(Model):
           not in SUCCEEDED_PAYMENTS and not settings.DEBUG:
             return False
         return True
+
+    def resolve(self):
+        """ Directly process cart items without passing through payment. """
+        return super().delete()
