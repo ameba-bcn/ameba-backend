@@ -3,7 +3,6 @@ import unittest.mock as mock
 import django.conf as conf
 import rest_framework.status as status
 
-import api.tests.helpers.items as item_helpers
 import api.tests.helpers.carts as cart_helpers
 import api.email_factories as email_factories
 import api.tests.helpers.user as user_helpers
