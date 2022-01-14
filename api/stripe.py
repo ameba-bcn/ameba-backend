@@ -311,16 +311,15 @@ def _get_item_variants_from_id(invoice):
         item_variant_id = line['price']['product']
         iv_matches = api_models.ItemVariant.objects.filter(id=item_variant_id)
         if iv_matches:
-            yield iv_matches[0]
+            yield iv_matches.first()
 
 
 def _create_payment_from_invoice(invoice):
-    user = _get_user_from_customer_id(invoice.customer)
+    user = _get_user_from_customer_id(invoice['customer'])
     payment = api_models.Payment.objects.get_or_create_payment(
         user=user, invoice=invoice
     )
-    for item_variant in _get_item_variants_from_id(invoice):
-        payment.item_variants.add(item_variant)
+    payment.item_variants.add(*_get_item_variants_from_id(invoice))
     return payment
 
 
