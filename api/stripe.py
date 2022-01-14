@@ -37,43 +37,6 @@ EMPTY_INVOICE = {
 }
 
 
-def create_payment_intent(amount, idempotency_key):
-    return stripe.PaymentIntent.create(
-        amount=amount,
-        currency=CURRENCY,
-        payment_method_types=PAYMENT_METHOD_TYPES,
-        idempotency_key=idempotency_key
-    )
-
-
-def payment_intent_exists(checkout_details):
-    return (
-        checkout_details
-        and 'id' in checkout_details.get('payment_intent', {})
-    )
-
-
-def no_payment_intent_needed(checkout_details):
-    return (
-        checkout_details
-        and 'date_time' in checkout_details
-        and 'payment_intent' not in checkout_details
-    )
-
-
-def get_create_update_payment_intent(amount, idempotency_key, checkout_details):
-    if payment_intent_exists(checkout_details):
-        intent_id = checkout_details["payment_intent"]["id"]
-        payment_intent = stripe.PaymentIntent.retrieve(id=intent_id)
-        payment_intent.update({"amount": amount})
-        payment_intent.save()
-    else:
-        payment_intent = create_payment_intent(
-            amount=amount, idempotency_key=str(idempotency_key)
-        )
-    return payment_intent
-
-
 def _get_or_create_product(product_id, product_name):
     try:
         stripe_product = stripe.Product.retrieve(id=str(product_id))
