@@ -1,6 +1,10 @@
-# ameba-site backend v0.21
+# ameba-site backend v1.6
 
 ### Release notes
+
+#### 1.6
+- AW-331: implementado stripe webhook handling para evento invoice.
+  paymen_succeeded.
 
 #### 1.5.1
 - hotfix: psycopg2-binary last version broken: fixed to 2.8
