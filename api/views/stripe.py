@@ -34,7 +34,9 @@ def webhook(request):
 
     elif event['type'] == 'invoice.payment_succeeded':
         invoice = event['data']['object']
-        api_signals.invoice_payment_succeeded.send(invoice=invoice)
+        api_signals.invoice_payment_succeeded.send(
+            sender=None, invoice=invoice
+        )
 
     return response.Response(status=200)
 

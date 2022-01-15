@@ -287,7 +287,7 @@ def _create_payment_from_invoice(invoice):
 
 
 def get_payment_from_invoice(invoice):
-    payments = api_models.Payment.objects.filter(invoice_id=invoice.id)
+    payments = api_models.Payment.objects.filter(invoice_id=invoice['id'])
     if payments:
         return payments[0]
     return _create_payment_from_invoice(invoice)
