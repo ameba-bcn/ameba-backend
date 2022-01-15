@@ -240,7 +240,3 @@ class Cart(Model):
           not in SUCCEEDED_PAYMENTS and not settings.DEBUG:
             return False
         return True
-
-    def resolve(self):
-        """ Directly process cart items without passing through payment. """
-        return super().delete()

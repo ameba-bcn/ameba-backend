@@ -23,3 +23,4 @@ def get_user(username, email, password, group_name='web_user', active=True):
 def get_user_token(user):
     refresh = RefreshToken.for_user(user)
     return refresh.access_token
+

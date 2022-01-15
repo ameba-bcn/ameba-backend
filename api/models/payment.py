@@ -1,3 +1,5 @@
+import uuid
+
 from django.utils.translation import gettext as _
 from django.db import models
 from django.db.models import UUIDField
@@ -15,15 +17,16 @@ class PaymentManager(models.Manager):
     @staticmethod
     def create_payment(user, cart, invoice):
         from api.serializers.cart import CartSerializer
-
-        payment = Payment.objects.create(
-            id=cart.id if cart else None,
+        payment_attrs = dict(
             cart=cart,
             user=user,
             cart_record=CartSerializer(instance=cart).data if cart else None,
             invoice_id=invoice['id'] if invoice else None,
             payment_intent_id=invoice['payment_intent'] if invoice else None
         )
+        if cart:
+            payment_attrs['id'] = cart.id
+        payment = Payment.objects.create(**payment_attrs)
 
         if cart:
             for cart_item in cart.get_cart_items():
@@ -44,12 +47,12 @@ class Payment(models.Model):
         verbose_name = _('Payment')
         verbose_name_plural = _('Payments')
 
-    id = UUIDField(primary_key=True, editable=True)
+    id = UUIDField(primary_key=True, editable=True, default=uuid.uuid4)
     user = models.ForeignKey('User', on_delete=models.CASCADE,
                              verbose_name=_('user'), null=True)
     cart = models.OneToOneField('Cart', on_delete=models.PROTECT, null=True,
                                 related_name='payment')
-    cart_record = models.JSONField(verbose_name=_('cart record'))
+    cart_record = models.JSONField(verbose_name=_('cart record'), null=True)
     details = models.JSONField(verbose_name=_('invoice'), null=True)
     invoice_id = models.CharField(max_length=128, null=True)
     payment_intent_id = models.CharField(max_length=128, null=True)
