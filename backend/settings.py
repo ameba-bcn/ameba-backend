@@ -253,10 +253,9 @@ EMAIL_PORT = int(os.getenv("EMAIL_PORT") or 465)
 EMAIL_USE_SSL = bool(os.getenv("EMAIL_USE_SSL", "").lower() == 'true')
 PROFILE_VERSION = 8
 
-
+# STRIPE KEYS
 STRIPE_SECRET = env("STRIPE_SECRET", '', var_type='string')
 STRIPE_PUBLIC = env("STRIPE_PUBLIC", '', var_type='string')
-STRIPE_SYNC = env('STRIPE_SYNC', False, var_type='boolean')
 
 
 # TOKENS EXPIRE TIMES
