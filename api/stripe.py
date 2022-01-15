@@ -1,10 +1,21 @@
+import sys
 from django.conf import settings
-import stripe
 from stripe.error import InvalidRequestError
 
 import api.exceptions as api_exceptions
 import api.models as api_models
-import api.signals.items as items
+
+
+def mock_stripe():
+    testing = sys.argv[1:2] == ['test']
+    return testing or not settings.STRIPE_SECRET or not settings.STRIPE_PUBLIC
+
+
+if mock_stripe():
+    import api.mocks.stripe as stripe
+else:
+    import stripe
+
 
 # Authenticate stripe
 stripe.api_key = settings.STRIPE_SECRET
@@ -35,43 +46,6 @@ EMPTY_INVOICE = {
     'amount_due': 0,
     'payment_intent_id': EMPTY_PAYMENT_INTENT_ID
 }
-
-
-def create_payment_intent(amount, idempotency_key):
-    return stripe.PaymentIntent.create(
-        amount=amount,
-        currency=CURRENCY,
-        payment_method_types=PAYMENT_METHOD_TYPES,
-        idempotency_key=idempotency_key
-    )
-
-
-def payment_intent_exists(checkout_details):
-    return (
-        checkout_details
-        and 'id' in checkout_details.get('payment_intent', {})
-    )
-
-
-def no_payment_intent_needed(checkout_details):
-    return (
-        checkout_details
-        and 'date_time' in checkout_details
-        and 'payment_intent' not in checkout_details
-    )
-
-
-def get_create_update_payment_intent(amount, idempotency_key, checkout_details):
-    if payment_intent_exists(checkout_details):
-        intent_id = checkout_details["payment_intent"]["id"]
-        payment_intent = stripe.PaymentIntent.retrieve(id=intent_id)
-        payment_intent.update({"amount": amount})
-        payment_intent.save()
-    else:
-        payment_intent = create_payment_intent(
-            amount=amount, idempotency_key=str(idempotency_key)
-        )
-    return payment_intent
 
 
 def _get_or_create_product(product_id, product_name):
@@ -118,7 +92,7 @@ def _get_update_or_create_price(product_id, amount, period):
 
 
 def create_or_update_product_and_price(item_variant):
-    product_id = item_variant.id
+    product_id = str(item_variant.id)
     period = item_variant.get_recurrence()
     product_name = item_variant.name
     stripe_product = _get_or_create_product(product_id, product_name)
@@ -173,12 +147,12 @@ def create_invoice(user, cart_items):
         lambda x: x.item_variant.get_recurrence(), cart_items
     )
     for cart_item in regular_items:
-        price = _get_product_price(product_id=cart_item.item_variant.id)
+        price = _get_product_price(product_id=str(cart_item.item_variant.id))
         _create_invoice_item(customer_id=customer.id, price_id=price.id)
 
     for cart_item in subscriptions:
         subscription = _create_subscription(
-            product_id=cart_item.item_variant.id,
+            product_id=str(cart_item.item_variant.id),
             customer_id=customer.id
         )
         invoice = stripe.Invoice.retrieve(subscription.latest_invoice)
@@ -190,18 +164,6 @@ def create_invoice(user, cart_items):
         return invoice.finalize_invoice()
 
     return invoice
-
-
-def create_payment_method(number, exp_month, exp_year, cvc):
-    return stripe.PaymentMethod.create(
-        type='card',
-        card=dict(
-            number=number,
-            exp_month=exp_month,
-            exp_year=exp_year,
-            cvc=cvc
-        )
-    ).id
 
 
 def _attach_payment_method(customer_id, payment_method_id):
@@ -286,10 +248,12 @@ def get_or_create_payment(cart):
         return cart.payment
     # When payment must be created
     invoice = get_or_create_invoice(cart) if cart.amount > 0 else None
-    payment = api_models.Payment.objects.get_or_create_payment(cart, invoice)
+    payment = api_models.Payment.objects.get_or_create_payment(
+        cart=cart, invoice=invoice
+    )
 
     if payment.amount == 0:
-        if payment.close_payment():
+        if payment.close():
             payment.refresh_from_db()
 
     return payment
@@ -298,3 +262,31 @@ def get_or_create_payment(cart):
 def get_payment_intent(payment_intent_id):
     return stripe.PaymentIntent.retrieve(payment_intent_id)
 
+
+def _get_user_from_customer_id(customer):
+    if customer.isdigit() and api_models.User.objects.filter(id=customer):
+        return api_models.User.objects.get(id=customer)
+
+
+def _get_item_variants_from_id(invoice):
+    for line in invoice['lines']['data']:
+        item_variant_id = line['price']['product']
+        iv_matches = api_models.ItemVariant.objects.filter(id=item_variant_id)
+        if iv_matches:
+            yield iv_matches.first()
+
+
+def _create_payment_from_invoice(invoice):
+    user = _get_user_from_customer_id(invoice['customer'])
+    payment = api_models.Payment.objects.get_or_create_payment(
+        user=user, invoice=invoice
+    )
+    payment.item_variants.add(*_get_item_variants_from_id(invoice))
+    return payment
+
+
+def get_payment_from_invoice(invoice):
+    payments = api_models.Payment.objects.filter(invoice_id=invoice['id'])
+    if payments:
+        return payments[0]
+    return _create_payment_from_invoice(invoice)
