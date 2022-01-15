@@ -39,6 +39,6 @@ def give_items_to_user(sender, payment, **kwargs):
 
 @django.dispatch.receiver(signals.post_save, sender=api_models.ItemVariant)
 def add_product_to_stripe(sender, instance, created, **kwargs):
-    if settings.STRIPE_SYNC:
-        stripe.create_or_update_product_and_price(item_variant=instance)
+    # if settings.STRIPE_SYNC:
+    stripe.create_or_update_product_and_price(item_variant=instance)
 

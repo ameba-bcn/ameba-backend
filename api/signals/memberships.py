@@ -17,7 +17,7 @@ def create_membership(sender, member, subscription, **kwargs):
     active_ms = Membership.objects.filter(member=member).order_by(
         '-expires').first()
     attrs = dict(member=member, subscription=subscription)
-    if active_ms and not active_ms.is_expired():
+    if active_ms and not active_ms.is_expired:
         attrs['starts'] = active_ms.expires
     membership = Membership.objects.create(**attrs)
     membership.member.user.groups.add(subscription.group)
