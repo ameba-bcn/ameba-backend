@@ -81,7 +81,7 @@ def _get_update_or_create_price(product_id, amount, period):
 
 
 def create_or_update_product_and_price(item_variant):
-    product_id = item_variant.id
+    product_id = str(item_variant.id)
     period = item_variant.get_recurrence()
     product_name = item_variant.name
     stripe_product = _get_or_create_product(product_id, product_name)
@@ -136,12 +136,12 @@ def create_invoice(user, cart_items):
         lambda x: x.item_variant.get_recurrence(), cart_items
     )
     for cart_item in regular_items:
-        price = _get_product_price(product_id=cart_item.item_variant.id)
+        price = _get_product_price(product_id=str(cart_item.item_variant.id))
         _create_invoice_item(customer_id=customer.id, price_id=price.id)
 
     for cart_item in subscriptions:
         subscription = _create_subscription(
-            product_id=cart_item.item_variant.id,
+            product_id=str(cart_item.item_variant.id),
             customer_id=customer.id
         )
         invoice = stripe.Invoice.retrieve(subscription.latest_invoice)
