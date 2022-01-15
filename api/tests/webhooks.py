@@ -18,7 +18,7 @@ class TestStripeWebhooks(helpers.BaseTest):
         # Check invoice items are attached to user
         for invoice_item in invoice.lines['data']:
             item_variant = api_models.ItemVariant.objects.get(
-                id=invoice_item['price']['product_id']
+                id=invoice_item['price']['product']
             )
             self.assertTrue(user.item_variants.filter(id=item_variant.id))
 

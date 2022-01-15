@@ -72,7 +72,7 @@ class BaseMock:
         result = {'data': []}
         for element in cls.objects.values():
             for key, value in kwargs.items():
-                if not hasattr(element, key) or getattr(element, key).id != value:
+                if not hasattr(element, key) or getattr(element, key) != value:
                     break
             else:
                 result['data'].append(element)
