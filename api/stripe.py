@@ -1,10 +1,21 @@
+import sys
 from django.conf import settings
-import stripe
 from stripe.error import InvalidRequestError
 
 import api.exceptions as api_exceptions
 import api.models as api_models
-import api.signals.items as items
+
+
+def mock_stripe():
+    testing = sys.argv[1:2] == ['test']
+    return testing or not settings.STRIPE_SECRET or not settings.STRIPE_PUBLIC
+
+
+if mock_stripe():
+    import api.mocks.stripe as stripe
+else:
+    import stripe
+
 
 # Authenticate stripe
 stripe.api_key = settings.STRIPE_SECRET
