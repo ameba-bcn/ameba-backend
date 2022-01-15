@@ -52,7 +52,13 @@ class BaseMock:
             return new_dict
 
     def to_dict(self):
-        return self._serialize(self.__dict__)
+        d = {}
+        for key, value in self.__dict__.items():
+            if key.endswith('_id'):
+                r_key = key.replace('_id', '')
+                d[r_key] = getattr(self, r_key)
+        d.update(self.__dict__)
+        return self._serialize(d)
 
     @classmethod
     def retrieve(cls, id):
@@ -109,9 +115,8 @@ class PriceMock(BaseMock):
     objects = {}
 
     def __init__(self, id, currency, product, unit_amount, recurring):
-        self.product_id = product
         super().__init__(id=id, currency=currency, unit_amount=unit_amount,
-                         recurring=recurring)
+                         recurring=recurring, product=product)
 
 
 class CustomerMock(BaseMock):
@@ -125,7 +130,7 @@ class SubscriptionMock(BaseMock):
     objects = {}
 
     def __init__(self, id, customer, items, payment_behaviour):
-        self.customer_id = customer
+        self.customer = customer
         super().__init__(id=id, items=items,payment_behaviour=payment_behaviour)
 
 
@@ -134,7 +139,7 @@ class InvoiceItemMock(BaseMock):
 
     def __init__(self, id, customer, price):
         self.price_id = price
-        super().__init__(id=id, customer=customer, price=price)
+        super().__init__(id=id, customer=customer)
 
 
 class PaymentIntentMock(BaseMock):
@@ -148,24 +153,24 @@ class PaymentIntentMock(BaseMock):
 class InvoiceMock(BaseMock):
     objects = {}
 
-    def __init__(self, id, customer, collection_method):
-        self.customer_id = customer
+    def __init__(self, id, customer, collection_method='charge_automatically'):
+        self.customer = customer
         self.amount_due = 0
         self.status = 'draft'
-        self.lines = []
-        self.payment_intent = PaymentIntentMock.create()
+        self.lines = {'data': []}
+        self.payment_intent = PaymentIntentMock.create()['id']
+        self.get_lines_and_amount()
         super().__init__(id=id, collection_method=collection_method)
-        self.get_amount()
 
     def finalize_invoice(self):
         self.status = 'open'
         return self
 
-    def get_amount(self):
+    def get_lines_and_amount(self):
         for id in list(InvoiceItemMock.objects.keys()):
             obj = InvoiceItemMock.objects[id]
-            if obj.customer == self.customer_id:
-                self.lines.append(obj)
+            if obj.customer == self.customer:
+                self.lines['data'].append(obj)
                 self.amount_due += obj.price.unit_amount
                 InvoiceItemMock.objects.pop(id)
 
@@ -197,6 +202,6 @@ stripe.Subscription = SubscriptionMock
 stripe.InvoiceItem = InvoiceItemMock
 stripe.Invoice = InvoiceMock
 stripe.PaymentMethod = mock.MagicMock()
-stripe.PaymentIntent = mock.MagicMock()
+stripe.PaymentIntent = PaymentIntentMock
 stripe.Webhook = WebhookMock
 stripe.error = Errors

@@ -266,11 +266,11 @@ def get_payment_intent(payment_intent_id):
 
 def _get_user_from_customer_id(customer):
     if customer.isdigit() and api_models.User.objects.filter(id=customer):
-        return api_models.User.objects.get(int(customer))
+        return api_models.User.objects.get(id=customer)
 
 
 def _get_item_variants_from_id(invoice):
-    for line in invoice.lines['data']:
+    for line in invoice['lines']['data']:
         item_variant_id = line['price']['product']
         iv_matches = api_models.ItemVariant.objects.filter(id=item_variant_id)
         if iv_matches:

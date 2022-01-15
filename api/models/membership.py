@@ -36,7 +36,7 @@ class Membership(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.id:
-            self.expires = self.starts + timezone.timedelta(days=DURATION)
+            self.expires = self.starts + timezone.timedelta(days=self.duration)
         return super().save(*args, **kwargs)
 
     @property
