@@ -20,6 +20,7 @@ from api.tests.integrations import TestStripeSynchronization
 from api.tests.payments import PaymentFlowTest
 from api.tests.flows.payments import TestPaymentsFlow
 from api.tests.flows.events import TestSavedUserEvents
+from api.tests.webhooks import TestStripeWebhooks
 from unittest import mock
 
 from api import mailgun
