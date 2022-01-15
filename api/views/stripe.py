@@ -2,7 +2,7 @@ import rest_framework.decorators as decorators
 import rest_framework.response as response
 import django.conf as conf
 
-import stripe
+import api.stripe as api_stripe
 
 import api.signals as api_signals
 
@@ -18,13 +18,13 @@ def webhook(request):
     sig_header = request.headers['STRIPE_SIGNATURE']
 
     try:
-        event = stripe.Webhook.construct_event(
+        event = api_stripe.stripe.Webhook.construct_event(
             payload, sig_header, endpoint_secret
         )
     except ValueError as e:
         # Invalid payload
         raise e
-    except stripe.error.SignatureVerificationError as e:
+    except api_stripe.stripe.error.SignatureVerificationError as e:
         # Invalid signature
         raise e
 

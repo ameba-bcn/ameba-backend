@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from api.serializers import EventListSerializer, EventDetailSerializer, \
     UserSavedEventsListSerializer
-from api.models import Event
+from api.models import Event, ItemVariant
 from api.views.base import BaseReadOnlyViewSet
 
 
@@ -34,4 +34,4 @@ class UserSignedUpEventsViewSet(
     permission_classes = (IsAuthenticated, )
 
     def get_queryset(self):
-        return Event.acquired_by.through.objects.filter(user=self.request.user)
+        return ItemVariant.acquired_by.through.objects.filter(user=self.request.user)

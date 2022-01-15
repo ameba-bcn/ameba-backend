@@ -166,18 +166,6 @@ def create_invoice(user, cart_items):
     return invoice
 
 
-def create_payment_method(number, exp_month, exp_year, cvc):
-    return stripe.PaymentMethod.create(
-        type='card',
-        card=dict(
-            number=number,
-            exp_month=exp_month,
-            exp_year=exp_year,
-            cvc=cvc
-        )
-    ).id
-
-
 def _attach_payment_method(customer_id, payment_method_id):
     stripe.PaymentMethod.attach(payment_method_id, customer=customer_id)
 
