@@ -2,6 +2,10 @@
 
 ### Release notes
 
+#### 1.5.1
+- hotfix: psycopg2-binary last version broken: fixed to 2.8
+
+
 #### 1.5
 - AW-319: Changed payment flow to work with PaymentIntent and new payments 
   form.
