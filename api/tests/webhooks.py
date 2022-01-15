@@ -77,19 +77,19 @@ class TestStripeWebhooks(helpers.BaseTest):
         self.assertFalse(user.groups.filter(name='ameba_member'))
 
         # Create invoice and other stripe items
-        customer = stripe_mock.CustomerMock.create(
+        customer = stripe_mock.Customer.create(
             id=str(user.id), name=user.username
         )
-        price = stripe_mock.PriceMock.create(
+        price = stripe_mock.Price.create(
             currency='eur',
             product=str(s_variant.id),
             unit_amount=s_variant.price,
-            recurring=s_variant.recurrence
+            recurring=dict(interval=s_variant.recurrence)
         )
-        stripe_mock.InvoiceItemMock.create(
+        stripe_mock.InvoiceItem.create(
             customer=str(user.id), price=price['id']
         )
-        invoice = stripe_mock.InvoiceMock.create(
+        invoice = stripe_mock.Invoice.create(
             id='invoice_id_subscription', customer=customer['id']
         )
 

@@ -1,19 +1,11 @@
 import sys
-import types
 import json
-import unittest.mock as mock
-import logging
-import stripe
 import time
 
 this_module = sys.modules[__name__]
 
-# module_name = 'stripe'
-# stripe = types.ModuleType(module_name)
-# sys.modules[module_name] = stripe
 
-
-class Errors:
+class error:
     InvalidRequestError = Exception
     SignatureVerificationError = Exception
 
@@ -65,7 +57,7 @@ class BaseMock:
         try:
             return cls.objects[id]
         except KeyError:
-            raise Errors.InvalidRequestError
+            raise error.InvalidRequestError
 
     @classmethod
     def list(cls, **kwargs):
@@ -92,9 +84,9 @@ class BaseMock:
     def __getattribute__(self, item):
         try:
             object_id = super().__getattribute__(item + '_id')
-        except:
+        except AttributeError:
             return super().__getattribute__(item)
-        class_name = item.capitalize() + 'Mock'
+        class_name = item.capitalize()
         return getattr(this_module, class_name).retrieve(object_id)
 
     def __getitem__(self, item):
@@ -104,37 +96,52 @@ class BaseMock:
         setattr(self, key, value)
 
 
-class ProductMock(BaseMock):
+class Product(BaseMock):
     objects = {}
 
     def __init__(self, id, name, active=True):
         super().__init__(id=id, name=name, active=active)
 
 
-class PriceMock(BaseMock):
+class PriceRecurring(BaseMock):
+    pass
+
+
+class Price(BaseMock):
     objects = {}
 
     def __init__(self, id, currency, product, unit_amount, recurring):
-        super().__init__(id=id, currency=currency, unit_amount=unit_amount,
-                         recurring=recurring, product=product)
+        self.recurring = PriceRecurring.create(**recurring)
+        super().__init__(
+            id=id, currency=currency, unit_amount=unit_amount, product=product
+        )
 
 
-class CustomerMock(BaseMock):
+class Customer(BaseMock):
     objects = {}
 
     def __init__(self, id, name):
         super().__init__(id=id, name=name)
 
 
-class SubscriptionMock(BaseMock):
+class Subscription(BaseMock):
     objects = {}
 
-    def __init__(self, id, customer, items, payment_behaviour):
+    def __init__(self, id, customer, items, payment_behavior):
         self.customer = customer
-        super().__init__(id=id, items=items,payment_behaviour=payment_behaviour)
+        self.latest_invoice = self.create_invoice(customer, items)
+        super().__init__(
+            id=id, items=items, payment_behavior=payment_behavior
+        )
+
+    @staticmethod
+    def create_invoice(customer, items):
+        for item in items:
+            InvoiceItem.create(customer=customer, price=item['price']['id'])
+        return Invoice.create(customer=customer)['id']
 
 
-class InvoiceItemMock(BaseMock):
+class InvoiceItem(BaseMock):
     objects = {}
 
     def __init__(self, id, customer, price):
@@ -142,7 +149,7 @@ class InvoiceItemMock(BaseMock):
         super().__init__(id=id, customer=customer)
 
 
-class PaymentIntentMock(BaseMock):
+class PaymentIntent(BaseMock):
     objects = {}
 
     def __init__(self, id):
@@ -150,7 +157,7 @@ class PaymentIntentMock(BaseMock):
         super().__init__(id=id)
 
 
-class InvoiceMock(BaseMock):
+class Invoice(BaseMock):
     objects = {}
 
     def __init__(self, id, customer, collection_method='charge_automatically'):
@@ -158,7 +165,7 @@ class InvoiceMock(BaseMock):
         self.amount_due = 0
         self.status = 'draft'
         self.lines = {'data': []}
-        self.payment_intent = PaymentIntentMock.create()['id']
+        self.payment_intent = PaymentIntent.create()['id']
         self.get_lines_and_amount()
         super().__init__(id=id, collection_method=collection_method)
 
@@ -167,15 +174,15 @@ class InvoiceMock(BaseMock):
         return self
 
     def get_lines_and_amount(self):
-        for id in list(InvoiceItemMock.objects.keys()):
-            obj = InvoiceItemMock.objects[id]
+        for id in list(InvoiceItem.objects.keys()):
+            obj = InvoiceItem.objects[id]
             if obj.customer == self.customer:
                 self.lines['data'].append(obj)
                 self.amount_due += obj.price.unit_amount
-                InvoiceItemMock.objects.pop(id)
+                InvoiceItem.objects.pop(id)
 
 
-class WebhookMock:
+class Webhook:
 
     @staticmethod
     def construct_event(payload, *args, **kwargs):
@@ -192,16 +199,3 @@ def mock_stripe_succeeded_payment(client, url, invoice):
         }
     }
     return client.post(url, data=data, format='json', **headers)
-
-
-logging.info('Mocking stripe module ...')
-stripe.Product = ProductMock
-stripe.Price = PriceMock
-stripe.Customer = CustomerMock
-stripe.Subscription = SubscriptionMock
-stripe.InvoiceItem = InvoiceItemMock
-stripe.Invoice = InvoiceMock
-stripe.PaymentMethod = mock.MagicMock()
-stripe.PaymentIntent = PaymentIntentMock
-stripe.Webhook = WebhookMock
-stripe.error = Errors
