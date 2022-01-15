@@ -1,5 +1,6 @@
 import sys
 import types
+import json
 import unittest.mock as mock
 import logging
 import stripe
@@ -26,6 +27,33 @@ class BaseMock:
         for key, value in kwargs.items():
             setattr(self, key, value)
 
+    def __iter__(self):
+        for key, value in self.to_dict().items():
+            yield key, value
+
+    def _serialize_element(self, element):
+        if type(element) in (list, dict, tuple):
+            return self._serialize(element)
+        elif issubclass(element.__class__, BaseMock):
+            return element.to_dict()
+        else:
+            return element
+
+    def _serialize(self, iterable):
+        if type(iterable) in (list, tuple):
+            new_list = []
+            for el in iterable:
+                new_list.append(self._serialize_element(el))
+            return new_list
+        elif type(iterable) is dict:
+            new_dict = {}
+            for key, value in iterable.items():
+                new_dict[key] = self._serialize_element(value)
+            return new_dict
+
+    def to_dict(self):
+        return self._serialize(self.__dict__)
+
     @classmethod
     def retrieve(cls, id):
         try:
@@ -48,7 +76,7 @@ class BaseMock:
     def create(cls, id=None, **kwargs):
         if not id:
             if not cls.objects:
-                id = 0
+                id = '0'
             else:
                 id = max(map(lambda x: int(x), cls.objects.keys())) + 1
                 id = str(id)
@@ -65,6 +93,9 @@ class BaseMock:
 
     def __getitem__(self, item):
         return getattr(self, item)
+
+    def __setitem__(self, key, value):
+        setattr(self, key, value)
 
 
 class ProductMock(BaseMock):
@@ -106,23 +137,44 @@ class InvoiceItemMock(BaseMock):
         super().__init__(id=id, customer=customer, price=price)
 
 
+class PaymentIntentMock(BaseMock):
+    objects = {}
+
+    def __init__(self, id):
+        self.client_secret = 'adcf44bg5bfcadcgb5fgb2c44c3gbafd'
+        super().__init__(id=id)
+
+
 class InvoiceMock(BaseMock):
     objects = {}
 
     def __init__(self, id, customer, collection_method):
         self.customer_id = customer
+        self.amount_due = 0
         self.status = 'draft'
+        self.lines = []
+        self.payment_intent = PaymentIntentMock.create()
         super().__init__(id=id, collection_method=collection_method)
+        self.get_amount()
 
     def finalize_invoice(self):
         self.status = 'open'
+        return self
+
+    def get_amount(self):
+        for id in list(InvoiceItemMock.objects.keys()):
+            obj = InvoiceItemMock.objects[id]
+            if obj.customer == self.customer_id:
+                self.lines.append(obj)
+                self.amount_due += obj.price.unit_amount
+                InvoiceItemMock.objects.pop(id)
 
 
 class WebhookMock:
 
     @staticmethod
     def construct_event(payload, *args, **kwargs):
-        return payload
+        return json.loads(payload)
 
 
 def mock_stripe_succeeded_payment(client, url, invoice):
@@ -131,10 +183,10 @@ def mock_stripe_succeeded_payment(client, url, invoice):
     data = {
         'type': 'invoice.payment_succeeded',
         'data': {
-            'object': invoice
+            'object': invoice.to_dict()
         }
     }
-    return client.post(url, data=data, **headers)
+    return client.post(url, data=data, format='json', **headers)
 
 
 logging.info('Mocking stripe module ...')

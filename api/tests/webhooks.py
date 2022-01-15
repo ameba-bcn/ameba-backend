@@ -21,9 +21,9 @@ class TestStripeWebhooks(helpers.BaseTest):
         payment = stripe.get_or_create_payment(cart)
 
         # Check payment status
+        self.assertEqual(payment.status, 'open')
 
         invoice = payment.invoice
-
         response = api.mocks.stripe.mock_stripe_succeeded_payment(
             self.client, self.DETAIL_ENDPOINT, invoice
         )
@@ -31,3 +31,7 @@ class TestStripeWebhooks(helpers.BaseTest):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # Check payment status
+        payment.refresh_from_db()
+        self.assertEqual(payment.status, 'paid')
+
+        # Check objects attached to user
