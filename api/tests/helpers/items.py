@@ -17,13 +17,15 @@ def create_attributes(item_variant):
         item_variant.attributes.add(attribute)
 
 
-def create_item(pk, name, item_class, is_active=True):
+def create_item(name, item_class=api_models.Article, is_active=True, pk=None):
     attrs = dict(
-        id=pk,
         name=name,
         description=f'This is the item {name} with pk {pk}',
         is_active=is_active
     )
+    if pk:
+        attrs['id'] = pk
+
     if item_class is api_models.Subscription:
         group, created = Group.objects.get_or_create(
             name='ameba_member'

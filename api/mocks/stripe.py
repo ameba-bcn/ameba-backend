@@ -195,7 +195,19 @@ def mock_stripe_succeeded_payment(client, url, invoice):
     data = {
         'type': 'invoice.payment_succeeded',
         'data': {
-            'object': invoice.to_dict()
+            'object': invoice if type(invoice) is dict else invoice.to_dict()
+        }
+    }
+    return client.post(url, data=data, format='json', **headers)
+
+
+def mock_stripe_failed_payment(client, url, invoice):
+    headers = {'HTTP_STRIPE_SIGNATURE': 'stripe-signature'}
+    invoice['status'] = 'open'
+    data = {
+        'type': 'invoice.payment_failed',
+        'data': {
+            'object': invoice if type(invoice) is dict else invoice.to_dict()
         }
     }
     return client.post(url, data=data, format='json', **headers)
