@@ -297,7 +297,7 @@ class TestEvents(BaseEventTest):
             'password': 'ameba12345'
         }
         user, token = BaseUserTest._insert_user(user_data)
-        event_obj = item_helpers.create_item(99, 'Event', Event)
+        event_obj = item_helpers.create_item(name='Event', item_class=Event)
         event_variant = item_helpers.create_item_variant(item=event_obj)
         event_variant.acquired_by.add(user)
         response = self._list(token=token)
@@ -315,7 +315,7 @@ class TestEvents(BaseEventTest):
             'password': 'ameba12345'
         }
         user, token = BaseUserTest._insert_user(user_data)
-        event_obj = item_helpers.create_item(99, 'Event', Event)
+        event_obj = item_helpers.create_item(name='Event', item_class=Event)
         event_variant = item_helpers.create_item_variant(item=event_obj)
         event_variant.acquired_by.add(user)
         response = self._list(token=None)
@@ -330,7 +330,7 @@ class TestEvents(BaseEventTest):
             'password': 'ameba12345'
         }
         user, token = BaseUserTest._insert_user(user_data)
-        event_obj = item_helpers.create_item(99, 'Event', Event)
+        event_obj = item_helpers.create_item(name='Event', item_class=Event)
         event_variant = item_helpers.create_item_variant(item=event_obj)
         event_variant.acquired_by.add(user)
         response = self._list(token=token)
@@ -348,7 +348,7 @@ class TestEvents(BaseEventTest):
             'password': 'ameba12345'
         }
         user, token = BaseUserTest._insert_user(user_data)
-        item_obj = item_helpers.create_item(99, 'Item', Item)
+        item_obj = item_helpers.create_item(name='Item', item_class=Item)
         item_variant = item_helpers.create_item_variant(item=item_obj)
         item_variant.acquired_by.add(user)
         response = self._list(token=token)

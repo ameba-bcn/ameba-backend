@@ -1,4 +1,4 @@
-# ameba-site backend v1.6
+# ameba backend v1.6
 
 ### Release notes
 

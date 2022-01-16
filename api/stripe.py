@@ -290,3 +290,25 @@ def get_payment_from_invoice(invoice):
     if payments:
         return payments[0]
     return _create_payment_from_invoice(invoice)
+
+
+def cancel_subscription(invoice):
+    invoice_lines = invoice['lines']['data']
+    # Cancel subscription
+    for il in invoice_lines:
+        if il['type'] == 'subscription':
+            stripe.Subscription.delete(il['subscription'])
+            return True
+    return False
+
+
+def cancel_previous_subscriptions(user, subscription):
+    subs_variants = [str(var.id) for var in subscription.variants.all()]
+    stripe_subs = stripe.Subscription.list(customer=str(user.id))
+    for stripe_sub in stripe_subs['data']:
+        if stripe_sub['status'] == 'active':
+            for stripe_sub_item in stripe_sub['items']['data']:
+                if stripe_sub_item['price']['product'] not in subs_variants:
+                    stripe.Subscription.delete(
+                        stripe_sub_item['subscription']
+                    )
