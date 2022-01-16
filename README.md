@@ -2,6 +2,10 @@
 
 ### Release notes
 
+#### 1.7
+- AW-334: Failed payments stripe webhook handling
+- AW-329: Preguntas y respuestas de entrevistas ampliadas a 2000 caracteres.
+
 #### 1.6
 - AW-331: implementado stripe webhook handling para evento invoice.
   paymen_succeeded.
