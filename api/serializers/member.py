@@ -5,6 +5,7 @@ from api.exceptions import (
     EmailAlreadyExists, WrongCartId, CartNeedOneSubscription,
     IdentityCardIsTooShort, WrongIdentityCardFormat
 )
+import api.stripe as api_stripe
 
 
 class DocMemberSerializer(serializers.ModelSerializer):
@@ -29,12 +30,19 @@ class MembershipSerializer(serializers.ModelSerializer):
 
 class MemberSerializer(serializers.ModelSerializer):
     memberships = MembershipSerializer(many=True, read_only=True)
+    payment_methods = serializers.SerializerMethodField()
 
     class Meta:
         model = Member
         fields = ('number', 'first_name', 'last_name', 'identity_card',
-                  'phone_number', 'user', 'status', 'type', 'memberships')
-        read_only_fields = ('number', 'status', 'type', 'memberships')
+                  'phone_number', 'user', 'status', 'type', 'memberships',
+                  'payment_methods')
+        read_only_fields = ('number', 'status', 'type', 'memberships',
+                            'payment_methods')
+
+    @staticmethod
+    def get_credit_cards(member):
+        return api_stripe.get_user_stored_cards(member.user)
 
 
 class MemberRegisterSerializer(serializers.Serializer):
