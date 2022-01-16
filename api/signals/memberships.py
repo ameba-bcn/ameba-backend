@@ -1,9 +1,9 @@
 from datetime import timedelta
 
 from django import dispatch
-import django.db.models.signals as signals
+import django.db.models as models
 
-from api.models import Membership
+import api.models as api_models
 from api.signals import new_membership
 from api.tasks import memberships
 import api.stripe as api_stripe
@@ -15,19 +15,11 @@ subscription_purchased = dispatch.Signal(
 
 @dispatch.receiver(subscription_purchased)
 def create_membership(sender, member, subscription, **kwargs):
-    active_ms = Membership.objects.filter(member=member).order_by(
-        '-expires').first()
     attrs = dict(member=member, subscription=subscription)
-    if active_ms and not active_ms.is_expired:
-        attrs['starts'] = active_ms.expires
-    membership = Membership.objects.create(**attrs)
-    api_stripe.cancel_previous_subscriptions(
-        user=member.user, subscription=subscription
-    )
-    membership.member.user.groups.add(subscription.group)
+    api_models.Membership.objects.create(**attrs)
 
 
-@dispatch.receiver(signals.post_save, sender=Membership)
+@dispatch.receiver(models.signals.post_save, sender=api_models.Membership)
 def trigger_new_member_notifications(sender, instance, created, **kwargs):
     if created:
         # Trigger reminders
@@ -37,13 +29,28 @@ def trigger_new_member_notifications(sender, instance, created, **kwargs):
             membership_id=instance.id,
             schedule=before_renewal_time
         )
-        # memberships.renew_membership(
-        #     membership_id=instance.id, schedule=instance.expires
-        # )
+
+        # todo: schedule if renewal was successfully done
+        pass
+        if instance.is_active:
+            # Add to corresponding group
+            instance.member.user.groups.add(instance.subscription.group)
+
+        # Remove previous subscriptions
+        for subs in api_models.Subscription.objects.filter(
+            ~models.Q(id=instance.subscription.id)
+        ):
+            if instance.member.user.groups.filter(id=subs.group.id):
+                instance.member.user.groups.remove(subs.group)
+
+        # Cancel previous subscription in case they exist
+        api_stripe.cancel_previous_subscriptions(
+            user=instance.member.user, subscription=instance.subscription
+        )
 
         # Trigger new member signal
         new_membership.send(
-            sender=Membership,
+            sender=api_models.Membership,
             user=instance.member.user,
             membership=instance
         )

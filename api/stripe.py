@@ -303,7 +303,7 @@ def cancel_subscription(invoice):
 
 
 def cancel_previous_subscriptions(user, subscription):
-    subs_variants = [var.id for var in subscription.variants.all()]
+    subs_variants = [str(var.id) for var in subscription.variants.all()]
     stripe_subs = stripe.Subscription.list(customer=str(user.id))
     for stripe_sub in stripe_subs['data']:
         if stripe_sub['status'] == 'active':

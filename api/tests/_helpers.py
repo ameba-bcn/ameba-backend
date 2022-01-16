@@ -3,7 +3,7 @@ import os
 import json
 
 from rest_framework.test import APITestCase
-
+import api.tests.helpers.stripe as stripe_helper
 
 MEDIA_TEST_DIR = [
     'media/artists/api',
@@ -16,6 +16,10 @@ class BaseTest(APITestCase):
     LIST_ENDPOINT = '/'
 
     def tearDown(self):
+        for key, value in stripe_helper.__dict__.items():
+            if hasattr(value, 'objects'):
+                value.objects = {}
+
         for directory in MEDIA_TEST_DIR:
             if os.path.isdir(directory):
                 shutil.rmtree(directory)

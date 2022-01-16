@@ -78,7 +78,8 @@ class BaseMock:
             if not cls.objects:
                 id = '0'
             else:
-                id = max(map(lambda x: int(x), cls.objects.keys())) + 1
+                numeric_ids = filter(lambda x: x.isdigit(), cls.objects.keys())
+                id = max(map(lambda x: int(x), numeric_ids)) + 1
                 id = str(id)
         cls.objects[id] = cls(id=id, **kwargs)
         return cls.retrieve(id=id)
@@ -135,7 +136,10 @@ class Subscription(BaseMock):
 
     def __init__(self, id, customer, items, payment_behavior):
         self.customer = customer
+        self.status = 'active'
         self.latest_invoice = self.create_invoice(customer, items)
+        items = [{'price': item['price'], 'subscription':id} for item in items]
+        items = {'data': items}
         super().__init__(
             id=id, items=items, payment_behavior=payment_behavior
         )

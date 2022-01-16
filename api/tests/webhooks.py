@@ -178,3 +178,69 @@ class TestStripeWebhooks(helpers.BaseTest):
         # Check notifications
         payment_send.assert_not_called()
         renewal_send.assert_called()
+
+    @mock.patch('api.email_factories.PaymentSuccessfulEmail.send_to')
+    @mock.patch('api.tasks.memberships.generate_email_with_qr_and_notify')
+    def test_upgrade_subscription_cancels_previous_one(
+        self, generate_email, payment_send
+    ):
+        member = user_helpers.get_member()
+        membership = subs_helpers.subscribe_member(member=member)
+        old_group = membership.subscription.group.name
+        s_variant = item_helpers.create_item_variant(
+            membership.subscription, 10 * 100, -1, 'year'
+        )
+
+        # Check generated email with qr
+        generate_email.assert_called_once()
+
+        # Check member is active
+        self.assertFalse(membership.is_expired)
+        self.assertEqual(member.status, 'active')
+        self.assertTrue(member.user.groups.filter(name=old_group))
+
+        subs_pro = subs_helpers.create_subscription(name='ameba_pro')
+        subs_pro_iv = item_helpers.create_item_variant(
+            item=subs_pro,
+            price=10,
+            stock=-1,
+            recurrence='year'
+        )
+        # Create cart
+        cart = cart_helpers.get_cart(user=member.user)
+        cart.item_variants.add(subs_pro_iv)
+        cart.checkout()
+        payment = stripe.get_or_create_payment(cart)
+        # Check payment status
+        self.assertEqual(payment.status, 'open')
+
+        # # Create invoice and other stripe items
+        # invoice = stripe_helper.get_invoice(
+        #     user=member.user, item_variants=[s_variant], status='paid'
+        # )
+
+        # Send webhook
+        invoice = payment.invoice
+        response = stripe_mock.mock_stripe_succeeded_payment(
+            self.client, self.DETAIL_ENDPOINT, invoice
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Check payment have been created
+        self.assertTrue(
+            api_models.Payment.objects.filter(invoice_id=invoice['id'])
+        )
+
+        # Check member is active
+        self.assertEqual(member.status, 'active')
+        self.assertTrue(member.user.groups.filter(name=subs_pro.name))
+        self.assertFalse(member.user.groups.filter(name=old_group))
+
+        # Check notifications
+        payment_send.assert_called_once()
+        generate_email.assert_called()
+
+        active_subs = stripe_mock.Subscription.list(
+            customer=str(member.user.id)
+        )
+        self.assertEqual(len(active_subs['data']), 1)
