@@ -27,9 +27,12 @@ def create_item(name, item_class=api_models.Article, is_active=True, pk=None):
         attrs['id'] = pk
 
     if item_class is api_models.Subscription:
-        group, created = Group.objects.get_or_create(
-            name='ameba_member'
-        )
+        groups = Group.objects.filter(name=name)
+        if groups:
+            group = groups.first()
+        else:
+            max_id = Group.objects.all().order_by('-id')[0].id
+            group = Group.objects.create(name=name, pk=max_id + 1)
         attrs['group'] = group
     elif item_class is api_models.Event:
         attrs['datetime'] = datetime.now()
