@@ -193,3 +193,6 @@ class ItemVariant(models.Model):
 
     def get_recurrence(self):
         return self.recurrence and str(self.recurrence) or None
+
+    def is_periodic(self):
+        return self.get_recurrence() is not None

@@ -15,7 +15,6 @@ class TestStripeSynchronization(APITestCase):
 
     def test_new_item_variant_creates_stripe_product(self):
         subs = item_helpers.create_item(
-            pk=1,
             name='Socio',
             item_class=api_models.Subscription
         )
@@ -39,7 +38,6 @@ class TestStripeSynchronization(APITestCase):
 
     def test_new_item_variant_updates_stripe_product_price(self):
         subs = item_helpers.create_item(
-            pk=1,
             name='Socio',
             item_class=api_models.Subscription
         )
@@ -121,7 +119,6 @@ class TestStripeSynchronization(APITestCase):
         )
 
         subs = item_helpers.create_item(
-            pk=4,
             name='Socio',
             item_class=api_models.Subscription
         )

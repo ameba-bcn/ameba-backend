@@ -57,7 +57,9 @@ class BaseMock:
         try:
             return cls.objects[id]
         except KeyError:
-            raise error.InvalidRequestError
+            raise error.InvalidRequestError(
+                f"{cls.__name__} with id={id} doesn't exist."
+            )
 
     @classmethod
     def list(cls, **kwargs):
@@ -76,10 +78,15 @@ class BaseMock:
             if not cls.objects:
                 id = '0'
             else:
-                id = max(map(lambda x: int(x), cls.objects.keys())) + 1
+                numeric_ids = filter(lambda x: x.isdigit(), cls.objects.keys())
+                id = max(map(lambda x: int(x), numeric_ids)) + 1
                 id = str(id)
         cls.objects[id] = cls(id=id, **kwargs)
         return cls.retrieve(id=id)
+
+    @classmethod
+    def delete(cls, id):
+        return bool(cls.objects.pop(id, None))
 
     def __getattribute__(self, item):
         try:
@@ -129,7 +136,10 @@ class Subscription(BaseMock):
 
     def __init__(self, id, customer, items, payment_behavior):
         self.customer = customer
+        self.status = 'active'
         self.latest_invoice = self.create_invoice(customer, items)
+        items = [{'price': item['price'], 'subscription':id} for item in items]
+        items = {'data': items}
         super().__init__(
             id=id, items=items, payment_behavior=payment_behavior
         )
@@ -160,14 +170,16 @@ class PaymentIntent(BaseMock):
 class Invoice(BaseMock):
     objects = {}
 
-    def __init__(self, id, customer, collection_method='charge_automatically'):
+    def __init__(
+        self, id, customer, collection_method='charge_automatically', **kwargs
+    ):
         self.customer = customer
         self.amount_due = 0
         self.status = 'draft'
         self.lines = {'data': []}
         self.payment_intent = PaymentIntent.create()['id']
         self.get_lines_and_amount()
-        super().__init__(id=id, collection_method=collection_method)
+        super().__init__(id=id, collection_method=collection_method, **kwargs)
 
     def finalize_invoice(self):
         self.status = 'open'
@@ -195,7 +207,19 @@ def mock_stripe_succeeded_payment(client, url, invoice):
     data = {
         'type': 'invoice.payment_succeeded',
         'data': {
-            'object': invoice.to_dict()
+            'object': invoice if type(invoice) is dict else invoice.to_dict()
+        }
+    }
+    return client.post(url, data=data, format='json', **headers)
+
+
+def mock_stripe_failed_payment(client, url, invoice):
+    headers = {'HTTP_STRIPE_SIGNATURE': 'stripe-signature'}
+    invoice['status'] = 'open'
+    data = {
+        'type': 'invoice.payment_failed',
+        'data': {
+            'object': invoice if type(invoice) is dict else invoice.to_dict()
         }
     }
     return client.post(url, data=data, format='json', **headers)
