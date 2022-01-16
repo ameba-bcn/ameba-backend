@@ -3,6 +3,7 @@
 ### Release notes
 
 #### 1.7
+- AW-327: Implemented member profile cards from stripe
 - AW-304: Check already active subscription in cart checkout
 - AW-334: Failed payments stripe webhook handling
 - AW-329: Preguntas y respuestas de entrevistas ampliadas a 2000 caracteres.
