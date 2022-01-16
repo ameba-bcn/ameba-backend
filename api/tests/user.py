@@ -209,6 +209,15 @@ class UserTest(BaseUserTest):
         )
         response = self.get_profile(pk=user.id, token=token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('payment_methods', response.data)
+        self.assertIs(type(response.data['payment_methods']), list)
+
+        exp = '2022/06'
+        last4 = '4242'
+        brand = 'visa'
+        card_id = 'pm_1EUp2m2tXu0CfXKwKWi2bboc'
+        payment_methods = [dict(exp=exp, last4=last4, brand=brand, id=card_id)]
+        self.assertEqual(response.data['payment_methods'], payment_methods)
 
     def test_get_non_member_from_current_user(self):
         user_props = {

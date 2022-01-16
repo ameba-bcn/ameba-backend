@@ -130,6 +130,21 @@ class Customer(BaseMock):
     def __init__(self, id, name):
         super().__init__(id=id, name=name)
 
+    @classmethod
+    def list_payment_methods(cls, id, type, **kargs):
+        exp_year = '2022'
+        exp_month = '06'
+        last4 = '4242'
+        brand = 'visa'
+        card_id = 'pm_1EUp2m2tXu0CfXKwKWi2bboc'
+        return dict(
+            data=[dict(
+                card=dict(exp_year=exp_year, exp_month=exp_month, last4=last4,
+                          brand=brand),
+                id=card_id
+            )]
+        )
+
 
 class Subscription(BaseMock):
     objects = {}
@@ -223,3 +238,4 @@ def mock_stripe_failed_payment(client, url, invoice):
         }
     }
     return client.post(url, data=data, format='json', **headers)
+

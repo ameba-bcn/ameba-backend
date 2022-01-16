@@ -41,7 +41,7 @@ class MemberSerializer(serializers.ModelSerializer):
                             'payment_methods')
 
     @staticmethod
-    def get_credit_cards(member):
+    def get_payment_methods(member):
         return api_stripe.get_user_stored_cards(member.user)
 
 
