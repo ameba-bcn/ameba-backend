@@ -40,7 +40,7 @@ class Question(models.Model):
         verbose_name = _('Question')
         verbose_name_plural = _('Questions')
 
-    question = models.TextField(max_length=200, verbose_name=_('question'))
+    question = models.TextField(max_length=2000, verbose_name=_('question'))
     is_default = models.BooleanField(default=False, verbose_name=_('is default'))
 
     def __str__(self):
@@ -58,7 +58,7 @@ class Answer(models.Model):
         related_name='answers',
         verbose_name=_('interview')
     )
-    answer = models.TextField(max_length=1000, verbose_name=_('answer'))
+    answer = models.TextField(max_length=2000, verbose_name=_('answer'))
     question = models.ForeignKey(
         to='Question',
         on_delete=models.CASCADE,
