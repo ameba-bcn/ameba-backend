@@ -20,9 +20,14 @@ def process_invoice_payment(sender, invoice, **kwargs):
     if invoice['lines']['data'][0]['type'] != 'subscription':
         return
 
+    # Check whether payment is a renew by checking previous user's
+    # subscriptions.
     item_variants = payment.item_variants.all()
     item_variant = item_variants.first()
-    if not payment.user.item_variants.filter(id=item_variant.id):
+    subscription = item_variant.item.subscription
+    user = payment.user
+    current_subs = [m.subscription for m in user.member.memberships.all()]
+    if not subscription in current_subs:
         return
 
     canceled = api_stripe.cancel_subscription(invoice)
