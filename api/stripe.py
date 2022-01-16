@@ -312,3 +312,22 @@ def cancel_previous_subscriptions(user, subscription):
                     stripe.Subscription.delete(
                         stripe_sub_item['subscription']
                     )
+
+
+def get_user_stored_cards(user):
+    card_data = []
+    try:
+        cards = stripe.Customer.list_payment_methods(
+            str(user.id),
+            type='card'
+        )
+    except stripe.error.InvalidRequestError:
+        return card_data
+
+    for card in cards['data']:
+        card_id = card['id']
+        exp = f"{card['card']['exp_year']}/{card['card']['exp_month']}"
+        last4 = card['card']['last4']
+        brand = card['card']['brand']
+        card_data.append(dict(exp=exp, last4=last4, brand=brand, id=card_id))
+    return card_data
