@@ -166,12 +166,10 @@ class Cart(Model):
         return len(self.subscriptions) > 1
 
     def has_already_active_subscription(self):
-        current_subs = [
-            m.subscription for m in self.user.member.memberships.filter(
-                is_active=True
-            )
-        ]
-        return self.subscription in current_subs
+        for memb in self.user.member.memberships.all():
+            if memb.is_active and memb.subscription == self.subscription:
+                return True
+        return False
 
     def has_identical_events(self):
         current_events = []
