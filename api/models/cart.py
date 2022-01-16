@@ -7,10 +7,7 @@ from django.db.models import (
 )
 from django.conf import settings
 
-from api.exceptions import (
-    CartIsEmpty, CartCheckoutNeedsUser, CartHasMultipleSubscriptions,
-    MemberProfileRequired, UserCanNotAcquireTwoIdenticalEvents
-)
+import api.exceptions as api_exceptions
 from api.stripe import IntentStatus
 import api.signals.items as items
 import api.stripe as stripe
@@ -168,6 +165,12 @@ class Cart(Model):
     def has_multiple_subscriptions(self):
         return len(self.subscriptions) > 1
 
+    def has_already_active_subscription(self):
+        for memb in self.user.member.memberships.all():
+            if memb.is_active and memb.subscription == self.subscription:
+                return True
+        return False
+
     def has_identical_events(self):
         current_events = []
         for event in self.events:
@@ -186,15 +189,17 @@ class Cart(Model):
 
     def is_checkout_able(self):
         if self.is_empty():
-            raise CartIsEmpty
+            raise api_exceptions.CartIsEmpty
         if self.is_anonymous():
-            raise CartCheckoutNeedsUser
-        if self.has_multiple_subscriptions():
-            raise CartHasMultipleSubscriptions
-        if self.has_identical_events():
-            raise UserCanNotAcquireTwoIdenticalEvents
+            raise api_exceptions.CartCheckoutNeedsUser
         if self.subscription and not self.user.has_member_profile():
-            raise MemberProfileRequired
+            raise api_exceptions.MemberProfileRequired
+        if self.has_multiple_subscriptions():
+            raise api_exceptions.CartHasMultipleSubscriptions
+        if self.has_already_active_subscription():
+            raise api_exceptions.CartHasAlreadyActiveSubscription
+        if self.has_identical_events():
+            raise api_exceptions.UserCanNotAcquireTwoIdenticalEvents
 
     def checkout(self):
         self.is_checkout_able()
