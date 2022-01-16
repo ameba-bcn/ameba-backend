@@ -1,14 +1,17 @@
 from django.utils import timezone
 from rest_framework import status
-from unittest import mock
 from django.contrib.auth.models import Group
 
 from api.tests.cart import BaseCartTest
 from api.models import Subscription, Article, ItemVariant
-from api import stripe
+import api.stripe as api_stripe
+import api.tests.helpers.user as user_helpers
+import api.tests.helpers.subscriptions as subs_helpers
+import api.tests.helpers.carts as cart_helpers
+import api.tests.helpers.items as item_helpers
 
 valid_payment_intent = {
-    'status': stripe.IntentStatus.SUCCESS,
+    'status': api_stripe.IntentStatus.SUCCESS,
     'id': 'whatever',
     'amount': 1000
 }
@@ -78,3 +81,16 @@ class TestSubscriptionPurchase(BaseCartTest):
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data['detail'], 'Checkout needed before continue.')
+
+    def test_checkout_with_already_active_subscription_is_not_allowed(self):
+        member = user_helpers.get_member()
+        token = user_helpers.get_user_token(member.user)
+        membership = subs_helpers.subscribe_member(member=member)
+        sub_iv = item_helpers.create_item_variant(item=membership.subscription)
+
+        cart = cart_helpers.get_cart(user=member.user)
+        cart.item_variants.add(sub_iv)
+
+        response = self.checkout('current', token=token)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data['detail'], 'Cart has already active subscription.')
