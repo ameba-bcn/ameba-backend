@@ -28,15 +28,9 @@ def webhook(request):
         # Invalid signature
         raise e
 
-    if event['type'] == 'invoice.payment_failed':
+    if event['type'] in ('invoice.payment_failed', 'invoice.payment_succeeded'):
         invoice = event['data']['object']
-        api_signals.invoice_payment_failed.send(invoice=invoice)
-
-    elif event['type'] == 'invoice.payment_succeeded':
-        invoice = event['data']['object']
-        api_signals.invoice_payment_succeeded.send(
-            sender=None, invoice=invoice
-        )
+        api_signals.invoice_payment.send(sender=None, invoice=invoice)
 
     return response.Response(status=200)
 

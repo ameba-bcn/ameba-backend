@@ -2,17 +2,36 @@ from django.dispatch import receiver
 import django.dispatch as dispatch
 
 import api.stripe as api_stripe
+import api.signals.emails as emails
 
-invoice_payment_succeeded = dispatch.Signal(providing_args=['invoice'])
-invoice_payment_failed = dispatch.Signal(providing_args=['invoice'])
+invoice_payment = dispatch.Signal(providing_args=['invoice'])
 
 
-@receiver(invoice_payment_succeeded)
-def process_succeeded_invoice_payment(sender, invoice, **kwargs):
+@receiver(invoice_payment)
+def process_invoice_payment(sender, invoice, **kwargs):
     payment = api_stripe.get_payment_from_invoice(invoice)
-    payment.close()
 
+    if invoice['status'] == 'paid':
+        payment.close()
+        return
 
-@receiver(invoice_payment_failed)
-def process_failed_invoice_payment(sender, invoice, **kwargs):
-    pass
+    if len(invoice['lines']['data']) != 1:
+        return
+    if invoice['lines']['data'][0]['type'] != 'subscription':
+        return
+
+    item_variants = payment.item_variants.all()
+    item_variant = item_variants.first()
+    if not payment.user.item_variants.filter(id=item_variant.id):
+        return
+
+    canceled = api_stripe.cancel_subscription(invoice)
+    if not canceled:
+        return
+
+    # Notify
+    emails.failed_renewal.send(
+        sender=sender,
+        user=payment.user,
+        subscription=item_variant.item.subscription
+    )

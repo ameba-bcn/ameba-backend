@@ -6,6 +6,7 @@ import django.db.models.signals as signals
 from api.models import Membership
 from api.signals import new_membership
 from api.tasks import memberships
+import api.stripe as api_stripe
 
 subscription_purchased = dispatch.Signal(
     providing_args=['member', 'subscription']
@@ -20,6 +21,9 @@ def create_membership(sender, member, subscription, **kwargs):
     if active_ms and not active_ms.is_expired:
         attrs['starts'] = active_ms.expires
     membership = Membership.objects.create(**attrs)
+    api_stripe.cancel_previous_subscriptions(
+        user=member.user, subscription=subscription
+    )
     membership.member.user.groups.add(subscription.group)
 
 
