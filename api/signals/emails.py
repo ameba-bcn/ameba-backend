@@ -14,7 +14,8 @@ password_changed = django.dispatch.Signal(providing_args=['user', 'request'])
 event_confirmation = django.dispatch.Signal(
     providing_args=['item_variant', 'user']
 )
-failed_renewal = django.dispatch.Signal(providing_args=['user', 'membership'])
+failed_renewal = django.dispatch.Signal(providing_args=['user',
+                                                        'subscription'])
 payment_closed = django.dispatch.Signal(providing_args=['payment'])
 
 
@@ -81,11 +82,11 @@ def on_event_confirmation(sender, item_variant, user, **kwargs):
 
 
 @receiver(failed_renewal)
-def on_failed_renewal(sender, user, membership, **kwargs):
+def on_failed_renewal(sender, user, subscription, **kwargs):
     email_factories.RenewalFailedNotification.send_to(
         mail_to=user.email,
         user=user,
-        subscription=membership.subscription,
+        subscription=subscription,
         site_name=settings.HOST_NAME,
         protocol=settings.DEBUG and 'http' or 'https'
     )
