@@ -1,3 +1,7 @@
+import api.stripe as stripe
+import api.mocks.stripe as stripe_mock
+
+
 def get_amount(item_variants):
     return sum([item_variant.price for item_variant in item_variants])
 
@@ -6,7 +10,7 @@ def has_subscription(item_variants):
     return any([iv.is_periodic() for iv in item_variants])
 
 
-def get_invoice_lines(item_variants):
+def get_invoice_lines(user, item_variants):
     lines = {
         'object': 'lines',
         'data': [],
@@ -14,8 +18,21 @@ def get_invoice_lines(item_variants):
         'url': '/v1/invoices/in_1KIX9XHRg08Ncmk70SISI4wQ/lines'
     }
     for item_variant in item_variants:
+        customer = stripe_mock.Customer.create(id=user.id, name=user.username)
+        product = stripe_mock.Product.create(
+            id=item_variant.id, name=item_variant.name
+        )
+        price = stripe_mock.Price.create(
+            currency='eur',
+            unit_amount=item_variant.price,
+            recurring={'interval': 'year'},
+            product=product.id
+        )
+        ii = stripe_mock.InvoiceItem.create(customer=customer, price=price.id)
         if item_variant.is_periodic():
-            subscription = 'sub_1KIX9XHRg08Ncmk7FHY3sSM7'
+            subscription = stripe._create_subscription(
+                product_id=product.id, customer_id=customer.id
+            )
         else:
             subscription = None
 
@@ -28,7 +45,7 @@ def get_invoice_lines(item_variants):
             "discount_amounts": [],
             "discountable": True,
             "discounts": [],
-            "invoice_item": "ii_1KIX9XHRg08Ncmk7Ct8O4mn5",
+            "invoice_item": ii.id,
             "livemode": False,
             "metadata": {},
             "period": {
@@ -36,7 +53,7 @@ def get_invoice_lines(item_variants):
               "start": 1642333447
             },
             "price": {
-              "id": "price_1KIHAaHRg08Ncmk7exeJKvYk",
+              "id": price.id,
               "object": "price",
               "active": True,
               "billing_scheme": "per_unit",
@@ -46,7 +63,7 @@ def get_invoice_lines(item_variants):
               "lookup_key": None,
               "metadata": {},
               "nickname": None,
-              "product": f"{item_variant.id}",
+              "product": product.id,
               "recurring": None,
               "tax_behavior": "unspecified",
               "tiers_mode": None,
@@ -57,17 +74,23 @@ def get_invoice_lines(item_variants):
             },
             "proration": False,
             "quantity": 1,
-            "subscription": subscription,
+            "subscription": subscription.id,
             "tax_amounts": [],
             "tax_rates": [],
-            "type": "invoiceitem" if not subscription else subscription
+            "type": "invoiceitem" if not subscription else 'subscription'
           })
     return lines
 
 
 def get_invoice(user, item_variants, status='paid'):
+    if status != 'draft':
+        payment_intent_id = stripe_mock.PaymentIntent.create().id
+    else:
+        payment_intent_id = None
+
+    customer = stripe_mock.Customer(id=str(user.id), name=user.username)
+
     invoice = {
-      "id": "in_1KIX9XHRg08Ncmk70SISI4wQ",
       "object": "invoice",
       "account_country": "ES",
       "account_name": None,
@@ -89,10 +112,10 @@ def get_invoice(user, item_variants, status='paid'):
       "created": 1642333447,
       "currency": "eur",
       "custom_fields": None,
-      "customer": "7",
+      "customer": customer.id,
       "customer_address": None,
       "customer_email": None,
-      "customer_name": "hector",
+      "customer_name": user.username,
       "customer_phone": None,
       "customer_shipping": None,
       "customer_tax_exempt": "none",
@@ -109,7 +132,7 @@ def get_invoice(user, item_variants, status='paid'):
       "hosted_invoice_url": None,
       "invoice_pdf": None,
       "last_finalization_error": None,
-      "lines": get_invoice_lines(item_variants),
+      "lines": get_invoice_lines(user, item_variants),
       "livemode": False,
       "metadata": {},
       "next_payment_attempt": 1642337047,
@@ -117,7 +140,7 @@ def get_invoice(user, item_variants, status='paid'):
       "on_behalf_of": None,
       "paid": False,
       "paid_out_of_band": False,
-      "payment_intent": None,
+      "payment_intent": payment_intent_id,
       "payment_settings": {
         "payment_method_options": None,
         "payment_method_types": None

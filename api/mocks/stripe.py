@@ -57,7 +57,9 @@ class BaseMock:
         try:
             return cls.objects[id]
         except KeyError:
-            raise error.InvalidRequestError
+            raise error.InvalidRequestError(
+                f"{cls.__name__} with id={id} doesn't exist."
+            )
 
     @classmethod
     def list(cls, **kwargs):
@@ -80,6 +82,10 @@ class BaseMock:
                 id = str(id)
         cls.objects[id] = cls(id=id, **kwargs)
         return cls.retrieve(id=id)
+
+    @classmethod
+    def delete(cls, id):
+        return bool(cls.objects.pop(id, None))
 
     def __getattribute__(self, item):
         try:
@@ -160,14 +166,16 @@ class PaymentIntent(BaseMock):
 class Invoice(BaseMock):
     objects = {}
 
-    def __init__(self, id, customer, collection_method='charge_automatically'):
+    def __init__(
+        self, id, customer, collection_method='charge_automatically', **kwargs
+    ):
         self.customer = customer
         self.amount_due = 0
         self.status = 'draft'
         self.lines = {'data': []}
         self.payment_intent = PaymentIntent.create()['id']
         self.get_lines_and_amount()
-        super().__init__(id=id, collection_method=collection_method)
+        super().__init__(id=id, collection_method=collection_method, **kwargs)
 
     def finalize_invoice(self):
         self.status = 'open'

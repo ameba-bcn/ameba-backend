@@ -37,9 +37,9 @@ def trigger_new_member_notifications(sender, instance, created, **kwargs):
             membership_id=instance.id,
             schedule=before_renewal_time
         )
-        memberships.renew_membership(
-            membership_id=instance.id, schedule=instance.expires
-        )
+        # memberships.renew_membership(
+        #     membership_id=instance.id, schedule=instance.expires
+        # )
 
         # Trigger new member signal
         new_membership.send(
