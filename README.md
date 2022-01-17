@@ -2,6 +2,9 @@
 
 ### Release notes
 
+#### 1.8
+- AW-335: Discounts integration with stripe
+
 #### 1.7
 - AW-327: Implemented member profile cards from stripe
 - AW-304: Check already active subscription in cart checkout
