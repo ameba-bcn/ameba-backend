@@ -331,3 +331,4 @@ def get_user_stored_cards(user):
         brand = card['card']['brand']
         card_data.append(dict(exp=exp, last4=last4, brand=brand, id=card_id))
     return card_data
+
