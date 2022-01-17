@@ -44,13 +44,17 @@ class Discount(models.Model):
     )
     groups = models.ManyToManyField(to='auth.Group', verbose_name=_('groups'))
     need_code = models.BooleanField(verbose_name=_('need code'))
-    number_of_uses = models.IntegerField(verbose_name=_('number of uses'))
     usages = models.ManyToManyField(
         to='User',
         through='DiscountUsage',
         related_name='used_discounts',
         verbose_name=_('usages')
     )
+    is_single_use = models.BooleanField(default=True)
+
+    @property
+    def number_of_uses(self):
+        return 1 if self.is_single_use else -1
 
     def __str__(self):
         return f'{self.name} ({self.value}%)'
@@ -62,9 +66,14 @@ class Discount(models.Model):
         return False
 
     def remaining_usages(self, user):
-        if self.number_of_uses == -1:
+        if not self.is_single_use:
             return 9999
-        return self.number_of_uses - self.usages.filter(id=user.id).count()
+        elif self._already_used_by(user):
+            return 0
+        return 1
+
+    def _already_used_by(self, user):
+        return bool(self.usages.filter(id=user.id))
 
     @staticmethod
     def _user_match_code(user, code):
