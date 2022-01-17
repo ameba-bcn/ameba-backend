@@ -124,6 +124,13 @@ class Price(BaseMock):
         )
 
 
+class Coupon(BaseMock):
+    objects = {}
+
+    def __init__(self, *args, **kwargs):
+        pass
+
+
 class Customer(BaseMock):
     objects = {}
 

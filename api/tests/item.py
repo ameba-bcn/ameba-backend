@@ -8,7 +8,7 @@ from api.tests._helpers import BaseTest, check_structure
 from api.tests.user import BaseUserTest
 from api.models import Image, Article, ItemAttributeType, ItemAttribute, \
     ItemVariant, Item
-from api.models import Discount
+from api.models import Discount, DiscountUsage
 
 
 class ModelMethods:
@@ -171,7 +171,7 @@ class TestItem(BaseTest):
             'name': 'members',
             'value': 20,
             'need_code': False,
-            'number_of_uses': -1
+            'is_single_use': False
         }
         discount = Discount.objects.create(**discount_data)
         discount.groups.add(ameba_member)
@@ -201,7 +201,7 @@ class TestItem(BaseTest):
             'name': 'members',
             'value': 20,
             'need_code': False,
-            'number_of_uses': -1
+            'is_single_use': False
         }
         discount = Discount.objects.create(**discount_data)
         discount.groups.add(ameba_member)
@@ -231,7 +231,7 @@ class TestItem(BaseTest):
             'name': 'members',
             'value': 20,
             'need_code': False,
-            'number_of_uses': -1
+            'is_single_use': False
         }
         discount = Discount.objects.create(**discount_data)
         discount.groups.add(ameba_member)
@@ -267,7 +267,7 @@ class TestItem(BaseTest):
             'name': 'members',
             'value': 20,
             'need_code': False,
-            'number_of_uses': -1
+            'is_single_use': False
         }
         discount = Discount.objects.create(**discount_1_data)
         discount.groups.add(ameba_member)
@@ -277,7 +277,7 @@ class TestItem(BaseTest):
             'name': 'members',
             'value': 30,
             'need_code': False,
-            'number_of_uses': -1
+            'is_single_use': False
         }
         discount_2 = Discount.objects.create(**discount_2_data)
         discount_2.groups.add(ameba_member)
@@ -313,7 +313,7 @@ class TestItem(BaseTest):
             'name': 'members',
             'value': 20,
             'need_code': False,
-            'number_of_uses': -1
+            'is_single_use': False
         }
         discount = Discount.objects.create(**discount_1_data)
         discount.groups.add(ameba_member)
@@ -323,7 +323,7 @@ class TestItem(BaseTest):
             'name': 'members',
             'value': 30,
             'need_code': False,
-            'number_of_uses': -1
+            'is_single_use': False
         }
         discount_2 = Discount.objects.create(**discount_2_data)
         discount_2.groups.add(ameba_member)
@@ -353,9 +353,10 @@ class TestItem(BaseTest):
             'name': 'members',
             'value': 20,
             'need_code': False,
-            'number_of_uses': 0
+            'is_single_use': True
         }
         discount = Discount.objects.create(**discount_1_data)
+        DiscountUsage.objects.create(user=user, discount=discount)
         discount.groups.add(ameba_member)
         article.discounts.add(discount)
 

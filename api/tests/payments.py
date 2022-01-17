@@ -87,8 +87,6 @@ class PaymentFlowTest(BaseCartTest):
             response_1.data['checkout'], response_2.data['checkout']
         )
 
-
-
     def test_cart_second_checkout_update_prices_if_items_changed(self):
         item_variants = [1, 2, 3]
         user = self.get_user()

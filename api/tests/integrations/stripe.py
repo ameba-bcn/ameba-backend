@@ -82,10 +82,7 @@ class TestStripeSynchronization(APITestCase):
             item_variants=[1, ],
             item_class=api_models.Subscription
         )
-        invoice = stripe.create_invoice(
-            user=user,
-            cart_items=cart.get_cart_items()
-        )
+        invoice = stripe.create_invoice_from_cart(cart=cart)
 
         self.assertEqual(cart.amount, invoice.amount_due)
 
@@ -128,10 +125,7 @@ class TestStripeSynchronization(APITestCase):
             recurrence='year'
         )
         cart.item_variants.add(subs_variant)
-        invoice = stripe.create_invoice(
-            user=user,
-            cart_items=cart.get_cart_items()
-        )
+        invoice = stripe.create_invoice_from_cart(cart=cart)
         try:
             self.assertEqual(cart.amount, invoice.amount_due)
         except Exception as e:
