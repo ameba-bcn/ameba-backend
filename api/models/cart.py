@@ -71,6 +71,13 @@ class Cart(Model):
         ) + (self.amount, )))
 
     @property
+    def base_amount(self):
+        amount = 0
+        for item_variant in self.item_variants.all():
+            amount += item_variant.amount
+        return amount
+
+    @property
     def amount(self):
         amount = 0
         for cart_item in self.get_cart_items_with_discounts():

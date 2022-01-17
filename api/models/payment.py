@@ -15,7 +15,7 @@ FP_AMOUNT = 0
 class PaymentManager(models.Manager):
 
     @staticmethod
-    def create_payment(user, cart, invoice):
+    def create_payment(user=None, cart=None, invoice=None):
         from api.serializers.cart import CartSerializer
         user = cart.user if hasattr(cart, 'user') and cart.user else user
         payment_attrs = dict(
