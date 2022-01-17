@@ -31,7 +31,7 @@ def get_invoice_lines(user, item_variants):
         ii = stripe_mock.InvoiceItem.create(customer=customer, price=price.id)
         if item_variant.is_periodic():
             subscription = stripe._create_subscription(
-                product_id=product.id, customer_id=customer.id
+                customer_id=customer.id, prices=[{'price': price}]
             )
         else:
             subscription = None

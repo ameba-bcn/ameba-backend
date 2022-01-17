@@ -15,7 +15,7 @@ from api.models.artist import Artist, ArtistMediaUrl, ArtistTag
 from api.models.interview import Interview, Answer, Question
 from api.models.subscriber import Subscriber
 from api.models.article import Article
-from api.models.discount import Discount, DiscountCode
+from api.models.discount import Discount, DiscountCode, DiscountUsage
 from api.models.cart import Cart, CartItems
 from api.models.event import Event, EventType
 from api.models.payment import Payment
