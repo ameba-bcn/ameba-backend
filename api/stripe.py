@@ -114,18 +114,55 @@ def _get_stripe_subscription_id(product_id, customer_id):
     return f'{product_id}-{customer_id}'
 
 
-def _create_subscription(product_id, customer_id):
-    prices = [{'price': _get_product_price(product_id)}]
+def _create_subscription(customer_id, prices, coupon_id):
     subscription = stripe.Subscription.create(
         customer=str(customer_id),
         items=prices,
-        payment_behavior='default_incomplete'
+        payment_behavior='default_incomplete',
+        coupon=coupon_id
     )
     return subscription
 
 
 def _create_invoice_item(customer_id, price_id):
     return stripe.InvoiceItem.create(customer=customer_id, price=price_id)
+
+
+def _get_discount_name(cart):
+    cart_discounts = cart.get_cart_items_with_discounts()
+    discounts = set(
+        d['discount'].name for d in cart_discounts if d['discount']
+    )
+    return ', '.join(discounts)
+
+
+def _get_discounts_attr(cart):
+    # Compute invoice discounts
+    amount_off = cart.base_amount - cart.amount
+    coupon_attrs = {
+        'id': cart.id,
+        'amount_off': amount_off,
+        'name': _get_discount_name(cart),
+        'currency': 'eur',
+        'applies_to': {
+            'products': [str(iv.id) for iv in cart.item_variants.all()]
+        }
+    }
+    coupon = stripe.Coupon.create(**coupon_attrs)
+    return [{'coupon': coupon.id}]
+
+
+def _delete_discounts(discounts):
+    for discount in discounts:
+        stripe.Coupon.delete(discount['coupon'])
+
+
+def _get_product_and_prices(cart):
+    products = {}
+    for item_variant in cart.item_variants.all():
+        product, price = create_or_update_product_and_price(item_variant)
+        products[product.id] = {'product': product, 'price': price}
+    return products
 
 
 def create_invoice_from_cart(cart):
@@ -135,11 +172,8 @@ def create_invoice_from_cart(cart):
     """
     user = cart.user
     customer = _get_or_create_customer(customer_id=user.id, name=user.username)
-
-    # Compute invoice discounts
-    c_dis = cart.get_cart_items_with_discounts()
-    discounts = [d['discount'].id for d in c_dis if d['discount']]
-
+    products = _get_product_and_prices(cart=cart)
+    discounts = _get_discounts_attr(cart)
     invoice_props = dict(
         customer=customer.id,
         discounts=discounts,
@@ -153,13 +187,15 @@ def create_invoice_from_cart(cart):
         lambda x: x.item_variant.get_recurrence(), cart_items
     )
     for cart_item in regular_items:
-        price = _get_product_price(product_id=str(cart_item.item_variant.id))
+        price = products[str(cart_item.item_variant.id)]['price']
         _create_invoice_item(customer_id=customer.id, price_id=price.id)
 
     for cart_item in subscriptions:
+        product_id = str(cart_item.item_variant.id)
         subscription = _create_subscription(
-            product_id=str(cart_item.item_variant.id),
-            customer_id=customer.id
+            customer_id=customer.id,
+            prices=[{'price': products[product_id]['price']}],
+            coupon_id=discounts[0]['coupon']
         )
         invoice = stripe.Invoice.retrieve(subscription.latest_invoice)
         break
@@ -167,8 +203,9 @@ def create_invoice_from_cart(cart):
         invoice = stripe.Invoice.create(**invoice_props)
 
     if invoice.status == 'draft':
-        return invoice.finalize_invoice()
+        invoice = invoice.finalize_invoice()
 
+    _delete_discounts(discounts)
     return invoice
 
 
@@ -314,65 +351,3 @@ def get_user_stored_cards(user):
         card_data.append(dict(exp=exp, last4=last4, brand=brand, id=card_id))
     return card_data
 
-
-def _get_discount_variants(discount):
-    for item in discount.items.all():
-        for item_variant in item.item_variants.all():
-            yield item_variant
-
-
-def _sync_discount_products(discount):
-    for item_variant in _get_discount_variants(discount):
-        _get_or_create_product(str(item_variant.id), item_variant.name)
-
-
-def _create_coupon(discount):
-    coupon_attrs = {
-        'id': discount.id,
-        'percent_off': discount.value,
-        'applies_to': {
-            'products': [str(iv.id) for iv in _get_discount_variants(discount)]
-        }
-    }
-    try:
-        return stripe.Coupon.create(**coupon_attrs)
-    except stripe.error.InvalidRequestError:
-        _sync_discount_products(discount)
-
-    return stripe.Coupon.create(**coupon_attrs)
-
-
-def _get_update_coupon(discount):
-    coupon = stripe.Coupon.retrieve(str(discount.id))
-    to_update = {}
-
-    if coupon['percent_off'] != discount.value:
-        to_update['percent_off'] = discount.value
-
-    products = [str(iv.id) for iv in _get_discount_variants(discount)]
-    if 'applies_to' not in coupon or 'products' not in coupon['applies_to']:
-        to_update['applies_to'] = dict(products=products)
-
-    if coupon['applies_to']['products'] != products:
-        to_update['applies_to'] = dict(products=products)
-
-    if to_update:
-        coupon = coupon.update(update_dict=to_update)
-
-    return coupon
-
-
-def get_create_update_discount(discount):
-    try:
-        coupon = _get_update_coupon(discount)
-    except stripe.error.InvalidRequestError:
-        coupon = _create_coupon(discount)
-
-    return coupon
-
-
-def delete_discount(discount):
-    try:
-        stripe.Coupon.delete(id=str(discount.id))
-    except stripe.error.InvalidRequestError:
-        pass
