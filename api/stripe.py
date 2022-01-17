@@ -142,7 +142,6 @@ def _get_discounts_attr(cart):
     # Compute invoice discounts
     amount_off = cart.base_amount - cart.amount
     coupon_attrs = {
-        'id': cart.id,
         'amount_off': amount_off,
         'name': _get_discount_name(cart),
         'currency': 'eur',
@@ -299,10 +298,10 @@ def _get_item_variants_from_id(invoice):
 
 def _create_payment_from_invoice(invoice):
     user = _get_user_from_customer_id(invoice['customer'])
+    item_variants = _get_item_variants_from_id(invoice)
     payment = api_models.Payment.objects.create_payment(
-        user=user, invoice=invoice
+        user=user, invoice=invoice, item_variants=item_variants
     )
-    payment.item_variants.add(*_get_item_variants_from_id(invoice))
     return payment
 
 

@@ -15,7 +15,7 @@ FP_AMOUNT = 0
 class PaymentManager(models.Manager):
 
     @staticmethod
-    def create_payment(user=None, cart=None, invoice=None):
+    def create_payment(user=None, cart=None, invoice=None, item_variants=None):
         from api.serializers.cart import CartSerializer
         user = cart.user if hasattr(cart, 'user') and cart.user else user
         payment_attrs = dict(
@@ -32,6 +32,8 @@ class PaymentManager(models.Manager):
         if cart:
             for cart_item in cart.get_cart_items():
                 payment.item_variants.add(cart_item.item_variant)
+        elif item_variants:
+            payment.item_variants.add(*item_variants)
 
         if payment.close():
             payment.refresh_from_db()
