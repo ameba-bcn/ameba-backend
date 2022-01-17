@@ -124,6 +124,19 @@ class Price(BaseMock):
         )
 
 
+class Coupon(BaseMock):
+    objects = {}
+
+    def __init__(self, id, amount_off, name, currency, applies_to):
+        super().__init__(
+            id=id,
+            amount_off=amount_off,
+            name=name,
+            currency=currency,
+            applies_to=applies_to
+        )
+
+
 class Customer(BaseMock):
     objects = {}
 
@@ -149,14 +162,15 @@ class Customer(BaseMock):
 class Subscription(BaseMock):
     objects = {}
 
-    def __init__(self, id, customer, items, payment_behavior):
+    def __init__(self, id, customer, items, payment_behavior, coupon=None):
         self.customer = customer
         self.status = 'active'
         self.latest_invoice = self.create_invoice(customer, items)
         items = [{'price': item['price'], 'subscription':id} for item in items]
         items = {'data': items}
         super().__init__(
-            id=id, items=items, payment_behavior=payment_behavior
+            id=id, items=items, payment_behavior=payment_behavior,
+            coupon=coupon
         )
 
     @staticmethod

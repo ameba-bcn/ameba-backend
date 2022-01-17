@@ -114,13 +114,15 @@ def _get_stripe_subscription_id(product_id, customer_id):
     return f'{product_id}-{customer_id}'
 
 
-def _create_subscription(product_id, customer_id):
-    prices = [{'price': _get_product_price(product_id)}]
-    subscription = stripe.Subscription.create(
+def _create_subscription(customer_id, prices, coupon_id=None):
+    subscription_attrs = dict(
         customer=str(customer_id),
         items=prices,
         payment_behavior='default_incomplete'
     )
+    if coupon_id:
+        subscription_attrs['coupon'] = coupon_id
+    subscription = stripe.Subscription.create(**subscription_attrs)
     return subscription
 
 
@@ -128,18 +130,57 @@ def _create_invoice_item(customer_id, price_id):
     return stripe.InvoiceItem.create(customer=customer_id, price=price_id)
 
 
-def create_invoice(user, cart_items):
+def _get_discount_name(cart):
+    cart_discounts = cart.get_cart_items_with_discounts()
+    discounts = set(
+        d['discount'].name for d in cart_discounts if d['discount']
+    )
+    return ', '.join(discounts)
+
+
+def _get_discounts_attr(cart):
+    # Compute invoice discounts
+    amount_off = cart.base_amount - cart.amount
+    coupon_attrs = {
+        'amount_off': amount_off,
+        'name': _get_discount_name(cart),
+        'currency': 'eur',
+        'applies_to': {
+            'products': [str(iv.id) for iv in cart.item_variants.all()]
+        }
+    }
+    coupon = stripe.Coupon.create(**coupon_attrs)
+    return [{'coupon': coupon.id}]
+
+
+def _delete_discounts(discounts):
+    for discount in discounts:
+        stripe.Coupon.delete(discount['coupon'])
+
+
+def _get_product_and_prices(cart):
+    products = {}
+    for item_variant in cart.item_variants.all():
+        product, price = create_or_update_product_and_price(item_variant)
+        products[product.id] = {'product': product, 'price': price}
+    return products
+
+
+def create_invoice_from_cart(cart):
     """ Only 1 subscription allowed in cart_items!!
-    :param cart_items: item variants with discounts related to same cart
-    :param user: owner of the cart
+    :param cart: cart with discounts related to same cart
     :return:
     """
+    user = cart.user
     customer = _get_or_create_customer(customer_id=user.id, name=user.username)
+    products = _get_product_and_prices(cart=cart)
+    discounts = _get_discounts_attr(cart)
     invoice_props = dict(
         customer=customer.id,
+        discounts=discounts,
         collection_method='charge_automatically'
     )
-    cart_items = list(cart_items)
+    cart_items = list(cart.get_cart_items())
     regular_items = filter(
         lambda x: x.item_variant.get_recurrence() is None, cart_items
     )
@@ -147,13 +188,15 @@ def create_invoice(user, cart_items):
         lambda x: x.item_variant.get_recurrence(), cart_items
     )
     for cart_item in regular_items:
-        price = _get_product_price(product_id=str(cart_item.item_variant.id))
+        price = products[str(cart_item.item_variant.id)]['price']
         _create_invoice_item(customer_id=customer.id, price_id=price.id)
 
     for cart_item in subscriptions:
+        product_id = str(cart_item.item_variant.id)
         subscription = _create_subscription(
-            product_id=str(cart_item.item_variant.id),
-            customer_id=customer.id
+            customer_id=customer.id,
+            prices=[{'price': products[product_id]['price']}],
+            coupon_id=discounts[0]['coupon']
         )
         invoice = stripe.Invoice.retrieve(subscription.latest_invoice)
         break
@@ -161,8 +204,9 @@ def create_invoice(user, cart_items):
         invoice = stripe.Invoice.create(**invoice_props)
 
     if invoice.status == 'draft':
-        return invoice.finalize_invoice()
+        invoice = invoice.finalize_invoice()
 
+    _delete_discounts(discounts)
     return invoice
 
 
@@ -177,18 +221,6 @@ def update_payment_method(user, payment_method_id):
 
 def get_invoice(invoice_id):
     return stripe.Invoice.retrieve(invoice_id)
-
-
-def get_or_create_invoice(cart):
-    if hasattr(cart, 'payment') and cart.payment is not None:
-        invoice_id = cart.payment.invoice['id']
-        invoice = get_invoice(invoice_id)
-    else:
-        invoice = create_invoice(
-            user=cart.user,
-            cart_items=cart.get_cart_items()
-        )
-    return invoice
 
 
 def _get_customer_payment_methods(customer_id):
@@ -234,27 +266,15 @@ def _try_to_pay(invoice, payment_method_id):
     return invoice
 
 
-def get_or_create_payment(cart):
+def create_payment_and_destroy_cart(cart):
     # If cart has changed or never checked out
     if cart.checkout_hash is None or cart.has_changed():
         raise api_exceptions.CheckoutNeeded
-    # If cart has payment but hashes doesn't match
-    if hasattr(cart, 'payment') and cart.payment and cart.checkout_hash != \
-        cart.payment.cart_hash:
-        cart.payment.delete()
-    # If cart has payment and hashes match
-    elif hasattr(cart, 'payment') and cart.payment and cart.checkout_hash ==\
-        cart.payment.cart_hash:
-        return cart.payment
-    # When payment must be created
-    invoice = get_or_create_invoice(cart) if cart.amount > 0 else None
-    payment = api_models.Payment.objects.get_or_create_payment(
+
+    invoice = create_invoice_from_cart(cart) if cart.amount > 0 else None
+    payment = api_models.Payment.objects.create_payment(
         cart=cart, invoice=invoice
     )
-
-    if payment.amount == 0:
-        if payment.close():
-            payment.refresh_from_db()
 
     return payment
 
@@ -278,10 +298,10 @@ def _get_item_variants_from_id(invoice):
 
 def _create_payment_from_invoice(invoice):
     user = _get_user_from_customer_id(invoice['customer'])
-    payment = api_models.Payment.objects.get_or_create_payment(
-        user=user, invoice=invoice
+    item_variants = _get_item_variants_from_id(invoice)
+    payment = api_models.Payment.objects.create_payment(
+        user=user, invoice=invoice, item_variants=item_variants
     )
-    payment.item_variants.add(*_get_item_variants_from_id(invoice))
     return payment
 
 
@@ -331,3 +351,4 @@ def get_user_stored_cards(user):
         brand = card['card']['brand']
         card_data.append(dict(exp=exp, last4=last4, brand=brand, id=card_id))
     return card_data
+
