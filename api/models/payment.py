@@ -17,6 +17,7 @@ class PaymentManager(models.Manager):
     @staticmethod
     def create_payment(user, cart, invoice):
         from api.serializers.cart import CartSerializer
+        user = cart.user if hasattr(cart, 'user') and cart.user else user
         payment_attrs = dict(
             cart=cart,
             user=user,
@@ -32,14 +33,10 @@ class PaymentManager(models.Manager):
             for cart_item in cart.get_cart_items():
                 payment.item_variants.add(cart_item.item_variant)
 
-        return payment
+        if payment.close():
+            payment.refresh_from_db()
 
-    def get_or_create_payment(self, user=None, cart=None, invoice=None):
-        if hasattr(cart, 'payment') and cart.payment is not None:
-            return cart.payment
-        else:
-            user = cart.user if hasattr(cart, 'user') and cart.user else user
-            return self.create_payment(user, cart, invoice)
+        return payment
 
 
 class Payment(models.Model):
@@ -57,6 +54,7 @@ class Payment(models.Model):
     invoice_id = models.CharField(max_length=128, null=True)
     payment_intent_id = models.CharField(max_length=128, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
+    processed = models.BooleanField(default=False)
     item_variants = models.ManyToManyField(
         to='ItemVariant', related_name='payments', blank=False
     )
@@ -155,13 +153,17 @@ class Payment(models.Model):
         :return: True/False if the payment was successful or not.
         """
         self.update_details()
-        if self.status == 'paid':
+
+        if self.cart:
+            self.detach_cart()
+
+        if self.status == 'paid' and not self.processed:
             items_signals.items_acquired.send(sender=self.__class__, payment=self)
             if self.amount > 0:
                 payment_closed.send(sender=self.__class__, payment=self)
-            if self.cart:
-                self.detach_cart()
             self.item_variants.clear()
+            self.processed = True
+            self.save()
             return True
         return False
 

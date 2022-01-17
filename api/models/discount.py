@@ -4,6 +4,7 @@ from datetime import date, timedelta
 
 from django.utils.translation import gettext_lazy as _
 from django.db import models
+import django.core.validators as validators
 
 
 MAX_CODE_GEN_RETRIES = 1000
@@ -38,7 +39,9 @@ class Discount(models.Model):
         verbose_name_plural = _('Discounts')
 
     name = models.CharField(max_length=25, verbose_name=_('name'))
-    value = models.IntegerField(verbose_name=_('Value (%)'))
+    value = models.IntegerField(verbose_name=_('Value (%)'), validators=[
+        validators.MaxValueValidator(100), validators.MinValueValidator(0)
+    ])
     items = models.ManyToManyField(
         to='Item', related_name='discounts', verbose_name=_('items')
     )

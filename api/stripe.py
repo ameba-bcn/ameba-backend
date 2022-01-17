@@ -128,18 +128,24 @@ def _create_invoice_item(customer_id, price_id):
     return stripe.InvoiceItem.create(customer=customer_id, price=price_id)
 
 
-def create_invoice(user, cart_items):
+def create_invoice_from_cart(cart):
     """ Only 1 subscription allowed in cart_items!!
-    :param cart_items: item variants with discounts related to same cart
-    :param user: owner of the cart
+    :param cart: cart with discounts related to same cart
     :return:
     """
+    user = cart.user
     customer = _get_or_create_customer(customer_id=user.id, name=user.username)
+
+    # Compute invoice discounts
+    c_dis = cart.get_cart_items_with_discounts()
+    discounts = [d['discount'].id for d in c_dis if d['discount']]
+
     invoice_props = dict(
         customer=customer.id,
+        discounts=discounts,
         collection_method='charge_automatically'
     )
-    cart_items = list(cart_items)
+    cart_items = list(cart.get_cart_items())
     regular_items = filter(
         lambda x: x.item_variant.get_recurrence() is None, cart_items
     )
@@ -177,18 +183,6 @@ def update_payment_method(user, payment_method_id):
 
 def get_invoice(invoice_id):
     return stripe.Invoice.retrieve(invoice_id)
-
-
-def get_or_create_invoice(cart):
-    if hasattr(cart, 'payment') and cart.payment is not None:
-        invoice_id = cart.payment.invoice['id']
-        invoice = get_invoice(invoice_id)
-    else:
-        invoice = create_invoice(
-            user=cart.user,
-            cart_items=cart.get_cart_items()
-        )
-    return invoice
 
 
 def _get_customer_payment_methods(customer_id):
@@ -234,27 +228,15 @@ def _try_to_pay(invoice, payment_method_id):
     return invoice
 
 
-def get_or_create_payment(cart):
+def create_payment_and_destroy_cart(cart):
     # If cart has changed or never checked out
     if cart.checkout_hash is None or cart.has_changed():
         raise api_exceptions.CheckoutNeeded
-    # If cart has payment but hashes doesn't match
-    if hasattr(cart, 'payment') and cart.payment and cart.checkout_hash != \
-        cart.payment.cart_hash:
-        cart.payment.delete()
-    # If cart has payment and hashes match
-    elif hasattr(cart, 'payment') and cart.payment and cart.checkout_hash ==\
-        cart.payment.cart_hash:
-        return cart.payment
-    # When payment must be created
-    invoice = get_or_create_invoice(cart) if cart.amount > 0 else None
-    payment = api_models.Payment.objects.get_or_create_payment(
+
+    invoice = create_invoice_from_cart(cart) if cart.amount > 0 else None
+    payment = api_models.Payment.objects.create_payment(
         cart=cart, invoice=invoice
     )
-
-    if payment.amount == 0:
-        if payment.close():
-            payment.refresh_from_db()
 
     return payment
 
@@ -278,7 +260,7 @@ def _get_item_variants_from_id(invoice):
 
 def _create_payment_from_invoice(invoice):
     user = _get_user_from_customer_id(invoice['customer'])
-    payment = api_models.Payment.objects.get_or_create_payment(
+    payment = api_models.Payment.objects.create_payment(
         user=user, invoice=invoice
     )
     payment.item_variants.add(*_get_item_variants_from_id(invoice))
@@ -332,3 +314,65 @@ def get_user_stored_cards(user):
         card_data.append(dict(exp=exp, last4=last4, brand=brand, id=card_id))
     return card_data
 
+
+def _get_discount_variants(discount):
+    for item in discount.items.all():
+        for item_variant in item.item_variants.all():
+            yield item_variant
+
+
+def _sync_discount_products(discount):
+    for item_variant in _get_discount_variants(discount):
+        _get_or_create_product(str(item_variant.id), item_variant.name)
+
+
+def _create_coupon(discount):
+    coupon_attrs = {
+        'id': discount.id,
+        'percent_off': discount.value,
+        'applies_to': {
+            'products': [str(iv.id) for iv in _get_discount_variants(discount)]
+        }
+    }
+    try:
+        return stripe.Coupon.create(**coupon_attrs)
+    except stripe.error.InvalidRequestError:
+        _sync_discount_products(discount)
+
+    return stripe.Coupon.create(**coupon_attrs)
+
+
+def _get_update_coupon(discount):
+    coupon = stripe.Coupon.retrieve(str(discount.id))
+    to_update = {}
+
+    if coupon['percent_off'] != discount.value:
+        to_update['percent_off'] = discount.value
+
+    products = [str(iv.id) for iv in _get_discount_variants(discount)]
+    if 'applies_to' not in coupon or 'products' not in coupon['applies_to']:
+        to_update['applies_to'] = dict(products=products)
+
+    if coupon['applies_to']['products'] != products:
+        to_update['applies_to'] = dict(products=products)
+
+    if to_update:
+        coupon = coupon.update(update_dict=to_update)
+
+    return coupon
+
+
+def get_create_update_discount(discount):
+    try:
+        coupon = _get_update_coupon(discount)
+    except stripe.error.InvalidRequestError:
+        coupon = _create_coupon(discount)
+
+    return coupon
+
+
+def delete_discount(discount):
+    try:
+        stripe.Coupon.delete(id=str(discount.id))
+    except stripe.error.InvalidRequestError:
+        pass

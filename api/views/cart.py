@@ -76,7 +76,7 @@ class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        payment = stripe.get_or_create_payment(cart)
+        payment = stripe.create_payment_and_destroy_cart(cart)
         serializer_class = self.get_serializer_class()
         payment_data = serializer_class(payment).data
         return response.Response(payment_data)

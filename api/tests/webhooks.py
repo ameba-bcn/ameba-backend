@@ -32,7 +32,7 @@ class TestStripeWebhooks(helpers.BaseTest):
         )
         cart = cart_helpers.get_cart(user=user, item_variants=[1, 2, 3])
         cart.checkout()
-        payment = stripe.get_or_create_payment(cart)
+        payment = stripe.create_payment_and_destroy_cart(cart)
 
         # Check payment status
         self.assertEqual(payment.status, 'open')
@@ -210,7 +210,7 @@ class TestStripeWebhooks(helpers.BaseTest):
         cart = cart_helpers.get_cart(user=member.user)
         cart.item_variants.add(subs_pro_iv)
         cart.checkout()
-        payment = stripe.get_or_create_payment(cart)
+        payment = stripe.create_payment_and_destroy_cart(cart)
         # Check payment status
         self.assertEqual(payment.status, 'open')
 
