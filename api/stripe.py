@@ -114,13 +114,15 @@ def _get_stripe_subscription_id(product_id, customer_id):
     return f'{product_id}-{customer_id}'
 
 
-def _create_subscription(customer_id, prices, coupon_id):
-    subscription = stripe.Subscription.create(
+def _create_subscription(customer_id, prices, coupon_id=None):
+    subscription_attrs = dict(
         customer=str(customer_id),
         items=prices,
-        payment_behavior='default_incomplete',
-        coupon=coupon_id
+        payment_behavior='default_incomplete'
     )
+    if coupon_id:
+        subscription_attrs['coupon'] = coupon_id
+    subscription = stripe.Subscription.create(**subscription_attrs)
     return subscription
 
 
