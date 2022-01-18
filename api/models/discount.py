@@ -108,7 +108,7 @@ class DiscountCode(models.Model):
     code = models.CharField(
         max_length=6, default=get_random_code,
         primary_key=True, verbose_name=_('code'))
-    user = models.ForeignKey(to='User', on_delete=models.CASCADE,
+    user = models.ForeignKey(to='User', on_delete=models.CASCADE, null=True,
                              blank=True, verbose_name=_('user'))
     discount = models.ForeignKey(to='Discount',
                                  on_delete=models.CASCADE,
