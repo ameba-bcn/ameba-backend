@@ -2,6 +2,10 @@
 
 ### Release notes
 
+#### 1.8.1
+- AW-333: bugfix - Payment.status read on the fly from stripe caused problems
+- AW-338: bugfix - Coupon 0 is not allowed in stripe
+
 #### 1.8
 - AW-335: Discounts integration with stripe
 
