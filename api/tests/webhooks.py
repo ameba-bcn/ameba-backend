@@ -37,7 +37,8 @@ class TestStripeWebhooks(helpers.BaseTest):
         # Check payment status
         self.assertEqual(payment.status, 'open')
 
-        invoice = payment.invoice
+        invoice = stripe.find_invoice(payment.invoice_id)
+        invoice.status = 'paid'
         response = stripe_mock.mock_stripe_succeeded_payment(
             self.client, self.DETAIL_ENDPOINT, invoice
         )
@@ -220,7 +221,8 @@ class TestStripeWebhooks(helpers.BaseTest):
         # )
 
         # Send webhook
-        invoice = payment.invoice
+        invoice = stripe.find_invoice(payment.invoice_id)
+        invoice.status = 'paid'
         response = stripe_mock.mock_stripe_succeeded_payment(
             self.client, self.DETAIL_ENDPOINT, invoice
         )

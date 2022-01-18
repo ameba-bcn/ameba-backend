@@ -18,11 +18,25 @@ class PaymentManager(models.Manager):
     def create_payment(user=None, cart=None, invoice=None, item_variants=None):
         from api.serializers.cart import CartSerializer
         user = cart.user if hasattr(cart, 'user') and cart.user else user
+
+        if invoice:
+            details = {
+                'invoice': dict(invoice),
+                'payment_intent': dict(
+                    api_stripe.get_payment_intent(invoice['payment_intent'])
+                )
+            }
+            invoice_id = invoice['id']
+        else:
+            details = None
+            invoice_id = None
+
         payment_attrs = dict(
             cart=cart,
             user=user,
             cart_record=CartSerializer(instance=cart).data if cart else None,
-            details={'invoice': dict(invoice)} if invoice else None
+            invoice_id=invoice_id,
+            details=details
         )
         if cart:
             payment_attrs['id'] = cart.id
@@ -52,6 +66,7 @@ class Payment(models.Model):
                                 related_name='payment')
     cart_record = models.JSONField(verbose_name=_('cart record'), null=True)
     details = models.JSONField(verbose_name=_('invoice'), null=True)
+    invoice_id = models.CharField(max_length=128, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     processed = models.BooleanField(default=False)
     item_variants = models.ManyToManyField(
@@ -113,8 +128,14 @@ class Payment(models.Model):
         """ Stripe's payment intent.
         :return: payment_intent or None
         """
-        if self.invoice and 'payment_intent' in self.invoice:
-            return self.invoice['payment_intent']
+        det = self.details
+        if det and 'payment_intent' in det and det['payment_intent']:
+            return self.details['payment_intent']
+
+    @property
+    def payment_intent_id(self):
+        if self.payment_intent:
+            return self.payment_intent['id']
 
     @property
     def client_secret(self):
@@ -124,11 +145,6 @@ class Payment(models.Model):
         """
         if payment_intent := self.payment_intent:
             return payment_intent['client_secret']
-
-    @property
-    def payment_method_id(self):
-        if self.invoice and 'payment_method' in self.invoice:
-            return self.invoice['payment_method']
 
     @property
     def invoice(self):
@@ -142,14 +158,17 @@ class Payment(models.Model):
         be added here.
         :return:
         """
-        if self.invoice:
-            invoice = api_stripe.find_invoice(self.invoice['id'])
-            if not invoice:
-                return
-            details = self.details is self.details or {}
-            details['invoice'] = dict(invoice)
-            self.details = details
-            self.save()
+        if not self.details or 'invoice' not in self.details:
+            return
+        invoice = api_stripe.find_invoice(self.invoice['id'])
+        if not invoice or not invoice['payment_intent']:
+            return
+        pi = api_stripe.get_payment_intent(invoice['payment_intent'])
+        details = self.details if self.details else {}
+        details['invoice'] = dict(invoice)
+        details['payment_intent'] = dict(pi)
+        self.details = details
+        self.save()
 
     def close(self):
         """ At this point, payment is expected to be done. Otherwise,
