@@ -141,6 +141,9 @@ def _get_discount_name(cart):
 def _get_discounts_attr(cart):
     # Compute invoice discounts
     amount_off = cart.base_amount - cart.amount
+    if amount_off <= 0:
+        return None
+
     coupon_attrs = {
         'amount_off': amount_off,
         'name': _get_discount_name(cart),
@@ -196,7 +199,7 @@ def create_invoice_from_cart(cart):
         subscription = _create_subscription(
             customer_id=customer.id,
             prices=[{'price': products[product_id]['price']}],
-            coupon_id=discounts[0]['coupon']
+            coupon_id=discounts[0]['coupon'] if discounts else None
         )
         invoice = stripe.Invoice.retrieve(subscription.latest_invoice)
         break
@@ -206,7 +209,8 @@ def create_invoice_from_cart(cart):
     if invoice.status == 'draft':
         invoice = invoice.finalize_invoice()
 
-    _delete_discounts(discounts)
+    if discounts:
+        _delete_discounts(discounts)
     return invoice
 
 
@@ -219,8 +223,11 @@ def update_payment_method(user, payment_method_id):
     _attach_payment_method(customer.id, payment_method_id)
 
 
-def get_invoice(invoice_id):
-    return stripe.Invoice.retrieve(invoice_id)
+def find_invoice(invoice_id):
+    try:
+        return stripe.Invoice.retrieve(invoice_id)
+    except stripe.error.InvalidRequestError:
+        return None
 
 
 def _get_customer_payment_methods(customer_id):

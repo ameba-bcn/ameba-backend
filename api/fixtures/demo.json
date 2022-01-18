@@ -1727,7 +1727,7 @@
     "name": "Descuento socios",
     "value": 5,
     "need_code": false,
-    "number_of_uses": -1,
+    "is_single_use": false,
     "items": [
       1
     ],
