@@ -65,8 +65,8 @@ AUTH_USER_MODEL = 'api.User'
 
 # Application definition
 INSTALLED_APPS = [
+    'api',
     'modeltranslation',
-    'api.apps.ApiConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -102,7 +102,7 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates/')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -113,6 +113,11 @@ TEMPLATES = [
             ],
         },
     },
+]
+
+TEMPLATE_LOADERS = [
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader'
 ]
 
 WSGI_APPLICATION = 'backend.wsgi.application'
