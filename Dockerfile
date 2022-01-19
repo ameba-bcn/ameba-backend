@@ -9,16 +9,16 @@ RUN apt-get -y install gettext
 WORKDIR /src
 
 
-COPY . .
-#COPY background-tasks/cron /etc/cron.d/cron
-
-#RUN chmod 0644 /etc/cron.d/cron
-#RUN crontab /etc/cron.d/cron
-#RUN touch /src/cron.log
-
+COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt --upgrade
+
+COPY api api
+COPY backend backend
+COPY templates templates
+COPY tmp tmp
+COPY manage.py manage.py
+
 RUN python manage.py compilemessages
-RUN python manage.py collectstatic --noinput
 
 EXPOSE 8000
 
