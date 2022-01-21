@@ -1,0 +1,35 @@
+{% extends 'admin/base_site.html' %}
+{% load static %}
+
+{% block branding %}
+{% block extrastyle %}{{ block.super }}
+<style>
+:root {
+  --primary: #343a40;
+  --secondary: #343a40;
+  --link-fg: #151515;
+  --link-selected-fg: #e74c3c;
+    h1{
+  color: #000;
+}
+.module h2, .module caption, .inline-group h2{
+  background: #aabbdd;
+  color: #000;
+  height: 40px;
+}
+a.section:link{
+  color: #000;
+}
+a:link{
+  color: #000;
+}
+</style>
+{% endblock extrastyle %}
+
+
+<img src="{% static 'ameba-logo.png' %}" alt="logo">
+{#<h1>#}
+{#Ameba Admin Site#}
+{#</h1>#}
+
+{% endblock branding %}

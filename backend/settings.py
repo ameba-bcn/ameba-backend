@@ -83,7 +83,8 @@ INSTALLED_APPS = [
     'django_extensions',
     'background_task',
     'naomi',
-    'localflavor'
+    'localflavor',
+    'django_non_dark_admin'
 ]
 
 MIDDLEWARE = [
@@ -305,3 +306,5 @@ TEST_MAILING_LIST_PREFIXES = ['test', 'dev', 'stag', 'sand', 'debug', 'local']
 TEST_TEMPLATE = 'unsubscribe.test'
 
 EMAIL_FILE_PATH = "/src/emails"
+
+DISABLE_DARK_MODE = True

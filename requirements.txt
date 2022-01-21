@@ -22,3 +22,4 @@ django-localflavor
 qrcode[pil]
 pdfkit
 weasyprint
+django-non-dark-admin
