@@ -229,6 +229,7 @@ EMAIL_BACKEND = env(
     'django.core.mail.backends.smtp.EmailBackend',
     var_type='string'
 )
+EMAIL_BACKEND = EMAIL_BACKEND or 'django.core.mail.backends.smtp.EmailBackend'
 
 MG_API_KEY = os.getenv('MG_SENDING_KEY', '')
 MG_TRACKING_KEY = os.getenv('MG_TRACKING_KEY') or MG_API_KEY
