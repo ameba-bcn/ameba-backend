@@ -31,9 +31,9 @@ urlpatterns = [
     path('api/', include(urls))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-admin.site.site_header = _("AMEBA Admin Site")
-admin.site.site_title = _("AMEBA Admin")
-admin.site.index_title = _("AMEBA Admin")
+# admin.site.site_header = _("AMEBA Admin Site")
+# admin.site.site_title = _("AMEBA Admin")
+# admin.site.index_title = _("AMEBA Admin")
 
 urlpatterns += i18n_patterns(
     path('admin/', admin.site.urls)
@@ -63,3 +63,4 @@ if settings.DEBUG:
            name='schema-swagger-ui'
        )
     ]
+
