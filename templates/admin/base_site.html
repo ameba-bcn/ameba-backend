@@ -1,0 +1,86 @@
+{% extends 'admin/base_site.html' %}
+{% load static %}
+
+{% block title %}AMEBA admin{% endblock %}
+
+{% block branding %}
+{% block extrastyle %}{{ block.super }}
+{#    <link rel='stylesheet' href='{% static 'admin_sytle_test.css' %}'>#}
+<style>
+
+@font-face {
+    font-family: 'ameba';
+    src: url("/static/fonts/BebasNeueRegular.woff") format('woff');
+}
+
+:root {
+    --ameba-orange: #eb5e3e;
+    --ameba-black: #1d1d1b;
+    --ameba-white: #ffffff;
+    --ameba-yellow: #f2c571;
+    --ameba-soft: #fae6c5;
+    --ameba-accent: #c9c9c9;
+    --ameba-lines: var(--ameba-white);
+
+    --body-fg: var(--ameba-black);
+    --body-quiet-color: var(--ameba-black);
+    --hairline-color: var(--ameba-lines);
+    --header-bg: var(--ameba-black);
+    --body-bg: var(--ameba-white);
+    --primary: var(--ameba-black);
+    --darkened-bg: var(--ameba-accent);
+    --header-link-color: var(--ameba-soft);
+    --header-color: var(--ameba-soft);
+    --selected-row: var(--ameba-soft);
+    --link-fg: var(--ameba-black);
+    --breadcrumbs-link-fg: var(--ameba-white);
+    --breadcrumbs-fg: var(--ameba-soft);
+    --link-hover-color: var(--ameba-soft);
+    --default-button-bg: var(--ameba-orange);
+    --default-button-hover-bg: var(--ameba-yellow);
+    --button-hover-bg: var(--ameba-yellow);
+}
+
+#header {
+    font-family: ameba;
+}
+
+#user-tools {
+    font-size: 1.2rem;
+}
+
+#user-tools a:hover {
+    color: var(--ameba-white);
+}
+
+.addlink {
+    padding-left: 16px;
+    background: url(/media/icons/icon-addlink.svg) 0 1px no-repeat;
+}
+
+#content-related .module {
+    color: var(--ameba-black);
+}
+
+#content-related .module h2 {
+    color: var(--ameba-black);
+}
+
+#header .title {
+    font-size: 2.5rem;
+    vertical-align: sub;
+    color: var(--ameba-soft);
+}
+
+</style>
+{% endblock extrastyle %}
+
+<h1 class="title">
+    <img src="{% static 'ameba-logo.png' %}" alt="logo" height="50">
+    AMEBA ADMIN
+</h1>
+
+{% endblock branding %}
+
+{% block welcome-msg %}
+{% endblock %}

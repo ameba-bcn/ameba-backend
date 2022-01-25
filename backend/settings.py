@@ -65,8 +65,8 @@ AUTH_USER_MODEL = 'api.User'
 
 # Application definition
 INSTALLED_APPS = [
+    'api',
     'modeltranslation',
-    'api.apps.ApiConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -83,7 +83,8 @@ INSTALLED_APPS = [
     'django_extensions',
     'background_task',
     'naomi',
-    'localflavor'
+    'localflavor',
+    'django_non_dark_admin'
 ]
 
 MIDDLEWARE = [
@@ -102,7 +103,7 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates/')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -113,6 +114,11 @@ TEMPLATES = [
             ],
         },
     },
+]
+
+TEMPLATE_LOADERS = [
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader'
 ]
 
 WSGI_APPLICATION = 'backend.wsgi.application'
@@ -301,3 +307,5 @@ TEST_MAILING_LIST_PREFIXES = ['test', 'dev', 'stag', 'sand', 'debug', 'local']
 TEST_TEMPLATE = 'unsubscribe.test'
 
 EMAIL_FILE_PATH = "/src/emails"
+
+DISABLE_DARK_MODE = True
