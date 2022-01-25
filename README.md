@@ -1,6 +1,12 @@
-# ameba backend v1.8.1
+# ameba backend v1.9
 
 ### Release notes
+
+#### 1.9
+- Added new admin look and feel
+- AW-340: Erro al crear un usuario nuevo -> Importante añadir 
+  EMAIL_BACKEND="django.core.mail.backends.smtp.EmailBackend" en .env para 
+  entornos locales.
 
 #### 1.8.1
 - AW-333: bugfix - Payment.status read on the fly from stripe caused problems
