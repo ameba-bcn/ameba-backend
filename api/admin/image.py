@@ -5,7 +5,7 @@ from api.models import Image
 
 def get_image_preview(image, size=150):
     return mark_safe(
-        f'<img src="{image.url}" width="{size}" height="{size}" />'
+        f'<img src="{image.url}" height="{size}" />'
     )
 
 
