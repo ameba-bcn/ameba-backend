@@ -33,7 +33,7 @@ class CartItemTabular(admin.TabularInline):
 
 
 class CartAdmin(admin.ModelAdmin):
-    search_fields = ('user', )
+    search_fields = ('user__email', 'user__username')
     list_display_links = ('user',)
     list_display = ('user', 'id')
     fieldsets = [
