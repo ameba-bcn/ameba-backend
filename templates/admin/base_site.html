@@ -3,6 +3,11 @@
 
 {% block title %}AMEBA admin{% endblock %}
 
+{% block extrahead %}
+    <link rel="icon" href="{% static 'logos/ameba-logo.ico'%}" sizes="48x48" />
+{% endblock %}
+
+
 {% block branding %}
 {% block extrastyle %}{{ block.super }}
 {#    <link rel='stylesheet' href='{% static 'admin_sytle_test.css' %}'>#}
@@ -19,6 +24,7 @@
     --ameba-white: #ffffff;
     --ameba-yellow: #f2c571;
     --ameba-soft: #fae6c5;
+    --ameba-dark: #ad9f88;
     --ameba-accent: #c9c9c9;
     --ameba-lines: var(--ameba-white);
 
@@ -39,6 +45,7 @@
     --default-button-bg: var(--ameba-orange);
     --default-button-hover-bg: var(--ameba-yellow);
     --button-hover-bg: var(--ameba-yellow);
+    --selected-bg: var(--ameba-yellow);
 }
 
 
