@@ -2,6 +2,11 @@
 
 ### Release notes
 
+#### 1.10
+- AW-346: Improved column selection colors in admin panel
+- AW-346: Added favicon to admin panel
+- AW-342: Fixed search in admin cart menu
+
 #### 1.9
 - Added new admin look and feel
 - AW-340: Erro al crear un usuario nuevo -> Importante añadir 
