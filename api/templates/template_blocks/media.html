@@ -1,28 +1,29 @@
 {% load i18n %}
+{% load static %}
 <td>
     <table>
         <tr>
             <td>
                 <a href="https://es-es.facebook.com/amebabarcelona">
-                    <img src="{{ protocol }}://{{ site_name }}/media/icons/facebook.png"
+                    <img src="{{ protocol }}://{{ site_name }}/{% static 'icons/facebook.png' %}"
                          alt="facebook-icon">
                 </a>
             </td>
             <td>
                 <a href="https://www.instagram.com/ameba_bcn">
-                    <img src="{{ protocol }}://{{ site_name }}/media/icons/instagram.png"
+                    <img src="{{ protocol }}://{{ site_name }}/{% static 'icons/instagram.png' %}"
                          alt="instagram-icon">
                 </a>
             </td>
             <td>
                 <a href="https://twitter.com/ameba_bcn?lang=es">
-                    <img src="{{ protocol }}://{{ site_name }}/media/icons/twitter.png"
+                    <img src="{{ protocol }}://{{ site_name }}/{% static 'icons/twitter.png' %}"
                          alt="twitter-icon">
                 </a>
             </td>
             <td>
                 <a href="https://www.youtube.com/channel/UCH5ssfBCmgJ1IDM-pSn2cEg">
-                    <img src="{{ protocol }}://{{ site_name }}/media/icons/youtube.png"
+                    <img src="{{ protocol }}://{{ site_name }}/{% static 'icons/youtube.png' %}"
                          alt="youtube-icon">
                 </a>
             </td>
