@@ -1,9 +1,7 @@
 {% load static %}
 <td>
    <a href="{{ protocol }}://{{ site_name }}/">
-        <img src="{{ protocol }}://{{ site_name }}/media/logo/ameba-full-logo.png"
+        <img src="{{ protocol }}://{{ site_name }}/{% static 'logos/ameba-full-logo.png' %}"
              alt="ameba-full-logo">
-{#        <img src="{{ protocol }}://{{ site_name }}/media/logo/ameba-name.png"#}
-{#             alt="ameba-logo">#}
     </a>
 </td>
