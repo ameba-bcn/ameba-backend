@@ -70,7 +70,8 @@ def perform_request(method, endpoint, attributes=None):
 @background(schedule=0)
 def single_async_request(method, endpoint, attributes=None):
     response = perform_request(method, endpoint, attributes)
-    response.raise_for_exceptions()
+    if response:
+        response.raise_for_exceptions()
 
 
 def list_members():
