@@ -133,7 +133,7 @@ dmypy.json
 .idea
 */.idea/*
 *.DS_Store
-static/
+/static/
 
 .tmp/qr/*
 .tmp/pdf/*

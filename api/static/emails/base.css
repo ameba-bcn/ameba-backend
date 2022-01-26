@@ -184,7 +184,7 @@ a {
 .marquee td {
     height: 30px;
     /* Property overwritten in template as inlinecss doesn't resolve relative paths and can not use variables in css. */
-    /*background-image: url("/media/icons/marquee.gif");*/
+    /*background-image: url("/static/icons/marquee.gif");*/
     background-position: center;
 }
 .clickable-marquee {
