@@ -3,16 +3,14 @@
 {% blocktrans %}¡Hola {{ user_name }}!{% endblocktrans %}
 
 {% blocktrans %}
-    Acabas de registrarte en {{ site_name }}, la web
-de L'Associació de Musica Electrònica de Barcelona.
+Acabas de registrarte en la web de AMEBA.
 {% endblocktrans %}
 
 {% blocktrans %}
-Por favor, haz click en el siguiente link para activar tu cuenta.
+Por favor, haz click en el siguiente enlace para activar tu cuenta.
 {% endblocktrans %}
 
-    {{ protocol }}://{{ site_name }}/ameba-site/activate/?token={{activation_token }}
-
+{{ protocol }}://{{ site_name }}/ameba-site/activate/?token={{activation_token }}
 
 L'Associació de Musica Electrònica de Barcelona
 
