@@ -4,13 +4,12 @@
 
 {% blocktrans %}
 Te has suscrito a la newsletter de AMEBA. Te enviaremos información sobre
-conciertos, tallers y otros eventos relacionados con la asociación.
+conciertos, formaciones y otros eventos relacionados con la asociación.
 {% endblocktrans %}
 
 {% blocktrans %}
-    Puedes dejar de recibir newsletters en cualquier momento
-    haciendo click en el botón de UNSUBSCRIBE que encontrarás en
-    cualquiera de ellas.
+Puedes dejar de recibir nuestras newsletters en cualquier momento haciendo
+clic en el botón UNSUBSCRIBE que encontrarás en cualquiera de ellas.
 {% endblocktrans %}
 
 

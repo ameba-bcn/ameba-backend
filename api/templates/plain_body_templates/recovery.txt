@@ -5,10 +5,10 @@
 {% endblocktrans %}
 
 {% blocktrans %}
-Para cambiar tu password en {{ site_name }}, click en el siguiente link:
-
-    {{ protocol }}://{{ site_name }}/ameba-site/recovery/?token={{ recovery_token }}
+Para cambiar tu password en {{ site_name }} haz click en el siguiente link.
 {% endblocktrans %}
+{{ protocol }}://{{ site_name }}/ameba-site/recovery/?token={{ recovery_token }}
+
 
 L'Associació de Musica Electrònica de Barcelona
 
