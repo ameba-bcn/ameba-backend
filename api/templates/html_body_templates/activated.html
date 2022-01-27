@@ -10,20 +10,19 @@
     <h1>{% blocktrans with user_name=user.username|upper %}¡BIENVENIDO {{ user_name }}!{% endblocktrans %}</h1>
     <p>
         {% blocktrans %}
-            Ya puedes usar tu cuenta en {{ site_name }}
+Ya puedes usar tu cuenta en {{ site_name }}
         {% endblocktrans %}
     </p>
     <p>
         {% blocktrans %}
-            Entérate de todos nuestros talleres, conciertos, entrevistas y
-            más en {{ site_name }}
+Entérate de todos nuestros talleres, eventos, entrevistas y más en
+{{ site_name }}
         {% endblocktrans %}
     </p>
     <p>
         {% blocktrans %}
-            Para formar parte de la asociación, colaborar con nosotros y
-            beneficiarte de descuentos, hazte socio <a href="
-            {{ protocol }}://{{ site_name }}/{{ new_member_page }}">aquí</a>
+Para formar parte de la asociación, colaborar con nosotros y beneficiarte de
+descuentos, hazte soci@ <a href="{{ protocol }}://{{ site_name }}/{{ new_member_page }}">aquí</a>
         {% endblocktrans %}
     </p>
 </td>
