@@ -9,20 +9,27 @@
 <td>
     <h1>
         {% blocktrans with user_name=user.username|upper %}
-            ¡GRACIAS {{ user_name }}, TU PEDIDO SE HA PROCESADO CORRECTAMENTE!
+¡GRACIAS {{ user_name }}, TU PEDIDO SE HA REALIZADO CORRECTAMENTE!
         {% endblocktrans %}
     </h1>
     <p>
         {% blocktrans %}
-            Te recordamos que actualmente no hacemos envíos. Para recogerlo
-            puedes dirigirte a <a href="https://goo.gl/maps/RSAfNpoG8zjhSMNF9">
-            RHYTHM CONTROL</a> de lunes a viernes de 15 a 20, o sábados de
-            12 a 20.
+Te recordamos que actualmente no hacemos envíos. Para recogerlo puedes
+dirigirte a RHYTHM CONTROL de lunes a viernes de 15h a 20h, o sábados de 12h
+a 20h. Te avisaremos cuando tu pedido esté listo para recoger.
         {% endblocktrans %}
     </p>
     <p>
         {% blocktrans %}
-            A continuación encontrarás los detalles del pedido.
+Rhythm Control: Galerías Olimpia
+<a href="https://goo.gl/maps/RSAfNpoG8zjhSMNF9">
+    (Ronda de Sant Pau, 17, 08015 Barcelona)
+</a>
+        {% endblocktrans %}
+    </p>
+    <p>
+        {% blocktrans %}
+A continuación encontrarás los detalles del pedido.
         {% endblocktrans %}
     </p>
     <table class="checkout-summary">

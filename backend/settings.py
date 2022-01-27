@@ -309,3 +309,6 @@ TEST_TEMPLATE = 'unsubscribe.test'
 EMAIL_FILE_PATH = "/src/emails"
 
 DISABLE_DARK_MODE = True
+
+
+NEW_MEMBER_PAGE = env('NEW_MEMBER_PAGE', 'soci', 'string')

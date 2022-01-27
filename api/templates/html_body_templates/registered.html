@@ -10,14 +10,13 @@
     <h1>{% blocktrans with user_name=user.username|upper %}¡HOLA {{ user_name }}!{% endblocktrans %}</h1>
     <p>
         {% blocktrans %}
-            Acabas de registrarte en <a href="{{ site_name }}">{{ site_name }}</a>, la web
-            de L'Associació de Musica Electrònica de Barcelona.
+Acabas de registrarte en la web de<a href="{{ site_name }}">AMEBA</a>.
         {% endblocktrans %}
     </p>
     <p>
         {% blocktrans %}
-            Por favor, haz click <a href="{{ protocol }}://{{ site_name }}/ameba-site/activate/?token={{ activation_token }}">aquí</a> para
-            activar tu cuenta.
+Por favor, haz click <a href="{{ protocol }}://{{ site_name }}/ameba-site/activate/?token={{ activation_token }}">aquí</a> para
+activar tu cuenta.
         {% endblocktrans %}
     </p>
 </td>

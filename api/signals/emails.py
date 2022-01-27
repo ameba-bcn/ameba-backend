@@ -38,7 +38,7 @@ def on_account_activated(sender, user, request, **kwargs):
         user=user,
         site_name=shortcuts.get_current_site(request),
         protocol=request.is_secure() and 'https' or 'http',
-        new_member_page=''
+        new_member_page=settings.NEW_MEMBER_PAGE
     )
 
 
@@ -88,7 +88,8 @@ def on_failed_renewal(sender, user, subscription, **kwargs):
         user=user,
         subscription=subscription,
         site_name=settings.HOST_NAME,
-        protocol=settings.DEBUG and 'http' or 'https'
+        protocol=settings.DEBUG and 'http' or 'https',
+        new_member_page=settings.NEW_MEMBER_PAGE
     )
 
 

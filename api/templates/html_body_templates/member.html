@@ -10,16 +10,38 @@
     <h1>{% blocktrans with user_name=user.username|upper %}¡BIENVENIDO {{ user_name }}!{% endblocktrans %}</h1>
     <p>
         {% blocktrans with subscription=subscription.name|upper %}
-            ¡Ya eres {{ subscription }} de AMEBA!
+¡Ya eres SOCI@ {{ subscription }} de AMEBA!
         {% endblocktrans %}
     </p>
     <p>
-        {{ subscription.description }}
+{% blocktrans %}
+Puedes comunicarte con nosotres a través del e-mail socis@ameba.cat.
+{% endblocktrans %}
     </p>
 
+{%  if 'pro' in subscription.name %}
     <p>
         {% blocktrans %}
-            Encontrarás tu carnet digital de socio adjunto en PDF a este correo.
+Recuerda que como SOCI@ PRO tienes descuentos en formaciones y eventos
+organizados por la asociación, descuentos en tiendas y escuelas; y
+actividades gratuitas. En nuestra web puedes ver todas las actividades de la
+asociación. Te animamos a que nos envíes información acerca de tus
+proyectos, intereses o inquietudes, así como sugerencias.
+        {% endblocktrans %}
+    </p>
+{% elif 'supp' in subscription.name  %}
+    <p>
+        {% blocktrans %}
+Recuerda que como SOCI@ SUPPORTER tienes descuentos en eventos organizados
+por la asociación y descuentos en tiendas. En nuestra web puedes ver todas
+las actividades de la asociación. Encontrarás tu carnet digital de soci@
+adjunto en PDF a este correo.
+        {% endblocktrans %}
+    </p>
+{% endif %}
+    <p>
+        {% blocktrans %}
+Encontrarás tu carnet digital de soci@ adjunto en PDF a este correo.
         {% endblocktrans %}
     </p>
 

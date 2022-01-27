@@ -5,19 +5,19 @@
 {% endblocktrans %}
 
 {% blocktrans %}
-    Ya puedes usar tu cuenta en {{ site_name }}
+Ya puedes usar tu cuenta en {{ site_name }}
 {% endblocktrans %}
 
 {% blocktrans %}
-    Entérate de todos nuestros talleres, conciertos, entrevistas y
-    más en {{ site_name }}
+Entérate de todos nuestros talleres, eventos, entrevistas y más en
+{{ site_name }}
 {% endblocktrans %}
 
 {% blocktrans %}
-    Para formar parte de la asociación, colaborar con nosotros y beneficiarte de descuentos, hazte socio en
-    {{ new_soci_link }}
+Para formar parte de la asociación, colaborar con nosotros y beneficiarte de
+descuentos, hazte soci@ visitando el siguiente enlace:
 {% endblocktrans %}
-
+{{ protocol }}://{{ site_name }}/{{ new_member_page }}
 
 L'Associació de Musica Electrònica de Barcelona
 

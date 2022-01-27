@@ -10,19 +10,19 @@
     <h1>{% blocktrans with user_name=user.username|upper %}¡HOLA {{ user_name }}!{% endblocktrans %}</h1>
     <p>
         {% blocktrans with subscription=subscription.name|upper %}
-            Hemos intentado renovar tu subscripción como {{ subscription }}
-            de AMEBA pero parece que ha habido un problema con el pago.
+Hemos intentado renovar tu subscripción como SOCI@ {{ subscription }} de
+AMEBA pero parece que ha habido un problema con el pago.
         {% endblocktrans %}
     </p>
     <p>
         {% blocktrans %}
-            Si sigues queriendo formar parte de la asociación, puedes vovler
-            a renovar tu subscripción desde nuestra web ameba.cat
+Si sigues queriendo formar parte de la asociación, puedes volver a renovar tu
+suscripción haciendo clic <a href="{{ protocol }}://{{ site_name }}/{{ new_member_page }}">aquí</a>.
         {% endblocktrans %}
     </p>
     <p>
         {% blocktrans %}
-            Si no deseas continuar siendo socio, no hace falta que hagas nada.
+Si no deseas continuar siendo soci@, no hace falta que hagas nada.
         {% endblocktrans %}
     </p>
 </td>

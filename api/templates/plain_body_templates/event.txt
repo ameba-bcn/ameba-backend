@@ -3,7 +3,7 @@
 {% blocktrans with user_name=user.username|upper %}¡HOLA {{ user_name }}!{% endblocktrans %}
 
 {% blocktrans with event_name=event.name event_date=event.date event_location=event.address %}
-Gracias por reservar tus entradas para:
+Gracias por comprar tus entradas para:
 {% endblocktrans %}
 
 {{ event.name }}
@@ -13,7 +13,8 @@ Gracias por reservar tus entradas para:
 {{ event.address }}
 
 {% blocktrans %}
-Encontrarás tu entrada en PDF adjunta en este correo. No hace falta que la imprimas, puedes traerla en tu móvil el día delevento.
+Encontrarás tu entrada en PDF adjunta en este correo. No hace falta que la
+imprimas, puedes traerla en tu móvil el día del evento.
 {% endblocktrans %}
 
 
