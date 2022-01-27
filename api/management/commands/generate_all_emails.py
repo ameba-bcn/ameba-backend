@@ -1,8 +1,11 @@
 import time
 
+from django.conf import settings
 from django.core.management.base import BaseCommand
 from api import email_factories as ef
 from api.models import User
+
+settings.EMAIL_BACKEND = 'naomi.mail.backends.naomi.NaomiBackend'
 
 EMAILS = {
     'ActivatedAccountEmail': {
