@@ -1,6 +1,9 @@
-# ameba backend v1.10
+# ameba backend v1.11
 
 ### Release notes
+
+#### 1.11
+- AW-347: Emails updated with new texts
 
 #### 1.10
 - AW-346: Improved column selection colors in admin panel
