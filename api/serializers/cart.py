@@ -1,19 +1,19 @@
-from rest_framework.serializers import ModelSerializer, \
-    SerializerMethodField, Serializer, SlugRelatedField, CharField
+import rest_framework.serializers as serializers
+import django.conf as conf
 
 import api.models as api_models
 
 
-class CartItemSerializer(Serializer):
-    id = SerializerMethodField()
-    name = SerializerMethodField()
-    discount_value = SerializerMethodField()
-    discount_name = SerializerMethodField()
-    price = SerializerMethodField()
-    preview = SerializerMethodField()
-    subtotal = SerializerMethodField()
-    is_subscription = SerializerMethodField()
-    variant_details = SerializerMethodField()
+class CartItemSerializer(serializers.Serializer):
+    id = serializers.SerializerMethodField()
+    name = serializers.SerializerMethodField()
+    discount_value = serializers.SerializerMethodField()
+    discount_name = serializers.SerializerMethodField()
+    price = serializers.SerializerMethodField()
+    preview = serializers.SerializerMethodField()
+    subtotal = serializers.SerializerMethodField()
+    is_subscription = serializers.SerializerMethodField()
+    variant_details = serializers.SerializerMethodField()
 
     @staticmethod
     def get_is_subscription(cart_item):
@@ -69,11 +69,11 @@ class CartItemSerializer(Serializer):
         return f"{'%.2f' % (price * fraction)}€"
 
 
-class CartSerializer(ModelSerializer):
+class CartSerializer(serializers.ModelSerializer):
     item_variants = CartItemSerializer(many=True, read_only=True,
                                        source='computed_item_variants')
-    count = SerializerMethodField()
-    item_variant_ids = SlugRelatedField(
+    count = serializers.SerializerMethodField()
+    item_variant_ids = serializers.SlugRelatedField(
         many=True, queryset=api_models.ItemVariant.objects.all(),
         slug_field='id', required=False, source='item_variants'
     )
@@ -145,8 +145,8 @@ class CartItemSummarySerializer(CartItemSerializer):
 class CartCheckoutSerializer(CartSerializer):
     item_variants = CartItemSummarySerializer(many=True, read_only=True,
                                               source='computed_item_variants')
-    email = SerializerMethodField()
-    checkout = SerializerMethodField()
+    email = serializers.SerializerMethodField()
+    checkout = serializers.SerializerMethodField()
 
     class Meta:
         model = api_models.Cart
@@ -174,7 +174,13 @@ class CartCheckoutSerializer(CartSerializer):
         return {}
 
 
-class PaymentDataSerializer(ModelSerializer):
+class PaymentDataSerializer(serializers.ModelSerializer):
+    stripe_public = serializers.SerializerMethodField()
+
     class Meta:
         model = api_models.Payment
-        fields = ('client_secret', 'payment_intent_id')
+        fields = ('client_secret', 'payment_intent_id', 'stripe_public')
+
+    @staticmethod
+    def get_stripe_public(payment):
+        return conf.settings.STRIPE_PUBLIC
