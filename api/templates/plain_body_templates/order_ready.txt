@@ -1,0 +1,23 @@
+{% load i18n %}{% autoescape off %}
+
+{% blocktrans %}
+¡HOLA {{ user_name }}, TU PEDIDO ESTÁ LISTO!
+{% endblocktrans %}
+
+{% blocktrans %}
+Ya puedes recoger tu pedido en la siguiente dirección:
+{% endblocktrans %}
+
+{{ address }}
+
+Detalles del pedido:
+
+{% for item_variant in item_variants %}
+- {{ item_variant }}
+{% endfor %}
+
+¡Gracias!
+
+L'Associació de Musica Electrònica de Barcelona
+
+{% endautoescape %}
