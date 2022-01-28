@@ -1,0 +1,32 @@
+{% extends "template_blocks/base.html" %}
+{% load i18n %}
+
+{% block header %}
+    {% include "template_blocks/header.html" %}
+{% endblock %}
+
+{% block content %}
+<td>
+    <h1>
+        {% blocktrans with user_name=user.username|upper %}
+¡NUEVO PEDIDO DE {{ user_name }}!
+        {% endblocktrans %}
+    </h1>
+    <p>
+        {% blocktrans %}
+Se ha registrado un nuevo pedido de {{ user_name }}. Detalles del pedido a
+continuación:
+        {% endblocktrans %}
+    </p>
+
+{% for item_variant in item_variants %}
+<p>
+    - {{ item_variant }}
+</p>
+{% endfor %}
+
+{% endblock %}
+
+{% block marquee %}
+    {% include "template_blocks/marquee.html" %}
+{% endblock %}
