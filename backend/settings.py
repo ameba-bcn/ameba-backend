@@ -311,3 +311,8 @@ DISABLE_DARK_MODE = True
 
 
 NEW_MEMBER_PAGE = env('NEW_MEMBER_PAGE', 'soci', 'string')
+
+# AMEBA INTERNAL ORDERS EMAIL
+INTERNAL_ORDERS_EMAIL = env(
+    'INTERNAL_ORDERS_EMAIL', 'jonrivala@gmail.com', 'string'
+)
