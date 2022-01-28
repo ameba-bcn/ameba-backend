@@ -7,24 +7,20 @@
 
 {% block content %}
 <td>
-    <h1>
-        {% blocktrans with user_name=user.username|upper %}
-¡NUEVO PEDIDO DE {{ user_name }}!
-        {% endblocktrans %}
-    </h1>
     <p>
         {% blocktrans %}
-Se ha registrado un nuevo pedido de {{ user_name }}. Detalles del pedido a
-continuación:
+Se ha registrado un nuevo pedido de {{ user_name }}.<br>
+Detalles del pedido:
         {% endblocktrans %}
     </p>
 
-{% for item_variant in item_variants %}
-<p>
-    - {{ item_variant }}
-</p>
-{% endfor %}
+    {% for item_variant in item_variants %}
+    <p>
+        - {{ item_variant }}
+    </p>
+    {% endfor %}
 
+</td>
 {% endblock %}
 
 {% block marquee %}
