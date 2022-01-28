@@ -110,9 +110,7 @@ def send_newsletter_unsubscription_notification(sender, email, **kwargs):
 
 
 @receiver(payment_closed)
-def send_payment_successful_notification(
-    sender, payment, **kwargs
-):
+def send_payment_successful_notification(sender, payment, **kwargs):
     user = payment.user
     cart_record = payment.cart_record
     email_factories.PaymentSuccessfulEmail.send_to(
@@ -121,4 +119,16 @@ def send_payment_successful_notification(
         site_name=settings.HOST_NAME,
         protocol=settings.DEBUG and 'http' or 'https',
         cart_record=cart_record
+    )
+
+
+def send_new_order_internal_notification(sender, order, **kwargs):
+    user = order.user
+    item_variants = [iv.name for iv in order.item_variants.all()]
+    email_factories.NewOrderInternalNotification.send_to(
+        mail_to=settings.INTERNAL_ORDERS_EMAIL,
+        user=user,
+        site_name=settings.HOST_NAME,
+        protocol=settings.DEBUG and 'http' or 'https',
+        item_variants=item_variants
     )
