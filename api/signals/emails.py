@@ -17,6 +17,8 @@ event_confirmation = django.dispatch.Signal(
 failed_renewal = django.dispatch.Signal(providing_args=['user',
                                                         'subscription'])
 payment_closed = django.dispatch.Signal(providing_args=['payment'])
+new_order = django.dispatch.Signal(providing_args=['order'])
+order_ready = django.dispatch.Signal(providing_args=['order'])
 
 
 @receiver(user_registered)
@@ -122,13 +124,28 @@ def send_payment_successful_notification(sender, payment, **kwargs):
     )
 
 
+@receiver(new_order)
 def send_new_order_internal_notification(sender, order, **kwargs):
     user = order.user
     item_variants = [iv.name for iv in order.item_variants.all()]
     email_factories.NewOrderInternalNotification.send_to(
         mail_to=settings.INTERNAL_ORDERS_EMAIL,
-        user=user,
+        user_name=user.name,
         site_name=settings.HOST_NAME,
+        protocol=settings.DEBUG and 'http' or 'https',
+        item_variants=item_variants
+    )
+
+
+@receiver(order_ready)
+def send_order_ready_notification(sender, order, **kwargs):
+    user = order.user
+    item_variants = [iv.name for iv in order.item_variants.all()]
+    email_factories.OrderReadyNotification.send_to(
+        mail_to=user.email,
+        user_name=user.user_name,
+        site_name=settings.HOST_NAME,
+        address=order.address,
         protocol=settings.DEBUG and 'http' or 'https',
         item_variants=item_variants
     )

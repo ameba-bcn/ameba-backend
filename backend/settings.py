@@ -316,3 +316,9 @@ NEW_MEMBER_PAGE = env('NEW_MEMBER_PAGE', 'soci', 'string')
 INTERNAL_ORDERS_EMAIL = env(
     'INTERNAL_ORDERS_EMAIL', 'jonrivala@gmail.com', 'string'
 )
+
+ORDERS_ADDRESS = env(
+    'ORDERS_ADDRESS',
+    'Ronda de Sant Pau, 17, 08015 Barcelona (https://goo.gl/maps/RSAfNpoG8zjhSMNF9)',
+    'string'
+)
