@@ -182,7 +182,9 @@ class Payment(models.Model):
             self.detach_cart()
 
         if self.status == 'paid' and not self.processed:
-            items_signals.items_acquired.send(sender=self.__class__, payment=self)
+            for item_variant in self.item_variants.all():
+                item_variant.acquired_by.add(self.user)
+
             if self.amount > 0:
                 payment_closed.send(sender=self.__class__, payment=self)
             self.item_variants.clear()
