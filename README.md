@@ -1,6 +1,9 @@
-# ameba backend v1.11
+# ameba backend v1.12
 
 ### Release notes
+
+#### 1.12
+- AW-351: added api_public to api/carts/current/payments
 
 #### 1.11
 - AW-347: Emails updated with new texts
