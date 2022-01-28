@@ -7,17 +7,15 @@ import api.signals.memberships as membership_signals
 import api.models as api_models
 import api.stripe as stripe
 
-items_acquired = django.dispatch.Signal(providing_args=['payment'])
-
 
 @django.dispatch.receiver(signals.m2m_changed,
                           sender=api_models.ItemVariant.acquired_by.through)
 def process_acquired_items(instance, pk_set, action, model, **kwargs):
     if action == 'post_add':
+        order = None
         for user_id in pk_set:
             user = api_models.User.objects.get(id=user_id)
             item_variant = instance
-
             if item_variant.item.is_event():
                 event_signals.event_acquired.send(
                     sender=user.__class__, item_variant=item_variant, user=user
@@ -29,13 +27,13 @@ def process_acquired_items(instance, pk_set, action, model, **kwargs):
                     member=user.member,
                     subscription=item_variant.item.subscription
                 )
+            elif item_variant.item.is_article():
+                if not order:
+                    order = api_models.Order.objects.create(user=user)
+                order.item_variants.add(item_variant)
 
-
-@django.dispatch.receiver(items_acquired)
-def give_items_to_user(sender, payment, **kwargs):
-    for item_variant in payment.item_variants.all():
-        item_variant.acquired_by.add(payment.user)
-
+        if order:
+            order.send_new_order_notification()
 
 @django.dispatch.receiver(signals.post_save, sender=api_models.ItemVariant)
 def add_product_to_stripe(sender, instance, created, **kwargs):

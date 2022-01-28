@@ -19,3 +19,4 @@ from api.models.discount import Discount, DiscountCode, DiscountUsage
 from api.models.cart import Cart, CartItems
 from api.models.event import Event, EventType
 from api.models.payment import Payment
+from api.models.orders import Order
