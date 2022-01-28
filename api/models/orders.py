@@ -18,9 +18,17 @@ class Order(models.Model):
     ready = models.BooleanField(default=False)
     delivered = models.BooleanField(default=False)
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.was_ready = self.ready
+
     def send_new_order_notification(self):
         new_order.send(self.__class__, self)
 
     def send_order_ready_notification(self):
+        order_ready.send(self.__class__, self)
 
-
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        if not self.was_ready and self.ready:
+            pass
