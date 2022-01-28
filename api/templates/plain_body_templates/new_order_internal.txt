@@ -1,0 +1,16 @@
+{% load i18n %}{% autoescape off %}
+
+{% blocktrans %}
+Se ha recibido un nuevo pedido de {{ user_name }}.
+Detalles del pedido:
+{% endblocktrans %}
+
+{% for item_variant in item_variants %}
+<p>
+    - {{ item_variant }}
+</p>
+{% endfor %}
+
+L'Associació de Musica Electrònica de Barcelona
+
+{% endautoescape %}
