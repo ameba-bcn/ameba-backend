@@ -173,6 +173,21 @@ class PaymentFlowTest(BaseCartTest):
         payment = Payment.objects.get(id=cart.id)
         self.assertEqual(payment.status, 'paid')
 
+    def test_get_payment_returns_api_public(self):
+        item_variants = [1, 2, 3]
+        user = self.get_user()
+        token = self.get_token(user).access_token
+        cart = self.get_cart(user=user, item_variants=item_variants,
+                             for_free=True)
+
+        self.checkout(token=token)
+        response = self.payment(pk=cart.id, token=token)
+
+        self.assertIn('stripe_public', response.data)
+        self.assertEqual(
+            response.data['stripe_public'], settings.STRIPE_PUBLIC
+        )
+
     def test_update_from_price_to_free(self):
         pass
         # todo: rework with new flow
