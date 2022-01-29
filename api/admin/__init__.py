@@ -13,3 +13,4 @@ from api.admin.mailing_list import MailingListAdmin
 from api.admin.subscriber import SubscriberAdmin
 from api.admin.about import AboutAdmin
 from api.admin.member import MemberAdmin
+from api.admin.orders import OrderAdmin
