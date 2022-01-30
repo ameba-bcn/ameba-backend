@@ -132,3 +132,16 @@ class NewsletterUnsubscribeNotification(UserEmailFactoryBase):
     subject_template = 'plain_subject_templates/unsubscribe.txt'
     plain_body_template = 'plain_body_templates/unsubscribe.txt'
     html_body_template = 'html_body_templates/unsubscribe.html'
+
+
+class NewOrderInternalNotification(UserEmailFactoryBase):
+    subject_template = 'plain_subject_templates/new_order_internal.txt'
+    plain_body_template = 'plain_body_templates/new_order_internal.txt'
+    html_body_template = 'html_body_templates/new_order_internal.html'
+
+
+class OrderReadyNotification(UserEmailFactoryBase):
+    subject_template = 'plain_subject_templates/order_ready.txt'
+    plain_body_template = 'plain_body_templates/order_ready.txt'
+    html_body_template = 'html_body_templates/order_ready.html'
+
