@@ -262,7 +262,7 @@ PROFILE_VERSION = 8
 # STRIPE KEYS
 STRIPE_SECRET = env("STRIPE_SECRET", '', var_type='string')
 STRIPE_PUBLIC = env("STRIPE_PUBLIC", '', var_type='string')
-
+STRIPE_WH_SECRET = env('STRIPE_WH_SECRET', '', var_type='string')
 
 # TOKENS EXPIRE TIMES
 ACTIVATION_EXPIRE_DAYS = 30
