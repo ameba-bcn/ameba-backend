@@ -17,6 +17,8 @@ event_confirmation = django.dispatch.Signal(
 failed_renewal = django.dispatch.Signal(providing_args=['user',
                                                         'subscription'])
 payment_closed = django.dispatch.Signal(providing_args=['payment'])
+new_order = django.dispatch.Signal(providing_args=['order'])
+order_ready = django.dispatch.Signal(providing_args=['order'])
 
 
 @receiver(user_registered)
@@ -110,9 +112,7 @@ def send_newsletter_unsubscription_notification(sender, email, **kwargs):
 
 
 @receiver(payment_closed)
-def send_payment_successful_notification(
-    sender, payment, **kwargs
-):
+def send_payment_successful_notification(sender, payment, **kwargs):
     user = payment.user
     cart_record = payment.cart_record
     email_factories.PaymentSuccessfulEmail.send_to(
@@ -122,3 +122,39 @@ def send_payment_successful_notification(
         protocol=settings.DEBUG and 'http' or 'https',
         cart_record=cart_record
     )
+
+
+@receiver(new_order)
+def send_new_order_internal_notification(sender, order, **kwargs):
+    user = order.user
+    item_variants = [iv.name for iv in order.item_variants.all()]
+    email_factories.NewOrderInternalNotification.send_to(
+        mail_to=settings.INTERNAL_ORDERS_EMAIL,
+        user_name=user.username,
+        site_name=settings.HOST_NAME,
+        protocol=settings.DEBUG and 'http' or 'https',
+        item_variants=item_variants
+    )
+
+
+@receiver(order_ready)
+def send_order_ready_notification(sender, order, **kwargs):
+    user = order.user
+    item_variants = [iv.name for iv in order.item_variants.all()]
+    email_factories.OrderReadyNotification.send_to(
+        mail_to=user.email,
+        user_name=user.username,
+        site_name=settings.HOST_NAME,
+        address=order.address,
+        protocol=settings.DEBUG and 'http' or 'https',
+        item_variants=item_variants
+    )
+    email_factories.OrderReadyNotification.send_to(
+        mail_to=settings.INTERNAL_ORDERS_EMAIL,
+        user_name=user.username,
+        site_name=settings.HOST_NAME,
+        address=order.address,
+        protocol=settings.DEBUG and 'http' or 'https',
+        item_variants=item_variants
+    )
+

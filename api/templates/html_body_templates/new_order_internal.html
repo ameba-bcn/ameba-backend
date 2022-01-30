@@ -1,0 +1,28 @@
+{% extends "template_blocks/base.html" %}
+{% load i18n %}
+
+{% block header %}
+    {% include "template_blocks/header.html" %}
+{% endblock %}
+
+{% block content %}
+<td>
+    <p>
+        {% blocktrans %}
+Se ha registrado un nuevo pedido de {{ user_name }}.<br>
+Detalles del pedido:
+        {% endblocktrans %}
+    </p>
+
+    {% for item_variant in item_variants %}
+    <p>
+        - {{ item_variant }}
+    </p>
+    {% endfor %}
+
+</td>
+{% endblock %}
+
+{% block marquee %}
+    {% include "template_blocks/marquee.html" %}
+{% endblock %}
