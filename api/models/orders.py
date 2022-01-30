@@ -33,10 +33,10 @@ class Order(models.Model):
                f', {self.created.strftime("%d/%m/%Y")})'
 
     def send_new_order_notification(self):
-        new_order.send(self.__class__, self)
+        new_order.send(sender=self.__class__, order=self)
 
     def send_order_ready_notification(self):
-        order_ready.send(self.__class__, self)
+        order_ready.send(sender=self.__class__, order=self)
 
     def save(self, *args, **kwargs):
         if not self.was_ready and self.ready:
