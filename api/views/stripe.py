@@ -7,7 +7,7 @@ import api.stripe as api_stripe
 import api.signals as api_signals
 
 # This is your Stripe CLI webhook secret for testing your endpoint locally.
-endpoint_secret = 'whsec_YXcUnODFG0oV6i0E2lzYV1yVbX9hgbTA'
+endpoint_secret = conf.settings.STRIPE_WH_SECRET
 api_key = conf.settings.STRIPE_SECRET
 
 
