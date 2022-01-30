@@ -149,3 +149,12 @@ def send_order_ready_notification(sender, order, **kwargs):
         protocol=settings.DEBUG and 'http' or 'https',
         item_variants=item_variants
     )
+    email_factories.OrderReadyNotification.send_to(
+        mail_to=settings.INTERNAL_ORDERS_EMAIL,
+        user_name=user.username,
+        site_name=settings.HOST_NAME,
+        address=order.address,
+        protocol=settings.DEBUG and 'http' or 'https',
+        item_variants=item_variants
+    )
+
