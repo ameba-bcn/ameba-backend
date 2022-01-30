@@ -1,6 +1,9 @@
-# ameba backend v1.12
+# ameba backend v1.13
 
 ### Release notes
+
+#### 1.13
+- AW-352: Added orders section in admin panel
 
 #### 1.12
 - AW-351: added api_public to api/carts/current/payments
