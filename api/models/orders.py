@@ -28,6 +28,10 @@ class Order(models.Model):
         super().__init__(*args, **kwargs)
         self.was_ready = self.ready
 
+    def __str__(self):
+        return f'{_("Order")}({self.user.username}' \
+               f', {self.created.strftime("%d/%m/%Y")})'
+
     def send_new_order_notification(self):
         new_order.send(self.__class__, self)
 
