@@ -1,6 +1,35 @@
 from django.contrib import admin
+from django.utils.html import mark_safe
 
-from api.models import Order
+import api.models as api_models
+from api.admin.image import get_image_preview
+
+
+class OrderToItemVariantInLine(admin.TabularInline):
+    model = api_models.Order.item_variants.through
+    verbose_name = 'ItemVariant'
+    verbose_name_plural = "ItemVariants"
+    fields = ('name', 'stock', 'preview', )
+    readonly_fields = ('name', 'stock', 'preview', )
+    extra = 0
+
+    def __str__(self):
+        return ''
+
+    def __repr__(self):
+        return ''
+
+    def name(self, obj):
+        return obj.itemvariant.name
+
+    def stock(self, obj):
+        return obj.itemvariant.stock
+
+    def preview(self, obj):
+        preview = '<div>{images}</div>'
+        images = ''.join(get_image_preview(image, 75) for image in
+                        obj.itemvariant.item.images.all())
+        return mark_safe(preview.format(images=images))
 
 
 class OrderAdmin(admin.ModelAdmin):
@@ -8,10 +37,11 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = ['user', 'ready', 'delivered', 'updated', 'items']
     list_filter = ['user', 'delivered', 'ready']
     readonly_fields = ['items', 'created', 'updated']
+    inlines = [OrderToItemVariantInLine]
 
     @staticmethod
     def items(obj):
         return len(obj.item_variants.all())
 
 
-admin.site.register(Order, OrderAdmin)
+admin.site.register(api_models.Order, OrderAdmin)

@@ -170,10 +170,10 @@ class ItemVariant(models.Model):
 
     @property
     def name(self):
-        return f'ItemVariant(item=\'{self.item.name}\')'
+        return self.get_variant_name()
 
     def __str__(self):
-        return self.name
+        return self.get_variant_name()
 
     def get_attributes_set(self):
         return ', '.join([
