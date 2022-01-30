@@ -22,14 +22,11 @@ Ya puedes recoger tu pedido en la siguiente dirección:
 {{ address }}
     </p>
     <p>
-Detalles del pedido:
-    </p>
+Detalles del pedido:<br>
 {% for item_variant in item_variants %}
-    <p>
-        - {{ item_variant }}
+        - {{ item_variant }}<br>
+{% endfor %}
     </p>
-    {% endfor %}
-
     <p>
 ¡Gracias!
     </p>

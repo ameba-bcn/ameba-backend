@@ -9,23 +9,20 @@ class OrderToItemVariantInLine(admin.TabularInline):
     model = api_models.Order.item_variants.through
     verbose_name = 'ItemVariant'
     verbose_name_plural = "ItemVariants"
-    fields = ('name', 'stock', 'preview', )
+    fields = ('itemvariant', 'name', 'stock', 'preview', )
     readonly_fields = ('name', 'stock', 'preview', )
     extra = 0
 
-    def __str__(self):
-        return ''
-
-    def __repr__(self):
-        return ''
-
-    def name(self, obj):
+    @staticmethod
+    def name(obj):
         return obj.itemvariant.name
 
-    def stock(self, obj):
+    @staticmethod
+    def stock(obj):
         return obj.itemvariant.stock
 
-    def preview(self, obj):
+    @staticmethod
+    def preview(obj):
         preview = '<div>{images}</div>'
         images = ''.join(get_image_preview(image, 75) for image in
                         obj.itemvariant.item.images.all())

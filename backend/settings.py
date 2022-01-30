@@ -319,6 +319,6 @@ INTERNAL_ORDERS_EMAIL = env(
 
 ORDERS_ADDRESS = env(
     'ORDERS_ADDRESS',
-    'Ronda de Sant Pau, 17, 08015 Barcelona (https://goo.gl/maps/RSAfNpoG8zjhSMNF9)',
+    'Ronda de Sant Pau, 17, 08015 Barcelona',
     'string'
 )
