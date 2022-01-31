@@ -135,6 +135,6 @@ dmypy.json
 *.DS_Store
 /static/
 
-.tmp/qr/*
-.tmp/pdf/*
-
+tmp
+media
+emails
