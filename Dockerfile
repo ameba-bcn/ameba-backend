@@ -12,10 +12,11 @@ WORKDIR /src
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt --upgrade
 
+RUN mkdir -p tmp/html/qr tmp/html/images tmp/emails tmp/pdf
+
 COPY api api
 COPY backend backend
 COPY templates templates
-COPY tmp tmp
 COPY manage.py manage.py
 
 RUN python manage.py compilemessages
