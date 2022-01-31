@@ -1,6 +1,9 @@
-# ameba backend v1.14
+# ameba backend v1.15
 
 ### Release notes
+
+#### 1.15
+- Fixed deps
 
 #### 1.14
 - AW-355: Fixing qr local files in prod
