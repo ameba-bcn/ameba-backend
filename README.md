@@ -1,6 +1,9 @@
-# ameba backend v1.13
+# ameba backend v1.14
 
 ### Release notes
+
+#### 1.14
+- AW-355: Fixing qr local files in prod
 
 #### 1.13
 - AW-352: Added orders section in admin panel
