@@ -14,7 +14,7 @@ class Interview(models.Model):
         to='Artist', on_delete=models.DO_NOTHING, verbose_name=_('artist')
     )
     title = models.CharField(max_length=55, verbose_name=_('title'))
-    introduction = models.TextField(max_length=2500, blank=True,
+    introduction = models.TextField(max_length=5000, blank=True,
                                     verbose_name=_('introduction'))
     updated = models.DateTimeField(auto_now=True, verbose_name=_('updated'))
     created = models.DateTimeField(auto_now_add=True, verbose_name=_(
@@ -58,7 +58,7 @@ class Answer(models.Model):
         related_name='answers',
         verbose_name=_('interview')
     )
-    answer = models.TextField(max_length=2000, verbose_name=_('answer'))
+    answer = models.TextField(max_length=5000, verbose_name=_('answer'))
     question = models.ForeignKey(
         to='Question',
         on_delete=models.CASCADE,
