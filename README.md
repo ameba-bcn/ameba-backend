@@ -3,7 +3,8 @@
 ### Release notes
 
 #### 1.16
-- AW-356: increased length of interview description and answers
+- AW-356: increased length of interview description and answers to 5000
+- AW-363: increased length of item description to 5000
 
 #### 1.15
 - Fixed deps
