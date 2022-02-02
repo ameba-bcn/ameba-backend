@@ -17,21 +17,21 @@ class ArtistSerializer(serializers.ModelSerializer):
     tags = serializers.SlugRelatedField(many=True, slug_field='name',
                                         read_only=True)
     has_interview = serializers.SerializerMethodField()
-    interview = serializers.SerializerMethodField()
+    interview_id = serializers.SerializerMethodField()
 
     class Meta:
         model = Artist
         fields = ['id', 'name', 'biography', 'images', 'media', 'tags',
                   'has_interview', 'is_ameba_dj', 'featured',
-                  'has_interview', 'interview']
-        read_only_fields = ['has_interview', 'interview']
+                  'has_interview', 'interview_id']
+        read_only_fields = ['has_interview', 'interview_id']
 
     @staticmethod
     def get_has_interview(artist):
         return artist.has_interview
 
     @staticmethod
-    def get_interview(artist):
+    def get_interview_id(artist):
         interview = artist.interview
         if interview:
             return interview.pk

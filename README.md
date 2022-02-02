@@ -5,6 +5,7 @@
 #### 1.16
 - AW-356: increased length of interview description and answers to 5000
 - AW-363: increased length of item description to 5000
+- AW-361: added artist_id to interviews and interview
 
 #### 1.15
 - Fixed deps
