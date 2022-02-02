@@ -76,6 +76,7 @@ class TestInterview(BaseTest):
         list_interview_data = {
             'id': int,
             'artist': str,
+            'artist_id': int,
             'title': str,
             'intro_preview': str,
             'created': str,
@@ -110,6 +111,7 @@ class TestInterview(BaseTest):
         response = self._get(pk=pk, token='')
         self.assertEqual(interview.id, response.data['id'])
         self.assertEqual(interview.artist.name, response.data['artist'])
+        self.assertEqual(interview.artist.pk, response.data['artist_id'])
         self.assertEqual(interview.title, response.data['title'])
         self.assertEqual(interview.introduction, response.data['introduction'])
         self.assertEqual(interview.created, parser.parse(response.data['created']))

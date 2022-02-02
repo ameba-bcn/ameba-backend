@@ -19,23 +19,25 @@ class AnswersSerializers(serializers.ModelSerializer):
         fields = ['question', 'answer']
 
 
-class InterviewDetailSerializer(serializers.ModelSerializer):
-    artist = serializers.SlugRelatedField(slug_field='name', read_only=True)
-    artist_id = serializers.RelatedField(source='artist', read_only=True)
-    current_answers = AnswersSerializers(many=True, read_only=True)
-
-    class Meta:
-        model = Interview
-        fields = ['id', 'artist', 'title', 'introduction', 'created', 'image',
-                  'current_answers', 'artist_id']
-        depth = 1
-
-
 class InterviewListSerializer(serializers.ModelSerializer):
     artist = serializers.SlugRelatedField(slug_field='name', read_only=True)
-    artist_id = serializers.RelatedField(source='artist', read_only=True)
+    artist_id = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Interview
         fields = ['id', 'artist', 'title', 'intro_preview', 'created',
                   'image', 'artist_id']
+
+    @staticmethod
+    def get_artist_id(interview):
+        return interview.artist.id
+
+
+class InterviewDetailSerializer(InterviewListSerializer):
+    current_answers = AnswersSerializers(many=True, read_only=True)
+
+    class Meta(InterviewListSerializer.Meta):
+        fields = ['id', 'artist', 'title', 'introduction', 'created', 'image',
+                  'current_answers', 'artist_id']
+        depth = 1
+
