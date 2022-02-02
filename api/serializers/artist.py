@@ -22,7 +22,8 @@ class ArtistSerializer(serializers.ModelSerializer):
     class Meta:
         model = Artist
         fields = ['id', 'name', 'biography', 'images', 'media', 'tags',
-                  'has_interview', 'is_ameba_dj', 'featured', 'has_interview']
+                  'has_interview', 'is_ameba_dj', 'featured',
+                  'has_interview', 'interview']
         read_only_fields = ['has_interview', 'interview']
 
     @staticmethod
@@ -31,7 +32,7 @@ class ArtistSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def get_interview(artist):
-        interview = artist.interview.pk
+        interview = artist.interview
         if interview:
             return interview.pk
         return None
