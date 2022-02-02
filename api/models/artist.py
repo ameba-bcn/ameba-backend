@@ -61,3 +61,10 @@ class Artist(models.Model):
     @property
     def has_interview(self):
         return bool(self.interview_set.filter(is_active=True))
+
+    @property
+    def interview(self):
+        if self.has_interview:
+            return self.interview_set.filter(
+                is_active=True).order_by('-created').first()
+        return None
