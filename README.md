@@ -2,6 +2,9 @@
 
 ### Release notes
 
+#### 1.16
+- AW-356: increased length of interview description and answers
+
 #### 1.15
 - Fixed deps
 
