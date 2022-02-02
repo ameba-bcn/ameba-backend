@@ -30,7 +30,7 @@ class Item(models.Model):
         max_length=100, unique=True, verbose_name=_('name')
     )
     description = models.TextField(
-        max_length=1000, verbose_name=_('description')
+        max_length=5000, verbose_name=_('description')
     )
     images = models.ManyToManyField(
         to='Image', blank=False, verbose_name=_('images')
