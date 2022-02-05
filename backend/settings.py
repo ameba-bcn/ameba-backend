@@ -322,3 +322,5 @@ ORDERS_ADDRESS = env(
     'Ronda de Sant Pau, 17, 08015 Barcelona',
     'string'
 )
+
+SUBSCRIPTION_RECURRENCES = env('SUBSCRIPTION_RECURRENCES', 'year', 'string')
