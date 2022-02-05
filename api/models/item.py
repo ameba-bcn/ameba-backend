@@ -9,16 +9,13 @@ EXPIRE_HOURS_BEFORE_EVENT = 1
 EXPIRE_BEFORE_EVENT = timedelta(hours=EXPIRE_HOURS_BEFORE_EVENT)
 
 
-INTERVALS = (
-    ('year', 'year'),
-)
+INTERVALS = [(i, i) for i in settings.SUBSCRIPTION_RECURRENCES.split(',')]
 
 
 if settings.DEBUG:
-    INTERVALS = (
-        ('year', 'year'),
-        ('minute', 'minute'),
-    )
+    INTERVALS.append(('day', 'day'))
+
+INTERVALS = tuple(INTERVALS)
 
 
 class Item(models.Model):

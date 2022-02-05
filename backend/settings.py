@@ -12,8 +12,15 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
-from envs import env
+import envs
 import os
+
+
+def env(name, default, var_type):
+    value = envs.env(name, default, var_type)
+    if not value:
+        return default
+    return value
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -34,19 +41,14 @@ class MissingSecretKey(Exception):
 def raise_debug():
     raise MissingSecretKey
 
+
 # Avoid auto field warning on upgrade to Django 3.2
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # SECURITY WARNING: keep the secret key used in production secret!
-DEV_SECRET_KEY = env(
-    'DJANGO_SECRET',
-    'f!e(2rsmnoiyy@+#s$&lg-m7xp3@-+8fveja$plau=ir--13f(',
-    'string'
-)
-
 SECRET_KEY = env(
     "DJANGO_SECRET",
-    DEBUG or DEV_SECRET_KEY or raise_debug(),
+    default=None,
     var_type='string'
 )
 
@@ -250,7 +252,7 @@ ANYMAIL = {
 
 
 DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", 'noreply@ameba.cat', 'string')
-SERVER_EMAIL = env("SERVER_EMAIL", 'support@ameba.cat')
+SERVER_EMAIL = env("SERVER_EMAIL", 'support@ameba.cat', 'string')
 
 EMAIL_HOST = env("EMAIL_HOST", '', var_type='string')
 EMAIL_HOST_USER = env("EMAIL_HOST_USER", '', var_type='string')
@@ -322,3 +324,5 @@ ORDERS_ADDRESS = env(
     'Ronda de Sant Pau, 17, 08015 Barcelona',
     'string'
 )
+
+SUBSCRIPTION_RECURRENCES = env('SUBSCRIPTION_RECURRENCES', 'year', 'string')
