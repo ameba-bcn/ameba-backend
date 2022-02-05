@@ -20,6 +20,7 @@ def env(name, default, var_type):
     value = envs.env(name, default, var_type)
     if not value:
         return default
+    return value
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -45,15 +46,9 @@ def raise_debug():
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # SECURITY WARNING: keep the secret key used in production secret!
-DEV_SECRET_KEY = env(
-    'DJANGO_SECRET',
-    'f!e(2rsmnoiyy@+#s$&lg-m7xp3@-+8fveja$plau=ir--13f(',
-    'string'
-)
-
 SECRET_KEY = env(
     "DJANGO_SECRET",
-    DEBUG or DEV_SECRET_KEY or raise_debug(),
+    default=None,
     var_type='string'
 )
 
