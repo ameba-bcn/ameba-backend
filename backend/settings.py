@@ -12,8 +12,14 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
-from envs import env
+import envs
 import os
+
+
+def env(name, default, var_type):
+    value = envs.env(name, default, var_type)
+    if not value:
+        return default
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -33,6 +39,7 @@ class MissingSecretKey(Exception):
 
 def raise_debug():
     raise MissingSecretKey
+
 
 # Avoid auto field warning on upgrade to Django 3.2
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
@@ -250,7 +257,7 @@ ANYMAIL = {
 
 
 DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", 'noreply@ameba.cat', 'string')
-SERVER_EMAIL = env("SERVER_EMAIL", 'support@ameba.cat')
+SERVER_EMAIL = env("SERVER_EMAIL", 'support@ameba.cat', 'string')
 
 EMAIL_HOST = env("EMAIL_HOST", '', var_type='string')
 EMAIL_HOST_USER = env("EMAIL_HOST_USER", '', var_type='string')
