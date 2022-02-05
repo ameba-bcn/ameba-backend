@@ -1,6 +1,9 @@
-# ameba backend v1.16
+# ameba backend v1.17
 
 ### Release notes
+
+#### 1.17
+- AW-368: Remove recurrence options from non-subscriptions in admin panel
 
 #### 1.16
 - AW-356: increased length of interview description and answers to 5000
