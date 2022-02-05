@@ -19,8 +19,6 @@ COPY backend backend
 COPY templates templates
 COPY manage.py manage.py
 
-RUN python manage.py compilemessages
-
 EXPOSE 8000
 
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

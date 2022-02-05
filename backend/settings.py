@@ -17,7 +17,10 @@ import os
 
 
 def env(name, default, var_type):
-    value = envs.env(name, default, var_type)
+    try:
+        value = envs.env(name, default, var_type)
+    except Exception as e:
+        value = default
     if not value:
         return default
     return value
@@ -46,11 +49,7 @@ def raise_debug():
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env(
-    "DJANGO_SECRET",
-    default=None,
-    var_type='string'
-)
+SECRET_KEY = env("DJANGO_SECRET", default=None, var_type='string')
 
 ALLOWED_HOSTS = []
 
