@@ -88,6 +88,10 @@ class BaseMock:
     def delete(cls, id):
         return bool(cls.objects.pop(id, None))
 
+    def update(self, **kwargs):
+        for key, value in kwargs.items():
+            self.__dict__[key] = value
+
     def __getattribute__(self, item):
         try:
             object_id = super().__getattribute__(item + '_id')
