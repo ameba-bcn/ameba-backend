@@ -169,6 +169,11 @@ def _get_product_and_prices(cart):
     return products
 
 
+def _setup_future_payments(invoice):
+    pi = stripe.PaymentIntent.retrieve(invoice['payment_intent'])
+    pi.update(setup_future_usage='off_session')
+
+
 def create_invoice_from_cart(cart):
     """ Only 1 subscription allowed in cart_items!!
     :param cart: cart with discounts related to same cart
@@ -205,6 +210,8 @@ def create_invoice_from_cart(cart):
         break
     else:
         invoice = stripe.Invoice.create(**invoice_props)
+
+    _setup_future_payments(invoice)
 
     if invoice.status == 'draft':
         invoice = invoice.finalize_invoice()
