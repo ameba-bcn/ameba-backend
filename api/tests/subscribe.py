@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 
 from api.tests._helpers import BaseTest
 from api.models import Subscriber
+from api import email_factories
 
 User = get_user_model()
 

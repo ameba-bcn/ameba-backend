@@ -37,41 +37,18 @@ def only_test_mailing_lists(fcn):
 def perform_request(method, endpoint, attributes=None):
     if not (API_URL and PROD_MAILING_LIST and all(AUTH) and AMEBA_DOMAIN):
         logger.error(NOT_MG_CONFIGURED_MSG)
-        return False
-
-    if hasattr(requests, method):
-        method = getattr(requests, method)
-        url = API_URL + endpoint
-        try:
-            response = method(url, auth=AUTH, data=attributes or {})
-            if response.status_code < HTTP_400_BAD_REQUEST:
-                log = logger.info
-            else:
-                log = logger.warning
-
-            log(RESP_MSG.format(
-                method=method,
-                endpoint=endpoint,
-                data=attributes,
-                status=response.status_code,
-                content=response
-            ))
-            return response
-
-        except requests.exceptions.RequestException as e:
-            logger.error(ERR_MSG.format(
-                method=method,
-                endpoint=endpoint,
-                data=attributes,
-                exception=e
-            ))
+        return
+    method = getattr(requests, method)
+    url = API_URL + endpoint
+    response = method(url, auth=AUTH, data=attributes or {})
+    return response
 
 
 @background(schedule=0)
 def single_async_request(method, endpoint, attributes=None):
     response = perform_request(method, endpoint, attributes)
     if response:
-        response.raise_for_exceptions()
+        response.raise_for_status()
 
 
 def list_members():
