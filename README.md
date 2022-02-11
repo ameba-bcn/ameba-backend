@@ -1,6 +1,13 @@
-# ameba backend v1.17
+# ameba backend v1.18
 
 ### Release notes
+
+#### 1.18
+- AW-372: bugfix -> no se recibe email de confirmacion de subscripcion a 
+  newsletters.
+- AW-371: bugfix -> pagos periodicos no funcionan para subscripciones 
+  (setup_future_usage en stripe)
+
 
 #### 1.17
 - AW-368: Remove recurrence options from non-subscriptions in admin panel
