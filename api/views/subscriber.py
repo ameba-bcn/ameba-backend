@@ -6,6 +6,7 @@ from drf_yasg.utils import swagger_auto_schema
 from api.serializers import DeleteSubscriberSerializer, SubscribeSerializer
 from api.models import Subscriber, MailingList
 from api.responses import NewSubscriberResponse
+import api.tasks.notifications as notifications
 
 
 @api_view(['POST'])
@@ -19,6 +20,7 @@ def mailgun_unsubscribe_hook(request):
             address=serialized_data.list_address
         )
         subscriber.mailing_lists.remove(mailing_list)
+        notifications.notify_unsubscription(email=serialized_data.email)
     return Response()
 
 
@@ -35,4 +37,7 @@ def subscribe(request):
         address=settings.DEFAULT_MAILING_LIST
     )
     subscriber.mailing_lists.add(mailing_list)
+    notifications.notify_subscription(
+        email=serialized_data.validated_data['email']
+    )
     return NewSubscriberResponse()

@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 
 from api.tests._helpers import BaseTest
 from api.models import Subscriber
+from api import email_factories
 
 User = get_user_model()
 
@@ -14,7 +15,7 @@ class SubscribeTest(BaseTest):
     LIST_ENDPOINT = '/api/subscribe/'
 
     @mock.patch('api.mailgun.add_member')
-    def test_subscribe_new_email(self, add_member_mock):
+    def test_subscribe_new_email(self, add_member_mock, send_to):
         data = dict(email='new@email.si')
         response = self._create(data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)

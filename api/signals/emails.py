@@ -94,23 +94,6 @@ def on_failed_renewal(sender, user, subscription, **kwargs):
         new_member_page=settings.NEW_MEMBER_PAGE
     )
 
-
-def send_newsletter_subscription_notification(sender, email, **kwargs):
-    email_factories.NewsletterSubscribeNotification.send_to(
-        mail_to=email,
-        site_name=settings.HOST_NAME,
-        protocol=settings.DEBUG and 'http' or 'https'
-    )
-
-
-def send_newsletter_unsubscription_notification(sender, email, **kwargs):
-    email_factories.NewsletterUnsubscribeNotification.send_to(
-        mail_to=email,
-        site_name=settings.HOST_NAME,
-        protocol=settings.DEBUG and 'http' or 'https'
-    )
-
-
 @receiver(payment_closed)
 def send_payment_successful_notification(sender, payment, **kwargs):
     user = payment.user
