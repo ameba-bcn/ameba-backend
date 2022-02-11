@@ -71,7 +71,7 @@ def perform_request(method, endpoint, attributes=None):
 def single_async_request(method, endpoint, attributes=None):
     response = perform_request(method, endpoint, attributes)
     if response:
-        response.raise_for_exceptions()
+        response.raise_for_status()
 
 
 def list_members():
