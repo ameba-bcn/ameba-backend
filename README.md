@@ -1,6 +1,9 @@
-# ameba backend v1.18
+# ameba backend v1.19
 
 ### Release notes
+
+#### 1.19
+- AW-375: bugfix -> compras stripe rotas (setup_future_usage mal actualizado)
 
 #### 1.18
 - AW-372: bugfix -> no se recibe email de confirmacion de subscripcion a 
