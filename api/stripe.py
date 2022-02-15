@@ -171,7 +171,7 @@ def _get_product_and_prices(cart):
 
 def _setup_future_payments(invoice):
     pi = stripe.PaymentIntent.retrieve(invoice['payment_intent'])
-    pi.update(setup_future_usage='off_session')
+    stripe.PaymentIntent.modify(pi.id, setup_future_usage='off_session')
 
 
 def create_invoice_from_cart(cart):
