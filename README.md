@@ -1,6 +1,10 @@
-# ameba backend v1.19
+# ameba backend v1.19.1
 
 ### Release notes
+
+#### 1.19.1
+- bugfix: compras no funcionan (setup_future_usage accedía a payment intent 
+  antes de cerrar invoice)
 
 #### 1.19
 - AW-375: bugfix -> compras stripe rotas (setup_future_usage mal actualizado)
