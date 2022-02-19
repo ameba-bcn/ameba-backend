@@ -211,10 +211,11 @@ def create_invoice_from_cart(cart):
     else:
         invoice = stripe.Invoice.create(**invoice_props)
 
-    _setup_future_payments(invoice)
 
     if invoice.status == 'draft':
         invoice = invoice.finalize_invoice()
+
+    _setup_future_payments(invoice)
 
     if discounts:
         _delete_discounts(discounts)
