@@ -211,7 +211,6 @@ def create_invoice_from_cart(cart):
     else:
         invoice = stripe.Invoice.create(**invoice_props)
 
-
     if invoice.status == 'draft':
         invoice = invoice.finalize_invoice()
 
