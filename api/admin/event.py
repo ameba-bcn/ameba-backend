@@ -11,7 +11,7 @@ class EventTypeAdmin(TranslationAdmin):
 
 
 class EventAdmin(BaseItemAdmin):
-    fields = BaseItemAdmin.fields + ['datetime', 'address', 'artists', 'type']
+    fields = ['header'] + BaseItemAdmin.fields + ['datetime', 'address', 'artists', 'type']
 
 
 admin.site.register(Event, EventAdmin)
