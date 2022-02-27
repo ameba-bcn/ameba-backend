@@ -2,6 +2,10 @@
 
 ### Release notes
 
+#### 1.20
+- AW-393: set customer's default payment method after every payment.
+- AW-391: add header to event model, serializer and admin panel translated.
+
 #### 1.19.1
 - bugfix: compras no funcionan (setup_future_usage accedía a payment intent 
   antes de cerrar invoice)
