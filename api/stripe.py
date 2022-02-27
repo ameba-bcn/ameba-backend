@@ -366,3 +366,11 @@ def get_user_stored_cards(user):
         card_data.append(dict(exp=exp, last4=last4, brand=brand, id=card_id))
     return card_data
 
+
+def set_payment_method_default(payment_intent):
+    customer_id = payment_intent['customer']
+    payment_method_id = payment_intent['payment_method']
+    stripe.Customer.modify(
+        customer_id,
+        invoice_settings={'default_payment_method': payment_method_id}
+    )

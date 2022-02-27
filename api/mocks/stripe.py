@@ -92,6 +92,11 @@ class BaseMock:
         for key, value in kwargs.items():
             self.__dict__[key] = value
 
+    @classmethod
+    def modify(cls, id, **kwargs):
+        for key, value in kwargs.items():
+            cls.objects[id][key] = value
+
     def __getattribute__(self, item):
         try:
             object_id = super().__getattribute__(item + '_id')
@@ -195,8 +200,10 @@ class InvoiceItem(BaseMock):
 class PaymentIntent(BaseMock):
     objects = {}
 
-    def __init__(self, id):
+    def __init__(self, id, customer=None):
         self.client_secret = 'adcf44bg5bfcadcgb5fgb2c44c3gbafd'
+        self.payment_method = 'asdoasdoijasdoisajdasdoijsa'
+        self.customer = customer
         super().__init__(id=id)
 
 
@@ -210,7 +217,7 @@ class Invoice(BaseMock):
         self.amount_due = 0
         self.status = 'draft'
         self.lines = {'data': []}
-        self.payment_intent = PaymentIntent.create()['id']
+        self.payment_intent = PaymentIntent.create(customer=customer)['id']
         self.get_lines_and_amount()
         super().__init__(id=id, collection_method=collection_method, **kwargs)
 
