@@ -1,10 +1,10 @@
 from rest_framework import serializers
 
-from api.models import About
+from api.models import Manifest
 
 
-class AboutSerializer(serializers.ModelSerializer):
+class ManifestSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = About
+        model = Manifest
         fields = ['text', 'is_active', 'created', 'updated']
