@@ -7,6 +7,7 @@ import api.models as api_models
 class CartItemSerializer(serializers.Serializer):
     id = serializers.SerializerMethodField()
     name = serializers.SerializerMethodField()
+    item_name = serializers.SerializerMethodField()
     discount_value = serializers.SerializerMethodField()
     discount_name = serializers.SerializerMethodField()
     price = serializers.SerializerMethodField()
@@ -16,6 +17,10 @@ class CartItemSerializer(serializers.Serializer):
     variant_details = serializers.SerializerMethodField()
 
     @staticmethod
+    def get_item_name(cart_item):
+        return cart_item['item_variant'].item.name
+
+    @staticmethod
     def get_is_subscription(cart_item):
         return cart_item['item_variant'].item.is_subscription()
 
@@ -23,8 +28,7 @@ class CartItemSerializer(serializers.Serializer):
     def get_variant_details(cart_item):
         item_variant = cart_item['item_variant']
         attrs = item_variant.attributes.all()
-        variants = [f'{attr.attribute.name}={attr.value}' for attr in attrs]
-        return ', '.join(variants)
+        return {attr.attribute.name: attr.value for attr in attrs}
 
     @staticmethod
     def get_name(cart_item):
