@@ -191,6 +191,7 @@ class TestEvents(BaseEventTest):
             {
                 'id': int,
                 'name': str,
+                'header': str,
                 'images': [str],
                 'discount': int,
                 'saved': bool,
@@ -206,6 +207,7 @@ class TestEvents(BaseEventTest):
         structure = {
             'id': int,
             'name': str,
+            'header': str,
             'description': str,
             'saved': bool,
             'purchased': bool,
