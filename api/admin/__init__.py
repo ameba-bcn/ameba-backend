@@ -11,6 +11,6 @@ from api.admin.payment import PaymentAdmin
 from api.admin.cover import CoverAdmin
 from api.admin.mailing_list import MailingListAdmin
 from api.admin.subscriber import SubscriberAdmin
-from api.admin.about import AboutAdmin
+from api.admin.manifest import ManifestAdmin
 from api.admin.member import MemberAdmin
 from api.admin.orders import OrderAdmin

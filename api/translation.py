@@ -1,11 +1,11 @@
 from modeltranslation.translator import register, TranslationOptions
 from .models import (
-    About, Artist, Interview, Item, Subscription, Article,
+    Manifest, Artist, Interview, Item, Subscription, Article,
     Event, ItemAttributeType, EventType, ArtistTag
 )
 
 
-@register(About)
+@register(Manifest)
 class AboutTranslationOptions(TranslationOptions):
     fields = ('text', )
 
