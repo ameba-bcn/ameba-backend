@@ -186,6 +186,7 @@ class Payment(models.Model):
                 item_variant.acquired_by.add(self.user)
 
             if self.amount > 0:
+                api_stripe.set_payment_method_default(self.payment_intent)
                 payment_closed.send(sender=self.__class__, payment=self)
             self.item_variants.clear()
             self.processed = True
