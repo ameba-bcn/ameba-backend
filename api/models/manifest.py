@@ -2,11 +2,11 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
-class About(models.Model):
+class Manifest(models.Model):
 
     class Meta:
-        verbose_name = _('About')
-        verbose_name_plural = _('Abouts')
+        verbose_name = _('Manifest')
+        verbose_name_plural = _('Manifests')
 
     text = models.TextField(verbose_name=_('text'))
     is_active = models.BooleanField(verbose_name=_('is_active'))
