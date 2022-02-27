@@ -28,7 +28,7 @@ class Event(Item):
     class Meta:
         verbose_name = _('Event')
         verbose_name_plural = _('Events')
-
+    header = CharField(max_length=22, verbose_name=_('header'))
     datetime = DateTimeField(verbose_name=_('datetime'))
     address = CharField(max_length=255, verbose_name=_('address'))
     type = ForeignKey(
