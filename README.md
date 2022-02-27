@@ -3,6 +3,7 @@
 ### Release notes
 
 #### 1.20
+- AW-390: variant details to json and added item name in cart
 - AW-393: set customer's default payment method after every payment.
 - AW-391: add header to event model, serializer and admin panel translated.
 
