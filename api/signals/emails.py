@@ -5,6 +5,8 @@ import django.contrib.sites.shortcuts as shortcuts
 
 from api import email_factories
 from api.tasks import memberships as membership_tasks
+import api.models as api_models
+
 
 user_registered = django.dispatch.Signal(providing_args=['user', 'request'])
 account_activated = django.dispatch.Signal(providing_args=['user', 'request'])
@@ -35,12 +37,13 @@ def on_user_registered(sender, user, request, **kwargs):
 
 @receiver(account_activated)
 def on_account_activated(sender, user, request, **kwargs):
+    subscription = api_models.Subscription.objects.all().first()
     email_factories.ActivatedAccountEmail.send_to(
         mail_to=user.email,
         user=user,
         site_name=shortcuts.get_current_site(request),
         protocol=request.is_secure() and 'https' or 'http',
-        new_member_page=settings.NEW_MEMBER_PAGE
+        new_member_page=settings.NEW_MEMBER_PAGE.format(id=subscription.pk)
     )
 
 
@@ -85,13 +88,14 @@ def on_event_confirmation(sender, item_variant, user, **kwargs):
 
 @receiver(failed_renewal)
 def on_failed_renewal(sender, user, subscription, **kwargs):
+    subscription = api_models.Subscription.objects.all().first()
     email_factories.RenewalFailedNotification.send_to(
         mail_to=user.email,
         user=user,
         subscription=subscription,
         site_name=settings.HOST_NAME,
         protocol=settings.DEBUG and 'http' or 'https',
-        new_member_page=settings.NEW_MEMBER_PAGE
+        new_member_page=settings.NEW_MEMBER_PAGE.format(id=subscription.pk)
     )
 
 @receiver(payment_closed)
