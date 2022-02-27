@@ -42,7 +42,7 @@ class EventTypeTranslationOptions(TranslationOptions):
 
 @register(Event)
 class EventTranslationOptions(TranslationOptions):
-    pass
+    fields = ('header', )
 
 
 @register(ItemAttributeType)
