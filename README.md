@@ -6,6 +6,7 @@
 - AW-390: variant details to json and added item name in cart
 - AW-393: set customer's default payment method after every payment.
 - AW-391: add header to event model, serializer and admin panel translated.
+- AW-358: renamed about to manifest
 
 #### 1.19.1
 - bugfix: compras no funcionan (setup_future_usage accedía a payment intent 
