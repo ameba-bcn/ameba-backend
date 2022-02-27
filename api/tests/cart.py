@@ -537,6 +537,7 @@ class TestPatchCart(BaseCartTest):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['count'], len(body['item_variant_ids']))
+        self.assertIs(type(response.data['item_variants'][0]['variant_details']), dict)
 
     def test_path_auth_others_cart_not_allowed(self):
         user = self.get_user(1)
