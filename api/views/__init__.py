@@ -14,7 +14,7 @@ from api.views.covers import CoversViewSet
 from api.views.artists import ArtistViewSet
 from api.views.subscriber import subscribe, mailgun_unsubscribe_hook
 from api.views.member_register import member_register
-from api.views.about import about
+from api.views.manifest import manifest
 from api.views.member_card import MemberCard
 from api.views.event_ticket import EventTicketView
 from api.views.stripe import webhook

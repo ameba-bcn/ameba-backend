@@ -40,6 +40,7 @@ urlpatterns = [
     path('subscribe/', views.subscribe),
     path('mailgun_unsubscribe/', views.mailgun_unsubscribe_hook),
     path('member_register/', views.member_register),
-    path('about/', views.about),
+    path('about/', views.manifest),
+    path('manifest/', views.manifest),
     path('stripe/', views.webhook),
 ]
