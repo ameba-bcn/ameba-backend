@@ -149,6 +149,10 @@ class ItemVariant(models.Model):
         to='User', blank=True, related_name='item_variants',
         verbose_name=_('acquired by')
     )
+    checked_in = models.ManyToManyField(
+        to='User', blank=True, related_name='checked_in_events',
+        verbose_name=_('checked in')
+    )
     recurrence = models.CharField(max_length=10, choices=INTERVALS,
                                   blank=True, null=True, default=None)
 

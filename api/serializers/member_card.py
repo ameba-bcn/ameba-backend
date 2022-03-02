@@ -13,13 +13,18 @@ class MemberCardSerializer(ModelSerializer):
         slug_field='username', source='user', read_only=True
     )
     expires = serializers.SerializerMethodField(read_only=True)
+    type = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Member
         fields = ('number', 'first_name', 'last_name', 'identity_card',
-                  'status', 'type', 'username', 'expires')
+                  'status', 'type', 'username', 'expires', 'type')
         read_only_fields = fields
 
     @staticmethod
     def get_expires(member):
         return member.get_newest_membership().expires
+
+    @staticmethod
+    def get_type(member):
+        return 'card'
