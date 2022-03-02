@@ -284,12 +284,12 @@ PDF_TMP_DIR = "tmp/pdf"
 # FRONTEND MEMBERSHIP CARD PATH
 FE_MEMBERSHIP_CARD_PATH = env(
     'FE_MEMBERSHIP_CARD_PATH',
-    'ameba-site/membership-card/?token={token}',
+    'api/member_card/?token={token}',
     var_type='string'
 )
 FE_EVENT_TICKET_PATH = env(
     'FE_EVENT_TICKET_PATH',
-    'ameba-site/event-ticket/?token={token}',
+    'api/ticket/?token={token}',
     var_type='string'
 )
 

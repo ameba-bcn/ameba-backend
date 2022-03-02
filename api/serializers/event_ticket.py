@@ -18,11 +18,29 @@ class EventTicketSerializer(ModelSerializer):
     )
     first_name = serializers.SerializerMethodField()
     last_name = serializers.SerializerMethodField()
+    checked_in = serializers.SerializerMethodField()
+    type = serializers.SerializerMethodField()
 
     class Meta:
         model = ItemVariant.acquired_by.through
         fields = ('user_name', 'first_name', 'last_name', 'event',
-                  'variants', )
+                  'variants', 'checked_in', 'type')
+
+    @staticmethod
+    def get_type(item_variant_user):
+        return 'event'
+
+    @staticmethod
+    def get_checked_in(item_variant_user):
+        if item_variant_user.itemvariant.checked_in.filter(
+                email=item_variant_user.user.email
+        ):
+            return True
+        else:
+            item_variant_user.itemvariant.checked_in.add(
+                item_variant_user.user
+            )
+            return False
 
     @staticmethod
     def get_first_name(item_variant_user):
