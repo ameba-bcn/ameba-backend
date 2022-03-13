@@ -104,6 +104,7 @@ def on_failed_renewal(sender, user, subscription, **kwargs):
 @receiver(payment_closed)
 def send_payment_successful_notification(sender, payment, **kwargs):
     user = payment.user
+    # todo: cart_record can be None!!!
     cart_record = payment.cart_record
     email_factories.PaymentSuccessfulEmail.send_to(
         mail_to=user.email,
