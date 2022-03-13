@@ -182,6 +182,7 @@ class Payment(models.Model):
 
         if self.status == 'paid' and not self.processed:
             for item_variant in self.item_variants.all():
+                item_variant.acquired_by.add(self.user)
                 item_acquired.send(
                     sender=self.__class__,
                     user=self.user,
