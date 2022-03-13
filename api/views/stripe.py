@@ -16,7 +16,6 @@ api_key = conf.settings.STRIPE_SECRET
 def webhook(request):
     payload = request.body
     sig_header = request.headers['STRIPE_SIGNATURE']
-
     try:
         event = api_stripe.stripe.Webhook.construct_event(
             payload, sig_header, endpoint_secret

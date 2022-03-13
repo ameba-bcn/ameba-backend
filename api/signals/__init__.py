@@ -11,6 +11,7 @@ from api.signals.mailing_lists import create_mailing_lists
 from api.signals.subscriber import on_new_user, on_deleted_user
 from api.signals.mailgun import on_deleted_subscription, on_new_subscription
 from api.signals.payments import invoice_payment
+from api.signals.items import item_acquired
 
 
 def populate_models(sender, **kwargs):

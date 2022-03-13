@@ -6,7 +6,7 @@ from django.db.models import UUIDField
 import api.stripe as api_stripe
 
 from api.signals.emails import payment_closed
-import api.signals.items as items_signals
+from api.signals.items import item_acquired
 
 FP_STATUS = 'paid'
 FP_AMOUNT = 0
@@ -41,7 +41,6 @@ class PaymentManager(models.Manager):
         if cart:
             payment_attrs['id'] = cart.id
         payment = Payment.objects.create(**payment_attrs)
-
         if cart:
             for cart_item in cart.get_cart_items():
                 payment.item_variants.add(cart_item.item_variant)
@@ -183,7 +182,11 @@ class Payment(models.Model):
 
         if self.status == 'paid' and not self.processed:
             for item_variant in self.item_variants.all():
-                item_variant.acquired_by.add(self.user)
+                item_acquired.send(
+                    sender=self.__class__,
+                    user=self.user,
+                    item_variant=item_variant
+                )
 
             if self.amount > 0:
                 api_stripe.set_payment_method_default(self.payment_intent)

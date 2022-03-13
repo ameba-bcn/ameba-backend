@@ -302,7 +302,7 @@ def _get_user_from_customer_id(customer):
         return api_models.User.objects.get(id=customer)
 
 
-def _get_item_variants_from_id(invoice):
+def _gen_item_variants_from_id(invoice):
     for line in invoice['lines']['data']:
         item_variant_id = line['price']['product']
         iv_matches = api_models.ItemVariant.objects.filter(id=item_variant_id)
@@ -312,7 +312,7 @@ def _get_item_variants_from_id(invoice):
 
 def _create_payment_from_invoice(invoice):
     user = _get_user_from_customer_id(invoice['customer'])
-    item_variants = _get_item_variants_from_id(invoice)
+    item_variants = _gen_item_variants_from_id(invoice)
     payment = api_models.Payment.objects.create_payment(
         user=user, invoice=invoice, item_variants=item_variants
     )
