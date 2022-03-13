@@ -20,13 +20,13 @@ https://goo.gl/maps/RSAfNpoG8zjhSMNF9
 {% endblocktrans %}
 
 
-{% for item in cart_record.item_variants %}
+{% for item in item_variants %}
 
 {{ item.name }}\t\t{% if item.discount_value %} {{ item.discount_name }} ({{ item.discount_value }}% de {{ item.price }}){% else %} - {% endif %}\t\t{{ item.subtotal }}
 
 {% endfor %}
 
-TOTAL: {{ cart_record.total }}
+TOTAL: {{ total }}
 
 
 L'Associació de Musica Electrònica de Barcelona

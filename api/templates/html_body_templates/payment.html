@@ -38,7 +38,7 @@ A continuación encontrarás los detalles del pedido.
             <th>DESCUENTO</th>
             <th>VALOR</th>
         </tr>
-        {% for item in cart_record.item_variants %}
+        {% for item in item_variants %}
         <tr>
             <td>{{ item.name }}</td>
             <td>
@@ -55,7 +55,7 @@ A continuación encontrarás los detalles del pedido.
             <td style="border: 0 solid transparent!important;"></td>
 {#            <td style="border: 0 solid transparent!important;"></td>#}
             <td style="font-weight: 400;">TOTAL</td>
-            <td style="font-weight: 400;">{{ cart_record.total }}</td>
+            <td style="font-weight: 400;">{{ total }}</td>
         </tr>
     </table>
 </td>
