@@ -29,21 +29,19 @@ def trigger_new_member_notifications(sender, instance, created, **kwargs):
             membership_id=instance.id,
             schedule=before_renewal_time
         )
+        margin_renewal_time = instance.expires + timedelta(days=1)
 
-        # todo: schedule if renewal was successfully done
-        pass
+        # Schedule expiration check
+        memberships.expire_if_didnt_renew(
+            membership_id=instance.id,
+            schedule=margin_renewal_time
+        )
+
         if instance.is_active:
             # Add to corresponding group
             instance.member.user.groups.add(instance.subscription.group)
 
-        # Remove previous subscriptions
-        for subs in api_models.Subscription.objects.filter(
-            ~models.Q(id=instance.subscription.id)
-        ):
-            if instance.member.user.groups.filter(id=subs.group.id):
-                instance.member.user.groups.remove(subs.group)
-
-        # Cancel previous subscription in case they exist
+        # Cancel previous different subscriptions in case they exist
         api_stripe.cancel_previous_subscriptions(
             user=instance.member.user, subscription=instance.subscription
         )

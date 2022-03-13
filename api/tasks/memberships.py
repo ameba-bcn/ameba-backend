@@ -28,6 +28,26 @@ def check_and_notify_before_renewal(membership_id):
 
 
 @background(schedule=0)
+def expire_if_didnt_renew(membership_id):
+    if not Membership.objects.filter(id=membership_id):
+        return
+
+    membership = Membership.objects.get(id=membership_id)
+    member = membership.member
+    user = member.user
+
+    for same_subs in Membership.objects.filter(
+            member=member, subscription=membership.subscription
+    ):
+        if same_subs.is_active:
+            return
+
+    if membership.is_expired:
+        user.groups.remove(membership.subscription.group)
+        # todo: notify user!!
+
+
+@background(schedule=0)
 def generate_email_with_qr_and_notify(membership_id):
     membership = Membership.objects.get(pk=membership_id)
     user = membership.member.user
