@@ -182,7 +182,7 @@ class TestStripeWebhooks(helpers.BaseTest):
 
     @mock.patch('api.email_factories.PaymentSuccessfulEmail.send_to')
     @mock.patch('api.tasks.memberships.generate_email_with_qr_and_notify')
-    def test_upgrade_subscription_cancels_previous_one(
+    def test_upgrade_subscription_maintains_previous_one(
         self, generate_email, payment_send
     ):
         member = user_helpers.get_member()
@@ -236,7 +236,7 @@ class TestStripeWebhooks(helpers.BaseTest):
         # Check member is active
         self.assertEqual(member.status, 'active')
         self.assertTrue(member.user.groups.filter(name=subs_pro.name))
-        self.assertFalse(member.user.groups.filter(name=old_group))
+        self.assertTrue(member.user.groups.filter(name=old_group))
 
         # Check notifications
         payment_send.assert_called_once()
