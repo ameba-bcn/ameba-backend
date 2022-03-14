@@ -1,5 +1,5 @@
 from datetime import timedelta
-
+from django.utils import timezone
 from django.conf import settings
 from django.db.models import Sum
 from django.db import models
@@ -34,7 +34,7 @@ class Item(models.Model):
     )
     is_active = models.BooleanField(default=True, verbose_name=_('is active'))
     created = models.DateTimeField(auto_now_add=True, verbose_name=_('created'))
-    order = models.DateTimeField(auto_now_add=True, verbose_name=_('order'))
+    order = models.DateTimeField(verbose_name=_('order'), default=timezone.now)
     updated = models.DateTimeField(auto_now=True, verbose_name=_('updated'))
     saved_by = models.ManyToManyField(
         to='User', blank=True, related_name='saved_items',
