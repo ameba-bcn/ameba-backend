@@ -2,6 +2,9 @@
 
 ### Release notes
 
+#### 1.22
+- AW-401: Added order date sort by articles
+
 #### 1.21
 - AW-400: Added items to emails after subscription renew 
 - AW-394: Modified QR system to work with APP
