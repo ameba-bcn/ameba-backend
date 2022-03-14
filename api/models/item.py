@@ -33,9 +33,8 @@ class Item(models.Model):
         to='Image', blank=False, verbose_name=_('images')
     )
     is_active = models.BooleanField(default=True, verbose_name=_('is active'))
-    created = models.DateTimeField(
-        auto_now_add=True, verbose_name=_('created')
-    )
+    created = models.DateTimeField(auto_now_add=True, verbose_name=_('created'))
+    order = models.DateTimeField(auto_now_add=True, verbose_name=_('order'))
     updated = models.DateTimeField(auto_now=True, verbose_name=_('updated'))
     saved_by = models.ManyToManyField(
         to='User', blank=True, related_name='saved_items',

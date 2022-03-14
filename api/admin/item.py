@@ -47,13 +47,13 @@ class ImageChoiceInLine(admin.TabularInline):
 
 class BaseItemAdmin(TranslationAdmin):
     fields = [
-        'name', 'description', 'is_active', 'price_range', 'created',
+        'name', 'description', 'is_active', 'order', 'price_range', 'created',
         'updated', 'has_stock', 'saved_by', 'acquired_by'
     ]
     inlines = [ImageChoiceInLine, ItemVariantInline, DiscountChoiceInLine]
     readonly_fields = ['created', 'updated', 'price_range', 'has_stock',
                        'acquired_by']
-    list_display = ['name', 'price_range', 'preview', 'has_stock']
+    list_display = ['name', 'price_range', 'order', 'preview', 'has_stock']
 
     def preview(self, obj):
         img_tag = '<img src="{}" width="75" height="75" style="margin:10px" />'

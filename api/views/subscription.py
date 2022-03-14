@@ -9,4 +9,4 @@ class SubscriptionViewSet(BaseReadOnlyViewSet):
     list_serializer = SubscriptionListSerializer
     detail_serializer = SubscriptionDetailSerializer
     model = Subscription
-    queryset = Subscription.objects.filter(is_active=True)
+    queryset = Subscription.objects.filter(is_active=True).order_by('-order')
