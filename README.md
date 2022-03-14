@@ -1,4 +1,4 @@
-# ameba backend v1.21
+# ameba backend v1.22
 
 ### Release notes
 
