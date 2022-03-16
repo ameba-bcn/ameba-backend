@@ -1,6 +1,9 @@
-# ameba backend v1.22
+# ameba backend v1.23
 
 ### Release notes
+
+#### 1.23
+- AW-403: Added embedded field to artist media
 
 #### 1.22
 - AW-401: Added order date sort by articles
