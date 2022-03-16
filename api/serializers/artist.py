@@ -7,11 +7,13 @@ class ArtistMediaUrlSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ArtistMediaUrl
-        fields = ['url', 'embedded']
+        fields = ['embedded']
 
 
 class ArtistSerializer(serializers.ModelSerializer):
-    media = ArtistMediaUrlSerializer(many=True, read_only=True)
+    media = serializers.SlugRelatedField(
+        many=True, slug_field='embedded', read_only=True, source='media_urls'
+    )
     images = serializers.SlugRelatedField(many=True, slug_field='url',
                                           read_only=True)
     tags = serializers.SlugRelatedField(many=True, slug_field='name',
@@ -24,7 +26,7 @@ class ArtistSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'biography', 'images', 'media', 'tags',
                   'has_interview', 'is_ameba_dj', 'featured',
                   'has_interview', 'interview_id']
-        read_only_fields = ['has_interview', 'interview_id']
+        read_only_fields = ['has_interview', 'interview_id', 'media']
 
     @staticmethod
     def get_has_interview(artist):
@@ -39,8 +41,6 @@ class ArtistSerializer(serializers.ModelSerializer):
 
 
 class ArtistListSerializer(serializers.ModelSerializer):
-    media_urls = serializers.SlugRelatedField(many=True, slug_field='url',
-                                              read_only=True)
     images = serializers.SlugRelatedField(many=True, slug_field='url',
                                           read_only=True)
     tags = serializers.SlugRelatedField(many=True, slug_field='name',
@@ -49,7 +49,7 @@ class ArtistListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Artist
         fields = [
-            'id', 'name', 'bio_preview', 'images', 'media_urls', 'tags',
+            'id', 'name', 'bio_preview', 'images', 'tags',
             'has_interview', 'is_ameba_dj', 'featured'
         ]
         read_only_fields = ['has_interview']
