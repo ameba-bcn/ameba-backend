@@ -14,7 +14,7 @@ class EventViewSet(BaseReadOnlyViewSet):
     list_serializer = EventListSerializer
     detail_serializer = EventDetailSerializer
     model = Event
-    queryset = Event.objects.filter(is_active=True).order_by('-order')
+    queryset = Event.objects.filter(is_active=True).order_by('-datetime')
 
 
 class UserSavedEventsViewSet(CreateModelMixin, DestroyModelMixin,
@@ -26,7 +26,7 @@ class UserSavedEventsViewSet(CreateModelMixin, DestroyModelMixin,
     def get_queryset(self):
         return Event.saved_by.through.objects.filter(
             user=self.request.user
-        ).order_by('-order')
+        )
 
 
 class UserSignedUpEventsViewSet(
@@ -38,4 +38,4 @@ class UserSignedUpEventsViewSet(
     def get_queryset(self):
         return ItemVariant.acquired_by.through.objects.filter(
             user=self.request.user
-        ).order_by('-order')
+        )
