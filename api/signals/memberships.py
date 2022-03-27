@@ -9,14 +9,15 @@ from api.tasks import memberships
 import api.stripe as api_stripe
 
 subscription_purchased = dispatch.Signal(
-    providing_args=['member', 'subscription']
+    providing_args=['member', 'subscription_variant']
 )
 
 
 @dispatch.receiver(subscription_purchased)
-def create_membership(sender, member, subscription, **kwargs):
-    attrs = dict(member=member, subscription=subscription)
-    api_models.Membership.objects.create(**attrs)
+def create_membership(sender, member, subscription_variant, **kwargs):
+    api_models.Membership.objects.create_membership(
+        member=member, subscription_variant=subscription_variant
+    )
 
 
 @dispatch.receiver(models.signals.post_save, sender=api_models.Membership)

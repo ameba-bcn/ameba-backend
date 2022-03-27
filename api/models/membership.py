@@ -14,6 +14,19 @@ class MembershipStates:
     not_active_yet = 'not_active_yet'
 
 
+class MembershipManager(models.Manager):
+
+    @staticmethod
+    def create_membership(member, subscription_variant):
+        attrs = dict(
+            member=member,
+            subscription=subscription_variant.item.subscription
+        )
+        if period := subscription_variant.period:
+            attrs['duration'] = period
+        return Membership.objects.create(**attrs)
+
+
 class Membership(models.Model):
     class Meta:
         verbose_name = _('Membership')
@@ -33,6 +46,7 @@ class Membership(models.Model):
 
     )
     auto_renew = models.BooleanField(default=True)
+    objects = MembershipManager()
 
     def save(self, *args, **kwargs):
         if not self.id:

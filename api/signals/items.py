@@ -23,7 +23,7 @@ def acquired_item(sender, user, item_variant, **kwargs):
         membership_signals.subscription_purchased.send(
             sender=user.__class__,
             member=user.member,
-            subscription=item_variant.item.subscription
+            subscription_variant=item_variant
         )
     elif item_variant.item.is_article():
         if not order:
