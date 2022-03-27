@@ -11,6 +11,13 @@ EXPIRE_BEFORE_EVENT = timedelta(hours=EXPIRE_HOURS_BEFORE_EVENT)
 
 INTERVALS = [(i, i) for i in settings.SUBSCRIPTION_RECURRENCES.split(',')]
 
+PERIODS = {
+    'year': 365,
+    'day': 1,
+    'month': 30,
+    'week': 7
+}
+
 
 if settings.DEBUG:
     INTERVALS.append(('day', 'day'))
@@ -196,3 +203,7 @@ class ItemVariant(models.Model):
 
     def is_periodic(self):
         return self.get_recurrence() is not None
+
+    @property
+    def period(self):
+        return PERIODS.get(self.get_recurrence(), None)
