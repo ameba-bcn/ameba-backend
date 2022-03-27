@@ -84,12 +84,14 @@ INSTALLED_APPS = [
     'background_task',
     'naomi',
     'localflavor',
-    'django_non_dark_admin'
+    'django_non_dark_admin',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -192,6 +194,11 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONOpenAPIRenderer',
     )
 }
+
+CORS_ORIGIN_REGEX_WHITELIST = (
+    r'^(https?://)?(\w+\.)*jaguarintheloop\.com$',
+    r'^(https?://)?(\w+\.)*ameba\.cat$'
+)
 
 ACCESS_TOKEN_LIFETIME = env('ACCESS_TOKEN_LIFETIME', 1., 'float')
 REFRESH_TOKEN_LIFETIME = env('REFRESH_TOKEN_LIFETIME', 7., 'float')
