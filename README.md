@@ -2,6 +2,9 @@
 
 ### Release notes
 
+#### 1.24
+- AW-423: Added expire time according to item_variant period
+
 #### 1.23
 - AW-403: Added embedded field to artist media
 
