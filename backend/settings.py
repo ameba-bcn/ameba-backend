@@ -53,8 +53,7 @@ SECRET_KEY = env("DJANGO_SECRET", default=None, var_type='string')
 
 ALLOWED_HOSTS = []
 
-DEFAULT_HOST_NAME = 'ameba.jaguarintheloop.live'
-HOST_NAME = env("HOST_NAME", '', 'string') or DEFAULT_HOST_NAME
+HOST_NAME = env("HOST_NAME", '', 'string') or 'ameba.cat'
 if HOST_NAME:
     ALLOWED_HOSTS.append(HOST_NAME)
 
