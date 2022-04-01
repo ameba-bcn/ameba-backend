@@ -14,7 +14,7 @@ token persistente y único.
 
 Cuando se crea un nuevo socio, éste recibe un QR en su email con una URL que apunta al front-end y con un token como queryparam:
 
-```<site-name>/ameba-site/card/?token=aosidjasoidjasokdald```
+```<site-name>/card/?token=aosidjasoidjasokdald```
 Desde ésta página, el frontend tendrá que hacer una request a éste endpoint 
 usando ese token en el header Authorization como Bearer token, igual que la 
 authenticación normal. 
