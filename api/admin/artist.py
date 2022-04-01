@@ -15,7 +15,7 @@ class MediaUrlsInLine(admin.StackedInline):
     model = ArtistMediaUrl
     verbose_name = 'ArtistMediaUrl'
     verbose_name_plural = "ArtistMediaUrls"
-    fields = ('embedded', 'created')
+    fields = ('embedded', 'url', 'created')
     readonly_fields = ('created', )
     extra = 0
 
