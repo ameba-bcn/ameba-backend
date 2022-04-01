@@ -15,7 +15,7 @@ disponibilidad. Si falla, la entrada no es válida.
 Cuando un usuario adquiere un evento, éste recibe un email con la entrada 
 del evento. La entrada del evento es un pdf con un código QR que contiene 
 una URL a:
-```<site-name>/ameba-site/event-ticket/?token=aosidjasoidjasokdald```
+```<site-name>/event-ticket/?token=aosidjasoidjasokdald```
 
 En esta dirección, el frontend tendrá que hacer una GET a éste endpoint 
 usando el token pasado en el header de authenticación (Authorization) como 
