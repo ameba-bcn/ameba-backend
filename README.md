@@ -1,6 +1,9 @@
-# ameba backend v1.24.1
+# ameba backend v1.25
 
 ### Release notes
+
+#### 1.25
+- Replaced ameba-site from all urls
 
 #### 1.24.1
 - Added url to admin panel in artist media field
