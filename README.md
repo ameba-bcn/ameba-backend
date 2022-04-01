@@ -1,6 +1,9 @@
-# ameba backend v1.24
+# ameba backend v1.24.1
 
 ### Release notes
+
+#### 1.24.1
+- Added url to admin panel in artist media field
 
 #### 1.24
 - AW-423: Added expire time according to item_variant period
