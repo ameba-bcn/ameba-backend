@@ -1,6 +1,9 @@
-# ameba backend v1.25
+# ameba backend v1.26
 
 ### Release notes
+
+### 1.26
+- Added offset to initial member number
 
 #### 1.25
 - Replaced ameba-site from all urls
