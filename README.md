@@ -1,6 +1,9 @@
-# ameba backend v1.26
+# ameba backend v1.27
 
 ### Release notes
+
+### 1.27
+- Removed url from artist media field
 
 ### 1.26
 - Added offset to initial member number
