@@ -20,7 +20,7 @@ QR_DATE_FORMAT = '%Y%m%d%H%M%S'
 
 def get_default_number():
     if not Member.objects.all():
-        return 1
+        return 105
     else:
         return Member.objects.all().order_by('-number').first().number + 1
 
