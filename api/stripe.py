@@ -338,14 +338,17 @@ def cancel_subscription(invoice):
 
 def cancel_previous_subscriptions(user, subscription):
     subs_variants = [str(var.id) for var in subscription.variants.all()]
-    stripe_subs = stripe.Subscription.list(customer=str(user.id))
-    for stripe_sub in stripe_subs['data']:
-        if stripe_sub['status'] == 'active':
-            for stripe_sub_item in stripe_sub['items']['data']:
-                if stripe_sub_item['price']['product'] not in subs_variants:
-                    stripe.Subscription.delete(
-                        stripe_sub_item['subscription']
-                    )
+    try:
+        stripe_subs = stripe.Subscription.list(customer=str(user.id))
+        for stripe_sub in stripe_subs['data']:
+            if stripe_sub['status'] == 'active':
+                for stripe_sub_item in stripe_sub['items']['data']:
+                    if stripe_sub_item['price']['product'] not in subs_variants:
+                        stripe.Subscription.delete(
+                            stripe_sub_item['subscription']
+                        )
+    except stripe.error.InvalidRequestError:
+        pass
 
 
 def get_user_stored_cards(user):
