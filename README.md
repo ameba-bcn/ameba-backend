@@ -1,6 +1,9 @@
-# ameba backend v1.27
+# ameba backend v1.28
 
 ### Release notes
+
+### 1.28
+- Hotfix: try except clause for delete previous subscriptions
 
 ### 1.27
 - Removed url from artist media field
