@@ -7,6 +7,7 @@
 - AW-455: Added benefits to subscriptions list
 - AW-452: Sorting Interview questions by Question.position
 - AW-440: Add creation date to artist profile and sort by it
+- AW-441: Added item_type to cart items
 
 ### 1.27
 - Removed url from artist media field
