@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext as _
-
+from django.core.exceptions import ValidationError
 
 INTRO_PREVIEW = 160
 
@@ -41,10 +41,19 @@ class Question(models.Model):
         verbose_name_plural = _('Questions')
 
     question = models.TextField(max_length=2000, verbose_name=_('question'))
+    position = models.IntegerField(null=True, blank=True)
     is_default = models.BooleanField(default=False, verbose_name=_('is default'))
 
     def __str__(self):
         return f'{self.question}'
+
+    def save(self, *args, **kwargs):
+        same_pos = Question.objects.filter(position=self.position)
+        if same_pos.exists() and self.position is not None:
+            raise ValidationError(message=_(
+                f'There\'s another question with position {self.position}'
+            ))
+        return super().save(*args, **kwargs)
 
 
 class Answer(models.Model):
