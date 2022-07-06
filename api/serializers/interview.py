@@ -34,10 +34,16 @@ class InterviewListSerializer(serializers.ModelSerializer):
 
 
 class InterviewDetailSerializer(InterviewListSerializer):
-    current_answers = AnswersSerializers(many=True, read_only=True)
+    current_answers = serializers.SerializerMethodField()
 
     class Meta(InterviewListSerializer.Meta):
         fields = ['id', 'artist', 'title', 'introduction', 'created', 'image',
                   'current_answers', 'artist_id']
         depth = 1
 
+    @staticmethod
+    def get_current_answers(instance):
+        return AnswersSerializers(
+            instance.answers.all().order_by('question__position'), many=True,
+            read_only=True
+        ).data
