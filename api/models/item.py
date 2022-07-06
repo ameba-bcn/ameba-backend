@@ -111,6 +111,16 @@ class Item(models.Model):
     def is_event(self):
         return hasattr(self, 'event')
 
+    def get_type(self):
+        if self.is_subscription():
+            return 'subscription'
+        elif self.is_article():
+            return 'article'
+        elif self.is_event():
+            return 'event'
+        else:
+            return 'item'
+
 
 class ItemAttributeType(models.Model):
     class Meta:

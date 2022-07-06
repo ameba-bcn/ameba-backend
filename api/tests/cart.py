@@ -330,6 +330,7 @@ class TestPostCarts(BaseCartTest):
         )
         self._execute_test(test_attrs)
 
+    @tag('post_cart')
     def test_post_auth_items_returns_200(self):
         test_attrs = dict(
             auth=True,
