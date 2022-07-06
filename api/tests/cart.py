@@ -1,5 +1,6 @@
 import time
 from django.contrib.auth.models import Group
+from django.test import tag
 from api.tests._helpers import BaseTest, check_structure
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -413,7 +414,7 @@ class TestPostCarts(BaseCartTest):
 class TestPatchCart(BaseCartTest):
 
     def _execute_test(self, current_items, new_items, auth, current_label,
-                      status_code):
+                      status_code, discount_code=None):
 
         self.create_items_variants(current_items)
         self.create_items_variants(new_items)
@@ -423,6 +424,10 @@ class TestPatchCart(BaseCartTest):
             request_body = {
                 'item_variant_ids': new_items
             }
+        if type(discount_code) is str:
+            if not request_body:
+                request_body = {}
+            request_body['discount_code'] = discount_code
 
         token = None
         if auth:
@@ -442,6 +447,9 @@ class TestPatchCart(BaseCartTest):
         )
 
         self.assertEqual(response.status_code, status_code)
+
+        if status_code != 200:
+            return
 
         if type(new_items) is list:
             cart_count = len(new_items)
@@ -512,6 +520,42 @@ class TestPatchCart(BaseCartTest):
 
         self._execute_test(current_items, new_items, auth, current_label,
                            status_code)
+
+    @tag("patch_cart")
+    def test_path_current_cart_with_non_existent_discount_6_chars(self):
+        current_items = [1, 2]
+        new_items = []
+        auth = True
+        current_label = None
+        status_code = status.HTTP_400_BAD_REQUEST
+        discount_code = 'ABCDEF'
+
+        self._execute_test(current_items, new_items, auth, current_label,
+                           status_code, discount_code)
+
+    @tag("patch_cart")
+    def test_path_current_cart_with_discount_less_than_6(self):
+        current_items = [1, 2]
+        new_items = []
+        auth = True
+        current_label = None
+        status_code = status.HTTP_400_BAD_REQUEST
+        discount_code = 'ABCD'
+
+        self._execute_test(current_items, new_items, auth, current_label,
+                           status_code, discount_code)
+
+    @tag("patch_cart")
+    def test_path_current_cart_with_discount_more_than_6(self):
+        current_items = [1, 2]
+        new_items = []
+        auth = True
+        current_label = None
+        status_code = status.HTTP_400_BAD_REQUEST
+        discount_code = 'ABCDASDASD'
+
+        self._execute_test(current_items, new_items, auth, current_label,
+                           status_code, discount_code)
 
     def test_path_auth_anon_cart_replaces_old_user_cart(self):
         user = self.get_user()
