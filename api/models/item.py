@@ -118,6 +118,8 @@ class Item(models.Model):
             return 'article'
         elif self.is_event():
             return 'event'
+        else:
+            return 'item'
 
 
 class ItemAttributeType(models.Model):
