@@ -14,6 +14,7 @@ class CartItemSerializer(serializers.Serializer):
     preview = serializers.SerializerMethodField()
     subtotal = serializers.SerializerMethodField()
     is_subscription = serializers.SerializerMethodField()
+    item_type = serializers.SerializerMethodField()
     variant_details = serializers.SerializerMethodField()
 
     @staticmethod
@@ -23,6 +24,10 @@ class CartItemSerializer(serializers.Serializer):
     @staticmethod
     def get_is_subscription(cart_item):
         return cart_item['item_variant'].item.is_subscription()
+
+    @staticmethod
+    def get_item_type(cart_item):
+        return cart_item['item_variant'].item.get_type()
 
     @staticmethod
     def get_variant_details(cart_item):
