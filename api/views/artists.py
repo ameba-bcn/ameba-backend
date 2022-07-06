@@ -7,4 +7,4 @@ class ArtistViewSet(BaseReadOnlyViewSet):
     list_serializer = ArtistListSerializer
     detail_serializer = ArtistSerializer
     model = Artist
-    queryset = Artist.objects.all()
+    queryset = Artist.objects.all().order_by('-created')
