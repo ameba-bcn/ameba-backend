@@ -3,6 +3,8 @@
 ### Release notes
 
 ### 1.28
+
+- Hotfix: try except clause for delete previous subscriptions
 - AW-455: Added benefits to subscriptions list
 
 ### 1.27
