@@ -3,9 +3,9 @@
 ### Release notes
 
 ### 1.28
-
 - Hotfix: try except clause for delete previous subscriptions
 - AW-455: Added benefits to subscriptions list
+- AW-452: Sorting Interview questions by Question.position
 
 ### 1.27
 - Removed url from artist media field
