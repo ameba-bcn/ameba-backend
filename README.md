@@ -6,6 +6,7 @@
 - Hotfix: try except clause for delete previous subscriptions
 - AW-455: Added benefits to subscriptions list
 - AW-452: Sorting Interview questions by Question.position
+- AW-440: Add creation date to artist profile and sort by it
 
 ### 1.27
 - Removed url from artist media field
