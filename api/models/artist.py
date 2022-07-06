@@ -1,6 +1,6 @@
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.db import models
-
 
 BIO_PREVIEW = 160
 
@@ -50,6 +50,7 @@ class Artist(models.Model):
     )
     is_ameba_dj = models.BooleanField(default=False)
     featured = models.BooleanField(default=False)
+    created = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.name
