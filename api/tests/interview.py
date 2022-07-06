@@ -32,6 +32,7 @@ class TestInterview(BaseTest):
         for i in range(10):
             models.Question.objects.create(
                 question=f'Esta es la pregunta numero {i}?',
+                position=i,
                 is_default=bool(i % 2)
             )
 

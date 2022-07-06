@@ -44,6 +44,7 @@ class InterviewDetailSerializer(InterviewListSerializer):
     @staticmethod
     def get_current_answers(instance):
         return AnswersSerializers(
-            instance.answers.all().order_by('question__position'), many=True,
+            instance.answers.filter(is_active=True).order_by('question__position'),
+            many=True,
             read_only=True
         ).data
