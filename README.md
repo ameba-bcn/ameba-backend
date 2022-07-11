@@ -1,6 +1,9 @@
-# ameba backend v1.28
+# ameba backend v1.29
 
 ### Release notes
+
+### 1.29
+- AW-459: "bug" reintroduced not to break functionality
 
 ### 1.28
 - Hotfix: try except clause for delete previous subscriptions
