@@ -4,17 +4,14 @@ from api.models import Subscription
 
 
 class SubscriptionListSerializer(ItemListSerializer):
-    variants = serializers.SlugRelatedField(many=True, read_only=True,
-                                            slug_field='id')
 
     class Meta(ItemDetailSerializer.Meta):
         model = Subscription
-        fields = ItemListSerializer.Meta.fields + ['description',
-                                                   'benefits', 'variants']
+        fields = ItemDetailSerializer.Meta.fields + ['benefits']
 
 
 class SubscriptionDetailSerializer(ItemDetailSerializer):
 
     class Meta(ItemDetailSerializer.Meta):
         model = Subscription
-        fields = ItemDetailSerializer.Meta.fields + ['description', 'benefits']
+        fields = ItemDetailSerializer.Meta.fields + ['benefits']
