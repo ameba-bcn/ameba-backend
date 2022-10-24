@@ -189,6 +189,7 @@ def create_invoice_from_cart(cart):
         collection_method='charge_automatically',
         payment_settings={'payment_method_types': PAYMENT_METHOD_TYPES}
     )
+
     cart_items = list(cart.get_cart_items())
     regular_items = filter(
         lambda x: x.item_variant.get_recurrence() is None, cart_items
