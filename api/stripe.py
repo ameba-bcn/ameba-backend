@@ -186,7 +186,8 @@ def create_invoice_from_cart(cart):
     invoice_props = dict(
         customer=customer.id,
         discounts=discounts,
-        collection_method='charge_automatically'
+        collection_method='charge_automatically',
+        payment_settings={'payment_method_types': PAYMENT_METHOD_TYPES}
     )
     cart_items = list(cart.get_cart_items())
     regular_items = filter(
