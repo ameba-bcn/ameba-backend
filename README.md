@@ -2,6 +2,12 @@
 
 ### Release notes
 
+### 1.30
+- fix: dependencies
+- Admin events with participant lists
+- Admin event list with participant number
+- Admin members with filters (type, status)
+
 ### 1.29
 - AW-459: "bug" reintroduced not to break functionality
 
