@@ -95,7 +95,7 @@
   }
 },
 {
-  "model": "api.about",
+  "model": "api.manifest",
   "pk": 1,
   "fields": {
     "text": "[OLD] Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ornare, ipsum vel facilisis bibendum, felis ex efficitur mi, nec sodales velit nulla nec leo. Suspendisse mollis varius ligula ac venenatis. Fusce et mattis erat. Morbi nec dui massa. Pellentesque turpis augue, molestie ut quam non, euismod pretium purus. Quisque auctor purus quis velit egestas, eget vestibulum lectus pretium. Praesent maximus, ipsum porttitor vestibulum porta, quam leo posuere massa, ut tempus sem dolor venenatis sem. In quam sem, bibendum eget turpis ac, porta porta nunc. Duis commodo efficitur efficitur. Donec tempus enim quis dui cursus, vitae convallis magna bibendum. Mauris faucibus bibendum viverra. Aenean molestie dignissim magna, in aliquet lacus interdum et. Aliquam rhoncus eros at augue laoreet, nec mollis nulla dictum. Donec in ipsum lacus. Phasellus lorem elit, laoreet id mattis in, finibus eu velit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae;\\r\\n\\r\\nIn eget mi ut lorem placerat blandit. Nullam id ante et augue feugiat laoreet et vitae tortor. Sed orci mi, hendrerit congue nibh ac, rutrum eleifend diam. Cras a porttitor felis. In et nunc maximus, tincidunt quam quis, lacinia sem. Praesent in orci ac nisi efficitur lacinia. Donec commodo neque eget urna.",
@@ -107,7 +107,7 @@
   }
 },
 {
-  "model": "api.about",
+  "model": "api.manifest",
   "pk": 2,
   "fields": {
     "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ornare, ipsum vel facilisis bibendum, felis ex efficitur mi, nec sodales velit nulla nec leo. Suspendisse mollis varius ligula ac venenatis. Fusce et mattis erat. Morbi nec dui massa. Pellentesque turpis augue, molestie ut quam non, euismod pretium purus. Quisque auctor purus quis velit egestas, eget vestibulum lectus pretium. Praesent maximus, ipsum porttitor vestibulum porta, quam leo posuere massa, ut tempus sem dolor venenatis sem. In quam sem, bibendum eget turpis ac, porta porta nunc. Duis commodo efficitur efficitur. Donec tempus enim quis dui cursus, vitae convallis magna bibendum. Mauris faucibus bibendum viverra. Aenean molestie dignissim magna, in aliquet lacus interdum et. Aliquam rhoncus eros at augue laoreet, nec mollis nulla dictum. Donec in ipsum lacus. Phasellus lorem elit, laoreet id mattis in, finibus eu velit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae;\\r\\n\\r\\nIn eget mi ut lorem placerat blandit. Nullam id ante et augue feugiat laoreet et vitae tortor. Sed orci mi, hendrerit congue nibh ac, rutrum eleifend diam. Cras a porttitor felis. In et nunc maximus, tincidunt quam quis, lacinia sem. Praesent in orci ac nisi efficitur lacinia. Donec commodo neque eget urna.",
