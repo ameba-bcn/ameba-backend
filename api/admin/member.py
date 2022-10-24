@@ -1,15 +1,11 @@
 from django.contrib import admin
 
-from api.models import Member, Membership
+from api.models import Member, Membership, Subscription
 
 
 class StatusFilter(admin.SimpleListFilter):
 
-    # Human-readable title which will be displayed in the
-    # right admin sidebar just above the filter options.
     title = 'Status'
-
-    # Parameter for the filter that will be used in the URL query.
     parameter_name = 'status'
 
     def lookups(self, request, model_admin):
@@ -21,11 +17,36 @@ class StatusFilter(admin.SimpleListFilter):
 
     def queryset(self, request, queryset):
         value = self.value()
+        if value is None:
+            return queryset
         if value == '-':
             value = None
 
         id_list = [
             element.pk for element in queryset if element.status == value
+        ]
+        return queryset.filter(pk__in=id_list)
+
+
+class TypeFilter(admin.SimpleListFilter):
+
+    title = 'Type'
+    parameter_name = 'type'
+
+    def lookups(self, request, model_admin):
+        return tuple([(obj.name, obj.name) for obj in Subscription.objects.all()] +
+            [('-', '-')]
+        )
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value is None:
+            return queryset
+        if value == '-':
+            value = None
+
+        id_list = [
+            element.pk for element in queryset if element.type == value
         ]
         return queryset.filter(pk__in=id_list)
 
@@ -55,7 +76,7 @@ class MemberAdmin(admin.ModelAdmin):
         'type'
     )
     list_display_links = ('number', )
-    list_filter = (StatusFilter, )
+    list_filter = (StatusFilter, TypeFilter)
     inlines = [MembershipInLine]
 
     def group_display(self, obj):
