@@ -1,8 +1,8 @@
-# ameba backend v1.29
+# ameba backend v1.31
 
 ### Release notes
 
-### 1.30
+### 1.31
 - fix: dependencies
 - Admin events with participant lists
 - Admin event list with participant number
