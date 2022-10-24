@@ -12,6 +12,15 @@ class EventTypeAdmin(TranslationAdmin):
 
 class EventAdmin(BaseItemAdmin):
     fields = ['header'] + BaseItemAdmin.fields + ['datetime', 'address', 'artists', 'type']
+    readonly_fields = BaseItemAdmin.readonly_fields + ['participants']
+    list_display = BaseItemAdmin.list_display[:3] + ['participants'] + BaseItemAdmin.list_display[3:]
+
+    @staticmethod
+    def participants(obj):
+        tot = 0
+        for iv in obj.variants.all():
+            tot += len(iv.acquired_by.all())
+        return tot
 
 
 admin.site.register(Event, EventAdmin)
