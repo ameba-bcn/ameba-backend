@@ -65,7 +65,7 @@ class MembershipInLine(admin.TabularInline):
 
 
 class MemberAdmin(admin.ModelAdmin):
-    search_fields = ('number', 'user')
+    search_fields = ('number', 'user__email', 'first_name', 'last_name')
     list_display = (
         'number',
         'user',
