@@ -47,21 +47,10 @@ class Question(models.Model):
     def __str__(self):
         return f'{self.question}'
 
-    def set_order(self, position):
+    def set_position(self, position):
         self.position = position
         self.save()
 
-    def save(self, *args, force=None, **kwargs):
-        if self.position is None or force is True:
-            return super().save(*args, **kwargs)
-        else:
-            old_position = Question.objects.get(pk=self.pk).position
-            same_pos_questions = list(Question.objects.filter(position=self.position))
-            for same_pos in same_pos_questions:
-                same_pos.position = old_position
-                same_pos.save(force=True)
-                old_position = None
-            return super().save(*args, **kwargs)
 
 class Answer(models.Model):
     class Meta:

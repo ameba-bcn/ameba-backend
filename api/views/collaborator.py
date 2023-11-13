@@ -10,4 +10,4 @@ class CollaboratorViewSet(ListModelMixin, GenericViewSet):
     serializer_class = CollaboratorListSerializer
     model = Collaborator
     permission_classes = (AllowAny, )
-    queryset = Collaborator.objects.filter(is_active=True).order_by('order')
+    queryset = Collaborator.objects.filter(is_active=True).order_by('position')
