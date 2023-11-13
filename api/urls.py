@@ -27,6 +27,8 @@ router.register(r'subscriptions', views.SubscriptionViewSet,
 router.register(r'recovery', views.RecoveryViewSet, basename='recovery')
 router.register(r'covers', views.CoversViewSet, basename='covers')
 router.register(r'artists', views.ArtistViewSet, basename='artists')
+router.register(r'collaborators', views.CollaboratorViewSet,
+                basename='collaborators')
 
 urlpatterns = [
     path('', include(router.urls)),
