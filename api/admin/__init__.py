@@ -14,3 +14,4 @@ from api.admin.subscriber import SubscriberAdmin
 from api.admin.manifest import ManifestAdmin
 from api.admin.member import MemberAdmin
 from api.admin.orders import OrderAdmin
+from api.admin.collaborator import CollaboratorAdmin

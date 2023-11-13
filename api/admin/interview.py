@@ -28,7 +28,7 @@ def set_position(request, queryset, position):
             request, messages.WARNING, 'Only one question change at a time'
         )
         return
-    queryset.first().set_order(position)
+    queryset.first().set_position(position)
 
 @admin.action(description="Set order to 1")
 def set_first(modeladmin, request, queryset):

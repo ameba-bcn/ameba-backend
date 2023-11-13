@@ -17,9 +17,10 @@ class Collaborator(models.Model):
         verbose_name=_('description'), blank=True, null=True
     )
     is_active = models.BooleanField(verbose_name=_('active'), default=True)
-    order = models.IntegerField(
-        verbose_name=_('order'),
+    position = models.IntegerField(
+        verbose_name=_('position'),
         blank=True,
+        null=True,
         default=get_default_order
     )
 
@@ -29,3 +30,7 @@ class Collaborator(models.Model):
 
     def __str__(self):
         return self.image.name
+
+    def set_position(self, position):
+        self.position = position
+        self.save()
