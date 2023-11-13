@@ -47,14 +47,21 @@ class Question(models.Model):
     def __str__(self):
         return f'{self.question}'
 
-    def save(self, *args, **kwargs):
-        same_pos = Question.objects.filter(position=self.position)
-        if same_pos.exists() and self.position is not None:
-            raise ValidationError(message=_(
-                f'There\'s another question with position {self.position}'
-            ))
-        return super().save(*args, **kwargs)
+    def set_order(self, position):
+        self.position = position
+        self.save()
 
+    def save(self, *args, force=None, **kwargs):
+        if self.position is None or force is True:
+            return super().save(*args, **kwargs)
+        else:
+            old_position = Question.objects.get(pk=self.pk).position
+            same_pos_questions = list(Question.objects.filter(position=self.position))
+            for same_pos in same_pos_questions:
+                same_pos.position = old_position
+                same_pos.save(force=True)
+                old_position = None
+            return super().save(*args, **kwargs)
 
 class Answer(models.Model):
     class Meta:
