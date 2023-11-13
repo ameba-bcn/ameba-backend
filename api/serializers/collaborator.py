@@ -8,4 +8,4 @@ class CollaboratorListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cover
-        fields = ['image', 'is_active', 'description']
+        fields = ['name', 'image', 'is_active', 'description']

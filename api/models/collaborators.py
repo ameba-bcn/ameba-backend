@@ -11,6 +11,7 @@ class Collaborator(models.Model):
         verbose_name = _('Image')
         verbose_name_plural = _('Images')
 
+    name = models.CharField(max_length=50, verbose_name=_('name'))
     image = models.ImageField(upload_to='images', verbose_name=_('image'))
     description = models.TextField(
         verbose_name=_('description'), blank=True, null=True
