@@ -34,3 +34,4 @@ from api.serializers.member import (
 from api.serializers.manifest import ManifestSerializer
 from api.serializers.member_card import MemberCardSerializer
 from api.serializers.event_ticket import EventTicketSerializer
+from api.serializers.collaborator import CollaboratorListSerializer
