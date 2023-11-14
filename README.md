@@ -1,6 +1,12 @@
 # ameba backend v1.31
 
 ### Release notes
+### 1.4
+- fix: ordering questions (AW-466)
+- fix: search bar in members admin view broken (AW-487)
+- Added collaborators endpoint to api and admin (AW-478)
+- Added maps_url field to events (AW-435)
+- Added created field to artists api (AW-479)
 
 ### 1.31
 - fix: dependencies
