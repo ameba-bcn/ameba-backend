@@ -25,7 +25,7 @@ class ArtistSerializer(serializers.ModelSerializer):
         model = Artist
         fields = ['id', 'name', 'biography', 'images', 'media', 'tags',
                   'has_interview', 'is_ameba_dj', 'featured',
-                  'has_interview', 'interview_id']
+                  'has_interview', 'interview_id', 'created']
         read_only_fields = ['has_interview', 'interview_id', 'media']
 
     @staticmethod
@@ -50,7 +50,7 @@ class ArtistListSerializer(serializers.ModelSerializer):
         model = Artist
         fields = [
             'id', 'name', 'bio_preview', 'images', 'tags',
-            'has_interview', 'is_ameba_dj', 'featured'
+            'has_interview', 'is_ameba_dj', 'featured', 'created'
         ]
         read_only_fields = ['has_interview']
 
