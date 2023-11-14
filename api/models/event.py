@@ -3,7 +3,8 @@ from datetime import timedelta
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.db.models import (
-    CharField, DateTimeField, ManyToManyField, Model, ForeignKey, CASCADE
+    CharField, DateTimeField, ManyToManyField, Model, ForeignKey, CASCADE,
+    URLField
 )
 
 from api.models import Item
@@ -31,6 +32,7 @@ class Event(Item):
     header = CharField(max_length=22, verbose_name=_('header'))
     datetime = DateTimeField(verbose_name=_('datetime'))
     address = CharField(max_length=255, verbose_name=_('address'))
+    maps_url = URLField(verbose_name=_('maps url'), null=True, blank=True)
     type = ForeignKey(
         to="EventType", on_delete=CASCADE, blank=True, null=True,
         verbose_name=_('type')

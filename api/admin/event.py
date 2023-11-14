@@ -12,7 +12,7 @@ class EventTypeAdmin(TranslationAdmin):
 
 
 class EventAdmin(BaseItemAdmin):
-    fields = ['header'] + BaseItemAdmin.fields + ['datetime', 'address', 'artists', 'type', 'participant_list']
+    fields = ['header'] + BaseItemAdmin.fields + ['datetime', 'address', 'maps_url', 'artists', 'type', 'participant_list']
     readonly_fields = BaseItemAdmin.readonly_fields + ['participants', 'participant_list']
     list_display = BaseItemAdmin.list_display[:3] + ['participants'] + BaseItemAdmin.list_display[3:]
 
