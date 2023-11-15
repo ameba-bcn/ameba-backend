@@ -4,9 +4,9 @@
 ### 1.4
 - fix: ordering questions (AW-466)
 - fix: search bar in members admin view broken (AW-487)
-- Added collaborators endpoint to api and admin (AW-478)
-- Added maps_url field to events (AW-435)
-- Added created field to artists api (AW-479)
+- Added collaborators list endpoint to api and admin (AW-478)
+- Added maps_url field to events detail api (AW-435)
+- Added created field to artists list and detail api (AW-479)
 
 ### 1.31
 - fix: dependencies
