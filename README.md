@@ -1,7 +1,7 @@
-# ameba backend v1.31
+# ameba backend v1.40
 
 ### Release notes
-### 1.4
+### 1.40
 - fix: ordering questions (AW-466)
 - fix: search bar in members admin view broken (AW-487)
 - Added collaborators list endpoint to api and admin (AW-478)
