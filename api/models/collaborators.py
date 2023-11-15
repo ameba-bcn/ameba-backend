@@ -8,8 +8,8 @@ def get_default_order():
 
 class Collaborator(models.Model):
     class Meta:
-        verbose_name = _('Image')
-        verbose_name_plural = _('Images')
+        verbose_name = _('Collaborator')
+        verbose_name_plural = _('Collaborators')
 
     name = models.CharField(max_length=50, verbose_name=_('name'))
     image = models.ImageField(upload_to='images', verbose_name=_('image'))
