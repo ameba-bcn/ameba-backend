@@ -371,6 +371,8 @@ def get_user_stored_cards(user):
 
 
 def set_payment_method_default(payment_intent):
+    if 'customer' not in payment_intent:
+        return
     customer_id = payment_intent['customer']
     payment_method_id = payment_intent['payment_method']
     stripe.Customer.modify(

@@ -199,6 +199,8 @@ class ItemVariant(models.Model):
         ])
 
     def get_variant_name(self):
+        if self.item.is_subscription():
+            return f'{self.item.name} Membership'
         return f'{self.item.name} ({self.get_attributes_set()})'
 
     def save(self, *args, **kwargs):
