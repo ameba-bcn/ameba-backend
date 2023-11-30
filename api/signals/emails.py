@@ -104,12 +104,16 @@ def on_failed_renewal(sender, user, subscription, **kwargs):
 @receiver(payment_closed)
 def send_payment_successful_notification(sender, payment, **kwargs):
     user = payment.user
+    has_articles = any(
+        [variant.item.is_article() for variant in payment.item_variants.all()]
+    )
     email_factories.PaymentSuccessfulEmail.send_to(
         mail_to=user.email,
         user=user,
         site_name=settings.HOST_NAME,
         protocol=settings.DEBUG and 'http' or 'https',
         total=payment.total,
+        has_articles=has_articles,
         item_variants=payment.item_variants.all()
     )
 
