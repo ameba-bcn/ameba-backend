@@ -21,3 +21,4 @@ from api.models.event import Event, EventType
 from api.models.payment import Payment
 from api.models.orders import Order
 from api.models.collaborators import Collaborator
+from api.models.member_project import MemberProject, MemberProjectMediaUrl

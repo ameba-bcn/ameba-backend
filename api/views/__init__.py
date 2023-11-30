@@ -19,3 +19,4 @@ from api.views.member_card import MemberCard
 from api.views.event_ticket import EventTicketView
 from api.views.stripe import webhook
 from api.views.collaborator import CollaboratorViewSet
+from api.views.member_project import MemberProjectViewSet

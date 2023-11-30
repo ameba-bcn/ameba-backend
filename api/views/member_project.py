@@ -1,10 +1,12 @@
-from api.serializers import ArtistSerializer, ArtistListSerializer
-from api.models import Artist
-from api.views.base import BaseReadOnlyViewSet
+from api.serializers import (
+    MemberProjectSerializer, MemberProjectListSerializer
+)
+from api.models import MemberProject
+from api.views.base import BaseCrudViewSet
 
 
-class ArtistViewSet(BaseReadOnlyViewSet):
-    list_serializer = ArtistListSerializer
-    detail_serializer = ArtistSerializer
-    model = Artist
-    queryset = Artist.objects.all().order_by('-created')
+class MemberProjectViewSet(BaseCrudViewSet):
+    list_serializer = MemberProjectListSerializer
+    detail_serializer = MemberProjectSerializer
+    model = MemberProject
+    queryset = MemberProject.objects.all().order_by('-created')
