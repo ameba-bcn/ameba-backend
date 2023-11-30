@@ -2,41 +2,46 @@ from django.contrib import admin
 from django.utils.html import mark_safe
 from modeltranslation.admin import TranslationAdmin
 
-from api.models import Artist, ArtistMediaUrl, ArtistTag
+from api.models import MemberProject, MemberProjectMediaUrl, ArtistTag
 from api.admin.image import get_image_preview
 
 
-class ArtistTagAdmin(TranslationAdmin):
+class MemberProjectTagAdmin(TranslationAdmin):
     fields = ('name', )
     list_display = ('name', )
 
 
 class MediaUrlsInLine(admin.StackedInline):
-    model = ArtistMediaUrl
-    verbose_name = 'ArtistMediaUrl'
-    verbose_name_plural = "ArtistMediaUrls"
+    model = MemberProjectMediaUrl
+    verbose_name = 'Member project media url'
+    verbose_name_plural = "Member project media urls"
     fields = ('embedded', 'created')
     readonly_fields = ('created', )
     extra = 0
 
 
-class ArtistImages(admin.StackedInline):
-    model = Artist.images.through
-    verbose_name = 'ArtistImage'
-    verbose_name_plural = 'ArtistImages'
+class MemberProjectImages(admin.StackedInline):
+    model = MemberProject.images.through
+    verbose_name = 'Member project image'
+    verbose_name_plural = 'Member project images'
     fields = ('image', )
     extra = 0
 
 
-class ArtistAdmin(admin.ModelAdmin):
+class MemberProjectAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None, {'fields': ['id', 'name', 'is_ameba_dj', 'featured',
-                           'has_interview', 'biography', 'tags', 'created']})
+        (
+            None,
+            {
+                'fields': [
+                    'id', 'member', 'name', 'description', 'tags', 'public', 'created'
+                ]
+            }
+        )
     ]
-    readonly_fields = ['id', 'bio_preview', 'has_interview']
-    list_display = ['name', 'bio_preview', 'list_preview', 'is_ameba_dj',
-                    'has_interview']
-    inlines = (MediaUrlsInLine, ArtistImages)
+    readonly_fields = ['id']
+    list_display = ['name', 'member', 'list_preview', 'public']
+    inlines = (MediaUrlsInLine, MemberProjectImages)
 
     def preview(self, obj):
         preview = '<div>{images}</div>'
@@ -59,5 +64,4 @@ class ArtistAdmin(admin.ModelAdmin):
     list_preview.allow_tags = True
 
 
-admin.site.register(Artist, ArtistAdmin)
-admin.site.register(ArtistTag, ArtistTagAdmin)
+admin.site.register(MemberProject, MemberProjectAdmin)

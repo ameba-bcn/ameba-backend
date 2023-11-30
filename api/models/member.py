@@ -85,3 +85,6 @@ class Member(models.Model):
             self.qr_date
         )
         return signing.dumps(signature, salt=settings.QR_MEMBER_SALT)
+
+    def __str__(self):
+        return f'{self.user.username} ({self.first_name[0]}. {self.last_name[0]}.)'
