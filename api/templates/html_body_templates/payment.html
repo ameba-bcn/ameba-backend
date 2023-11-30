@@ -12,6 +12,7 @@
 ¡GRACIAS {{ user_name }}, TU PEDIDO SE HA REALIZADO CORRECTAMENTE!
         {% endblocktrans %}
     </h1>
+    {% if has_articles %}
     <p>
         {% blocktrans %}
 Te recordamos que actualmente no hacemos envíos. Para recogerlo puedes
@@ -27,6 +28,7 @@ Rhythm Control: Galerías Olimpia
 </a>
         {% endblocktrans %}
     </p>
+    {% endif %}
     <p>
         {% blocktrans %}
 A continuación encontrarás los detalles del pedido.
