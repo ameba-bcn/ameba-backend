@@ -39,6 +39,16 @@ class TestGetMemberProjects(BaseTest):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['name'], 'new name')
 
+    def test_member_can_edit_his_hidden_project(self):
+        project = user_helpers.get_member_project(public=False)
+        token = user_helpers.get_user_token(project.member.user)
+        response = self._partial_update(project.id, token, {
+            'name': 'new name',
+            'description': 'new description'
+        })
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['name'], 'new name')
+
     def test_member_can_create_his_project(self):
         image_path = 'api/tests/fixtures/media/member_project.jpeg'
         member = user_helpers.get_member()
@@ -54,6 +64,23 @@ class TestGetMemberProjects(BaseTest):
         self.assertEqual(response.data['name'], 'new name')
         self.assertEqual(response.data['description'], 'new description')
         self.assertIn('.jpeg', response.data['image'])
+
+    def test_member_create_hidden_project(self):
+        image_path = 'api/tests/fixtures/media/member_project.jpeg'
+        member = user_helpers.get_member()
+        token = user_helpers.get_user_token(member.user)
+        response = self._create({
+            'member': member.id,
+            'name': 'new name',
+            'description': 'new description',
+            'public': False,
+            'image': open(image_path, 'rb')
+        }, token, format='multipart')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['name'], 'new name')
+        self.assertEqual(response.data['description'], 'new description')
+        self.assertIn('.jpeg', response.data['image'])
+
 
     def test_member_can_not_create_others_project(self):
         image_path = 'api/tests/fixtures/media/member_project.jpeg'
@@ -98,3 +125,10 @@ class TestGetMemberProjects(BaseTest):
             'description': 'new description'
         })
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+    def test_unpublished_project_is_not_shown(self):
+        projects = [user_helpers.get_member_project(public=False) for i in range(3)]
+        response = self._list()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 0)
