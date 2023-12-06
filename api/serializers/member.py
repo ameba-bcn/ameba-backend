@@ -110,3 +110,20 @@ class MemberRegisterSerializer(serializers.Serializer):
         cart.checkout()
 
         return member_profile
+
+
+class MemberDetailSerializer(MemberSerializer):
+
+    class Meta:
+        model = Member
+        fields = (
+            'number', 'first_name', 'last_name', 'identity_card',
+            'phone_number', 'user', 'status', 'type', 'memberships',
+            'payment_methods', 'expires', 'project_name', 'description',
+            'image', 'media_urls', 'tags', 'genres', 'created',
+            'public'
+        )
+        read_only_fields = (
+            'number', 'user', 'status', 'type', 'memberships',
+            'payment_methods', 'expires', 'created'
+        )

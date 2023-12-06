@@ -28,7 +28,8 @@ from api.serializers.subscriber import (
     DeleteSubscriberSerializer, SubscribeSerializer
 )
 from api.serializers.member import (
-    MemberRegisterSerializer, MemberSerializer, DocMemberSerializer
+    MemberRegisterSerializer, MemberSerializer, DocMemberSerializer,
+    MemberDetailSerializer
 )
 # from api.serializers.membership import MembershipSerializer
 from api.serializers.manifest import ManifestSerializer

@@ -50,10 +50,36 @@ class Member(models.Model):
     )
     qr_date = models.CharField(max_length=14, default=get_default_qr_date)
 
+    # Project attributes
+    project_name = models.CharField(
+        max_length=50, verbose_name=_('project name'), blank=True, null=True
+    )
+    description = models.TextField(
+        max_length=2500, verbose_name=_('biography'), null=True
+    )
+    image = models.ImageField(
+        upload_to='member_projects', verbose_name=_('image'), null=True
+    )
+    tags = models.ManyToManyField(
+        to='ArtistTag', blank=True, verbose_name=_('tags'), null=True,
+        related_name='members'
+    )
+    genres = models.ManyToManyField(
+        to='MusicGenres', blank=True, verbose_name=_('genres'), null=True,
+        related_name='members'
+    )
+    public = models.BooleanField(default=False)
+
     def get_newest_membership(self):
         if self.memberships.all():
             return self.memberships.order_by('-expires').first()
         return None
+
+    @property
+    def is_active(self):
+        if newest := self.get_newest_membership():
+            return newest.is_active
+        return False
 
     @property
     def status(self):
@@ -92,3 +118,22 @@ class Member(models.Model):
 
     def __str__(self):
         return f'{self.user.username} ({self.first_name[0]}. {self.last_name[0]}.)'
+
+
+class MemberMediaUrl(models.Model):
+    member = models.ForeignKey(
+        to='Member', on_delete=models.CASCADE, related_name='media_urls',
+        verbose_name=_('Member media url')
+    )
+    url = models.URLField(verbose_name=_('url'))
+    embedded = models.TextField(max_length=3000, blank=True)
+    created = models.DateTimeField(
+        auto_now_add=True, verbose_name=_('created')
+    )
+
+    class Meta:
+        verbose_name = _('Member media url')
+        verbose_name_plural = _('Member media urls')
+
+    def __str__(self):
+        return self.url

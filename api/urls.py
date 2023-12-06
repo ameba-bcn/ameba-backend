@@ -34,7 +34,9 @@ router.register(
 router.register(
     r'member_projects', views.MemberProjectViewSet, basename='member_projects'
 )
-
+router.register(
+    r'member', views.MemberViewSet, basename='members'
+)
 
 urlpatterns = [
     path('', include(router.urls)),
