@@ -1,5 +1,7 @@
+import random
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.models import Group
+from django.core.files.images import ImageFile
 
 import api.models as api_models
 import api.tests.helpers.items as item_helpers
@@ -8,6 +10,8 @@ user_types = {
     'web_user': None,
     'ameba_member': None
 }
+
+chiquito_ipsum = 'Lorem fistrum pecador te va a hasé pupitaa sexuarl papaar papaar jarl ahorarr condemor ahorarr. Al ataquerl a peich qué dise usteer te va a hasé pupitaa ese pedazo de. Ese hombree ese que llega papaar papaar pecador caballo blanco caballo negroorl ese pedazo de al ataquerl. Al ataquerl jarl mamaar pupita condemor torpedo. Te voy a borrar el cerito ahorarr te va a hasé pupitaa mamaar de la pradera ese pedazo de torpedo hasta luego Lucas sexuarl caballo blanco caballo negroorl por la gloria de mi madre. Condemor papaar papaar ese hombree está la cosa muy malar se calle ustée.'
 
 
 def get_user(username, email, password, group_name='web_user', active=True):
@@ -33,8 +37,16 @@ def get_member(
     phone_number='666666666'
 ):
     if not user:
-        user = get_user(username='Namerandom', email='random@email.com',
-                 password='12345')
+        while True:
+            try:
+                i = random.randint(0, 1000)
+                user = get_user(
+                    username=f'Username{i}', email=f'username{i}@email.com',
+                    password='12345'
+                )
+                break
+            except Exception as e:
+                pass
 
     return api_models.Member.objects.create(
         user=user,
@@ -45,3 +57,20 @@ def get_member(
     )
 
 
+def get_member_project(member=None, name=None, description=None, public=True):
+    project_image = ImageFile(
+        open('api/tests/fixtures/media/member_project.jpeg', 'rb')
+    )
+    if not member:
+        member = get_member()
+    if not name:
+        name = f'{member.user.username} music project'
+    if not description:
+        description = f'{chiquito_ipsum}\n' * random.randint(1, 3)
+    return api_models.MemberProject.objects.create(
+        member=member,
+        name=name,
+        description=description,
+        image=project_image,
+        public=public
+    )
