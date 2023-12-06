@@ -20,34 +20,25 @@ class MediaUrlsInLine(admin.StackedInline):
     extra = 0
 
 
-class MemberProjectImages(admin.StackedInline):
-    model = MemberProject.images.through
-    verbose_name = 'Member project image'
-    verbose_name_plural = 'Member project images'
-    fields = ('image', )
-    extra = 0
-
-
 class MemberProjectAdmin(admin.ModelAdmin):
     fieldsets = [
         (
             None,
             {
                 'fields': [
-                    'id', 'member', 'name', 'description', 'tags', 'public', 'created'
+                    'member', 'name', 'description', 'tags',
+                    'public', 'image', 'preview', 'created'
                 ]
             }
         )
     ]
-    readonly_fields = ['id']
+    readonly_fields = ['preview']
     list_display = ['name', 'member', 'list_preview', 'public']
-    inlines = (MediaUrlsInLine, MemberProjectImages)
+    inlines = (MediaUrlsInLine, )
 
     def preview(self, obj):
         preview = '<div>{images}</div>'
-        images = ''.join(
-            get_image_preview(image, 150) for image in obj.images.all()
-        )
+        images = get_image_preview(obj.image, 150)
         return mark_safe(preview.format(images=images))
 
     preview.short_description = 'Preview'
@@ -55,9 +46,7 @@ class MemberProjectAdmin(admin.ModelAdmin):
 
     def list_preview(self, obj):
         preview = '<div>{images}</div>'
-        images = ''.join(
-            get_image_preview(image, 75) for image in obj.images.all()
-        )
+        images = get_image_preview(obj.image, 75)
         return mark_safe(preview.format(images=images))
 
     list_preview.short_description = 'Preview'
