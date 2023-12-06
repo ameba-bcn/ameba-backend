@@ -86,5 +86,9 @@ class Member(models.Model):
         )
         return signing.dumps(signature, salt=settings.QR_MEMBER_SALT)
 
+    @property
+    def id(self):
+        return self.number
+
     def __str__(self):
         return f'{self.user.username} ({self.first_name[0]}. {self.last_name[0]}.)'
