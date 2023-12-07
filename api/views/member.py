@@ -1,26 +1,20 @@
 from rest_framework.permissions import IsAuthenticated
-from api.serializers import MemberDetailSerializer
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from api.serializers import MemberDetailSerializer, MemberImageSerializer
 from api.views.base import BaseUserEditableViewSet
 from api.docs.member_card import MemberCardDocs
-from api.permissions import (
-    MemberProjectReadPermission, MemberProjectEditPermission
-)
+from api.permissions import MemberPermission
 from api import models
 
 
 class MemberViewSet(BaseUserEditableViewSet):
     list_serializer = MemberDetailSerializer
     detail_serializer = MemberDetailSerializer
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (MemberPermission, )
     model = models.Member
     serializer_class = MemberDetailSerializer
-
-    def get_permissions(self):
-        if self.action in ('list', 'retrieve'):
-            self.permission_classes = (MemberProjectReadPermission, )
-        elif self.action in ('update', 'partial_update'):
-            self.permission_classes = (MemberProjectEditPermission, )
-        return super().get_permissions()
+    queryset = models.Member.objects.all()
 
     @staticmethod
     def _get_member(user):
@@ -36,5 +30,20 @@ class MemberViewSet(BaseUserEditableViewSet):
         member = request.user.member
         kwargs['pk'] = member.pk
         return self.retrieve(request, *args, **kwargs)
+
+    def get_serializer_class(self):
+        if self.action == 'image':
+            return MemberImageSerializer
+        return super().get_serializer_class()
+
+    @action(detail=True, methods=['POST', 'GET'], serializer_class=MemberImageSerializer)
+    def image(self, request, *args, **kwargs):
+        member = self.get_object()
+        serializer_class = self.get_serializer_class()
+        serializer = serializer_class(member, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        result = serializer.save()
+        return Response(serializer_class(result).data)
+
 
     list.__doc__ = MemberCardDocs.list

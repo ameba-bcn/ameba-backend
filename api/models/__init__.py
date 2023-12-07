@@ -9,7 +9,7 @@ from api.models.covers import Cover
 from api.models.images import Image
 from api.models.item import Item, ItemVariant, ItemAttribute, ItemAttributeType
 from api.models.subscription import Subscription
-from api.models.member import Member
+from api.models.member import Member, MemberMediaUrl
 from api.models.membership import Membership
 from api.models.artist import Artist, ArtistMediaUrl, ArtistTag
 from api.models.interview import Interview, Answer, Question
@@ -21,3 +21,4 @@ from api.models.event import Event, EventType
 from api.models.payment import Payment
 from api.models.orders import Order
 from api.models.collaborators import Collaborator
+from api.models.genres import MusicGenres

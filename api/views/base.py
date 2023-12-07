@@ -1,8 +1,7 @@
-from rest_framework.viewsets import GenericViewSet, ModelViewSet
+from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import (
     RetrieveModelMixin, ListModelMixin, UpdateModelMixin
 )
-from rest_framework.mixins import RetrieveModelMixin, ListModelMixin
 from rest_framework.permissions import AllowAny
 
 
@@ -20,7 +19,7 @@ class BaseReadOnlyViewSet(RetrieveModelMixin, ListModelMixin, GenericViewSet):
         return super().get_serializer_class()
 
 
-class BaseUserEditableViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin,
+class BaseUserEditableViewSet(RetrieveModelMixin, UpdateModelMixin,
                               GenericViewSet):
     list_serializer = None
     detail_serializer = None
