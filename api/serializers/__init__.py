@@ -28,10 +28,14 @@ from api.serializers.subscriber import (
     DeleteSubscriberSerializer, SubscribeSerializer
 )
 from api.serializers.member import (
-    MemberRegisterSerializer, MemberSerializer, DocMemberSerializer
+    MemberRegisterSerializer, MemberSerializer, DocMemberSerializer,
+    MemberDetailSerializer, MemberImageSerializer
 )
 # from api.serializers.membership import MembershipSerializer
 from api.serializers.manifest import ManifestSerializer
 from api.serializers.member_card import MemberCardSerializer
 from api.serializers.event_ticket import EventTicketSerializer
 from api.serializers.collaborator import CollaboratorListSerializer
+from api.serializers.member_project import (
+    MemberProjectSerializer, MemberProjectListSerializer
+)
