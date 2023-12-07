@@ -3,7 +3,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from api.serializers import MemberDetailSerializer, MemberImageSerializer
 from api.views.base import BaseUserEditableViewSet
-from api.docs.member_card import MemberCardDocs
+from api.docs.members import MembersDocs
 from api.permissions import MemberPermission
 from api import models
 
@@ -46,4 +46,4 @@ class MemberViewSet(BaseUserEditableViewSet):
         return Response(serializer_class(result).data)
 
 
-    list.__doc__ = MemberCardDocs.list
+    image.__doc__ = MembersDocs.images
