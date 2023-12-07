@@ -50,23 +50,10 @@ class CartPermission(permissions.IsAuthenticated):
         return False
 
 
-class MemberProjectReadPermission(permissions.IsAuthenticated):
+class MemberPermission(permissions.IsAuthenticated):
     def has_permission(self, request, view):
         if request.user and request.user.is_authenticated:
-                return True
-        return False
-
-    def has_object_permission(self, request, view, obj):
-        if not obj.user or request.user == obj.user:
-            return True
-        return False
-
-
-class MemberProjectEditPermission(permissions.IsAuthenticated):
-
-    def has_permission(self, request, view):
-        if request.user and request.user.is_authenticated:
-            if request.user.member.is_active:
+            if hasattr(request.user, 'member') and request.user.member:
                 return True
         return False
 

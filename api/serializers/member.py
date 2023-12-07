@@ -117,13 +117,19 @@ class MemberDetailSerializer(MemberSerializer):
     class Meta:
         model = Member
         fields = (
-            'number', 'first_name', 'last_name', 'identity_card',
+            'id', 'number', 'first_name', 'last_name', 'identity_card',
             'phone_number', 'user', 'status', 'type', 'memberships',
             'payment_methods', 'expires', 'project_name', 'description',
-            'image', 'media_urls', 'tags', 'genres', 'created',
+            'image', 'media_urls', 'tags', 'genres', 'created', 'is_active',
             'public'
         )
         read_only_fields = (
-            'number', 'user', 'status', 'type', 'memberships',
-            'payment_methods', 'expires', 'created'
+            'id', 'number', 'user', 'status', 'is_active', 'type', 'memberships',
+            'payment_methods', 'expires', 'created', 'image'
         )
+
+
+class MemberImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Member
+        fields = ('image',)

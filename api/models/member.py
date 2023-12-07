@@ -69,6 +69,9 @@ class Member(models.Model):
         related_name='members'
     )
     public = models.BooleanField(default=False)
+    created = models.DateTimeField(
+        auto_now_add=True, verbose_name=_('created')
+    )
 
     def get_newest_membership(self):
         if self.memberships.all():

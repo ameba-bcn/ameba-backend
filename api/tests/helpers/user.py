@@ -34,7 +34,8 @@ def get_member(
     identity_card='55555555M',
     first_name='Member',
     last_name='Frito',
-    phone_number='666666666'
+    phone_number='666666666',
+    public=False
 ):
     if not user:
         while True:
@@ -53,24 +54,7 @@ def get_member(
         identity_card=identity_card,
         first_name=first_name,
         last_name=last_name,
-        phone_number=phone_number
-    )
-
-
-def get_member_project(member=None, name=None, description=None, public=True):
-    project_image = ImageFile(
-        open('api/tests/fixtures/media/member_project.jpeg', 'rb')
-    )
-    if not member:
-        member = get_member()
-    if not name:
-        name = f'{member.user.username} music project'
-    if not description:
-        description = f'{chiquito_ipsum}\n' * random.randint(1, 3)
-    return api_models.MemberProject.objects.create(
-        member=member,
-        name=name,
-        description=description,
-        image=project_image,
+        phone_number=phone_number,
         public=public
     )
+

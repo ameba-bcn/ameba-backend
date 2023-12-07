@@ -14,9 +14,6 @@ class MusicGenres(models.Model):
     def __str__(self):
         return self.verbose
 
-    def verbose_name(self):
-        return self._meta.verbose_name
-
     @staticmethod
     def normalize_name(name):
         return name.replace(' ', '_').lower()

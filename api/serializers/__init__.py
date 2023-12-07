@@ -29,7 +29,7 @@ from api.serializers.subscriber import (
 )
 from api.serializers.member import (
     MemberRegisterSerializer, MemberSerializer, DocMemberSerializer,
-    MemberDetailSerializer
+    MemberDetailSerializer, MemberImageSerializer
 )
 # from api.serializers.membership import MembershipSerializer
 from api.serializers.manifest import ManifestSerializer

@@ -30,10 +30,13 @@ class BaseTest(APITestCase):
                 HTTP_AUTHORIZATION='Bearer {}'.format(token)
             )
 
-    def request(self, url, method, token=None, props=None):
+    def request(self, url, method, token=None, props=None, format='json'):
         self._authenticate(token)
         method = getattr(self.client, method.lower())
-        return method(url, data=props or {}, follow=True)
+        attrs = dict(path=url, data=props or {}, follow=True)
+        if format:
+            attrs['format'] = format
+        return method(**attrs)
 
     def _update(self, pk, token, props):
         self._authenticate(token)
