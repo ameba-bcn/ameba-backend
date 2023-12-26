@@ -1,7 +1,8 @@
 from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin
 
-from api.models import Member, Membership, Subscription, MemberMediaUrl
+from api.models import Member, Membership, Subscription, MemberMediaUrl, \
+    MemberProfileImage
 from api.admin.image import get_image_preview
 
 class StatusFilter(admin.SimpleListFilter):
@@ -79,6 +80,21 @@ class MediaUrlsInLine(admin.StackedInline):
     extra = 0
 
 
+class MemberImageInLine(admin.TabularInline):
+    model = MemberProfileImage
+    verbose_name = 'Member profile image'
+    verbose_name_plural = "Member profile images"
+    fields = ('image', 'created', 'preview')
+    readonly_fields = ('created', 'preview')
+    extra = 0
+
+    def preview(self, obj):
+        return get_image_preview(obj.image, 150)
+
+    preview.short_description = 'Preview'
+    preview.allow_tags = True
+
+
 
 class MemberAdmin(admin.ModelAdmin):
     search_fields = ('number', 'user__email', 'first_name', 'last_name')
@@ -88,24 +104,17 @@ class MemberAdmin(admin.ModelAdmin):
     )
     fields = (
         'number', 'user', 'first_name', 'last_name', 'project_name',
-        'description', 'tags', 'genres', 'public', 'image', 'preview',
+        'description', 'tags', 'genres', 'public',
         'status', 'type', 'expires'
     )
     list_display_links = ('number', )
-    readonly_fields = (
-        'preview', 'list_preview', 'status', 'type', 'expires'
-    )
+    readonly_fields = ('list_preview', 'status', 'type', 'expires')
     list_filter = (StatusFilter, TypeFilter)
-    inlines = [MembershipInLine]
-
-    def preview(self, obj):
-        return get_image_preview(obj.image, 150)
-
-    preview.short_description = 'Preview'
-    preview.allow_tags = True
+    inlines = [MembershipInLine, MemberImageInLine]
 
     def list_preview(self, obj):
-        return get_image_preview(obj.image, 60)
+        if obj.images and obj.images.all():
+            return get_image_preview(obj.images.first().image, 60)
 
     list_preview.short_description = 'Preview'
     list_preview.allow_tags = True
