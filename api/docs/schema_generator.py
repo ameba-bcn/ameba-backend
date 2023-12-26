@@ -1,7 +1,8 @@
 from drf_yasg.generators import OpenAPISchemaGenerator
 
 from api.docs import carts, recovery, activate, covers, subscriber, \
-    articles, events, subscriptions, user, member_register, members
+    articles, events, subscriptions, user, member_register, members, \
+    profile_images
 
 
 class CustomOpenAPISchemaGenerator(OpenAPISchemaGenerator):
@@ -54,6 +55,10 @@ class CustomOpenAPISchemaGenerator(OpenAPISchemaGenerator):
             {
                 "name": "members",
                 "description": members.MembersDocs.common
+            },
+            {
+                "name": "profile_images",
+                "description": profile_images.ProfileImagesDocs.common
             }
         ]
 
