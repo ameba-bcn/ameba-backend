@@ -2,7 +2,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from api.serializers import MemberDetailSerializer, MemberImageSerializer
-from api.views.base import BaseUserEditableViewSet
+from api.views.base import BaseUserEditableViewSet, BaseCrudViewSet
 from api.docs.members import MembersDocs
 from api.permissions import MemberPermission
 from api import models
@@ -31,19 +31,18 @@ class MemberViewSet(BaseUserEditableViewSet):
         kwargs['pk'] = member.pk
         return self.retrieve(request, *args, **kwargs)
 
-    def get_serializer_class(self):
-        if self.action == 'image':
-            return MemberImageSerializer
-        return super().get_serializer_class()
 
-    @action(detail=True, methods=['POST', 'GET'], serializer_class=MemberImageSerializer)
-    def image(self, request, *args, **kwargs):
-        member = self.get_object()
-        serializer_class = self.get_serializer_class()
-        serializer = serializer_class(member, data=request.data)
-        serializer.is_valid(raise_exception=True)
-        result = serializer.save()
-        return Response(serializer_class(result).data)
+class MemberProfileImageViewSet(BaseCrudViewSet):
+    permission_classes = (IsAuthenticated, )
+    model = models.Member
+    list_serializer = MemberImageSerializer
+    detail_serializer = MemberImageSerializer
+    queryset = models.MemberProfileImage.objects.all()
 
+    def get_queryset(self):
+        return self.queryset.filter(member=self.request.user.member.pk)
 
-    image.__doc__ = MembersDocs.images
+    def create(self, request, *args, **kwargs):
+        member = request.user.member
+        request.data['member'] = member.pk
+        return super().create(request, *args, **kwargs)

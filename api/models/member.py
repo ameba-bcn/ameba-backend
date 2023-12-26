@@ -29,6 +29,27 @@ def get_default_qr_date():
     return datetime.datetime.now().strftime(QR_DATE_FORMAT)
 
 
+class MemberProfileImage(models.Model):
+    class Meta:
+        verbose_name = _('Member profile image')
+        verbose_name_plural = _('Member profile images')
+
+    member = models.ForeignKey(
+        to='Member', on_delete=models.CASCADE, verbose_name=_('member'),
+        related_name='images'
+    )
+    image = models.ImageField(
+        upload_to='member_profile_images', verbose_name=_('profile image')
+    )
+    created = models.DateTimeField(
+        auto_now_add=True, verbose_name=_('created')
+    )
+
+    def __str__(self):
+        return f'{self.member.user.username} profile images'
+
+
+
 class Member(models.Model):
     class Meta:
         verbose_name = _('Member')
@@ -56,9 +77,6 @@ class Member(models.Model):
     )
     description = models.TextField(
         max_length=2500, verbose_name=_('biography'), null=True
-    )
-    image = models.ImageField(
-        upload_to='member_projects', verbose_name=_('image'), null=True
     )
     tags = models.ManyToManyField(
         to='ArtistTag', blank=True, verbose_name=_('tags'), null=True,

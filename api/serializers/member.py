@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from api.models import Member, User, Cart, Membership
+from api.models import Member, User, Cart, Membership, MemberProfileImage
 from api.exceptions import (
     EmailAlreadyExists, WrongCartId, CartNeedOneSubscription,
     IdentityCardIsTooShort, WrongIdentityCardFormat
@@ -112,7 +112,17 @@ class MemberRegisterSerializer(serializers.Serializer):
         return member_profile
 
 
+class MemberImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MemberProfileImage
+        fields = ('id', 'image', 'created', 'member')
+
+
 class MemberDetailSerializer(MemberSerializer):
+    images = MemberImageSerializer(many=True, read_only=True)
+    upload_images = serializers.ListField(
+        write_only=True, required=False, allow_empty=False,
+    )
 
     class Meta:
         model = Member
@@ -120,16 +130,17 @@ class MemberDetailSerializer(MemberSerializer):
             'id', 'number', 'first_name', 'last_name', 'identity_card',
             'phone_number', 'user', 'status', 'type', 'memberships',
             'payment_methods', 'expires', 'project_name', 'description',
-            'image', 'media_urls', 'tags', 'genres', 'created', 'is_active',
-            'public'
+            'images', 'media_urls', 'tags', 'genres', 'created', 'is_active',
+            'public', 'upload_images'
         )
         read_only_fields = (
             'id', 'number', 'user', 'status', 'is_active', 'type', 'memberships',
-            'payment_methods', 'expires', 'created', 'image'
+            'payment_methods', 'expires', 'created', 'images'
         )
+        optional_fields = fields
 
-
-class MemberImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Member
-        fields = ('image',)
+    def save(self, **kwargs):
+        upload_images = self.validated_data.get('upload_images', [])
+        for image in upload_images:
+            MemberProfileImage.objects.create(member=self.instance, image=image)
+        return super().save(**kwargs)

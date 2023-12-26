@@ -1,5 +1,6 @@
 from django.utils import timezone
 from django.core.files.images import ImageFile
+from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework import status
 
 from api.tests.helpers import user as user_helpers
@@ -74,25 +75,117 @@ class TestMemberProfileDetails(BaseTest):
         response = self._get('current', token)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_member_can_add_image(self):
+    def test_member_can_upload_images(self):
         member = user_helpers.get_member()
         token = user_helpers.get_user_token(member.user)
-        url = self.DETAIL_ENDPOINT.format(pk='current') + 'image/'
-        response = self.request(url, 'POST', token, {
-            'image': ImageFile(open('api/tests/fixtures/media/member_project.jpeg', 'rb'))
-        }, format='multipart')
+        url = self.DETAIL_ENDPOINT.format(pk='current')
+        response = self.request(
+            url,
+            'PATCH',
+            token,
+            {
+                'upload_images': [
+                    open('api/tests/fixtures/media/member_project.jpeg', 'rb'),
+                    open('api/tests/fixtures/media/member_project.jpeg', 'rb'),
+                    open('api/tests/fixtures/media/member_project.jpeg', 'rb')
+                ],
+                'first_name': 'Manolito gafotas',
+            },
+            format='multipart'
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn('image', response.data)
-        self.assertIn('member_project', response.data['image'])
+        self.assertIn('images', response.data)
+        self.assertIs(type(response.data['images']), list)
+        self.assertEqual(len(response.data['images']), 3)
 
-    def test_member_can_get_image(self):
+    def test_member_can_delete_image(self):
         member = user_helpers.get_member()
         token = user_helpers.get_user_token(member.user)
-        url = self.DETAIL_ENDPOINT.format(pk='current') + 'image/'
-        response = self.request(url, 'POST', token, {
-            'image': ImageFile(open('api/tests/fixtures/media/member_project.jpeg', 'rb'))
-        }, format='multipart')
+        url = self.DETAIL_ENDPOINT.format(pk='current')
+        response = self.request(
+            url,
+            'PATCH',
+            token,
+            {
+                'upload_images': [
+                    open('api/tests/fixtures/media/member_project.jpeg', 'rb'),
+                    open('api/tests/fixtures/media/member_project.jpeg', 'rb'),
+                    open('api/tests/fixtures/media/member_project.jpeg', 'rb')
+                ],
+                'first_name': 'Manolito gafotas',
+            },
+            format='multipart'
+        )
+        self.assertEqual(member.images.count(), 3)
+
+        profile_images_url = '/api/profile_images/{pk}/'
+        image = member.images.first()
+        url = profile_images_url.format(pk=image.pk)
+        response = self.request(url, 'DELETE', token)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(member.images.count(), 2)
+
+    def test_member_can_delete_others_image(self):
+        member_1 = user_helpers.get_member()
+        member_2 = user_helpers.get_member()
+        token_1 = user_helpers.get_user_token(member_1.user)
+        token_2 = user_helpers.get_user_token(member_2.user)
+
+        url = self.DETAIL_ENDPOINT.format(pk='current')
+        response = self.request(
+            url,
+            'PATCH',
+            token_1,
+            {
+                'upload_images': [
+                    open('api/tests/fixtures/media/member_project.jpeg', 'rb'),
+                    open('api/tests/fixtures/media/member_project.jpeg', 'rb'),
+                    open('api/tests/fixtures/media/member_project.jpeg', 'rb')
+                ],
+                'first_name': 'Manolito gafotas',
+            },
+            format='multipart'
+        )
+        self.assertEqual(member_1.images.count(), 3)
+        profile_images_url = '/api/profile_images/{pk}/'
+        image = member_1.images.first()
+        url = profile_images_url.format(pk=image.pk)
+        response = self.request(url, 'DELETE', token_2)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_member_can_add_new_image(self):
+        member = user_helpers.get_member()
+        token = user_helpers.get_user_token(member.user)
+        url = self.DETAIL_ENDPOINT.format(pk='current')
+        response = self.request(
+            url,
+            'PATCH',
+            token,
+            {
+                'upload_images': [
+                    open('api/tests/fixtures/media/member_project.jpeg', 'rb'),
+                    open('api/tests/fixtures/media/member_project.jpeg', 'rb'),
+                    open('api/tests/fixtures/media/member_project.jpeg', 'rb')
+                ],
+                'first_name': 'Manolito gafotas',
+            },
+            format='multipart'
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        response = self.request(url, 'GET', token)
-        self.assertIn('image', response.data)
-        self.assertIn('member_project', response.data['image'])
+        self.assertIn('images', response.data)
+        self.assertIs(type(response.data['images']), list)
+        self.assertEqual(len(response.data['images']), 3)
+
+        new_image_url = '/api/profile_images/'
+        response = self.request(
+            new_image_url,
+            'POST',
+            token,
+            {
+                'image': open('api/tests/fixtures/media/member_project.jpeg', 'rb')
+            },
+            format='multipart'
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(member.images.count(), 4)
+

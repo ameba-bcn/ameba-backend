@@ -37,6 +37,9 @@ router.register(
 router.register(
     r'members', views.MemberViewSet, basename='members'
 )
+router.register(
+    r'profile_images', views.MemberProfileImageViewSet, basename='member_images'
+)
 
 urlpatterns = [
     path('', include(router.urls)),
