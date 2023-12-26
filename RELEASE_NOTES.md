@@ -1,5 +1,9 @@
 ### Release notes
 
+### 1.42
+- AW-497: implemented member profile project attributes and member_projects lists.
+
+
 ### 1.41
 - fix: removed pick-up message from payment emails when there aren't articles (AW-443)
 
