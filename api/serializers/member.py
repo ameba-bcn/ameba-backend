@@ -142,8 +142,15 @@ class MemberDetailSerializer(MemberSerializer):
 
     def to_internal_value(self, data):
         new_data = data.copy()
-        new_data['genres'] = [MusicGenres.normalize_name(genre) for genre in data.get('genres', [])]
+        if 'genres' in data:
+            new_data['genres'] = [
+                MusicGenres.normalize_name(genre)
+                for genre in data.get('genres', [])
+            ]
         return super().to_internal_value(new_data)
+
+    def update(self, instance, validated_data):
+        return super().update(instance, validated_data)
 
     def save(self, **kwargs):
         upload_images = self.validated_data.get('upload_images', [])
