@@ -5,9 +5,10 @@ from api.models import MusicGenres
 
 
 class MusicGenresAdmin(admin.ModelAdmin):
-    fields = ('name', 'verbose')
+    fields = ('name', 'verbose', 'validated')
     readonly_fields = ('verbose', )
-    list_display = ('verbose', )
-
+    list_display = ('name', 'verbose', 'validated')
+    search_fields = ('name', )
+    list_filter = ('validated', )
 
 admin.site.register(MusicGenres, MusicGenresAdmin)
