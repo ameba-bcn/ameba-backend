@@ -1,12 +1,8 @@
-from django.utils import timezone
-from django.core.files.images import ImageFile
-from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework import status
 
 from api.tests.helpers import user as user_helpers
-from api.tests._helpers import BaseTest, check_structure
-from api.tests.user import BaseUserTest
-from api.models import Member
+from api.tests._helpers import BaseTest
+from api import models
 
 
 class TestMemberProfileDetails(BaseTest):
@@ -189,3 +185,84 @@ class TestMemberProfileDetails(BaseTest):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(member.images.count(), 4)
 
+    def test_member_can_add_music_genres(self):
+        member = user_helpers.get_member()
+        token = user_helpers.get_user_token(member.user)
+        url = self.DETAIL_ENDPOINT.format(pk='current')
+        response = self.request(
+            url,
+            'PATCH',
+            token,
+            {
+                'genres': ['IDM', 'Techno'],
+            }
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('genres', response.data)
+        self.assertIs(type(response.data['genres']), list)
+        self.assertEqual(len(response.data['genres']), 2)
+
+    def test_member_added_genres_appear_doesnt_appear_in_genres_list(self):
+        member = user_helpers.get_member()
+        token = user_helpers.get_user_token(member.user)
+        url = self.DETAIL_ENDPOINT.format(pk='current')
+        response = self.request(
+            url,
+            'PATCH',
+            token,
+            {
+                'genres': ['IDM', 'Techno'],
+            }
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('genres', response.data)
+        self.assertIs(type(response.data['genres']), list)
+        self.assertEqual(len(response.data['genres']), 2)
+
+        url = '/api/genres/'
+        response = self.request(url,'GET')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 0)
+
+    def test_validated_genres_appear_in_genres_list(self):
+        member = user_helpers.get_member()
+        token = user_helpers.get_user_token(member.user)
+        url = self.DETAIL_ENDPOINT.format(pk='current')
+        response = self.request(
+            url,
+            'PATCH',
+            token,
+            {
+                'genres': ['IDM', 'Techno'],
+            }
+        )
+        for genre in models.MusicGenres.objects.all():
+            genre.validated = True
+            genre.save()
+
+        url = '/api/genres/'
+        response = self.request(url,'GET')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+
+    def test_music_genres_normalization(self):
+        member = user_helpers.get_member()
+        token = user_helpers.get_user_token(member.user)
+        url = self.DETAIL_ENDPOINT.format(pk='current')
+        response = self.request(
+            url,
+            'PATCH',
+            token,
+            {
+                'genres': ['IDM', 'I.D.M'],
+            }
+        )
+        for genre in models.MusicGenres.objects.all():
+            genre.validated = True
+            genre.save()
+
+        url = '/api/genres/'
+        response = self.request(url,'GET')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(member.genres.count(), 1)
+        self.assertEqual(len(response.data), 1)

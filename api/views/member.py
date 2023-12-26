@@ -21,6 +21,13 @@ class MemberViewSet(BaseUserEditableViewSet):
         if user.is_authenticated and hasattr(user, 'member') and user.member:
             return user.member
 
+    def update(self, request, *args, **kwargs):
+        if 'genres' in request.data:
+            genres = request.data.get('genres', [])
+            for genre in genres:
+                models.MusicGenres.objects.get_or_create(name=genre)
+        return super().update(request, *args, **kwargs)
+
     def get_object(self):
         current = self._get_member(self.request.user)
         self.kwargs['pk'] = current.pk

@@ -39,3 +39,5 @@ from api.serializers.collaborator import CollaboratorListSerializer
 from api.serializers.member_project import (
     MemberProjectSerializer, MemberProjectListSerializer
 )
+from api.serializers.genres import MusicGenresSerializer
+

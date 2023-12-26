@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
-from api.models import Member, User, Cart, Membership, MemberProfileImage
+from api.models import Member, User, Cart, Membership, MemberProfileImage, \
+    MusicGenres
 from api.exceptions import (
     EmailAlreadyExists, WrongCartId, CartNeedOneSubscription,
     IdentityCardIsTooShort, WrongIdentityCardFormat
@@ -138,6 +139,11 @@ class MemberDetailSerializer(MemberSerializer):
             'payment_methods', 'expires', 'created', 'images'
         )
         optional_fields = fields
+
+    def to_internal_value(self, data):
+        new_data = data.copy()
+        new_data['genres'] = [MusicGenres.normalize_name(genre) for genre in data.get('genres', [])]
+        return super().to_internal_value(new_data)
 
     def save(self, **kwargs):
         upload_images = self.validated_data.get('upload_images', [])
