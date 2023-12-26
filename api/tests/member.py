@@ -266,3 +266,29 @@ class TestMemberProfileDetails(BaseTest):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(member.genres.count(), 1)
         self.assertEqual(len(response.data), 1)
+
+    def test_member_can_hidde_project(self):
+        member = user_helpers.get_member(public=True)
+        token = user_helpers.get_user_token(member.user)
+        response = self._partial_update(member.id, token, {
+            'project_name': 'new name',
+            'description': 'new description'
+        })
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['project_name'], 'new name')
+
+        project_url = '/api/member_projects/'
+        response = self.request(project_url, 'GET')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+
+        response = self._partial_update(member.id, token, {
+            'public': False,
+        })
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['public'], False)
+
+        project_url = '/api/member_projects/'
+        response = self.request(project_url, 'GET')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 0)
