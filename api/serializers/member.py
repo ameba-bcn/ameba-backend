@@ -124,6 +124,9 @@ class MemberDetailSerializer(MemberSerializer):
     upload_images = serializers.ListField(
         write_only=True, required=False, allow_empty=False,
     )
+    username = serializers.SlugRelatedField(
+        slug_field='username', source='user', read_only=True, many=False
+    )
 
     class Meta:
         model = Member
@@ -132,7 +135,7 @@ class MemberDetailSerializer(MemberSerializer):
             'phone_number', 'user', 'status', 'type', 'memberships',
             'payment_methods', 'expires', 'project_name', 'description',
             'images', 'media_urls', 'tags', 'genres', 'created', 'is_active',
-            'public', 'upload_images'
+            'public', 'upload_images', 'username'
         )
         read_only_fields = (
             'id', 'number', 'user', 'status', 'is_active', 'type', 'memberships',
@@ -147,10 +150,10 @@ class MemberDetailSerializer(MemberSerializer):
                 MusicGenres.normalize_name(genre)
                 for genre in data.get('genres', [])
             ]
+        if 'username' in new_data:
+            self.instance.user.username = new_data.pop('username')
+            self.instance.user.save()
         return super().to_internal_value(new_data)
-
-    def update(self, instance, validated_data):
-        return super().update(instance, validated_data)
 
     def save(self, **kwargs):
         upload_images = self.validated_data.get('upload_images', [])
