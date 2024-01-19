@@ -9,4 +9,5 @@ steps:
   commands:
   - docker build -t ameba/backend .
   volumes:
-    - /var/run/docker.sock:/var/run/docker.sock
+  - /var/run/docker.sock: /var/run/docker.sock
+
