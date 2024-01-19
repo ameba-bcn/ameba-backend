@@ -49,7 +49,11 @@ def raise_debug():
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env("DJANGO_SECRET", default=None, var_type='string')
+SECRET_KEY = env(
+    "DJANGO_SECRET",
+    default='#gn88d3jueyq#l2uear=)@q!#jz-3esp!y4mo)d%(0_uc%pta&',
+    var_type='string'
+)
 
 ALLOWED_HOSTS = []
 
@@ -230,7 +234,7 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 
-MEDIA_ROOT = '/src/media'
+MEDIA_ROOT = 'media/'
 MEDIA_URL = 'media/'
 
 
@@ -312,7 +316,7 @@ STAFF_DOMAINS = ['jaguarintheloop.live', 'ameba.cat']
 TEST_MAILING_LIST_PREFIXES = ['test', 'dev', 'stag', 'sand', 'debug', 'local']
 TEST_TEMPLATE = 'unsubscribe.test'
 
-EMAIL_FILE_PATH = "/src/emails"
+EMAIL_FILE_PATH = "/home/ameba/app/emails"
 
 DISABLE_DARK_MODE = True
 

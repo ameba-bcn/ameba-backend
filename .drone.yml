@@ -7,4 +7,4 @@ steps:
 - name: greeting
   image: ubuntu:22.04
   commands:
-  - echo `ls -al`
+  - docker build -t ameba/backend .
