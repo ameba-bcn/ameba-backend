@@ -1,0 +1,10 @@
+---
+kind: pipeline
+type: docker
+name: default
+
+steps:
+- name: greeting
+  image: ubuntu:22.04
+  commands:
+  - echo `ls -al`
