@@ -4,7 +4,7 @@ type: docker
 name: default
 
 steps:
-- name: greeting
+- name: build-backend-image
   image: ubuntu:22.04
   commands:
   - docker build -t ameba/backend .
