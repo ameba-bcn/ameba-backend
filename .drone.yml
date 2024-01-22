@@ -16,6 +16,7 @@ steps:
   - docker pull hello-world
   - docker tag hello-world registry:5000/hello-world
   - docker push registry:5000/hello-world
+
 #  - docker-compose pull ameba-backend
 #  - if [[ $DRONE_BRANCH == dev* ]]; then
 #      echo "Tagging ameba-backend docker image";
