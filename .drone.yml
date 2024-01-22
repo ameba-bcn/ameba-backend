@@ -16,14 +16,7 @@ steps:
   - docker-compose build ameba-backend
   - echo "Git branch is:"
   - echo $DRONE_BRANCH
-  - |
-    if [ $DRONE_BRANCH == dev* ]; then
-      echo "Tagging ameba-backend:dev image";
-      docker tag ameba-backend http://drone:5000/ameba-backend:dev;
-      echo "Pushing ameba-backend:dev image";
-      docker push ameba-backend http://drone:5000/ameba-backend:dev;
-      echo "Done";
-    fi
+  - if [ $DRONE_BRANCH == dev* ]; then echo "Is dev branch"; else echo "Is not dev branch"; fi
 
 services:
 - name: docker
