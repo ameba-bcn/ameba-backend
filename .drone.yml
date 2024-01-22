@@ -1,5 +1,4 @@
 ---
 
 kind: template
-load: plugin.yaml
-name: default
+load: default
