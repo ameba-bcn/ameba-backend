@@ -13,9 +13,9 @@ steps:
     path: /var/run
   commands:
   - sleep 5 # give docker enough time to start
-  - docker pull hello-world
-  - docker tag hello-world registry:5000/hello-world-joni
-  - docker push registry:5000/hello-world-joni
+  - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin registry.mngst.in
+  - docker tag hello-world registry.mngst.in/hello-world-joni
+  - docker push registry.mngst.in/hello-world-joni
 #  - docker-compose pull ameba-backend
 #  - if [[ $DRONE_BRANCH == dev* ]]; then
 #      echo "Tagging ameba-backend docker image";
