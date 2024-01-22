@@ -8,6 +8,11 @@ name: default
 steps:
 - name: test
   image: docker:dind
+  environment:
+    DOCKER_USERNAME:
+      from_secret: DOCKER_USERNAME
+    DOCKER_PASSWORD:
+      from_secret: DOCKER_PASSWORD
   volumes:
   - name: dockersock
     path: /var/run
