@@ -14,9 +14,13 @@ steps:
   commands:
   - sleep 5 # give docker enough time to start
   - docker-compose build ameba-backend
+  - echo "Git branch is: $DRONE_BRANCH"
   - if [ $DRONE_BRANCH == *dev ]; then
+      echo "Tagging ameba-backend:dev image";
       docker tag ameba-backend drone:5000/ameba-backend:dev;
+      echo "Pushing ameba-backend:dev image";
       docker push ameba-backend drone:5000/ameba-backend:dev;
+      echo "Done";
     fi;
 
 services:
