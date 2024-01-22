@@ -13,12 +13,26 @@ steps:
     path: /var/run
   commands:
   - sleep 5 # give docker enough time to start
-#  - docker-compose build ameba-backend
+  - docker-compose build ameba-backend
   - echo "Git branch is:"
   - echo $DRONE_BRANCH
-  - if [[ $DRONE_BRANCH == dev* ]]; 
-      then echo "Is dev branch"; 
-      else echo "Is not dev branch"; 
+  - if [[ $DRONE_BRANCH == dev* ]]; then 
+      echo "Tagging ameba-backend docker image";
+      docker tag ameba-backend registry:5000/ameba-backend:dev;
+      echo "Pushing ameba-backend docker image"; 
+      docker push registry:5000/ameba-backend:dev;
+    elif [[ $DRONE_BRANCH == main ]]; then 
+      echo "Tagging ameba-backend:latest docker image";
+      docker tag ameba-backend registry:5000/ameba-backend:latest;
+      echo "Pushing ameba-backend:latest docker image"; 
+      docker push registry:5000/ameba-backend:latest;
+    elif [[ $DRONE_BRANCH == release* ]]; then 
+      echo "Tagging ameba-backend:release docker image";
+      docker tag ameba-backend registry:5000/ameba-backend:staging;
+      echo "Pushing ameba-backend:release docker image"; 
+      docker push registry:5000/ameba-backend:staging;
+    else
+      echo "Not pushing ameba-backend docker image";
     fi
 
 services:
