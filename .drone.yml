@@ -1,58 +1,50 @@
 ---
 
-
 kind: pipeline
+type: docker
 name: default
 
-
 steps:
-- name: test
-  image: docker:dind
-  environment:
-    DOCKER_USERNAME:
-      from_secret: DOCKER_USERNAME
-    DOCKER_PASSWORD:
-      from_secret: DOCKER_PASSWORD
-  volumes:
-  - name: dockersock
-    path: /var/run
-  commands:
-  - sleep 5 # give docker enough time to start
-  - echo $DOCKER_PASSWORD > /tmp/docker_password
-  - echo `cat /tmp/docker_password`
-  - cat /tmp/docker_password | docker login -u $DOCKER_USERNAME --password-stdin registry.mngst.in
-  - docker pull hello-world
-  - docker tag hello-world registry.mngst.in/hello-world-joni:latest
-  - docker push registry.mngst.in/hello-world-joni:latest
-#  - docker-compose pull ameba-backend
-#  - if [[ $DRONE_BRANCH == dev* ]]; then
-#      echo "Tagging ameba-backend docker image";
-#      docker tag ameba-backend http://192.168.1.21:5000/ameba-backend:dev;
-#      echo "Pushing ameba-backend docker image";
-#      docker push http://192.168.1.21:5000/ameba-backend:dev;
-#    elif [[ $DRONE_BRANCH == main ]]; then
-#      echo "Tagging ameba-backend:latest docker image";
-#      docker tag ameba-backend registry:5000/ameba-backend:latest;
-#      echo "Pushing ameba-backend:latest docker image";
-#      docker push registry:5000/ameba-backend:latest;
-#    elif [[ $DRONE_BRANCH == release* ]]; then
-#      echo "Tagging ameba-backend:release docker image";
-#      docker tag ameba-backend registry:5000/ameba-backend:staging;
-#      echo "Pushing ameba-backend:release docker image";
-#      docker push registry:5000/ameba-backend:staging;
-#    else
-#      echo "Not pushing ameba-backend docker image";
-#    fi
+  - name: build-docker-image
+    image: docker:dind
+    environment:
+      DOCKER_USERNAME:
+        from_secret: DOCKER_USERNAME
+      DOCKER_PASSWORD:
+        from_secret: DOCKER_PASSWORD
+      DOCKER_REGISTRY: registry.mngst.in
+    volumes:
+      - name: dockersock
+        path: /var/run
+    commands:
+      - sleep 5 # give docker enough time to start
+      - export IMAGE_NAME=$DRONE_REPO_OWNER/$DRONE_REPO_NAME
+      - docker build -t $IMAGE_NAME .
+      - echo $DOCKER_PASSWORD > /tmp/docker_password
+      - cat /tmp/docker_password | docker login -u $DOCKER_USERNAME --password-stdin $DOCKER_REGISTRY
+      - if [[ $DRONE_BRANCH == dev* ]]; then
+          export TAG=dev;
+        elif [[ $DRONE_BRANCH == main || $DRONE_BRANCH == master ]]; then
+          export TAG=latest;
+        elif [[ $DRONE_BRANCH == release* ]]; then
+          export TAG=staging;
+        else
+          echo "Not pushing ameba-backend docker image";
+        fi
+      - echo "Tagging $IMAGE_NAME:$TAG docker image";
+      - docker tag $IMAGE_NAME $DOCKER_REGISTRY/$IMAGE_NAME:$TAG;
+      - echo "Pushing $IMAGE_NAME:$TAG docker image";
+      - docker push $DOCKER_REGISTRY/$IMAGE_NAME:$TAG;
 
 services:
-- name: docker
-  image: docker:dind
-  privileged: true
-  volumes:
-  - name: dockersock
-    path: /var/run
+  - name: docker
+    image: docker:dind
+    privileged: true
+    volumes:
+      - name: dockersock
+        path: /var/run
 
 
 volumes:
-- name: dockersock
-  temp: {}
+  - name: dockersock
+    temp: {}
