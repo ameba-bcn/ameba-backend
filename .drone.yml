@@ -4,10 +4,23 @@ type: docker
 name: default
 
 steps:
-- name: build-backend-image
-  image: docker
-  commands:
-  - docker build -t ameba/backend .
+- name: test
+  image: docker:dinf
   volumes:
-  - /var/run/docker.sock: /var/run/docker.sock
+  - name: dockersock
+    path: /var/run
+  commands:
+    - docker-compose build backend
+    - echo `docker image ls`
 
+services:
+  - name: docker
+    image: docker:dind
+    privileged: true
+    volumes:
+      - name: dockersock
+        path: /var/run
+
+volumes:
+  - name: dockersock
+    temp: {}
