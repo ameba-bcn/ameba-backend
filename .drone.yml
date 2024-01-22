@@ -1,6 +1,6 @@
 ---
+
 kind: pipeline
-type: docker
 name: default
 
 steps:
@@ -10,17 +10,17 @@ steps:
   - name: dockersock
     path: /var/run
   commands:
-    - docker build -t ameba-backend .
-    - echo `docker image ls`
+  - sleep 5 # give docker enough time to start
+  - docker ps -a
 
 services:
-  - name: docker
-    image: docker:dind
-    privileged: true
-    volumes:
-      - name: dockersock
-        path: /var/run
+- name: docker
+  image: docker:dind
+  privileged: true
+  volumes:
+  - name: dockersock
+    path: /var/run
 
 volumes:
-  - name: dockersock
-    temp: {}
+- name: dockersock
+  temp: {}
