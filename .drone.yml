@@ -10,7 +10,7 @@ steps:
   - name: dockersock
     path: /var/run
   commands:
-    - docker-compose build ameba-backend
+    - docker build -t ameba-backend .
     - echo `docker image ls`
 
 services:
