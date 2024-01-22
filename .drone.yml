@@ -1,7 +1,9 @@
 ---
 
+
 kind: pipeline
 name: default
+
 
 steps:
 - name: test
@@ -12,6 +14,10 @@ steps:
   commands:
   - sleep 5 # give docker enough time to start
   - docker-compose build ameba-backend
+  - if [ $DRONE_BRANCH == *dev ]; then
+      docker tag ameba-backend drone:5000/ameba-backend:dev;
+      docker push ameba-backend drone:5000/ameba-backend:dev;
+    fi;
 
 services:
 - name: docker
@@ -20,6 +26,7 @@ services:
   volumes:
   - name: dockersock
     path: /var/run
+
 
 volumes:
 - name: dockersock
