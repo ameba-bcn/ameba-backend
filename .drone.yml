@@ -18,9 +18,9 @@ steps:
   - echo $DRONE_BRANCH
   - if [[ $DRONE_BRANCH == dev* ]]; then 
       echo "Tagging ameba-backend docker image";
-      docker tag ameba-backend registry:5000/ameba-backend:dev;
+      docker tag ameba-backend 192.168.1.21:5000/ameba-backend:dev;
       echo "Pushing ameba-backend docker image"; 
-      docker push registry:5000/ameba-backend:dev;
+      docker push 192.168.1.21:5000/ameba-backend:dev;
     elif [[ $DRONE_BRANCH == main ]]; then 
       echo "Tagging ameba-backend:latest docker image";
       docker tag ameba-backend registry:5000/ameba-backend:latest;
