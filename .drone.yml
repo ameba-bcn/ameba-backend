@@ -13,7 +13,8 @@ steps:
     path: /var/run
   commands:
   - sleep 5 # give docker enough time to start
-  - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin registry.mngst.in
+  - echo $DOCKER_PASSWORD > /tmp/docker_password
+  - docker login -u $DOCKER_USERNAME --password-stdin < /tmp/docker_password
   - docker tag hello-world registry.mngst.in/hello-world-joni
   - docker push registry.mngst.in/hello-world-joni
 #  - docker-compose pull ameba-backend
