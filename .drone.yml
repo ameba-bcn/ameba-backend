@@ -1,4 +1,4 @@
 ---
 
 kind: template
-load: build-docker-images
+load: build-docker-images.yaml
