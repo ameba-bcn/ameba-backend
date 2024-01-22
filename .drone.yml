@@ -13,9 +13,9 @@ steps:
     path: /var/run
   commands:
   - sleep 5 # give docker enough time to start
-  - docker pull hello-world
-  - docker tag hello-world registry:5000/hello-world
-  - docker push registry:5000/hello-world
+#  - docker pull hello-world
+  - ping registry
+  - ping 192.168.1.21
 
 #  - docker-compose pull ameba-backend
 #  - if [[ $DRONE_BRANCH == dev* ]]; then
