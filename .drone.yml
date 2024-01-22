@@ -1,4 +1,4 @@
 ---
 
 kind: template
-load: default
+load: build-docker-images
