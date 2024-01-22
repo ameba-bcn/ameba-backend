@@ -21,6 +21,7 @@ steps:
   - echo $DOCKER_PASSWORD > /tmp/docker_password
   - echo `cat /tmp/docker_password`
   - cat /tmp/docker_password | docker login -u $DOCKER_USERNAME --password-stdin registry.mngst.in
+  - docker pull hello-world
   - docker tag hello-world registry.mngst.in/hello-world-joni:latest
   - docker push registry.mngst.in/hello-world-joni:latest
 #  - docker-compose pull ameba-backend
