@@ -66,7 +66,7 @@ class Membership(models.Model):
     @property
     def expires_soon(self):
         if self.id:
-            return self.starts < self.expires - timezone.timedelta(days=ABOUT_TO_EXPIRE_DAYS) < timezone.now()
+            return self.expires - timezone.timedelta(days=ABOUT_TO_EXPIRE_DAYS) < timezone.now() < self.expires
 
     @property
     def state(self):
