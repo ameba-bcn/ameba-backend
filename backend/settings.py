@@ -55,9 +55,9 @@ SECRET_KEY = env(
     var_type='string'
 )
 
-ALLOWED_HOSTS = []
-
-HOST_NAME = env("HOST_NAME", '', 'string') or 'ameba.cat'
+ALLOWED_HOSTS = env("ALLOWED_HOSTS", 'localhost', 'string').split(',')
+CORS_ALLOWED_ORIGINS = env("CORS_ALLOWED_ORIGINS", 'localhost', 'string').split(',')
+HOST_NAME = env("HOST_NAME", '', 'string') or 'ameba.mngst.in'
 if HOST_NAME:
     ALLOWED_HOSTS.append(HOST_NAME)
 
