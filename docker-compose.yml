@@ -9,21 +9,8 @@ services:
     working_dir: /home/ameba/dev_app
     volumes:
       - .:/home/ameba/dev_app
-    environment:
-      - PYTHONUNBUFFERED=1
-      - PUID=$PUID
-      - PGID=$PGID
-      - POSTGRES_HOST=ameba-db
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - DJANGO_SECRET=$DJANGO_SECRET
-      - EMAIL_BACKEND=$EMAIL_BACKEND
-      - HOST_NAME=$HOST_NAME
-      - FE_MEMBERSHIP_CARD_PATH=$FE_MEMBERSHIP_CARD_PATH
-      - ACCESS_TOKEN_LIFETIME=$ACCESS_TOKEN_LIFETIME
-      - DEFAULT_FROM_EMAIL=$DEFAULT_FROM_EMAIL
-      - DEBUG=$DEBUG
+    env_file:
+      - .env
     ports:
       - "8000:8000"
     depends_on:

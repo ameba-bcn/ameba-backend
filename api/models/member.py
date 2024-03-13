@@ -79,11 +79,11 @@ class Member(models.Model):
         max_length=2500, verbose_name=_('biography'), null=True
     )
     tags = models.ManyToManyField(
-        to='ArtistTag', blank=True, verbose_name=_('tags'), null=True,
+        to='ArtistTag', blank=True, verbose_name=_('tags'),
         related_name='members'
     )
     genres = models.ManyToManyField(
-        to='MusicGenres', blank=True, verbose_name=_('genres'), null=True,
+        to='MusicGenres', blank=True, verbose_name=_('genres'),
         related_name='members'
     )
     public = models.BooleanField(default=False)
