@@ -59,8 +59,10 @@ class Payment(models.Model):
         verbose_name_plural = _('Payments')
 
     id = UUIDField(primary_key=True, editable=True, default=uuid.uuid4)
-    user = models.ForeignKey('User', on_delete=models.CASCADE,
-                             verbose_name=_('user'), null=True)
+    user = models.ForeignKey(
+        'User', on_delete=models.CASCADE, verbose_name=_('user'),
+        null=True, related_name='payments'
+    )
     cart = models.OneToOneField('Cart', on_delete=models.PROTECT, null=True,
                                 related_name='payment')
     cart_record = models.JSONField(verbose_name=_('cart record'), null=True)

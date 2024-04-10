@@ -11,8 +11,10 @@ class Order(models.Model):
         verbose_name = _('Order')
         verbose_name_plural = _('Orders')
 
-    user = models.ForeignKey('User', on_delete=models.CASCADE,
-                             verbose_name=_('user'), null=True)
+    user = models.ForeignKey(
+        'User', on_delete=models.CASCADE, verbose_name=_('user'),
+        null=True, related_name='orders'
+    )
     item_variants = models.ManyToManyField(to='ItemVariant', blank=False)
     address = models.CharField(
         max_length=1000,

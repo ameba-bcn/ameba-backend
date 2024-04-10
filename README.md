@@ -27,11 +27,16 @@ python manage.py runserver
 #### Load dataset
 Dataset inicial con datos reales:
 ```
-python manage.py loaddata demo.json
+python manage.py loadlocal
 ```
 #### Crear dataset a partir de datos actuales
-```
+```python
 python manage.py dumpdata --indent 2 > demo.json
+```
+
+#### Cargar dataset creado
+```python
+python manage.py loaddata demo.json
 ```
 
 ### Localización

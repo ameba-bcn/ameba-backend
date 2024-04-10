@@ -24,3 +24,4 @@ qrcode[pil]==7.3.1
 pdfkit==1.0.0
 weasyprint==52.5
 django-non-dark-admin==2.0.2
+Faker
