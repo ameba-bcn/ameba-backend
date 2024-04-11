@@ -15,12 +15,11 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         call_command(
-            'dumpdata', '--natutal-foreign', '--natural-primary',
-            'auth.group', 'auth.permission', output=self.auth_file
+            'dumpdata', 'auth.group', 'auth.permission', exclude=['background_task'], indent=2, natural_foreign=True,
+            natural_primary=True, output=self.auth_file
         )
         call_command(
-            'dumpdata', '--natutal-foreign', '--natural-primary',
-            '--exclude auth.permission',  '--exclude contenttypes',
-            '--exclude auth.group',  '--exclude sessions',
+            'dumpdata', 'api', indent=2, natural_foreign=True, natural_primary=True,
+            exclude=['background_task', 'auth.permission', 'contenttypes', 'auth.group', 'sessions'],
             output=self.data_file
         )
