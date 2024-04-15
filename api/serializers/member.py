@@ -1,4 +1,8 @@
+import os
+import base64
 from rest_framework import serializers
+from django.core.files.base import ContentFile
+from django.conf import settings
 
 from api.models import Member, User, Cart, Membership, MemberProfileImage, \
     MusicGenres
@@ -122,7 +126,7 @@ class MemberImageSerializer(serializers.ModelSerializer):
 class MemberDetailSerializer(MemberSerializer):
     images = MemberImageSerializer(many=True, read_only=True)
     upload_images = serializers.ListField(
-        write_only=True, required=False, allow_empty=False,
+        write_only=True, required=False, allow_empty=True,
     )
     username = serializers.SlugRelatedField(
         slug_field='username', source='user', read_only=True, many=False
@@ -155,8 +159,23 @@ class MemberDetailSerializer(MemberSerializer):
             self.instance.user.save()
         return super().to_internal_value(new_data)
 
+    def delete_all_images(self):
+        for image in self.instance.images.all():
+            if os.path.exists(image.image.path):
+                os.remove(image.image.path)
+            image.delete()
+
+    def save_images(self, upload_images):
+        for i, image_data in enumerate(upload_images):
+            image_name = f'{self.instance.user.username}_{i}.png'
+            image_data = base64.b64decode(image_data)
+            member_image = MemberProfileImage.objects.create(
+                member=self.instance)
+            member_image.image.save(image_name, ContentFile(image_data))
+
     def save(self, **kwargs):
-        upload_images = self.validated_data.get('upload_images', [])
-        for image in upload_images:
-            MemberProfileImage.objects.create(member=self.instance, image=image)
+        upload_images = self.validated_data.get('upload_images', None)
+        if upload_images is not None:
+            self.delete_all_images()
+            self.save_images(upload_images)
         return super().save(**kwargs)
