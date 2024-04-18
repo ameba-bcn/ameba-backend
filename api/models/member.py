@@ -10,7 +10,6 @@ from localflavor.es.models import ESIdentityCardNumberField
 from api import qr_generator
 from api.models.membership import MembershipStates
 
-
 # Get current user model
 User = get_user_model()
 
@@ -90,6 +89,7 @@ class Member(models.Model):
     created = models.DateTimeField(
         auto_now_add=True, verbose_name=_('created')
     )
+    qr = models.ImageField(upload_to='member_qr', blank=True, null=True)
 
     def get_newest_membership(self):
         if self.memberships.all():
@@ -132,6 +132,11 @@ class Member(models.Model):
             self.qr_date
         )
         return signing.dumps(signature, salt=settings.QR_MEMBER_SALT)
+
+    def regenerate_qr(self):
+        qr_generator.generate_member_card_qr(
+            member=self, protocol=settings.Protocol, site_name=settings.HOST_NAME
+        )
 
     @property
     def id(self):

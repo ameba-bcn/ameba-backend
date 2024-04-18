@@ -139,11 +139,11 @@ class MemberDetailSerializer(MemberSerializer):
             'phone_number', 'user', 'status', 'type', 'memberships',
             'payment_methods', 'expires', 'project_name', 'description',
             'images', 'media_urls', 'tags', 'genres', 'created', 'is_active',
-            'public', 'upload_images', 'username'
+            'public', 'upload_images', 'username', 'qr'
         )
         read_only_fields = (
             'id', 'number', 'user', 'status', 'is_active', 'type', 'memberships',
-            'payment_methods', 'expires', 'created', 'images'
+            'payment_methods', 'expires', 'created', 'images', 'qr'
         )
         optional_fields = fields
 

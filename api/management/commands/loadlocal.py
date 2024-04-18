@@ -24,8 +24,7 @@ class Command(BaseCommand):
         with signaling.DisableSignals():
             call_command('loaddata', self.auth_fixtures_file)
             call_command('loaddata', self.fixtures_file)
-        media_path = os.path.join(settings.MEDIA_ROOT, os.path.pardir)
-        self.decompress_tar_file(self.media_file, media_path)
+        self.decompress_tar_file(self.media_file, settings.MEDIA_ROOT)
 
     @staticmethod
     def decompress_tar_file(file_path, target_path):

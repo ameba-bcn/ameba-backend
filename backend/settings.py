@@ -294,12 +294,12 @@ PDF_TMP_DIR = "tmp/pdf"
 # FRONTEND MEMBERSHIP CARD PATH
 FE_MEMBERSHIP_CARD_PATH = env(
     'FE_MEMBERSHIP_CARD_PATH',
-    'api/member_card/?token={token}',
+    'pub/mcsa/?token={token}',
     var_type='string'
 )
 FE_EVENT_TICKET_PATH = env(
     'FE_EVENT_TICKET_PATH',
-    'api/ticket/?token={token}',
+    'pub/mtsa/?token={token}',
     var_type='string'
 )
 
