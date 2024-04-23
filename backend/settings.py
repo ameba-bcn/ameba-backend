@@ -186,7 +186,7 @@ LANGUAGES = (
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = env('STATIC_URL', '/static/', 'string')
 STATIC_ROOT = 'static/'
 
 REST_FRAMEWORK = {
@@ -235,7 +235,7 @@ SIMPLE_JWT = {
 }
 
 MEDIA_ROOT = 'media/'
-MEDIA_URL = 'media/'
+MEDIA_URL = env('MEDIA_URL', '/media/', 'string')
 
 
 # EMAIL CONFIG
