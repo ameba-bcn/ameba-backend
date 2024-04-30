@@ -4,7 +4,9 @@ from api.models import Member
 
 class MemberProjectSerializer(serializers.ModelSerializer):
     member_number = serializers.IntegerField(source='id', read_only=True)
-    images = serializers.SerializerMethodField()
+    images = serializers.SlugRelatedField(
+        many=True, slug_field='url', read_only=True
+    )
 
     class Meta:
         model = Member

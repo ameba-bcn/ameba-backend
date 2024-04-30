@@ -47,6 +47,10 @@ class MemberProfileImage(models.Model):
     def __str__(self):
         return f'{self.member.user.username} profile images'
 
+    @property
+    def url(self):
+        return self.image.url
+
 
 
 class Member(models.Model):
