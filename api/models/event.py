@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.db.models import (
     CharField, DateTimeField, ManyToManyField, Model, ForeignKey, CASCADE,
-    URLField
+    URLField, BooleanField
 )
 
 from api.models import Item
@@ -40,6 +40,7 @@ class Event(Item):
     artists = ManyToManyField(
         to='Artist', related_name='events', blank=True, verbose_name=_('artists')
     )
+    cancelled = BooleanField(default=False, verbose_name=_('cancelled'))
 
     def expire(self):
         self.is_active = False

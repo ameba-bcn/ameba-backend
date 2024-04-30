@@ -63,6 +63,12 @@ class Item(models.Model):
             return '-'
         return f'{min(prices)}€ / {max(prices)}€'
 
+    @property
+    def price(self):
+        prices = list(variant.price for variant in self.variants.all())
+        if prices:
+            return min(prices)
+
     def __str__(self):
         return self.name
 
