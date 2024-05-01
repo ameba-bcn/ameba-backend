@@ -5,7 +5,7 @@ from django.core.files.base import ContentFile
 from django.conf import settings
 
 from api.models import Member, User, Cart, Membership, MemberProfileImage, \
-    MusicGenres
+    MusicGenres, MemberMediaUrl
 from api.exceptions import (
     EmailAlreadyExists, WrongCartId, CartNeedOneSubscription,
     IdentityCardIsTooShort, WrongIdentityCardFormat
@@ -81,17 +81,6 @@ class MemberRegisterSerializer(serializers.Serializer):
         raise CartNeedOneSubscription
 
     @staticmethod
-    def validate_identity_card(identity_card):
-        if len(identity_card) == 9:
-            if (
-                all(c.isdigit() for c in identity_card[1:-1]) and
-                identity_card[-1].isalpha()
-            ):
-                return identity_card
-            raise WrongIdentityCardFormat
-        raise IdentityCardIsTooShort
-
-    @staticmethod
     def validate_email(email):
         if User.objects.filter(email=email):
             raise EmailAlreadyExists
@@ -128,6 +117,12 @@ class MemberDetailSerializer(MemberSerializer):
     upload_images = serializers.ListField(
         write_only=True, required=False, allow_empty=True,
     )
+    media_urls = serializers.SlugRelatedField(
+        many=True, read_only=True, slug_field='url'
+    )
+    upload_media_urls = serializers.ListField(
+        write_only=True, required=False, allow_empty=True
+    )
     username = serializers.SlugRelatedField(
         slug_field='username', source='user', read_only=True, many=False
     )
@@ -139,10 +134,10 @@ class MemberDetailSerializer(MemberSerializer):
             'phone_number', 'user', 'status', 'type', 'memberships',
             'payment_methods', 'expires', 'project_name', 'description',
             'images', 'media_urls', 'tags', 'genres', 'created', 'is_active',
-            'public', 'upload_images', 'username', 'qr'
+            'public', 'upload_images', 'upload_media_urls', 'username', 'qr'
         )
         read_only_fields = (
-            'id', 'number', 'user', 'status', 'is_active', 'type', 'memberships',
+            'id', 'number', 'status', 'is_active', 'type', 'memberships',
             'payment_methods', 'expires', 'created', 'images', 'qr'
         )
         optional_fields = fields
@@ -165,6 +160,10 @@ class MemberDetailSerializer(MemberSerializer):
                 os.remove(image.image.path)
             image.delete()
 
+    def delete_all_media_urls(self):
+        for media_url in self.instance.media_urls.all():
+            media_url.delete()
+
     def save_images(self, upload_images):
         for i, image_data in enumerate(upload_images):
             image_name = f'{self.instance.user.username}_{i}.png'
@@ -173,9 +172,17 @@ class MemberDetailSerializer(MemberSerializer):
                 member=self.instance)
             member_image.image.save(image_name, ContentFile(image_data))
 
+    def save_media_urls(self, upload_media_urls):
+        for media_url in upload_media_urls:
+            MemberMediaUrl.objects.create(member=self.instance, url=media_url)
+
     def save(self, **kwargs):
         upload_images = self.validated_data.get('upload_images', None)
         if upload_images is not None:
             self.delete_all_images()
             self.save_images(upload_images)
+        upload_media_urls = self.validated_data.get('upload_media_urls', None)
+        if upload_media_urls is not None:
+            self.delete_all_media_urls()
+            self.save_media_urls(upload_media_urls)
         return super().save(**kwargs)

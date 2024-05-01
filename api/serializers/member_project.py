@@ -13,8 +13,9 @@ class MemberProjectSerializer(serializers.ModelSerializer):
         fields = ['id', 'member_number', 'project_name', 'description', 'images', 'media_urls',
                   'tags', 'genres', 'created', 'expires', 'public', 'is_active']
         read_only_fields = fields
-    #
-    def get_images(self, obj):
+
+    @staticmethod
+    def get_images(obj):
         return [img.image.url for img in obj.images.all()]
 
 
