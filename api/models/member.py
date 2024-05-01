@@ -66,7 +66,7 @@ class Member(models.Model):
         to='User', on_delete=models.CASCADE, verbose_name=_('user'),
         related_name='member'
     )
-    identity_card = ESIdentityCardNumberField(verbose_name='dni/nie')
+    identity_card = models.CharField(max_length=20, verbose_name='dni/nie')
     first_name = models.CharField(max_length=20, verbose_name=_('first name'))
     last_name = models.CharField(max_length=20, verbose_name=_('last name'))
     phone_number = models.CharField(
