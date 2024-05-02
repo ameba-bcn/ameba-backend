@@ -17,7 +17,6 @@ class Image(models.Model):
     def __str__(self):
         return self.image.name
 
-
     def save(self, *args, **kwargs):
         if self.image:
             img_utils.replace_image_field(self.image)

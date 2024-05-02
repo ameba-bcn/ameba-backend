@@ -158,35 +158,45 @@ class MemberDetailSerializer(MemberSerializer):
 
     def delete_all_images(self):
         for image in self.instance.images.all():
-            if os.path.exists(image.image.path):
-                os.remove(image.image.path)
+            image.image.delete()
             image.delete()
 
     def delete_all_media_urls(self):
         for media_url in self.instance.media_urls.all():
             media_url.delete()
 
-    def validate_upload_images(self, upload_images):
+    @staticmethod
+    def validate_upload_images(upload_images):
         if upload_images is not None and len(upload_images) > 0:
-            for image_data in upload_images:
+            for i, image_data in enumerate(upload_images):
                 try:
                     img_utils.decode_base64_image(image_data)
                 except ValueError:
-                    raise serializers.ValidationError("Invalid image format")
+                    raise serializers.ValidationError(
+                        f"Invalid image format in image position: {i}"
+                    )
         return upload_images
 
     def save_images(self, upload_images):
         for i, image_data in enumerate(upload_images):
+            if image_data is None:
+                continue
             member_image = MemberProfileImage.objects.create(
                 member=self.instance)
             image, ext = img_utils.decode_base64_image(image_data)
             image_name = f"{self.instance.number}_{i}.{ext}"
             member_image.image.save(image_name, image)
-            member_image.save()
 
     def save_media_urls(self, upload_media_urls):
         for media_url in upload_media_urls:
             MemberMediaUrl.objects.create(member=self.instance, url=media_url)
+
+    def clean_existing(self, upload_images):
+        for i, image in enumerate(upload_images):
+            if not image.startswith('data:image'):
+                if MemberMediaUrl.objects.filter(member=self.instance, url=image):
+                    upload_images[i] = None
+        return [image for image in upload_images if image is not None]
 
     def save(self, **kwargs):
         upload_images = self.validated_data.get('upload_images', None)

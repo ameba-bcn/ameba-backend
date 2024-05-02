@@ -10,8 +10,9 @@ class MemberProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Member
-        fields = ['id', 'member_number', 'project_name', 'description', 'images', 'media_urls',
-                  'tags', 'genres', 'created', 'expires', 'public', 'is_active']
+        fields = ['id', 'member_number', 'project_name', 'description',
+                  'images', 'media_urls', 'tags', 'genres', 'created',
+                  'expires', 'public', 'is_active']
         read_only_fields = fields
 
     @staticmethod
@@ -19,9 +20,10 @@ class MemberProjectSerializer(serializers.ModelSerializer):
         return [img.image.url for img in obj.images.all()]
 
 
-class MemberProjectListSerializer(serializers.ModelSerializer):
+class MemberProjectListSerializer(MemberProjectSerializer):
 
     class Meta:
         model = Member
-        fields = ['id', 'project_name', 'tags', 'genres', 'created', 'is_active', 'expires']
+        fields = ['id', 'project_name', 'tags', 'genres', 'created',
+                  'is_active', 'expires', 'images']
         read_only_fields = fields

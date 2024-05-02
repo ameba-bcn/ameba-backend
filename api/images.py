@@ -16,9 +16,54 @@ def decode_base64_image(image_data: str) -> ContentFile:
     data = base64.b64decode(data)
     return ContentFile(data), ext
 
+def exists_image(image: ContentFile) -> bool:
+    try:
+        img = PilImage.open(image)
+        return True
+    except Exception:
+        return False
 
-def resize_image(image: ContentFile, max_size=(1920, 1080), format='JPEG') -> InMemoryUploadedFile:
+def is_valid_image(
+        image: ContentFile, max_size=(1920, 1080), img_format='JPEG'
+) -> bool:
+    if not exists_image(image):
+        return True
     img = PilImage.open(image)
+    if (
+            img.size[0] <= max_size[0]
+            and img.size[1] <= max_size[1]
+            and img.format.lower() == img_format.lower()
+    ):
+        return True
+    return False
+
+def adjust_image_orientation(img):
+    try:
+        exif = img._getexif()
+        orientation_key = 274  # cf ExifTags
+        if exif and orientation_key in exif:
+            orientation = exif[orientation_key]
+            if orientation == 3:
+                img = img.rotate(180, expand=True)
+            elif orientation == 6:
+                img = img.rotate(270, expand=True)
+            elif orientation == 8:
+                img = img.rotate(90, expand=True)
+    except AttributeError:
+        # No EXIF metadata present
+        pass
+    return img
+
+
+def resize_image(image: ContentFile, max_size=(1920, 1080), img_format='JPEG') -> InMemoryUploadedFile:
+    img = PilImage.open(image)
+    img = adjust_image_orientation(img)
+    if (
+            img.size[0] <= max_size[0]
+            and img.size[1] <= max_size[1]
+            and img.format.lower() == img_format.lower()
+    ):
+        return image
 
     # Convert image to RGB to ensure compatibility with JPEG
     if img.mode in ('RGBA', 'LA', 'P'):
@@ -29,12 +74,12 @@ def resize_image(image: ContentFile, max_size=(1920, 1080), format='JPEG') -> In
 
     # Save the image to a BytesIO object
     img_io = BytesIO()
-    img.save(img_io, format=format, quality=90)  # Adjust quality as needed
+    img.save(img_io, format=img_format, quality=70)  # Adjust quality as needed
 
     # Create a new Django file-like object
     new_image = InMemoryUploadedFile(
-        img_io, 'ImageField', f"{image.name.split('.')[0]}.{format.lower()}",
-        f'image/{format.lower()}', img_io.getbuffer().nbytes, None
+        img_io, 'ImageField', f"{image.name.split('.')[0]}.{img_format.lower()}",
+        f'image/{img_format.lower()}', img_io.getbuffer().nbytes, None
     )
     return new_image
 
@@ -44,7 +89,8 @@ def replace_image_field(image_field):
     a resized version removing the original one.
     """
     image = image_field
-    new_image = resize_image(image)
-    image_field.delete(save=False)
-    image_field.save(new_image.name, new_image, save=False)
+    if not is_valid_image(image):
+        new_image = resize_image(image)
+        image_field.delete(save=False)
+        image_field.save(new_image.name, new_image, save=False)
     return image_field
