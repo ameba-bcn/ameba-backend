@@ -1,4 +1,5 @@
 import os
+import re
 import base64
 from rest_framework import serializers
 from django.core.files.base import ContentFile
@@ -11,6 +12,7 @@ from api.exceptions import (
     IdentityCardIsTooShort, WrongIdentityCardFormat
 )
 import api.stripe as api_stripe
+import api.images as img_utils
 
 
 class DocMemberSerializer(serializers.ModelSerializer):
@@ -164,13 +166,23 @@ class MemberDetailSerializer(MemberSerializer):
         for media_url in self.instance.media_urls.all():
             media_url.delete()
 
+    def validate_upload_images(self, upload_images):
+        if upload_images is not None and len(upload_images) > 0:
+            for image_data in upload_images:
+                try:
+                    img_utils.decode_base64_image(image_data)
+                except ValueError:
+                    raise serializers.ValidationError("Invalid image format")
+        return upload_images
+
     def save_images(self, upload_images):
         for i, image_data in enumerate(upload_images):
-            image_name = f'{self.instance.user.username}_{i}.png'
-            image_data = base64.b64decode(image_data)
             member_image = MemberProfileImage.objects.create(
                 member=self.instance)
-            member_image.image.save(image_name, ContentFile(image_data))
+            image, ext = img_utils.decode_base64_image(image_data)
+            image_name = f"{self.instance.number}_{i}.{ext}"
+            member_image.image.save(image_name, image)
+            member_image.save()
 
     def save_media_urls(self, upload_media_urls):
         for media_url in upload_media_urls:

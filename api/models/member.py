@@ -9,6 +9,7 @@ from localflavor.es.models import ESIdentityCardNumberField
 
 from api import qr_generator
 from api.models.membership import MembershipStates
+import api.images as img_utils
 
 # Get current user model
 User = get_user_model()
@@ -51,6 +52,10 @@ class MemberProfileImage(models.Model):
     def url(self):
         return self.image.url
 
+    def save(self, *args, **kwargs):
+        if self.image:
+            img_utils.replace_image_field(self.image)
+        super().save(*args, **kwargs)
 
 
 class Member(models.Model):
