@@ -2,6 +2,8 @@ from django.db import models
 from django.utils.translation import gettext as _
 from django.core.exceptions import ValidationError
 
+import api.images as img_utils
+
 INTRO_PREVIEW = 160
 
 
@@ -33,6 +35,12 @@ class Interview(models.Model):
     @property
     def current_answers(self):
         return self.answers.filter(is_active=True)
+
+    def save(self, *args, **kwargs):
+        if self.image:
+            img_utils.replace_image_field(self.image)
+        super().save(*args, **kwargs)
+
 
 
 class Question(models.Model):
