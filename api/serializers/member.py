@@ -144,6 +144,12 @@ class MemberDetailSerializer(MemberSerializer):
         )
         optional_fields = fields
 
+    def resolve_link(self, image_link):
+        name = image_link.split(settings.MEDIA_URL)[-1]
+        img_obj = self.instance.images.get(image=name)
+        image_data = img_utils.get_base64_image(img_obj.image)
+        return image_data
+
     def to_internal_value(self, data):
         new_data = data.copy()
         if 'genres' in data:
@@ -165,16 +171,24 @@ class MemberDetailSerializer(MemberSerializer):
         for media_url in self.instance.media_urls.all():
             media_url.delete()
 
-    @staticmethod
-    def validate_upload_images(upload_images):
+    def validate_upload_images(self, upload_images):
         if upload_images is not None and len(upload_images) > 0:
             for i, image_data in enumerate(upload_images):
-                try:
-                    img_utils.decode_base64_image(image_data)
-                except ValueError:
-                    raise serializers.ValidationError(
-                        f"Invalid image format in image position: {i}"
-                    )
+                if img_utils.match_base64_format(image_data):
+                    try:
+                        img_utils.decode_base64_image(image_data)
+                    except ValueError:
+                        raise serializers.ValidationError(
+                            f"Invalid image format in image position {i} "
+                            f"({image_data[:100]}...)"
+                        )
+                else:
+                    try:
+                        upload_images[i] = self.resolve_link(image_data)
+                    except MemberProfileImage.DoesNotExist:
+                        raise serializers.ValidationError(
+                            f"Image with url {image_data} not found in db"
+                        )
         return upload_images
 
     def save_images(self, upload_images):

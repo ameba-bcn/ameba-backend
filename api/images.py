@@ -1,14 +1,19 @@
 import re
 import base64
+import mimetypes
 from PIL import Image as PilImage
 from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.files.base import ContentFile
 
 
-def decode_base64_image(image_data: str) -> ContentFile:
+def match_base64_format(data: str) -> bool:
     pattern = r'data:image/(?P<format>[a-zA-Z]+);base64,(?P<data>.+)'
-    match = re.match(pattern, image_data)
+    return re.match(pattern, data)
+
+
+def decode_base64_image(image_data: str) -> ContentFile:
+    match = match_base64_format(image_data)
     if not match:
         raise ValueError("Invalid data format")
     ext = match.group('format')
@@ -94,3 +99,29 @@ def replace_image_field(image_field):
         image_field.delete(save=False)
         image_field.save(new_image.name, new_image, save=False)
     return image_field
+
+
+def get_base64_image(image_field):
+    # Ensure there is an image in the ImageField
+    if not image_field:
+        return None
+
+    # Get the MIME type of the file based on its extension
+    mime_type, _ = mimetypes.guess_type(image_field.name)
+    if not mime_type:
+        mime_type = 'application/octet-stream'  # Use a binary data type if MIME type is unknown
+
+    # Read the image file
+    if image_field.file.multiple_chunks():
+        content = b''.join(chunk for chunk in image_field.file.chunks())
+    else:
+        content = image_field.file.read()
+
+    # Encode the image content in base64
+    image_base64 = base64.b64encode(content)
+
+    # Convert bytes to string and prepend the data URI prefix
+    image_base64_str = f"data:{mime_type};base64,{image_base64.decode('utf-8')}"
+
+    # Return the base64 string with prefix
+    return image_base64_str
