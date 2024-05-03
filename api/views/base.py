@@ -4,6 +4,9 @@ from rest_framework.mixins import (
     DestroyModelMixin
 )
 from rest_framework.permissions import AllowAny
+import api.cache_utils as cache_utils
+
+
 
 
 class BaseReadOnlyViewSet(RetrieveModelMixin, ListModelMixin, GenericViewSet):
@@ -18,6 +21,14 @@ class BaseReadOnlyViewSet(RetrieveModelMixin, ListModelMixin, GenericViewSet):
             'list': self.list_serializer
         }.get(self.action)
         return super().get_serializer_class()
+
+    @cache_utils.cache_response
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+    @cache_utils.cache_response
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
 
 
 class BaseUserEditableViewSet(RetrieveModelMixin, UpdateModelMixin,

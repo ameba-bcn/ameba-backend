@@ -4,6 +4,7 @@ from django.conf import settings
 from django.db.models import Sum
 from django.db import models
 from django.utils.translation import gettext as _
+import api.cache_utils as cache_utils
 
 EXPIRE_HOURS_BEFORE_EVENT = 1
 EXPIRE_BEFORE_EVENT = timedelta(hours=EXPIRE_HOURS_BEFORE_EVENT)
@@ -127,6 +128,10 @@ class Item(models.Model):
         else:
             return 'item'
 
+    @cache_utils.invalidate_models_cache
+    def save(self, *args, **kwargs):
+        return super().save(*args, **kwargs)
+
 
 class ItemAttributeType(models.Model):
     class Meta:
@@ -137,6 +142,10 @@ class ItemAttributeType(models.Model):
 
     def __str__(self):
         return self.name
+
+    @cache_utils.invalidate_models_cache
+    def save(self, *args, **kwargs):
+        return super().save(*args, **kwargs)
 
 
 class ItemAttribute(models.Model):
@@ -154,6 +163,10 @@ class ItemAttribute(models.Model):
     def __str__(self):
         return f'{self.attribute.name}: {self.value}'
 
+    @cache_utils.invalidate_models_cache
+    def save(self, *args, **kwargs):
+        return super().save(*args, **kwargs)
+
 
 class ItemVariant(models.Model):
     class Meta:
@@ -163,7 +176,8 @@ class ItemVariant(models.Model):
     item = models.ForeignKey('Item', on_delete=models.CASCADE,
                              related_name='variants', verbose_name=_('item'))
     attributes = models.ManyToManyField('ItemAttribute', blank=False,
-                                        verbose_name=_('attributes'))
+                                        verbose_name=_('attributes'),
+                                        related_name='variants')
     stock = models.IntegerField()
     price = models.DecimalField(max_digits=8, decimal_places=2,
                                 verbose_name=_('price'))
@@ -209,6 +223,7 @@ class ItemVariant(models.Model):
             return f'{self.item.name} Membership'
         return f'{self.item.name} ({self.get_attributes_set()})'
 
+    @cache_utils.invalidate_models_cache
     def save(self, *args, **kwargs):
         if self.recurrence is not None and not self.item.is_subscription():
             self.recurrence = None
@@ -225,3 +240,4 @@ class ItemVariant(models.Model):
     @property
     def period(self):
         return PERIODS.get(self.get_recurrence(), None)
+
