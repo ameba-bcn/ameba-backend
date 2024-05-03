@@ -19,7 +19,7 @@ model_to_cache_patterns = {
 
 def cache_response(fcn):
     def wrapper(self, *args, **kwargs):
-        cache_key = self.model.__name__ + self.__class__.__name__ + fcn.__name__
+        cache_key = self.model.__name__ + self.__class__.__name__ + fcn.__name__ + str(args) + str(kwargs)
         cached_data = cache.get(cache_key)
         if cached_data is None:
             response = fcn(self, *args, **kwargs)
