@@ -10,9 +10,10 @@ class MemberProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Member
-        fields = ['id', 'member_number', 'project_name', 'description',
-                  'images', 'media_urls', 'tags', 'genres', 'created',
-                  'expires', 'public', 'is_active']
+        fields = ['id', 'member_number', 'first_name', 'last_name',
+                  'project_name', 'description', 'images', 'media_urls',
+                  'tags', 'genres', 'created', 'expires', 'public',
+                  'is_active']
         read_only_fields = fields
 
     @staticmethod
