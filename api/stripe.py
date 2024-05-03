@@ -102,11 +102,13 @@ def create_or_update_product_and_price(item_variant):
     return stripe_product, stripe_price
 
 
-def _get_or_create_customer(customer_id, name):
+def _get_or_create_customer(customer_id, name, email):
     try:
         customer = stripe.Customer.retrieve(id=str(customer_id))
     except stripe.error.InvalidRequestError as err:
-        customer = stripe.Customer.create(id=str(customer_id), name=name)
+        customer = stripe.Customer.create(
+            id=str(customer_id), name=name, email=email
+        )
     return customer
 
 
@@ -180,7 +182,9 @@ def create_invoice_from_cart(cart):
     :return:
     """
     user = cart.user
-    customer = _get_or_create_customer(customer_id=user.id, name=user.username)
+    customer = _get_or_create_customer(
+        customer_id=user.id, name=user.username, email=user.email
+    )
     products = _get_product_and_prices(cart=cart)
     discounts = _get_discounts_attr(cart)
     invoice_props = dict(
@@ -226,7 +230,7 @@ def _attach_payment_method(customer_id, payment_method_id):
 
 
 def update_payment_method(user, payment_method_id):
-    customer = _get_or_create_customer(user.id, user.username)
+    customer = _get_or_create_customer(user.id, user.username, user.email)
     _attach_payment_method(customer.id, payment_method_id)
 
 
@@ -253,7 +257,7 @@ def _check_user_pm_exists(customer_id, pm):
 
 
 def get_or_create_user_pm(user, card_number, exp_month, exp_year, cvc):
-    customer = _get_or_create_customer(user.id, user.username)
+    customer = _get_or_create_customer(user.id, user.username, user.email)
     card_data = dict(
         number=card_number, exp_month=exp_month, exp_year=exp_year, cvc=cvc
     )
