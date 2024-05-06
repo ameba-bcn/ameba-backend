@@ -44,5 +44,5 @@ def invalidate_models_cache(fcn):
             key_patterns = model_to_cache_patterns[model_name]
             for pattern in key_patterns:
                 cache.delete_pattern(pattern)
-        return fcn(*args, **kwargs)
+        return fcn(self, *args, **kwargs)
     return wrapper
