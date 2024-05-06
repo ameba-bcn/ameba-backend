@@ -51,23 +51,11 @@ def expire_if_didnt_renew(membership_id):
 def generate_email_with_qr_and_notify(membership_id):
     membership = Membership.objects.get(pk=membership_id)
     user = membership.member.user
-    # Generate pdf with qr here
-    qr_path = qr_generator.generate_member_card_qr(
-        member=membership.member,
-        protocol=settings.DEBUG and 'http' or 'https',
-        site_name=settings.HOST_NAME
-    )
-    pdf_card = qr_factories.MemberCardWithQr(
-        identifier=membership.member.pk,
-        member=membership.member,
-        qr_path=qr_path
-    )
 
     if user.member.memberships.filter(
         ~Q(pk=membership.pk), subscription=membership.subscription
     ):
         email_factories.RenewalConfirmation.send_to(
-            attachment=pdf_card.attachment,
             mail_to=user.email,
             user=user,
             subscription=membership.subscription,
@@ -76,7 +64,6 @@ def generate_email_with_qr_and_notify(membership_id):
         )
     else:
         email_factories.NewMembershipEmail.send_to(
-            attachment=pdf_card.attachment,
             mail_to=user.email,
             user=user,
             subscription=membership.subscription,

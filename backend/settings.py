@@ -57,7 +57,7 @@ SECRET_KEY = env(
 
 ALLOWED_HOSTS = env("ALLOWED_HOSTS", 'localhost', 'string').split(',')
 CORS_ALLOWED_ORIGINS = env("CORS_ALLOWED_ORIGINS", 'localhost', 'string').split(',')
-HOST_NAME = env("HOST_NAME", '', 'string') or 'ameba.mngst.in'
+HOST_NAME = env("HOST_NAME", '', 'string') or 'ameba.cat'
 if HOST_NAME:
     ALLOWED_HOSTS.append(HOST_NAME)
 
@@ -307,7 +307,7 @@ PDF_TMP_DIR = "tmp/pdf"
 # FRONTEND MEMBERSHIP CARD PATH
 FE_MEMBERSHIP_CARD_PATH = env(
     'FE_MEMBERSHIP_CARD_PATH',
-    'pub/mcsa/?token={token}',
+    'qr-view/?token={token}',
     var_type='string'
 )
 FE_EVENT_TICKET_PATH = env(
