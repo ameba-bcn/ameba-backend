@@ -2,6 +2,8 @@ from django.db import models
 from django.utils.translation import gettext as _
 from django.utils import timezone
 
+from api import cache_utils
+
 
 class LegalDocument(models.Model):
     title = models.CharField(max_length=255)
@@ -26,3 +28,7 @@ class LegalDocument(models.Model):
 
     def __str__(self):
         return self.title
+
+    @cache_utils.invalidate_models_cache
+    def save(self, *args, **kwargs):
+        return super().save(*args, **kwargs)

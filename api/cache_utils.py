@@ -14,6 +14,7 @@ model_to_cache_patterns = {
     'Interview': ['Interview*'],
     'MusicGenres': ['MusicGenres*'],
     'Member': ['Member*'],
+    'LegalDocument': ['LegalDocument*'],
 }
 
 
