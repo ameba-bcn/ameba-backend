@@ -1,5 +1,11 @@
 ### Release notes
 
+### 1.43
+- Implementado member profile con imagenes y tags
+- Implementado EP `GET /api/genres/` con los géneros disponibles
+- Implementado EP `/api/profile_images/` para borrar imagenes de perfil
+
+
 ### 1.42
 - AW-497: implemented member profile project attributes and member_projects lists.
 
