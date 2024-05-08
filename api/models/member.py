@@ -167,7 +167,7 @@ class Member(models.Model):
         return f'{self.user.username} ({self.first_name[0]}. {self.last_name[0]}.)'
 
     def save(self, *args, **kwargs):
-        if not self.number:
+        if not self.number or not self.qr:
             self.regenerate_qr()
         super().save(*args, **kwargs)
 
