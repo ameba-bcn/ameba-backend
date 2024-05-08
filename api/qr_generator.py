@@ -24,8 +24,7 @@ def update_member_qr_image(member, tmp_qr_path):
 
 def generate_member_card_qr(token, site_name):
     url_path = settings.FE_MEMBERSHIP_CARD_PATH.format(token=token)
-    protocol = settings.DEBUG and 'http' or 'https',
-    url = urllib.parse.urljoin(f'{protocol}://{site_name}/', url_path)
+    url = urllib.parse.urljoin(site_name, url_path)
     qr_img = create_qr_code(url)
     buffer = io.BytesIO()
     qr_img.save(buffer, format='PNG')
