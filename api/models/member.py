@@ -156,7 +156,7 @@ class Member(models.Model):
         if self.qr:
             self.qr.delete(save=False)
         qr_img = qr_generator.generate_member_card_qr(
-            token=self.get_member_card_token(), site_name=settings.HOST_NAME
+            token=self.get_member_card_token()
         )
         self.qr.save(f'{self.qr_hash}.png', qr_img, save=False)
 

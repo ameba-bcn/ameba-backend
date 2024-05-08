@@ -22,8 +22,9 @@ def update_member_qr_image(member, tmp_qr_path):
         member.qr.save(image_name, qr_file)
 
 
-def generate_member_card_qr(token, site_name):
+def generate_member_card_qr(token):
     url_path = settings.FE_MEMBERSHIP_CARD_PATH.format(token=token)
+    site_name = settings.HOST_NAME + '/'
     url = urllib.parse.urljoin(site_name, url_path)
     qr_img = create_qr_code(url)
     buffer = io.BytesIO()
