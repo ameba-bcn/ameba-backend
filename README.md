@@ -13,6 +13,7 @@
 - Added image processing to normalize images in backend (all converted to .jpeg and resized to 1920, 1080 FHD)
 - Added REDIS database for caching api responses.
 - Refactored to new infrastructure with secret-files
+- Email texts updated
 
 ## REST-API
 
