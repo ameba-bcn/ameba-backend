@@ -7,7 +7,7 @@
 
 {% block content %}
 <td>
-    <h1>{% blocktrans with user_name=user.username|upper %}¡BIENVENIDO {{ user_name }}!{% endblocktrans %}</h1>
+    <h1>{% blocktrans with user_name=user.username|upper %}¡BIENVENIDO/A {{ user_name }}!{% endblocktrans %}</h1>
     <p>
         {% blocktrans %}
 Ya puedes usar tu cuenta en {{ site_name }}
@@ -22,7 +22,7 @@ Entérate de todos nuestros talleres, eventos, entrevistas y más en
     <p>
         {% blocktrans %}
 Para formar parte de la asociación, colaborar con nosotros y beneficiarte de
-descuentos, hazte soci@ <a href="{{ protocol }}://{{ site_name }}/{{ new_member_page }}">aquí</a>.
+descuentos, hazte socio/a <a href="{{ protocol }}://{{ site_name }}/{{ new_member_page }}">aquí</a>.
         {% endblocktrans %}
     </p>
 </td>

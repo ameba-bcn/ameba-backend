@@ -41,6 +41,10 @@ router.register(
 router.register(
     r'profile_images', views.MemberProfileImageViewSet, basename='member_images'
 )
+router.register(
+    r'legal', views.LegalViewSet, basename='legal'
+)
+
 
 urlpatterns = [
     path('', include(router.urls)),

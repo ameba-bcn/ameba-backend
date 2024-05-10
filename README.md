@@ -2,10 +2,18 @@
 
 ### Release notes
 
-### 1.43
-- Implementado member profile con imagenes y tags
-- Implementado EP `GET /api/genres/` con los géneros disponibles
-- Implementado EP `/api/profile_images/` para borrar imagenes de perfil
+### 1.5
+- Added member profile GET/PATCH/POST /api/user/current/member_profile editable endpoint with QR
+- Added images upload in upload_images field in PATCH /api/user/current/member_profile accepting existing URLs and base64 images.
+- Added GET /api/member_projects/ endpoint with public member projects list
+- Added GET /api/member_projects/<id>/ endpoint with public member project detail
+- Added qr regeneration in GET /api/user/current/reset_qr/
+- Added legal section in GET /api/legal
+- Added "email" field to stripe customer integration
+- Added image processing to normalize images in backend (all converted to .jpeg and resized to 1920, 1080 FHD)
+- Added REDIS database for caching api responses.
+- Refactored to new infrastructure with secret-files
+- Email texts updated
 
 ## REST-API
 
@@ -27,11 +35,16 @@ python manage.py runserver
 #### Load dataset
 Dataset inicial con datos reales:
 ```
-python manage.py loaddata demo.json
+python manage.py loadlocal
 ```
 #### Crear dataset a partir de datos actuales
-```
+```python
 python manage.py dumpdata --indent 2 > demo.json
+```
+
+#### Cargar dataset creado
+```python
+python manage.py loaddata demo.json
 ```
 
 ### Localización

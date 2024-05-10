@@ -1,5 +1,5 @@
 {% load i18n %}{% autoescape off %}
 {% blocktrans with subscription=subscription.name|upper %}
-    ¡Bienvenido! Ya eres {{ subscription }} de AMEBA
+    ¡Bienvenido! Ya eres SOCIO/A de AMEBA
 {% endblocktrans %}
 {% endautoescape %}

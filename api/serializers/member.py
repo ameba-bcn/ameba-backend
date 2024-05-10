@@ -1,12 +1,18 @@
+import os
+import re
+import base64
 from rest_framework import serializers
+from django.core.files.base import ContentFile
+from django.conf import settings
 
 from api.models import Member, User, Cart, Membership, MemberProfileImage, \
-    MusicGenres
+    MusicGenres, MemberMediaUrl
 from api.exceptions import (
     EmailAlreadyExists, WrongCartId, CartNeedOneSubscription,
     IdentityCardIsTooShort, WrongIdentityCardFormat
 )
 import api.stripe as api_stripe
+import api.images as img_utils
 
 
 class DocMemberSerializer(serializers.ModelSerializer):
@@ -77,17 +83,6 @@ class MemberRegisterSerializer(serializers.Serializer):
         raise CartNeedOneSubscription
 
     @staticmethod
-    def validate_identity_card(identity_card):
-        if len(identity_card) == 9:
-            if (
-                all(c.isdigit() for c in identity_card[1:-1]) and
-                identity_card[-1].isalpha()
-            ):
-                return identity_card
-            raise WrongIdentityCardFormat
-        raise IdentityCardIsTooShort
-
-    @staticmethod
     def validate_email(email):
         if User.objects.filter(email=email):
             raise EmailAlreadyExists
@@ -122,7 +117,16 @@ class MemberImageSerializer(serializers.ModelSerializer):
 class MemberDetailSerializer(MemberSerializer):
     images = MemberImageSerializer(many=True, read_only=True)
     upload_images = serializers.ListField(
-        write_only=True, required=False, allow_empty=False,
+        write_only=True, required=False, allow_empty=True,
+    )
+    media_urls = serializers.SlugRelatedField(
+        many=True, read_only=True, slug_field='url'
+    )
+    upload_media_urls = serializers.ListField(
+        write_only=True, required=False, allow_empty=True
+    )
+    username = serializers.SlugRelatedField(
+        slug_field='username', source='user', read_only=True, many=False
     )
 
     class Meta:
@@ -132,13 +136,19 @@ class MemberDetailSerializer(MemberSerializer):
             'phone_number', 'user', 'status', 'type', 'memberships',
             'payment_methods', 'expires', 'project_name', 'description',
             'images', 'media_urls', 'tags', 'genres', 'created', 'is_active',
-            'public', 'upload_images'
+            'public', 'upload_images', 'upload_media_urls', 'username', 'qr'
         )
         read_only_fields = (
-            'id', 'number', 'user', 'status', 'is_active', 'type', 'memberships',
-            'payment_methods', 'expires', 'created', 'images'
+            'id', 'number', 'status', 'is_active', 'type', 'memberships',
+            'payment_methods', 'expires', 'created', 'images', 'qr'
         )
         optional_fields = fields
+
+    def resolve_link(self, image_link):
+        name = image_link.split(settings.MEDIA_URL)[-1]
+        img_obj = self.instance.images.get(image=name)
+        image_data = img_utils.get_base64_image(img_obj.image)
+        return image_data
 
     def to_internal_value(self, data):
         new_data = data.copy()
@@ -147,13 +157,68 @@ class MemberDetailSerializer(MemberSerializer):
                 MusicGenres.normalize_name(genre)
                 for genre in data.get('genres', [])
             ]
+        if 'username' in new_data:
+            self.instance.user.username = new_data.pop('username')
+            self.instance.user.save()
         return super().to_internal_value(new_data)
 
-    def update(self, instance, validated_data):
-        return super().update(instance, validated_data)
+    def delete_all_images(self):
+        for image in self.instance.images.all():
+            image.image.delete()
+            image.delete()
+
+    def delete_all_media_urls(self):
+        for media_url in self.instance.media_urls.all():
+            media_url.delete()
+
+    def validate_upload_images(self, upload_images):
+        if upload_images is not None and len(upload_images) > 0:
+            for i, image_data in enumerate(upload_images):
+                if img_utils.match_base64_format(image_data):
+                    try:
+                        img_utils.decode_base64_image(image_data)
+                    except ValueError:
+                        raise serializers.ValidationError(
+                            f"Invalid image format in image position {i} "
+                            f"({image_data[:100]}...)"
+                        )
+                else:
+                    try:
+                        upload_images[i] = self.resolve_link(image_data)
+                    except MemberProfileImage.DoesNotExist:
+                        raise serializers.ValidationError(
+                            f"Image with url {image_data} not found in db"
+                        )
+        return upload_images
+
+    def save_images(self, upload_images):
+        for i, image_data in enumerate(upload_images):
+            if image_data is None:
+                continue
+            member_image = MemberProfileImage.objects.create(
+                member=self.instance)
+            image, ext = img_utils.decode_base64_image(image_data)
+            image_name = f"{self.instance.number}_{i}.{ext}"
+            member_image.image.save(image_name, image)
+
+    def save_media_urls(self, upload_media_urls):
+        for media_url in upload_media_urls:
+            MemberMediaUrl.objects.create(member=self.instance, url=media_url)
+
+    def clean_existing(self, upload_images):
+        for i, image in enumerate(upload_images):
+            if not image.startswith('data:image'):
+                if MemberMediaUrl.objects.filter(member=self.instance, url=image):
+                    upload_images[i] = None
+        return [image for image in upload_images if image is not None]
 
     def save(self, **kwargs):
-        upload_images = self.validated_data.get('upload_images', [])
-        for image in upload_images:
-            MemberProfileImage.objects.create(member=self.instance, image=image)
+        upload_images = self.validated_data.get('upload_images', None)
+        if upload_images is not None:
+            self.delete_all_images()
+            self.save_images(upload_images)
+        upload_media_urls = self.validated_data.get('upload_media_urls', None)
+        if upload_media_urls is not None:
+            self.delete_all_media_urls()
+            self.save_media_urls(upload_media_urls)
         return super().save(**kwargs)

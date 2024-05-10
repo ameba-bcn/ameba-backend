@@ -23,9 +23,9 @@ class ItemListSerializer(serializers.ModelSerializer):
     images = serializers.SlugRelatedField(many=True,
                                           read_only=True,
                                           slug_field='url')
-    discount = serializers.SerializerMethodField()
-    saved = serializers.SerializerMethodField()
-    purchased = serializers.SerializerMethodField()
+    # discount = serializers.SerializerMethodField()
+    # saved = serializers.SerializerMethodField()
+    # purchased = serializers.SerializerMethodField()
 
     def get_discount(self, article):
         user = self.context.get('request').user
@@ -44,8 +44,7 @@ class ItemListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Item
-        fields = ['id', 'name', 'images', 'discount', 'price_range',
-                  'has_stock']
+        fields = ['id', 'name', 'images', 'price_range', 'price', 'stock']
 
 
 class ItemDetailSerializer(ItemListSerializer):

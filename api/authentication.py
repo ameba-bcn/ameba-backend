@@ -14,22 +14,11 @@ class MemberCardAuthentication(JWTAuthentication):
     salt = settings.QR_MEMBER_SALT
     age = None
     signature = ('pk', 'qr_date')
-    keyword = 'Bearer'
 
     def authenticate(self, request):
-        auth = get_authorization_header(request).split()
-
-        if not auth or auth[0].lower() != b'bearer':
+        token = request.query_params.get('token')
+        if not token:
             return None
-
-        if len(auth) == 1:
-            msg = _('Invalid basic header. No credentials provided.')
-            raise exceptions.AuthenticationFailed(msg)
-        elif len(auth) > 2:
-            msg = _('Invalid basic header. Credentials string should not contain spaces.')
-            raise exceptions.AuthenticationFailed(msg)
-
-        token = auth[1].decode('utf8')
         try:
             signature = signing.loads(token, max_age=self.age, salt=self.salt)
             obj = self.model.objects.get(pk=signature[0])

@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+import api.images as img_utils
 
 
 def get_default_order():
@@ -34,3 +35,8 @@ class Collaborator(models.Model):
     def set_position(self, position):
         self.position = position
         self.save()
+
+    def save(self, *args, **kwargs):
+        if self.image:
+            img_utils.replace_image_field(self.image)
+        super().save(*args, **kwargs)

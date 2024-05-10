@@ -15,7 +15,7 @@
 
 @font-face {
     font-family: 'ameba';
-    src: url("/static/fonts/BebasNeueRegular.woff") format('woff');
+    src: url("{% static 'fonts/BebasNeueRegular.woff' %}") format('woff');
 }
 
 :root {
@@ -70,7 +70,7 @@
 
 .addlink {
     padding-left: 16px;
-    background: url(/static/icons/icon-addlink.svg) 0 1px no-repeat;
+    background: url("{% static 'icons/icon-addlink.svg' %}") 0 1px no-repeat;
 }
 
 #content-related .module {
@@ -91,7 +91,7 @@
 {% endblock extrastyle %}
 
 <h1 class="title">
-    <img src="/media/logo/ameba-logo.png" alt="logo" height="50">
+    <img src="{% static 'logos/ameba-logo.png' %}" alt="logo" height="50">
     AMEBA ADMIN
 </h1>
 

@@ -4,6 +4,7 @@ from django.conf import settings
 from django.db.models import Sum
 from django.db import models
 from django.utils.translation import gettext as _
+import api.cache_utils as cache_utils
 
 EXPIRE_HOURS_BEFORE_EVENT = 1
 EXPIRE_BEFORE_EVENT = timedelta(hours=EXPIRE_HOURS_BEFORE_EVENT)
@@ -23,6 +24,19 @@ if settings.DEBUG:
     INTERVALS.append(('day', 'day'))
 
 INTERVALS = tuple(INTERVALS)
+
+
+item_stock_hint = _(
+    'Usa este campo para indicar la cantidad de stock disponible.\n'
+    'Si se trata de un evento, introduce el número de plazas/entradas disponibles.\n'
+    'Si la gestión del aforo no se realiza a través de la web, introduce -1.\n'
+    'Por ejemplo, si la entrada es libre hasta completar aforo o si la venta de entradas se gestiona directamente en taquilla.'
+)
+
+item_price_hint = _(
+    'Usa este campo para indicar el precio del producto o evento.'
+    'Si es un evento gratuito, introduce el valor 0.'
+)
 
 
 class Item(models.Model):
@@ -62,6 +76,12 @@ class Item(models.Model):
         elif len(prices) == 0:
             return '-'
         return f'{min(prices)}€ / {max(prices)}€'
+
+    @property
+    def price(self):
+        prices = list(variant.price for variant in self.variants.all())
+        if prices:
+            return min(prices)
 
     def __str__(self):
         return self.name
@@ -121,6 +141,10 @@ class Item(models.Model):
         else:
             return 'item'
 
+    @cache_utils.invalidate_models_cache
+    def save(self, *args, **kwargs):
+        return super().save(*args, **kwargs)
+
 
 class ItemAttributeType(models.Model):
     class Meta:
@@ -131,6 +155,10 @@ class ItemAttributeType(models.Model):
 
     def __str__(self):
         return self.name
+
+    @cache_utils.invalidate_models_cache
+    def save(self, *args, **kwargs):
+        return super().save(*args, **kwargs)
 
 
 class ItemAttribute(models.Model):
@@ -148,6 +176,10 @@ class ItemAttribute(models.Model):
     def __str__(self):
         return f'{self.attribute.name}: {self.value}'
 
+    @cache_utils.invalidate_models_cache
+    def save(self, *args, **kwargs):
+        return super().save(*args, **kwargs)
+
 
 class ItemVariant(models.Model):
     class Meta:
@@ -157,10 +189,11 @@ class ItemVariant(models.Model):
     item = models.ForeignKey('Item', on_delete=models.CASCADE,
                              related_name='variants', verbose_name=_('item'))
     attributes = models.ManyToManyField('ItemAttribute', blank=False,
-                                        verbose_name=_('attributes'))
-    stock = models.IntegerField()
+                                        verbose_name=_('attributes'),
+                                        related_name='variants')
+    stock = models.IntegerField(help_text=item_stock_hint, verbose_name=_('stock'))
     price = models.DecimalField(max_digits=8, decimal_places=2,
-                                verbose_name=_('price'))
+                                verbose_name=_('price'), help_text=item_price_hint)
     acquired_by = models.ManyToManyField(
         to='User', blank=True, related_name='item_variants',
         verbose_name=_('acquired by')
@@ -203,6 +236,7 @@ class ItemVariant(models.Model):
             return f'{self.item.name} Membership'
         return f'{self.item.name} ({self.get_attributes_set()})'
 
+    @cache_utils.invalidate_models_cache
     def save(self, *args, **kwargs):
         if self.recurrence is not None and not self.item.is_subscription():
             self.recurrence = None
@@ -219,3 +253,4 @@ class ItemVariant(models.Model):
     @property
     def period(self):
         return PERIODS.get(self.get_recurrence(), None)
+

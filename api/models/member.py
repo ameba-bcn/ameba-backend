@@ -9,7 +9,7 @@ from localflavor.es.models import ESIdentityCardNumberField
 
 from api import qr_generator
 from api.models.membership import MembershipStates
-
+import api.images as img_utils
 
 # Get current user model
 User = get_user_model()
@@ -48,6 +48,14 @@ class MemberProfileImage(models.Model):
     def __str__(self):
         return f'{self.member.user.username} profile images'
 
+    @property
+    def url(self):
+        return self.image.url
+
+    def save(self, *args, **kwargs):
+        if self.image:
+            img_utils.replace_image_field(self.image)
+        super().save(*args, **kwargs)
 
 
 class Member(models.Model):
@@ -63,7 +71,7 @@ class Member(models.Model):
         to='User', on_delete=models.CASCADE, verbose_name=_('user'),
         related_name='member'
     )
-    identity_card = ESIdentityCardNumberField(verbose_name='dni/nie')
+    identity_card = models.CharField(max_length=20, verbose_name='dni/nie')
     first_name = models.CharField(max_length=20, verbose_name=_('first name'))
     last_name = models.CharField(max_length=20, verbose_name=_('last name'))
     phone_number = models.CharField(
@@ -79,17 +87,25 @@ class Member(models.Model):
         max_length=2500, verbose_name=_('biography'), null=True
     )
     tags = models.ManyToManyField(
-        to='ArtistTag', blank=True, verbose_name=_('tags'), null=True,
+        to='ArtistTag', blank=True, verbose_name=_('tags'),
         related_name='members'
     )
     genres = models.ManyToManyField(
-        to='MusicGenres', blank=True, verbose_name=_('genres'), null=True,
+        to='MusicGenres', blank=True, verbose_name=_('genres'),
         related_name='members'
     )
     public = models.BooleanField(default=False)
     created = models.DateTimeField(
         auto_now_add=True, verbose_name=_('created')
     )
+    qr = models.ImageField(upload_to='member_qr', blank=True, null=True)
+
+    def __init__(self, *args, **kwargs):
+        if hasattr(self, 'qr_date'):
+            self._original_qr_date = self.qr_date
+        else:
+            self._original_qr_date = None
+        super().__init__(*args, **kwargs)
 
     def get_newest_membership(self):
         if self.memberships.all():
@@ -126,7 +142,6 @@ class Member(models.Model):
         self.save()
 
     def get_member_card_token(self):
-        self.update_qr_date()
         signature = (
             self.pk,
             self.qr_date
@@ -134,11 +149,28 @@ class Member(models.Model):
         return signing.dumps(signature, salt=settings.QR_MEMBER_SALT)
 
     @property
+    def qr_hash(self):
+        return signing.dumps(self.number, salt=settings.QR_MEMBER_SALT)
+
+    def regenerate_qr(self):
+        if self.qr:
+            self.qr.delete(save=False)
+        qr_img = qr_generator.generate_member_card_qr(
+            token=self.get_member_card_token()
+        )
+        self.qr.save(f'{self.qr_hash}.png', qr_img, save=False)
+
+    @property
     def id(self):
         return self.number
 
     def __str__(self):
         return f'{self.user.username} ({self.first_name[0]}. {self.last_name[0]}.)'
+
+    def save(self, *args, **kwargs):
+        if not self.number or not self.qr:
+            self.regenerate_qr()
+        super().save(*args, **kwargs)
 
 
 class MemberMediaUrl(models.Model):

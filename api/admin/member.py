@@ -105,10 +105,10 @@ class MemberAdmin(admin.ModelAdmin):
     fields = (
         'number', 'user', 'first_name', 'last_name', 'project_name',
         'description', 'tags', 'genres', 'public',
-        'status', 'type', 'expires'
+        'status', 'type', 'expires', 'created', 'qr'
     )
     list_display_links = ('number', )
-    readonly_fields = ('list_preview', 'status', 'type', 'expires')
+    readonly_fields = ('list_preview', 'status', 'type', 'expires', 'created', 'qr')
     list_filter = (StatusFilter, TypeFilter)
     inlines = [MembershipInLine, MemberImageInLine]
 

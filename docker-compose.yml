@@ -1,0 +1,32 @@
+version: '3.8'
+
+
+services:
+  ameba-backend:
+    build: .
+    image: ameba-backend
+    command: "python manage.py runserver 0.0.0.0:8000"
+    working_dir: /home/ameba/dev_app
+    volumes:
+      - .:/home/ameba/dev_app
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - ameba-db
+      - ameba-redis
+
+  ameba-db:
+    image: postgres:12-alpine
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  ameba-redis:
+    image: redis:alpine
+    container_name: ameba-redis
+    restart: always
+    ports:
+      - "6379:6379"

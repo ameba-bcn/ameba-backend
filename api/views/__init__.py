@@ -22,3 +22,4 @@ from api.views.collaborator import CollaboratorViewSet
 from api.views.member_project import MemberProjectViewSet
 from api.views.member import MemberViewSet, MemberProfileImageViewSet
 from api.views.genres import MusicGenresViewSet
+from api.views.legal import LegalViewSet

@@ -4,6 +4,8 @@
 ¡GRACIAS {{ user_name }}, TU PEDIDO SE HA REALIZADO CORRECTAMENTE!
 {% endblocktrans %}
 
+{% if has_articles %}
+
 {% blocktrans %}
 Te recordamos que actualmente no hacemos envíos. Para recogerlo puedes
 dirigirte a RHYTHM CONTROL de lunes a viernes de 15h a 20h, o sábados de 12h
@@ -14,6 +16,7 @@ a 20h. Te avisaremos cuando tu pedido esté listo para recoger.
 Rhythm Control: Galerías Olimpia (Ronda de Sant Pau, 17, 08015 Barcelona)
 {% endblocktrans %}
 https://goo.gl/maps/RSAfNpoG8zjhSMNF9
+{% endif %}
 
 {% blocktrans %}
     A continuación encontrarás los detalles del pedido.

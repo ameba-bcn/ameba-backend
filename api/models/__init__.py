@@ -22,3 +22,4 @@ from api.models.payment import Payment
 from api.models.orders import Order
 from api.models.collaborators import Collaborator
 from api.models.genres import MusicGenres
+from api.models.legal import LegalDocument

@@ -49,10 +49,14 @@ def raise_debug():
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env("DJANGO_SECRET", default=None, var_type='string')
+SECRET_KEY = env(
+    "DJANGO_SECRET",
+    default='#gn88d3jueyq#l2uear=)@q!#jz-3esp!y4mo)d%(0_uc%pta&',
+    var_type='string'
+)
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = env("ALLOWED_HOSTS", 'localhost', 'string').split(',')
+CORS_ALLOWED_ORIGINS = env("CORS_ALLOWED_ORIGINS", 'localhost', 'string').split(',')
 HOST_NAME = env("HOST_NAME", '', 'string') or 'ameba.cat'
 if HOST_NAME:
     ALLOWED_HOSTS.append(HOST_NAME)
@@ -140,6 +144,19 @@ DATABASES = {
 }
 
 
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": env('REDIS_LOC', 'redis://ameba-redis:6379/1', 'string'),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "IGNORE_EXCEPTIONS": True,
+        }
+    }
+}
+
+
+
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
@@ -164,7 +181,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'es'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'CET'
 
 USE_I18N = True
 
@@ -182,7 +199,7 @@ LANGUAGES = (
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = env('STATIC_URL', '/static/', 'string')
 STATIC_ROOT = 'static/'
 
 REST_FRAMEWORK = {
@@ -230,8 +247,10 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 
-MEDIA_ROOT = '/src/media'
-MEDIA_URL = 'media/'
+LOCALE_PATHS = ('api/locale/',)
+
+MEDIA_ROOT = 'media/'
+MEDIA_URL = env('MEDIA_URL', '/media/', 'string')
 
 
 # EMAIL CONFIG
@@ -290,12 +309,12 @@ PDF_TMP_DIR = "tmp/pdf"
 # FRONTEND MEMBERSHIP CARD PATH
 FE_MEMBERSHIP_CARD_PATH = env(
     'FE_MEMBERSHIP_CARD_PATH',
-    'api/member_card/?token={token}',
+    'qr-view/?token={token}',
     var_type='string'
 )
 FE_EVENT_TICKET_PATH = env(
     'FE_EVENT_TICKET_PATH',
-    'api/ticket/?token={token}',
+    'pub/mtsa/?token={token}',
     var_type='string'
 )
 
@@ -312,12 +331,12 @@ STAFF_DOMAINS = ['jaguarintheloop.live', 'ameba.cat']
 TEST_MAILING_LIST_PREFIXES = ['test', 'dev', 'stag', 'sand', 'debug', 'local']
 TEST_TEMPLATE = 'unsubscribe.test'
 
-EMAIL_FILE_PATH = "/src/emails"
+EMAIL_FILE_PATH = "/home/ameba/app/emails"
 
 DISABLE_DARK_MODE = True
 
 
-NEW_MEMBER_PAGE = env('NEW_MEMBER_PAGE', 'botiga/?id={id}', 'string')
+NEW_MEMBER_PAGE = env('NEW_MEMBER_PAGE', 'memberships/?id={id}', 'string')
 
 # AMEBA INTERNAL ORDERS EMAIL
 INTERNAL_ORDERS_EMAIL = env(

@@ -40,4 +40,5 @@ from api.serializers.member_project import (
     MemberProjectSerializer, MemberProjectListSerializer
 )
 from api.serializers.genres import MusicGenresSerializer
+from api.serializers.legal import LegalSerializer
 
