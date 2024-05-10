@@ -336,7 +336,7 @@ EMAIL_FILE_PATH = "/home/ameba/app/emails"
 DISABLE_DARK_MODE = True
 
 
-NEW_MEMBER_PAGE = env('NEW_MEMBER_PAGE', 'botiga/?id={id}', 'string')
+NEW_MEMBER_PAGE = env('NEW_MEMBER_PAGE', 'memberships/?id={id}', 'string')
 
 # AMEBA INTERNAL ORDERS EMAIL
 INTERNAL_ORDERS_EMAIL = env(
