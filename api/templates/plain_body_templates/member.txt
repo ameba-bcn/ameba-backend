@@ -3,7 +3,7 @@
 {% blocktrans %}¡Bienvenido {{ user_name }}!{% endblocktrans %}
 
 {% blocktrans with subscription=subscription.name|upper %}
-    ¡Ya eres SOCIO/A {{ subscription }} de AMEBA!
+    ¡Ya eres SOCI/A de AMEBA!
 {% endblocktrans %}
 
 {% blocktrans %}

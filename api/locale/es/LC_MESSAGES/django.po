@@ -734,12 +734,12 @@ msgstr "¡HOLA %(user_name)s!"
 #, python-format
 msgid ""
 "\n"
-"Te recordamos que tu subscripción como SOCIO/A %(subscription)s se renovará\n"
+"Te recordamos que tu subscripción como SOCIO/A se renovará\n"
 "automáticamente el %(renewal_date)s\n"
 "        "
 msgstr ""
 "\n"
-"Te recordamos que tu subscripción como SOCIO/A %(subscription)s se renovará\n"
+"Te recordamos que tu subscripción como SOCIO/A se renovará\n"
 "automáticamente el %(renewal_date)s\n"
 "        "
 
@@ -785,11 +785,11 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"¡Ya eres SOCIO/A %(subscription)s de AMEBA!\n"
+"¡Ya eres SOCIO/A de AMEBA!\n"
 "        "
 msgstr ""
 "\n"
-"¡Ya eres SOCIO/A %(subscription)s de AMEBA!\n"
+"¡Ya eres SOCIO/A de AMEBA!\n"
 "        "
 
 
@@ -1018,11 +1018,11 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"¡Se ha renovado tu subscripción como SOCI/A %(subscription)s de AMEBA!\n"
+"¡Se ha renovado tu subscripción como SOCI/A de AMEBA!\n"
 "        "
 msgstr ""
 "\n"
-"¡Se ha renovado tu subscripción como SOCI/A %(subscription)s de AMEBA!\n"
+"¡Se ha renovado tu subscripción como SOCI/A de AMEBA!\n"
 "        "
 
 
@@ -1045,12 +1045,12 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"Hemos intentado renovar tu subscripción como SOCIO/A %(subscription)s de\n"
+"Hemos intentado renovar tu subscripción como SOCIO/A de\n"
 "AMEBA pero parece que ha habido un problema con el pago.\n"
 "        "
 msgstr ""
 "\n"
-"Hemos intentado renovar tu subscripción como SOCIO/A %(subscription)s de\n"
+"Hemos intentado renovar tu subscripción como SOCIO/A de\n"
 "AMEBA pero parece que ha habido un problema con el pago.\n"
 "        "
 
@@ -1249,11 +1249,11 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"Te recordamos que tu subscripción como SOCIO/A %(subscription)s se renovará\n"
+"Te recordamos que tu subscripción como SOCIO/A se renovará\n"
 "automáticamente el %(renewal_date)s\n"
 msgstr ""
 "\n"
-"Te recordamos que tu subscripción como SOCIO/A %(subscription)s se renovará\n"
+"Te recordamos que tu subscripción como SOCIO/A se renovará\n"
 "automáticamente el %(renewal_date)s\n"
 
 
@@ -1297,10 +1297,10 @@ msgstr "¡Bienvenido %(user_name)s!"
 #, python-format
 msgid ""
 "\n"
-"    ¡Ya eres SOCIO/A %(subscription)s de AMEBA!\n"
+"    ¡Ya eres SOCIO/A de AMEBA!\n"
 msgstr ""
 "\n"
-"    ¡Ya eres SOCIO/A %(subscription)s de AMEBA!\n"
+"    ¡Ya eres SOCIO/A de AMEBA!\n"
 
 
 #: api/templates/plain_body_templates/member.txt:9
@@ -1485,10 +1485,10 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"¡Se ha renovado tu subscripción como SOCIO/A %(subscription)s de AMEBA!\n"
+"¡Se ha renovado tu subscripción como SOCIO/A de AMEBA!\n"
 msgstr ""
 "\n"
-"¡Se ha renovado tu subscripción como SOCIO/A %(subscription)s de AMEBA!\n"
+"¡Se ha renovado tu subscripción como SOCIO/A de AMEBA!\n"
 
 
 #: api/templates/plain_body_templates/renewal.txt:10
@@ -1508,11 +1508,11 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"Hemos intentado renovar tu subscripción como SOCIO/A %(subscription)s de\n"
+"Hemos intentado renovar tu subscripción como SOCIO/A de\n"
 "AMEBA pero parece que ha habido un problema con el pago.\n"
 msgstr ""
 "\n"
-"Hemos intentado renovar tu subscripción como SOCIO/A %(subscription)s de\n"
+"Hemos intentado renovar tu subscripción como SOCIO/A de\n"
 "AMEBA pero parece que ha habido un problema con el pago.\n"
 
 
@@ -1597,10 +1597,10 @@ msgstr "Tus entradas para %(event_name)s! "
 #, python-format
 msgid ""
 "\n"
-"    ¡Bienvenido! Ya eres %(subscription)s de AMEBA\n"
+"    ¡Bienvenido! Ya eres SOCIO/A de AMEBA\n"
 msgstr ""
 "\n"
-"    ¡Bienvenido! Ya eres %(subscription)s de AMEBA\n"
+"    ¡Bienvenido! Ya eres SOCIO/A de AMEBA\n"
 
 
 #: api/templates/plain_subject_templates/new_order_internal.txt:2
@@ -1635,20 +1635,20 @@ msgstr "Activa tu cuenta en %(site_name)s"
 #, python-format
 msgid ""
 "\n"
-"    ¡Hemos renovado tu subscripción como %(subscription)s de AMEBA!\n"
+"    ¡Hemos renovado tu subscripción como SOCIO/A de AMEBA!\n"
 msgstr ""
 "\n"
-"    ¡Hemos renovado tu subscripción como %(subscription)s de AMEBA!\n"
+"    ¡Hemos renovado tu subscripción como SOCIO/A de AMEBA!\n"
 
 
 #: api/templates/plain_subject_templates/renewal_failed.txt:2
 #, python-format
 msgid ""
 "\n"
-"    No hemos podido renovar tu subscripción como %(subscription)s de AMEBA\n"
+"    No hemos podido renovar tu subscripción como SOCIO/A de AMEBA\n"
 msgstr ""
 "\n"
-"    No hemos podido renovar tu subscripción como %(subscription)s de AMEBA\n"
+"    No hemos podido renovar tu subscripción como SOCIO/A de AMEBA\n"
 
 
 #: api/templates/plain_subject_templates/subscribe.txt:2

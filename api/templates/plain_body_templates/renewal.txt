@@ -3,7 +3,7 @@
 {% blocktrans %}¡Hola {{ user_name }}!{% endblocktrans %}
 
 {% blocktrans with subscription=subscription.name|upper %}
-¡Se ha renovado tu subscripción como SOCIO/A {{ subscription }} de AMEBA!
+¡Se ha renovado tu subscripción como SOCI/A de AMEBA!
 {% endblocktrans %}
 
 
