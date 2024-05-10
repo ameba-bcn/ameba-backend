@@ -3,7 +3,7 @@
 {% blocktrans %}¡Hola {{ user_name }}!{% endblocktrans %}
 
 {% blocktrans with subscription=subscription.name|upper %}
-Hemos intentado renovar tu subscripción como SOCI@ {{ subscription }} de
+Hemos intentado renovar tu subscripción como SOCIO/A {{ subscription }} de
 AMEBA pero parece que ha habido un problema con el pago.
 {% endblocktrans %}
 
@@ -13,7 +13,7 @@ suscripción visitando {{ protocol }}://{{ site_name }}/{{ new_member_page }}
 {% endblocktrans %}
 
 {% blocktrans %}
-Si no deseas continuar siendo soci@, no hace falta que hagas nada.
+Si no deseas continuar siendo socio/a, no hace falta que hagas nada.
 {% endblocktrans %}
 
 

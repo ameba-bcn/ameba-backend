@@ -3,29 +3,20 @@
 {% blocktrans %}¡Bienvenido {{ user_name }}!{% endblocktrans %}
 
 {% blocktrans with subscription=subscription.name|upper %}
-    ¡Ya eres SOCI@ {{ subscription }} de AMEBA!
+    ¡Ya eres SOCIO/A {{ subscription }} de AMEBA!
 {% endblocktrans %}
 
-{%  if 'pro' in subscription.name %}
-        {% blocktrans %}
-Recuerda que como SOCI@ PRO tienes descuentos en formaciones y eventos
+{% blocktrans %}
+Recuerda que como SOCIO/A tienes descuentos en formaciones y eventos
 organizados por la asociación, descuentos en tiendas y escuelas; y
 actividades gratuitas. En nuestra web puedes ver todas las actividades de la
 asociación. Te animamos a que nos envíes información acerca de tus
 proyectos, intereses o inquietudes, así como sugerencias.
-        {% endblocktrans %}
-{% elif 'supp' in subscription.name  %}
-        {% blocktrans %}
-Recuerda que como SOCI@ SUPPORTER tienes descuentos en eventos organizados
-por la asociación y descuentos en tiendas. En nuestra web puedes ver todas
-las actividades de la asociación. Encontrarás tu carnet digital de soci@
-adjunto en PDF a este correo.
-        {% endblocktrans %}
-{% endif %}
+{% endblocktrans %}
 
 
 {% blocktrans %}
-Encontrarás tu carnet digital de soci@ adjunto en PDF a este correo.
+Encontrarás tu carnet digital de socio/a adjunto en PDF a este correo.
 {% endblocktrans %}
 
 

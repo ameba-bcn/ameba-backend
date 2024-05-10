@@ -19,11 +19,14 @@ model_to_cache_patterns = {
 
 
 def cache_response(fcn):
-    def wrapper(self, *args, **kwargs):
-        cache_key = self.model.__name__ + self.__class__.__name__ + fcn.__name__ + str(args) + str(kwargs)
+    def wrapper(self, request, *args, **kwargs):
+        # Include headers in the cache key
+        cache_key = self.model.__name__ + self.__class__.__name__ + fcn.__name__ + str(
+            args) + str(kwargs) + str(request.headers.get('Accept-Language'))
+
         cached_data = cache.get(cache_key)
         if cached_data is None:
-            response = fcn(self, *args, **kwargs)
+            response = fcn(self, request, *args, **kwargs)
             # Store data and status code, and potentially some headers
             cache_data = {
                 'data': response.data,

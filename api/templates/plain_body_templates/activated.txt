@@ -15,7 +15,7 @@ Entérate de todos nuestros talleres, eventos, entrevistas y más en
 
 {% blocktrans %}
 Para formar parte de la asociación, colaborar con nosotros y beneficiarte de
-descuentos, hazte soci@ visitando el siguiente enlace:
+descuentos, hazte soci/a visitando el siguiente enlace:
 {% endblocktrans %}
 {{ protocol }}://{{ site_name }}/{{ new_member_page }}
 

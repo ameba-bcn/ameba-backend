@@ -26,6 +26,19 @@ if settings.DEBUG:
 INTERVALS = tuple(INTERVALS)
 
 
+item_stock_hint = _(
+    'Usa este campo para indicar la cantidad de stock disponible.\n'
+    'Si se trata de un evento, introduce el número de plazas/entradas disponibles.\n'
+    'Si la gestión del aforo no se realiza a través de la web, introduce -1.\n'
+    'Por ejemplo, si la entrada es libre hasta completar aforo o si la venta de entradas se gestiona directamente en taquilla.'
+)
+
+item_price_hint = _(
+    'Usa este campo para indicar el precio del producto o evento.'
+    'Si es un evento gratuito, introduce el valor 0.'
+)
+
+
 class Item(models.Model):
     class Meta:
         verbose_name = _('Item')
@@ -178,9 +191,9 @@ class ItemVariant(models.Model):
     attributes = models.ManyToManyField('ItemAttribute', blank=False,
                                         verbose_name=_('attributes'),
                                         related_name='variants')
-    stock = models.IntegerField()
+    stock = models.IntegerField(help_text=item_stock_hint, verbose_name=_('stock'))
     price = models.DecimalField(max_digits=8, decimal_places=2,
-                                verbose_name=_('price'))
+                                verbose_name=_('price'), help_text=item_price_hint)
     acquired_by = models.ManyToManyField(
         to='User', blank=True, related_name='item_variants',
         verbose_name=_('acquired by')
