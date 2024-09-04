@@ -12,4 +12,3 @@ class InterviewViewSet(base.BaseReadOnlyViewSet):
     detail_serializer = serializers.InterviewDetailSerializer
     model = models.Interview
     queryset = models.Interview.objects.filter(is_active=True)
-

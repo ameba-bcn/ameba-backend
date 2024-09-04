@@ -8,6 +8,7 @@ from django.db.models import (
 )
 
 from api.models import Item
+import api.cache_utils as cache_utils
 
 
 EXPIRE_HOURS_BEFORE_EVENT = 1
@@ -53,3 +54,7 @@ class Event(Item):
     @property
     def str_datetime(self):
         return self.datetime.strftime('%d/%m/%Y - %H:%M')
+
+    @cache_utils.invalidate_models_cache
+    def save(self, *args, **kwargs):
+        return super().save(*args, **kwargs)

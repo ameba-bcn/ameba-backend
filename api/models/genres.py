@@ -1,5 +1,6 @@
 from django.utils.translation import gettext_lazy as _
 from django.db import models
+import api.cache_utils as cache_utils
 
 
 class MusicGenresManager(models.Manager):
@@ -36,6 +37,7 @@ class MusicGenres(models.Model):
     def verbose(self):
         return self.name.replace('_', ' ').capitalize()
 
+    @cache_utils.invalidate_models_cache
     def save(self, *args, **kwargs):
         self.name = self.normalize_name(self.name)
         super().save(*args, **kwargs)

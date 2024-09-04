@@ -1,8 +1,8 @@
 from django.db import models
 from django.utils.translation import gettext as _
-from django.core.exceptions import ValidationError
 
 import api.images as img_utils
+import api.cache_utils as cache_utils
 
 INTRO_PREVIEW = 160
 
@@ -36,6 +36,7 @@ class Interview(models.Model):
     def current_answers(self):
         return self.answers.filter(is_active=True)
 
+    @cache_utils.invalidate_models_cache
     def save(self, *args, **kwargs):
         if self.image:
             img_utils.replace_image_field(self.image)
@@ -59,6 +60,10 @@ class Question(models.Model):
         self.position = position
         self.save()
 
+    @cache_utils.invalidate_models_cache
+    def save(self, *args, **kwargs):
+        return super().save(*args, **kwargs)
+
 
 class Answer(models.Model):
     class Meta:
@@ -81,3 +86,7 @@ class Answer(models.Model):
 
     def __str__(self):
         return f'{self.interview.title} - {self.question.question} '
+
+    @cache_utils.invalidate_models_cache
+    def save(self, *args, **kwargs):
+        return super().save(*args, **kwargs)

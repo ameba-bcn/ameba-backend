@@ -11,5 +11,4 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         for member in api_models.Member.objects.all():
             member.regenerate_qr()
-            member.save()
             print(f'Processing {member.number}')

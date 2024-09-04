@@ -5,11 +5,11 @@ from django.contrib.auth import get_user_model
 from django.conf import settings
 from django.core import signing
 from django.db import models
-from localflavor.es.models import ESIdentityCardNumberField
 
 from api import qr_generator
 from api.models.membership import MembershipStates
 import api.images as img_utils
+import api.cache_utils as cache_utils
 
 # Get current user model
 User = get_user_model()
@@ -159,6 +159,7 @@ class Member(models.Model):
             token=self.get_member_card_token()
         )
         self.qr.save(f'{self.qr_hash}.png', qr_img, save=False)
+        self.save()
 
     @property
     def id(self):
@@ -167,6 +168,7 @@ class Member(models.Model):
     def __str__(self):
         return f'{self.user.username} ({self.first_name[0]}. {self.last_name[0]}.)'
 
+    @cache_utils.invalidate_models_cache
     def save(self, *args, **kwargs):
         if not self.number or not self.qr:
             self.regenerate_qr()

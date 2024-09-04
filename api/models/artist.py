@@ -1,6 +1,7 @@
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.db import models
+import api.cache_utils as cache_utils
 
 BIO_PREVIEW = 160
 
@@ -69,3 +70,7 @@ class Artist(models.Model):
             return self.interview_set.filter(
                 is_active=True).order_by('-created').first()
         return None
+
+    @cache_utils.invalidate_models_cache
+    def save(self, *args, **kwargs):
+        return super().save(*args, **kwargs)
