@@ -5,6 +5,14 @@ from api.models import Member, Membership, Subscription, MemberMediaUrl, \
     MemberProfileImage
 from api.admin.image import get_image_preview
 
+
+@admin.action(description="Regenerate QR")
+def regenerate_qr(modeladmin, request, queryset):
+    for member in queryset:
+        member.regenerate_qr()
+
+
+
 class StatusFilter(admin.SimpleListFilter):
 
     title = 'Status'
@@ -100,7 +108,7 @@ class MemberAdmin(admin.ModelAdmin):
     search_fields = ('number', 'user__email', 'first_name', 'last_name')
     list_display = (
         'number', 'user', 'first_name', 'last_name' , 'expires', 'status',
-        'type', 'public', 'list_preview'
+        'type', 'public', 'has_qr', 'list_preview'
     )
     fields = (
         'number', 'user', 'first_name', 'last_name', 'project_name',
@@ -108,11 +116,21 @@ class MemberAdmin(admin.ModelAdmin):
         'status', 'type', 'expires', 'created', 'qr'
     )
     list_display_links = ('number', )
-    readonly_fields = ('list_preview', 'status', 'type', 'expires', 'created', 'qr')
+    readonly_fields = (
+        'list_preview', 'status', 'type', 'expires', 'created', 'qr', 'has_qr'
+    )
     list_filter = (StatusFilter, TypeFilter)
     inlines = [MembershipInLine, MemberImageInLine]
+    actions = [regenerate_qr]
 
-    def list_preview(self, obj):
+    @staticmethod
+    def has_qr(obj):
+        if obj.qr is None or str(obj.qr) == '':
+            return False
+        return True
+
+    @staticmethod
+    def list_preview(obj):
         if obj.images and obj.images.all():
             return get_image_preview(obj.images.first().image, 60)
 
