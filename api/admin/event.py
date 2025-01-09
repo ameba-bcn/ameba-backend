@@ -17,20 +17,22 @@ def export_participants_to_csv(modeladmin, request, queryset):
     response['Content-Disposition'] = 'attachment; filename="ameba-event-list.csv"'
 
     writer = csv.writer(response)
-    writer.writerow(['Email', 'Member Type', 'Status', 'Event', 'Date', 'Price'])
+    writer.writerow([
+        'Número', 'Email', 'Nombre', 'Appellidos', 'Caducidad', 'Estado',
+        'Member Type', 'Event', 'Date'
+    ])
 
     for obj in queryset:
         for iv in obj.variants.all():
             for user in iv.acquired_by.all():
+                number = user.member.number if hasattr(user, 'member') else '-'
+                name = user.member.first_name if hasattr(user, 'member') else '-'
+                last_name = user.member.last_name if hasattr(user, 'member') else '-'
+                expires = user.member.expires if hasattr(user, 'member') else '-'
+                status = user.member.status if hasattr(user, 'member') else '-'
                 member_type = user.member.type if hasattr(user, 'member') else 'not member'
-                status = user.member.status if hasattr(user, 'member') else 'not member'
-                writer.writerow([
-                    user.email,
-                    member_type,
-                    status,
-                    obj.name,
-                    obj.datetime.isoformat(),
-                    float(obj.price)
+                writer.writerow([number, user.email, name, last_name, expires,
+                    status, member_type, obj.name, obj.datetime.isoformat()
                 ])
 
     return response
@@ -65,23 +67,35 @@ class EventAdmin(BaseItemAdmin):
                 <td> {} </td>
                 <td> {} </td>
                 <td> {} </td>
+                <td> {} </td>
+                <td> {} </td>
+                <td> {} </td>
+                <td> {} </td>
             </tr>
         """
         rows = []
         for iv in obj.variants.all():
             for user in iv.acquired_by.all():
                 rows.append(row.format(
+                    user.member.number if hasattr(user, 'member') else '-',
                     user.email,
-                    user.member.type if hasattr(user, 'member') else 'not member',
-                    user.member.status if hasattr(user, 'member') else 'not member'
+                    user.member.first_name if hasattr(user, 'member') else '-',
+                    user.member.last_name if hasattr(user, 'member') else '-',
+                    user.member.expires if hasattr(user, 'member') else '-',
+                    user.member.status if hasattr(user, 'member') else '-',
+                    user.member.type if hasattr(user, 'member') else 'not member'
                 ))
 
         return mark_safe(f"""
             <table>
                 <tr>
+                    <th>Número</th>
                     <th>Email</th>
-                    <th>Member type</th>
-                    <th>Status</th>
+                    <th>Nombre</th>
+                    <th>Apellidos</th>
+                    <th>Caducidad</th>
+                    <th>Estado</th>
+                    <th>Tipo</th>
                 </tr>
                 {''.join(rows)}
             </table>
