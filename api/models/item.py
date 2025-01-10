@@ -61,6 +61,7 @@ class Item(models.Model):
         to='User', blank=True, related_name='saved_items',
         verbose_name=_('saved by')
     )
+    members_only = models.BooleanField(default=False, verbose_name=_('only members'))
 
     @property
     def acquired_by(self):
