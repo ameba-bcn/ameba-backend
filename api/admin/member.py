@@ -1,3 +1,5 @@
+import csv
+from django.http import HttpResponse
 from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin
 
@@ -5,8 +7,8 @@ from api.models import Member, Membership, Subscription, MemberMediaUrl, \
     MemberProfileImage
 from api.admin.image import get_image_preview
 
-class StatusFilter(admin.SimpleListFilter):
 
+class StatusFilter(admin.SimpleListFilter):
     title = 'Status'
     parameter_name = 'status'
 
@@ -31,7 +33,6 @@ class StatusFilter(admin.SimpleListFilter):
 
 
 class TypeFilter(admin.SimpleListFilter):
-
     title = 'Type'
     parameter_name = 'type'
 
@@ -66,9 +67,10 @@ class MembershipInLine(admin.TabularInline):
         'is_expired'
     )
 
+
 class MemberProjectTagAdmin(TranslationAdmin):
-    fields = ('name', )
-    list_display = ('name', )
+    fields = ('name',)
+    list_display = ('name',)
 
 
 class MediaUrlsInLine(admin.StackedInline):
@@ -76,7 +78,7 @@ class MediaUrlsInLine(admin.StackedInline):
     verbose_name = 'Member media url'
     verbose_name_plural = "Member media urls"
     fields = ('url', 'embedded', 'created')
-    readonly_fields = ('created', )
+    readonly_fields = ('created',)
     extra = 0
 
 
@@ -95,11 +97,34 @@ class MemberImageInLine(admin.TabularInline):
     preview.allow_tags = True
 
 
+def export_to_csv(modeladmin, request, queryset):
+    """Export selected members to a CSV file."""
+    field_names = [
+        'number', 'user', 'first_name', 'last_name', 'expires', 'status',
+        'type', 'public'
+    ]
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="ameba-socios.csv"'
+    writer = csv.writer(response)
+
+    # Write the header row
+    writer.writerow(field_names)
+
+    # Write data rows
+    for obj in queryset:
+        writer.writerow([getattr(obj, field) for field in field_names])
+
+    return response
+
+
+export_to_csv.short_description = "Export to CSV"
+
 
 class MemberAdmin(admin.ModelAdmin):
     search_fields = ('number', 'user__email', 'first_name', 'last_name')
     list_display = (
-        'number', 'user', 'first_name', 'last_name' , 'expires', 'status',
+        'number', 'user', 'first_name', 'last_name', 'expires', 'status',
         'type', 'public', 'list_preview'
     )
     fields = (
@@ -107,10 +132,12 @@ class MemberAdmin(admin.ModelAdmin):
         'description', 'tags', 'genres', 'public',
         'status', 'type', 'expires', 'created', 'qr'
     )
-    list_display_links = ('number', )
-    readonly_fields = ('list_preview', 'status', 'type', 'expires', 'created', 'qr')
+    list_display_links = ('number',)
+    readonly_fields = (
+    'list_preview', 'status', 'type', 'expires', 'created', 'qr')
     list_filter = (StatusFilter, TypeFilter)
     inlines = [MembershipInLine, MemberImageInLine]
+    actions = [export_to_csv]
 
     def list_preview(self, obj):
         if obj.images and obj.images.all():
