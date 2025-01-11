@@ -1,3 +1,5 @@
+import csv
+from django.http import HttpResponse
 from django.contrib import admin
 from modeltranslation.admin import TranslationAdmin
 
@@ -103,6 +105,28 @@ class MemberImageInLine(admin.TabularInline):
     preview.allow_tags = True
 
 
+def export_to_csv(modeladmin, request, queryset):
+    """Export selected members to a CSV file."""
+    field_names = (
+        'number', 'user', 'first_name', 'last_name' , 'expires', 'status',
+        'type', 'public'
+    )
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="ameba-members-export.csv"'
+    writer = csv.writer(response)
+
+    # Write the header row
+    writer.writerow(field_names)
+
+    # Write data rows
+    for obj in queryset:
+        writer.writerow([getattr(obj, field) for field in field_names])
+
+    return response
+
+export_to_csv.short_description = "Export to CSV"
+
 
 class MemberAdmin(admin.ModelAdmin):
     search_fields = ('number', 'user__email', 'first_name', 'last_name')
@@ -121,7 +145,7 @@ class MemberAdmin(admin.ModelAdmin):
     )
     list_filter = (StatusFilter, TypeFilter)
     inlines = [MembershipInLine, MemberImageInLine]
-    actions = [regenerate_qr]
+    actions = [regenerate_qr, export_to_csv]
 
     @staticmethod
     def has_qr(obj):
