@@ -118,7 +118,6 @@ def export_to_csv(modeladmin, request, queryset):
 
     writer.writerow(field_names)
 
-    # Write data rows
     for obj in queryset:
         writer.writerow([getattr(obj, field) for field in field_names])
 
