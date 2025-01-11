@@ -116,7 +116,6 @@ def export_to_csv(modeladmin, request, queryset):
     response['Content-Disposition'] = 'attachment; filename="ameba-members-export.csv"'
     writer = csv.writer(response)
 
-    # Write the header row
     writer.writerow(field_names)
 
     # Write data rows
