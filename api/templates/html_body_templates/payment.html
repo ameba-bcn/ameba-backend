@@ -9,29 +9,26 @@
 <td>
     <h1>
         {% blocktrans with user_name=user.username|upper %}
-¡GRACIAS {{ user_name }}, TU PEDIDO SE HA REALIZADO CORRECTAMENTE!
+¡Gràcies per la teva compra!!
         {% endblocktrans %}
     </h1>
     {% if has_articles %}
     <p>
         {% blocktrans %}
-Te recordamos que actualmente no hacemos envíos. Para recogerlo puedes
-dirigirte a RHYTHM CONTROL de lunes a viernes de 15h a 20h, o sábados de 12h
-a 20h. Te avisaremos cuando tu pedido esté listo para recoger.
+Amb aquest gest estàs donant suport directe a l'AMEBA i ajudant a fer créixer la cultura electrònica local.
+Pots recollir el teu producte el 17 de maig a la nostra parada de merch dins del AMEBA Parkfest 2025.
         {% endblocktrans %}
     </p>
     <p>
         {% blocktrans %}
-Rhythm Control: Galerías Olimpia
-<a href="https://goo.gl/maps/RSAfNpoG8zjhSMNF9">
-    (Ronda de Sant Pau, 17, 08015 Barcelona)
+T’hi esperem amb ganes! 💚
 </a>
         {% endblocktrans %}
     </p>
     {% endif %}
     <p>
         {% blocktrans %}
-A continuación encontrarás los detalles del pedido.
+A continuació trobareu els detalls de la comanda.
         {% endblocktrans %}
     </p>
     <table class="checkout-summary">
