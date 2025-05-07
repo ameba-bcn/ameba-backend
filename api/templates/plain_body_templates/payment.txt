@@ -7,15 +7,12 @@
 {% if has_articles %}
 
 {% blocktrans %}
-Te recordamos que actualmente no hacemos envíos. Para recogerlo puedes
-dirigirte a RHYTHM CONTROL de lunes a viernes de 15h a 20h, o sábados de 12h
-a 20h. Te avisaremos cuando tu pedido esté listo para recoger.
+Con este gesto estás apoyando directamente a AMEBA y ayudando a fortalecer la cultura electrónica local.
+Puedes recoger tu producto el 17 de mayo en nuestro stand de merch dentro del AMEBA Parkfest 2025.
 {% endblocktrans %}
 
 {% blocktrans %}
-Rhythm Control: Galerías Olimpia (Ronda de Sant Pau, 17, 08015 Barcelona)
 {% endblocktrans %}
-https://goo.gl/maps/RSAfNpoG8zjhSMNF9
 {% endif %}
 
 {% blocktrans %}
