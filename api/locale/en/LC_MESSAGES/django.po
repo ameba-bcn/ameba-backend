@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-10 06:48+0000\n"
+"POT-Creation-Date: 2025-05-16 16:54+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -39,62 +39,62 @@ msgstr ""
 msgid "Articles"
 msgstr ""
 
-#: api/models/artist.py:10
+#: api/models/artist.py:11
 msgid "Artist tag"
 msgstr ""
 
-#: api/models/artist.py:11
+#: api/models/artist.py:12
 msgid "Artist tags"
 msgstr ""
 
-#: api/models/artist.py:13 api/models/artist.py:43
+#: api/models/artist.py:14 api/models/artist.py:44
 #: api/models/collaborators.py:15 api/models/discount.py:42
-#: api/models/event.py:22 api/models/genres.py:23 api/models/item.py:48
+#: api/models/event.py:23 api/models/genres.py:24 api/models/item.py:48
 #: api/models/user.py:51
 msgid "name"
 msgstr ""
 
-#: api/models/artist.py:21
+#: api/models/artist.py:22
 msgid "Artist media url"
 msgstr ""
 
-#: api/models/artist.py:22
+#: api/models/artist.py:23
 msgid "Artist media urls"
 msgstr ""
 
-#: api/models/artist.py:24 api/models/member.py:181
+#: api/models/artist.py:25 api/models/member.py:183
 msgid "url"
 msgstr ""
 
-#: api/models/artist.py:27 api/models/cart.py:47 api/models/covers.py:14
+#: api/models/artist.py:28 api/models/cart.py:47 api/models/covers.py:14
 #: api/models/discount.py:33 api/models/discount.py:117
 #: api/models/interview.py:23 api/models/item.py:57 api/models/manifest.py:14
-#: api/models/member.py:45 api/models/member.py:99 api/models/member.py:184
+#: api/models/member.py:45 api/models/member.py:99 api/models/member.py:186
 #: api/models/membership.py:39 api/models/subscriber.py:26
 msgid "created"
 msgstr ""
 
-#: api/models/artist.py:31 api/models/interview.py:16
+#: api/models/artist.py:32 api/models/interview.py:16
 msgid "artist"
 msgstr ""
 
-#: api/models/artist.py:40
+#: api/models/artist.py:41
 msgid "Artist"
 msgstr ""
 
-#: api/models/artist.py:41
+#: api/models/artist.py:42
 msgid "Artists"
 msgstr ""
 
-#: api/models/artist.py:44 api/models/member.py:87
+#: api/models/artist.py:45 api/models/member.py:87
 msgid "biography"
 msgstr ""
 
-#: api/models/artist.py:46 api/models/item.py:54
+#: api/models/artist.py:47 api/models/item.py:54
 msgid "images"
 msgstr ""
 
-#: api/models/artist.py:49 api/models/member.py:90
+#: api/models/artist.py:50 api/models/member.py:90
 msgid "tags"
 msgstr ""
 
@@ -168,7 +168,7 @@ msgstr ""
 msgid "file"
 msgstr ""
 
-#: api/models/covers.py:11 api/models/interview.py:80 api/models/item.py:56
+#: api/models/covers.py:11 api/models/interview.py:85 api/models/item.py:56
 msgid "is active"
 msgstr ""
 
@@ -241,59 +241,59 @@ msgstr ""
 msgid "is expired"
 msgstr ""
 
-#: api/models/event.py:19
+#: api/models/event.py:20
 msgid "Event type"
 msgstr ""
 
-#: api/models/event.py:20
+#: api/models/event.py:21
 msgid "Event types"
 msgstr ""
 
-#: api/models/event.py:30
+#: api/models/event.py:31
 msgid "Event"
 msgstr ""
 
-#: api/models/event.py:31
+#: api/models/event.py:32
 msgid "Events"
 msgstr ""
 
-#: api/models/event.py:32
+#: api/models/event.py:33
 msgid "header"
 msgstr ""
 
-#: api/models/event.py:33
+#: api/models/event.py:34
 msgid "datetime"
 msgstr ""
 
-#: api/models/event.py:34 api/models/mailing_list.py:17 api/models/orders.py:22
+#: api/models/event.py:35 api/models/mailing_list.py:17 api/models/orders.py:22
 msgid "address"
 msgstr ""
 
-#: api/models/event.py:35
+#: api/models/event.py:36
 msgid "maps url"
 msgstr ""
 
-#: api/models/event.py:38
+#: api/models/event.py:39
 msgid "type"
 msgstr ""
 
-#: api/models/event.py:41
+#: api/models/event.py:42
 msgid "artists"
 msgstr ""
 
-#: api/models/event.py:43
+#: api/models/event.py:44
 msgid "cancelled"
 msgstr ""
 
-#: api/models/genres.py:19
+#: api/models/genres.py:20
 msgid "Music genre"
 msgstr ""
 
-#: api/models/genres.py:20
+#: api/models/genres.py:21
 msgid "Music genres"
 msgstr ""
 
-#: api/models/genres.py:25
+#: api/models/genres.py:26
 msgid "validated"
 msgstr ""
 
@@ -321,35 +321,35 @@ msgstr ""
 msgid "introduction"
 msgstr ""
 
-#: api/models/interview.py:48
+#: api/models/interview.py:49
 msgid "Question"
 msgstr ""
 
-#: api/models/interview.py:49
+#: api/models/interview.py:50
 msgid "Questions"
 msgstr ""
 
-#: api/models/interview.py:51 api/models/interview.py:78
+#: api/models/interview.py:52 api/models/interview.py:83
 msgid "question"
 msgstr ""
 
-#: api/models/interview.py:53
+#: api/models/interview.py:54
 msgid "is default"
 msgstr ""
 
-#: api/models/interview.py:65
+#: api/models/interview.py:70
 msgid "Answer"
 msgstr ""
 
-#: api/models/interview.py:66
+#: api/models/interview.py:71
 msgid "Answers"
 msgstr ""
 
-#: api/models/interview.py:72
+#: api/models/interview.py:77
 msgid "interview"
 msgstr ""
 
-#: api/models/interview.py:74
+#: api/models/interview.py:79
 msgid "answer"
 msgstr ""
 
@@ -525,11 +525,11 @@ msgstr ""
 msgid "genres"
 msgstr ""
 
-#: api/models/member.py:179 api/models/member.py:188
+#: api/models/member.py:181 api/models/member.py:190
 msgid "Member media url"
 msgstr ""
 
-#: api/models/member.py:189
+#: api/models/member.py:191
 msgid "Member media urls"
 msgstr ""
 
@@ -700,7 +700,7 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"Te recordamos que tu subscripción como SOCIO/A se renovará\n"
+"Te recordamos que tu subscripción como SOCI/A se renovará\n"
 "automáticamente el %(renewal_date)s\n"
 "        "
 msgstr ""
@@ -729,10 +729,9 @@ msgid ""
 msgstr ""
 
 #: api/templates/html_body_templates/member.html:12
-#, python-format
 msgid ""
 "\n"
-"¡Ya eres SOCIO/A de AMEBA!\n"
+"¡Ya eres SOCI/A de AMEBA!\n"
 "        "
 msgstr ""
 
@@ -809,39 +808,28 @@ msgid ""
 "        "
 msgstr ""
 
-#: api/templates/html_body_templates/payment.html:11
-#, python-format
+#: api/templates/html_body_templates/payment.html:10
 msgid ""
-"\n"
-"¡GRACIAS %(user_name)s, TU PEDIDO SE HA REALIZADO CORRECTAMENTE!\n"
-"        "
+" \n"
+"    ¡Gracias por tu compra! "
 msgstr ""
 
-#: api/templates/html_body_templates/payment.html:17
+#: api/templates/html_body_templates/payment.html:15
 msgid ""
-"\n"
-"Te recordamos que actualmente no hacemos envíos. Para recogerlo puedes\n"
-"dirigirte a RHYTHM CONTROL de lunes a viernes de 15h a 20h, o sábados de "
-"12h\n"
-"a 20h. Te avisaremos cuando tu pedido esté listo para recoger.\n"
-"        "
+" \n"
+"Con este gesto estás apoyando directamente a AMEBA y ayudando a fortalecer "
+"la cultura electrónica local.\n"
+"Para recoger tu compra, te enviaremos un mensaje indicándote cuándo y dónde "
+"hacerlo. \n"
+"Si tienes cualquier duda, puedes contactarnos en info@ameba.cat 💚 \n"
+"    "
 msgstr ""
 
-#: api/templates/html_body_templates/payment.html:24
+#: api/templates/html_body_templates/payment.html:23
 msgid ""
 "\n"
-"Rhythm Control: Galerías Olimpia\n"
-"<a href=\"https://goo.gl/maps/RSAfNpoG8zjhSMNF9\">\n"
-"    (Ronda de Sant Pau, 17, 08015 Barcelona)\n"
-"</a>\n"
-"        "
-msgstr ""
-
-#: api/templates/html_body_templates/payment.html:33
-msgid ""
-"\n"
-"A continuación encontrarás los detalles del pedido.\n"
-"        "
+"  A continuación encontrarás los detalles de tu pedido.\n"
+"    "
 msgstr ""
 
 #: api/templates/html_body_templates/recovery.html:12
@@ -875,7 +863,6 @@ msgid ""
 msgstr ""
 
 #: api/templates/html_body_templates/renewal.html:12
-#, python-format
 msgid ""
 "\n"
 "¡Se ha renovado tu subscripción como SOCI/A de AMEBA!\n"
@@ -892,10 +879,9 @@ msgid ""
 msgstr ""
 
 #: api/templates/html_body_templates/renewal_failed.html:12
-#, python-format
 msgid ""
 "\n"
-"Hemos intentado renovar tu subscripción como SOCIO/A de\n"
+"Hemos intentado renovar tu subscripción como SOCI/A de\n"
 "AMEBA pero parece que ha habido un problema con el pago.\n"
 "        "
 msgstr ""
@@ -1035,7 +1021,7 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"Te recordamos que tu subscripción como SOCIO/A se renovará\n"
+"Te recordamos que tu subscripción como SOCI/A se renovará\n"
 "automáticamente el %(renewal_date)s\n"
 msgstr ""
 
@@ -1065,10 +1051,9 @@ msgid "¡Bienvenido %(user_name)s!"
 msgstr ""
 
 #: api/templates/plain_body_templates/member.txt:5
-#, python-format
 msgid ""
 "\n"
-"    ¡Ya eres SOCIO/A de AMEBA!\n"
+"    ¡Ya eres SOCI/A de AMEBA!\n"
 msgstr ""
 
 #: api/templates/plain_body_templates/member.txt:9
@@ -1147,19 +1132,18 @@ msgstr ""
 #: api/templates/plain_body_templates/payment.txt:9
 msgid ""
 "\n"
-"Te recordamos que actualmente no hacemos envíos. Para recogerlo puedes\n"
-"dirigirte a RHYTHM CONTROL de lunes a viernes de 15h a 20h, o sábados de "
-"12h\n"
-"a 20h. Te avisaremos cuando tu pedido esté listo para recoger.\n"
+"Con este gesto estás apoyando directamente a AMEBA y ayudando a fortalecer "
+"la cultura electrónica local.\n"
+"Para recoger tu compra, te enviaremos un mensaje indicándote cuándo y dónde "
+"hacerlo.\n"
+"Si tienes cualquier duda, puedes contactarnos en info@ameba.cat 💚\n"
 msgstr ""
 
 #: api/templates/plain_body_templates/payment.txt:15
-msgid ""
-"\n"
-"Rhythm Control: Galerías Olimpia (Ronda de Sant Pau, 17, 08015 Barcelona)\n"
+msgid "\n"
 msgstr ""
 
-#: api/templates/plain_body_templates/payment.txt:21
+#: api/templates/plain_body_templates/payment.txt:19
 msgid ""
 "\n"
 "    A continuación encontrarás los detalles del pedido.\n"
@@ -1192,10 +1176,9 @@ msgid ""
 msgstr ""
 
 #: api/templates/plain_body_templates/renewal.txt:5
-#, python-format
 msgid ""
 "\n"
-"¡Se ha renovado tu subscripción como SOCIO/A de AMEBA!\n"
+"¡Se ha renovado tu subscripción como SOCI/A de AMEBA!\n"
 msgstr ""
 
 #: api/templates/plain_body_templates/renewal.txt:10
@@ -1207,10 +1190,9 @@ msgid ""
 msgstr ""
 
 #: api/templates/plain_body_templates/renewal_failed.txt:5
-#, python-format
 msgid ""
 "\n"
-"Hemos intentado renovar tu subscripción como SOCIO/A de\n"
+"Hemos intentado renovar tu subscripción como SOCI/A de\n"
 "AMEBA pero parece que ha habido un problema con el pago.\n"
 msgstr ""
 
@@ -1271,7 +1253,6 @@ msgid "Tus entradas para %(event_name)s! "
 msgstr ""
 
 #: api/templates/plain_subject_templates/member.txt:2
-#, python-format
 msgid ""
 "\n"
 "    ¡Bienvenido! Ya eres SOCIO/A de AMEBA\n"
@@ -1306,14 +1287,12 @@ msgid "Activa tu cuenta en %(site_name)s"
 msgstr ""
 
 #: api/templates/plain_subject_templates/renewal.txt:2
-#, python-format
 msgid ""
 "\n"
 "    ¡Hemos renovado tu subscripción como SOCIO/A de AMEBA!\n"
 msgstr ""
 
 #: api/templates/plain_subject_templates/renewal_failed.txt:2
-#, python-format
 msgid ""
 "\n"
 "    No hemos podido renovar tu subscripción como SOCIO/A de AMEBA\n"
