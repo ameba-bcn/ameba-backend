@@ -904,10 +904,9 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"Et recordem que actualment no fem enviaments. Per recollir-ho pots\n"
-"adreçar-te a RHYTHM CONTROL de dilluns a divendres de 15h a 20h, o dissabtes "
-"de 12h\n"
-"a 20h. T'avisarem quan la teva comanda estigui llesta per recollir.\n"
+"Gràcies per la teva compra! Amb aquest gest dones suport directe a l'AMEBA i ajudes a fer créixer la cultura electrònica local.\n" 
+"Per recollir la teva compra, t'enviarem un missatge indicant-te quan i on fer la recollida.\n" 
+"Si tens qualsevol dubte, pots contactar amb nosaltres a info@ameba.cat 💚\n"
 "        "
 
 #: api/templates/html_body_templates/payment.html:24
