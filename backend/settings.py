@@ -88,7 +88,8 @@ INSTALLED_APPS = [
     'naomi',
     'localflavor',
     'django_non_dark_admin',
-    'corsheaders'
+    'corsheaders',
+    'ckeditor'
 ]
 
 MIDDLEWARE = [
@@ -327,11 +328,11 @@ DEFAULT_MAILING_LIST = env(
 )
 
 
-STAFF_DOMAINS = ['jaguarintheloop.live', 'ameba.cat']
+STAFF_DOMAINS = ['mngst.in', 'ameba.cat']
 TEST_MAILING_LIST_PREFIXES = ['test', 'dev', 'stag', 'sand', 'debug', 'local']
 TEST_TEMPLATE = 'unsubscribe.test'
 
-EMAIL_FILE_PATH = "/home/ameba/app/emails"
+EMAIL_FILE_PATH = "./emails"
 
 DISABLE_DARK_MODE = True
 

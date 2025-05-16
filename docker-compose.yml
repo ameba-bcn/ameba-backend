@@ -1,11 +1,13 @@
-version: '3.8'
 
+volumes:
+  ameba-db-data:
+    
 
 services:
   ameba-backend:
     build: .
     image: ameba-backend
-    command: "python manage.py runserver 0.0.0.0:8000"
+    command: "python -m debugpy --wait-for-client --listen 0.0.0.0:5678 manage.py runserver 0.0.0.0:8000"
     working_dir: /home/ameba/dev_app
     volumes:
       - .:/home/ameba/dev_app
@@ -13,6 +15,7 @@ services:
       - .env
     ports:
       - "8000:8000"
+      - "5678:5678"
     depends_on:
       - ameba-db
       - ameba-redis
@@ -23,6 +26,11 @@ services:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+    container_name: ameba-db
+    restart: always
+    volumes:
+      - ameba-db-data:/var/lib/postgresql/data
+
 
   ameba-redis:
     image: redis:alpine

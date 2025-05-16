@@ -17,3 +17,4 @@ from api.admin.orders import OrderAdmin
 from api.admin.collaborator import CollaboratorAdmin
 from api.admin.genres import MusicGenresAdmin
 from api.admin.legal import LegalAdmin
+from api.admin.email import EmailAdmin

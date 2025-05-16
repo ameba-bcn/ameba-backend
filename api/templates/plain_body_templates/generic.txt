@@ -1,0 +1,13 @@
+{% load i18n %}{% autoescape off %}
+
+{{ content }}
+
+{% blocktrans %}
+Para formar parte de la asociación, colaborar con nosotros y beneficiarte de
+descuentos, hazte soci/a visitando el siguiente enlace:
+{% endblocktrans %}
+{{ protocol }}://{{ site_name }}/{{ new_member_page }}
+
+L'Associació de Musica Electrònica de Barcelona
+
+{% endautoescape %}

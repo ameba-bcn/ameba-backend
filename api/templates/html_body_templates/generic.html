@@ -7,27 +7,8 @@
 
 {% block content %}
 <td>
-    <h1>{% blocktrans with user_name=user.username|upper %}¡HOLA {{ user_name }}!{% endblocktrans %}</h1>
-    <p>
-        {% blocktrans with event_name=event.name %}
-Gracias por comprar tus entradas para:
-        {% endblocktrans %}
-    </p>
-    <h3>
-            {{ event.name }}
-    </h3>
-    <h4>
-            {{ event.datetime }}
-    </h4>
-    <h4>
-            {{ event.address }}
-    </h4>
-    <p>
-        {% blocktrans %}
-Encontrarás tu entrada en PDF adjunta en este correo. No hace falta que la
-imprimas, puedes traerla en tu móvil el día del evento.
-        {% endblocktrans %}
-    </p>
+    <h1>{{ heading }}</h1>
+    {{ content|safe }}
 </td>
 {% endblock %}
 

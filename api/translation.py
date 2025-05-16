@@ -1,7 +1,7 @@
 from modeltranslation.translator import register, TranslationOptions
 from .models import (
     Manifest, Artist, Interview, Item, Subscription, Article,
-    Event, ItemAttributeType, EventType, ArtistTag
+    Event, ItemAttributeType, EventType, ArtistTag, Email
 )
 
 
@@ -53,3 +53,9 @@ class ItemAttributeTypeTranslationOptions(TranslationOptions):
 @register(ArtistTag)
 class ArtistTagTranslationOptions(TranslationOptions):
     fields = ('name', )
+
+
+@register(Email)
+class EmailTranslationOptions(TranslationOptions):
+    fields = ('subject', 'content')
+
