@@ -1,86 +1,52 @@
-{% extends "template_blocks/base.html" %}
-{% load i18n %}
-
-{% block header %}
-    {% include "template_blocks/header.html" %}
-{% endblock %}
-
-{% block content %}
+{% extends "template_blocks/base.html" %} {% load i18n %} {% block header %} {%
+include "template_blocks/header.html" %} {% endblock %} {% block content %}
 <td>
-    <h1>
-        {% blocktrans with user_name=user.username|upper %}
-¡Gràcies per la teva compra!!
-        {% endblocktrans %}
-    </h1>
-    {% if has_articles %}
-    <p>
-        {% blocktrans %}
-Amb aquest gest estàs donant suport directe a l'AMEBA i ajudant a fer créixer la cultura electrònica local.
-Pots recollir el teu producte el 17 de maig a la nostra parada de merch dins del AMEBA Parkfest 2025.
-        {% endblocktrans %}
-    </p>
-    <p>
-        {% blocktrans %}
-T’hi esperem amb ganes! 💚
-</a>
-        {% endblocktrans %}
-    </p>
-    {% endif %}
-    <p>
-        {% blocktrans %}
-A continuació trobareu els detalls de la comanda.
-        {% endblocktrans %}
-    </p>
-    <table class="checkout-summary">
-        <tr>
-            <th>ARTÍCULO</th>
-            <th>DESCUENTO</th>
-            <th>VALOR</th>
-        </tr>
-        {% for item in item_variants %}
-        <tr>
-            <td>{{ item.name }}</td>
-            <td>
-                {% if item.discount_value %}
-                    {{ item.discount_name }} ({{ item.discount_value }}% de {{ item.price }})
-                {% else %}
-                    -
-                {% endif %}
-            </td>
-            <td>{{ item.subtotal }}</td>
-        </tr>
-        {% endfor %}
-        <tr>
-            <td style="border: 0 solid transparent!important;"></td>
-{#            <td style="border: 0 solid transparent!important;"></td>#}
-            <td style="font-weight: 400;">TOTAL</td>
-            <td style="font-weight: 400;">{{ total }}</td>
-        </tr>
-    </table>
+  <h1>
+    {% blocktrans with user_name=user.username|upper %} ¡Gràcies per la teva
+    compra!! {% endblocktrans %}
+  </h1>
+  {% if has_articles %}
+  <p>
+    {% blocktrans %} Con este gesto estás apoyando directamente a AMEBA y
+    ayudando a fortalecer la cultura electrónica local. Para recoger tu compra,
+    te enviaremos un mensaje indicándote cuándo y dónde hacerlo. Si tienes
+    cualquier duda, puedes contactarnos en info@ameba.cat 💚 {% endblocktrans %}
+  </p>
+  {% endif %}
+  <p>
+    {% blocktrans %} A continuació trobareu els detalls de la comanda. {%
+    endblocktrans %}
+  </p>
+  <table class="checkout-summary">
+    <tr>
+      <th>ARTÍCULO</th>
+      <th>DESCUENTO</th>
+      <th>VALOR</th>
+    </tr>
+    {% for item in item_variants %}
+    <tr>
+      <td>{{ item.name }}</td>
+      <td>
+        {% if item.discount_value %} {{ item.discount_name }} ({{
+        item.discount_value }}% de {{ item.price }}) {% else %} - {% endif %}
+      </td>
+      <td>{{ item.subtotal }}</td>
+    </tr>
+    {% endfor %}
+    <tr>
+      <td style="border: 0 solid transparent !important"></td>
+      {#
+      <td style="border: 0 solid transparent !important"></td>
+      #}
+      <td style="font-weight: 400">TOTAL</td>
+      <td style="font-weight: 400">{{ total }}</td>
+    </tr>
+  </table>
 </td>
 
-{% endblock %}
-
-{% block marquee %}
-    {% include "template_blocks/marquee.html" %}
-{% endblock %}
-
-
-{% block newsletter %}
-    {% include "template_blocks/newsletter.html" %}
-{% endblock %}
-
-
-{% block subscribe %}
-    {% include "template_blocks/subscribe.html" %}
-{% endblock %}
-
-
-{% block media %}
-    {% include "template_blocks/media.html" %}
-{% endblock %}
-
-
-{% block marquee_2 %}
-    {% include "template_blocks/marquee.html" %}
-{% endblock %}
+{% endblock %} {% block marquee %} {% include "template_blocks/marquee.html" %}
+{% endblock %} {% block newsletter %} {% include
+"template_blocks/newsletter.html" %} {% endblock %} {% block subscribe %} {%
+include "template_blocks/subscribe.html" %} {% endblock %} {% block media %} {%
+include "template_blocks/media.html" %} {% endblock %} {% block marquee_2 %} {%
+include "template_blocks/marquee.html" %} {% endblock %}

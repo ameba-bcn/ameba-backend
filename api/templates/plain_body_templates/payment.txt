@@ -8,7 +8,8 @@
 
 {% blocktrans %}
 Con este gesto estás apoyando directamente a AMEBA y ayudando a fortalecer la cultura electrónica local.
-Puedes recoger tu producto el 17 de mayo en nuestro stand de merch dentro del AMEBA Parkfest 2025.
+Para recoger tu compra, te enviaremos un mensaje indicándote cuándo y dónde hacerlo.
+Si tienes cualquier duda, puedes contactarnos en info@ameba.cat 💚
 {% endblocktrans %}
 
 {% blocktrans %}
