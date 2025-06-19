@@ -19,7 +19,7 @@
 {% block subtitle %}
     <td>
     <p>
-       {% blocktrans with location=event.address time=event.str_datetime %}{{ location }}
+       {% blocktrans with location=event.address time=event.datetime %}{{ location }}
            <br>{{ time }}{% endblocktrans %}
     </p>
     </td>
