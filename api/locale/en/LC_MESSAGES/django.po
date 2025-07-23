@@ -1096,7 +1096,7 @@ msgid ""
 msgstr ""
 "\n"
 "You can consult the complete member guide at ameba.cat/legal\n"
-"        "
+
 
 #: api/templates/plain_body_templates/new_order_internal.txt:3
 #, python-format

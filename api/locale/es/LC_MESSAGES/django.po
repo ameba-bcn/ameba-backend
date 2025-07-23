@@ -1555,7 +1555,7 @@ msgstr ""
 "Te has dado de baja de nuestras newsletters. En un periodo de 24h dejarás "
 "de\n"
 "recibirlas.\n"
-"        "
+
 
 #: api/templates/plain_subject_templates/activated.txt:2
 #, python-format
