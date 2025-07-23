@@ -760,6 +760,20 @@ msgid ""
 "ameba.cat\n"
 "        "
 msgstr ""
+"\n"
+"You can access your digital membership card in QR format from your personal area at\n"
+"ameba.cat\n"
+"        "
+
+#: api/templates/html_body_templates/member.html:38
+msgid ""
+"\n"
+"Puedes consultar la guía de socio/a completa en <a href=\"https://ameba.cat/legal\" style=\"color: #007bff; text-decoration: none;\">ameba.cat/legal</a>\n"
+"        "
+msgstr ""
+"\n"
+"You can consult the complete member guide at <a href=\"https://ameba.cat/legal\" style=\"color: #007bff; text-decoration: none;\">ameba.cat/legal</a>\n"
+"        "
 
 #: api/templates/html_body_templates/new_order_internal.html:11
 #, python-format
@@ -1072,6 +1086,17 @@ msgid ""
 "\n"
 "Encontrarás tu carnet digital de socio/a adjunto en PDF a este correo.\n"
 msgstr ""
+"\n"
+"You will find your digital membership card attached as PDF to this email.\n"
+
+#: api/templates/plain_body_templates/member.txt:21
+msgid ""
+"\n"
+"Puedes consultar la guía de socio/a completa en ameba.cat/legal\n"
+msgstr ""
+"\n"
+"You can consult the complete member guide at ameba.cat/legal\n"
+"        "
 
 #: api/templates/plain_body_templates/new_order_internal.txt:3
 #, python-format

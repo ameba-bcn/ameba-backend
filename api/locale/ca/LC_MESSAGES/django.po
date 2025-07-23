@@ -770,6 +770,16 @@ msgstr ""
 "imprimeixis, pots portar-la en el teu mòbil el dia de l'esdeveniment.\n"
 "        "
 
+#: api/templates/html_body_templates/member.html:38
+msgid ""
+"\n"
+"Puedes consultar la guía de socio/a completa en <a href=\"https://ameba.cat/legal\" style=\"color: #007bff; text-decoration: none;\">ameba.cat/legal</a>\n"
+"        "
+msgstr ""
+"\n"
+"Pots consultar la guia de soci/a completa a <a href=\"https://ameba.cat/legal\" style=\"color: #007bff; text-decoration: none;\">ameba.cat/legal</a>\n"
+"        "
+
 #: api/templates/html_body_templates/member.html:12
 #, fuzzy
 #| msgid ""

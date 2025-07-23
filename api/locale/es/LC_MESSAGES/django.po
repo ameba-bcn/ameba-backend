@@ -834,6 +834,16 @@ msgstr ""
 "ameba.cat\n"
 "        "
 
+#: api/templates/html_body_templates/member.html:38
+msgid ""
+"\n"
+"Puedes consultar la guía de socio/a completa en <a href=\"https://ameba.cat/legal\" style=\"color: #007bff; text-decoration: none;\">ameba.cat/legal</a>\n"
+"        "
+msgstr ""
+"\n"
+"Puedes consultar la guía de socio/a completa en <a href=\"https://ameba.cat/legal\" style=\"color: #007bff; text-decoration: none;\">ameba.cat/legal</a>\n"
+"        "
+
 #: api/templates/html_body_templates/new_order_internal.html:11
 #, python-format
 msgid ""
@@ -1022,7 +1032,6 @@ msgstr ""
 #| "\n"
 #| "Hemos intentado renovar tu subscripción como SOCIO/A de\n"
 #| "AMEBA pero parece que ha habido un problema con el pago.\n"
-#| "        "
 msgid ""
 "\n"
 "Hemos intentado renovar tu subscripción como SOCI/A de\n"
@@ -1298,6 +1307,14 @@ msgstr ""
 "\n"
 "Encontrarás tu carnet digital de socio/a adjunto en PDF a este correo.\n"
 
+#: api/templates/plain_body_templates/member.txt:21
+msgid ""
+"\n"
+"Puedes consultar la guía de socio/a completa en ameba.cat/legal\n"
+msgstr ""
+"\n"
+"Puedes consultar la guía de socio/a completa en ameba.cat/legal\n"
+
 #: api/templates/plain_body_templates/new_order_internal.txt:3
 #, python-format
 msgid ""
@@ -1538,6 +1555,7 @@ msgstr ""
 "Te has dado de baja de nuestras newsletters. En un periodo de 24h dejarás "
 "de\n"
 "recibirlas.\n"
+"        "
 
 #: api/templates/plain_subject_templates/activated.txt:2
 #, python-format

@@ -19,6 +19,9 @@ proyectos, intereses o inquietudes, así como sugerencias.
 Encontrarás tu carnet digital de socio/a adjunto en PDF a este correo.
 {% endblocktrans %}
 
+{% blocktrans %}
+Puedes consultar la guía de socio/a completa en ameba.cat/legal
+{% endblocktrans %}
 
 L'Associació de Musica Electrònica de Barcelona
 
