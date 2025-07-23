@@ -35,7 +35,7 @@ class CartItemTabular(admin.TabularInline):
 class CartAdmin(admin.ModelAdmin):
     search_fields = ('user__email', 'user__username')
     list_display_links = ('user',)
-    list_display = ('user', 'id', 'created', 'uptaded')
+    list_display = ('user', 'id', 'created')#, 'uptaded')
     fieldsets = [
         (None, {'fields': ['id', 'user', 'total', 'discount_code']})
     ]
