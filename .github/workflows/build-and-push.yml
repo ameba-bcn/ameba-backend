@@ -1,0 +1,40 @@
+name: Build, Test and Push Docker image
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build image
+        run: |
+          docker build -t ghcr.io/${{ github.repository }}/app:latest .
+
+      - name: Run tests inside container
+        run: |
+          docker run --rm \
+            --env-file .env \
+            ghcr.io/${{ github.repository }}/app:latest \
+            python manage.py test
+
+      - name: Push image
+        if: success()
+        run: |
+          docker push ghcr.io/${{ github.repository }}/app:latest
