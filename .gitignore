@@ -129,7 +129,7 @@ dmypy.json
 .pyre/
 
 # Pycharm
-../backend/.idea/
+../config/.idea/
 .idea
 */.idea/*
 *.DS_Store
