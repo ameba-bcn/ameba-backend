@@ -12,14 +12,16 @@ WORKDIR /home/ameba/app
 
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt --upgrade
+RUN pip install debugpy
 
 RUN mkdir -p tmp/html/qr tmp/html/images tmp/emails tmp/pdf
 
 COPY api api
-COPY backend backend
+COPY config config
 COPY templates templates
 COPY manage.py manage.py
-COPY entrypoint.sh entrypoint.sh
+COPY entrypoints/entrypoint.prod.sh entrypoint.sh
+COPY entrypoints/entrypoint.dev.sh /home/ameba/dev_app/entrypoint.sh
 
 VOLUME /home/ameba/app/static
 
@@ -30,6 +32,6 @@ RUN python manage.py collectstatic --no-input
 EXPOSE 8000
 
 # Set PUID/PGID
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["./entrypoints/entrypoint.prod.sh"]
 
 CMD ["gunicorn", "server.wsgi", "--bind", "0.0.0.0:8000"]
