@@ -1647,11 +1647,11 @@ msgstr "NEWSLETTER"
 msgid "SUBCRÍBETE"
 msgstr "SUBCRÍBETE"
 
-#: backend/settings.py:195
+#: config/settings.py:195
 msgid "Español"
 msgstr "Español"
 
-#: backend/settings.py:196
+#: config/settings.py:196
 msgid "Catalá"
 msgstr "Catalán"
 

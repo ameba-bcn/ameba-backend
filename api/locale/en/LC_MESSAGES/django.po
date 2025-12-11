@@ -1343,10 +1343,10 @@ msgstr ""
 msgid "SUBCRÍBETE"
 msgstr ""
 
-#: backend/settings.py:195
+#: config/settings.py:195
 msgid "Español"
 msgstr ""
 
-#: backend/settings.py:196
+#: config/settings.py:196
 msgid "Catalá"
 msgstr ""
