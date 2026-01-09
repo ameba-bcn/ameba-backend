@@ -1,0 +1,35 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Django: Run Server",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/manage.py",
+            "args": [
+                "runserver",
+                "0.0.0.0:8000"
+            ],
+            "django": true,
+            "justMyCode": true,
+            // Si el servidor tarda en arrancar, esto evita timeouts falsos
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Django: Run Tests",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/manage.py",
+            "args": [
+                "test",
+                "--no-input",
+                "--verbosity=3",
+                // Puedes añadir aquí el nombre de una app si solo quieres testear esa parte
+                // ej: "mi_app_usuarios"
+            ],
+            "django": true,
+            "justMyCode": false, // False para poder entrar en el código de DRF si falla algo interno
+            "console": "integratedTerminal"
+        }
+    ]
+}
