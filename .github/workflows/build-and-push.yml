@@ -50,7 +50,7 @@ jobs:
           fi
           
           TARGET_IMAGE="${{ env.REGISTRY }}/${LOWERCASE_REPO}:${IMAGE_TAG}"
-          SOURCE_IMAGE_ID=$(docker compose images -q ameba-backend)
+          SOURCE_IMAGE_ID=$(docker images -q ameba-backend)
           
           if [ -z "$SOURCE_IMAGE_ID" ]; then
             echo "Error: No se encontró imagen para el servicio ameba-backend."
