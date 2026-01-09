@@ -23,18 +23,20 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build image
-        run: |
-          docker build -t ghcr.io/${{ github.repository }}/app:latest .
+      - name: Build backend image with docker-compose
+        run: docker compose build ameba-backend
 
-      - name: Run tests inside container
-        run: |
-          docker run --rm \
-            --env-file .env \
-            ghcr.io/${{ github.repository }}/app:latest \
-            python manage.py test
+      - name: Run tests
+        run: docker compose run --rm ameba-backend python manage.py test
 
-      - name: Push image
+
+      - name: Tag and push image
         if: success()
         run: |
-          docker push ghcr.io/${{ github.repository }}/app:latest
+          IMAGE_LOCAL=$(docker images --format "{{.Repository}}:{{.Tag}}" | grep ameba-backend | head -n 1)
+
+          # Etiqueta para GHCR
+          docker tag "$IMAGE_LOCAL" ghcr.io/${{ github.repository }}:latest
+
+          # Push
+          docker push ghcr.io/${{ github.repository }}:latest
