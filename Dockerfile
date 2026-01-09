@@ -31,7 +31,4 @@ RUN python manage.py collectstatic --no-input
 
 EXPOSE 8000
 
-# Set PUID/PGID
-ENTRYPOINT ["./entrypoints/entrypoint.prod.sh"]
-
 CMD ["gunicorn", "server.wsgi", "--bind", "0.0.0.0:8000"]
