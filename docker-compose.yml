@@ -1,6 +1,3 @@
-version: '3.8'
-
-
 services:
   ameba-backend:
     build: .
@@ -13,6 +10,7 @@ services:
       - .env
     ports:
       - "8000:8000"
+      - "5678:5678"
     depends_on:
       - ameba-db
       - ameba-redis

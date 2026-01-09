@@ -46,7 +46,7 @@ class FullRegistrationTest(BaseUserTest):
             'username': 'User2',
             'password': 'ameba12345',
             'email': 'user11@ameba.cat',
-            'identity_card': 'A1234',
+            'identity_card': '',
             'first_name': 'First Name',
             'last_name': 'Last Name',
             'phone_number': '661839816',

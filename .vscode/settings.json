@@ -1,0 +1,5 @@
+{
+    "python.testing.cwd": "${workspaceFolder}",
+    "python.testing.djangoEnabled": true,
+    "python.testing.djangoSettingsFile": "config/settings.py"
+}

@@ -103,7 +103,7 @@ MIDDLEWARE = [
     'django.middleware.locale.LocaleMiddleware'
 ]
 
-ROOT_URLCONF = 'backend.urls'
+ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
     {
@@ -126,7 +126,7 @@ TEMPLATE_LOADERS = [
     'django.template.loaders.app_directories.Loader'
 ]
 
-WSGI_APPLICATION = 'backend.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # Database
@@ -181,7 +181,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'es'
 
-TIME_ZONE = "Europe/Madrid"
+TIME_ZONE = 'Europe/Madrid'
 
 USE_I18N = True
 

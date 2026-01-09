@@ -3,7 +3,7 @@ from rest_framework import status
 from api.tests.helpers import user as user_helpers
 from api.tests._helpers import BaseTest
 from api import models
-
+from api import images
 
 class TestMemberProfileDetails(BaseTest):
     DETAIL_ENDPOINT = '/api/members/{pk}/'
@@ -81,9 +81,9 @@ class TestMemberProfileDetails(BaseTest):
             token,
             {
                 'upload_images': [
-                    open('api/tests/fixtures/media/member_project.jpeg', 'rb'),
-                    open('api/tests/fixtures/media/member_project.jpeg', 'rb'),
-                    open('api/tests/fixtures/media/member_project.jpeg', 'rb')
+                    images.get_base64_from_file('api/tests/fixtures/media/member-project.jpg'),
+                    images.get_base64_from_file('api/tests/fixtures/media/member-project.jpg'),
+                    images.get_base64_from_file('api/tests/fixtures/media/member-project.jpg')
                 ],
                 'first_name': 'Manolito gafotas',
             },
@@ -104,9 +104,9 @@ class TestMemberProfileDetails(BaseTest):
             token,
             {
                 'upload_images': [
-                    open('api/tests/fixtures/media/member_project.jpeg', 'rb'),
-                    open('api/tests/fixtures/media/member_project.jpeg', 'rb'),
-                    open('api/tests/fixtures/media/member_project.jpeg', 'rb')
+                    images.get_base64_from_file('api/tests/fixtures/media/member-project.jpg'),
+                    images.get_base64_from_file('api/tests/fixtures/media/member-project.jpg'),
+                    images.get_base64_from_file('api/tests/fixtures/media/member-project.jpg')
                 ],
                 'first_name': 'Manolito gafotas',
             },
@@ -134,9 +134,9 @@ class TestMemberProfileDetails(BaseTest):
             token_1,
             {
                 'upload_images': [
-                    open('api/tests/fixtures/media/member_project.jpeg', 'rb'),
-                    open('api/tests/fixtures/media/member_project.jpeg', 'rb'),
-                    open('api/tests/fixtures/media/member_project.jpeg', 'rb')
+                    images.get_base64_from_file('api/tests/fixtures/media/member-project.jpg'),
+                    images.get_base64_from_file('api/tests/fixtures/media/member-project.jpg'),
+                    images.get_base64_from_file('api/tests/fixtures/media/member-project.jpg')
                 ],
                 'first_name': 'Manolito gafotas',
             },
@@ -159,9 +159,9 @@ class TestMemberProfileDetails(BaseTest):
             token,
             {
                 'upload_images': [
-                    open('api/tests/fixtures/media/member_project.jpeg', 'rb'),
-                    open('api/tests/fixtures/media/member_project.jpeg', 'rb'),
-                    open('api/tests/fixtures/media/member_project.jpeg', 'rb')
+                    images.get_base64_from_file('api/tests/fixtures/media/member-project.jpg'),
+                    images.get_base64_from_file('api/tests/fixtures/media/member-project.jpg'),
+                    images.get_base64_from_file('api/tests/fixtures/media/member-project.jpg')
                 ],
                 'first_name': 'Manolito gafotas',
             },
@@ -178,7 +178,7 @@ class TestMemberProfileDetails(BaseTest):
             'POST',
             token,
             {
-                'image': open('api/tests/fixtures/media/member_project.jpeg', 'rb')
+                'image': images.get_base64_from_file('api/tests/fixtures/media/member-project.jpg')
             },
             format='multipart'
         )

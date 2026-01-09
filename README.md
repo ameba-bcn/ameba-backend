@@ -1,50 +1,61 @@
-# ameba backend v1.42
+# ameba backend v1.5
 
-### Release notes
+## Requisitos
+- Docker
 
-### 1.5
-- Added member profile GET/PATCH/POST /api/user/current/member_profile editable endpoint with QR
-- Added images upload in upload_images field in PATCH /api/user/current/member_profile accepting existing URLs and base64 images.
-- Added GET /api/member_projects/ endpoint with public member projects list
-- Added GET /api/member_projects/<id>/ endpoint with public member project detail
-- Added qr regeneration in GET /api/user/current/reset_qr/
-- Added legal section in GET /api/legal
-- Added "email" field to stripe customer integration
-- Added image processing to normalize images in backend (all converted to .jpeg and resized to 1920, 1080 FHD)
-- Added REDIS database for caching api responses.
-- Refactored to new infrastructure with secret-files
-- Email texts updated
+## Desarrollo Dockerizado en Visual Studio Code
+- Mac: `cmd + shift + P` -> ">Dev Containers: Rebuild and Reopen in Container"
+- Windows: `ctrl + shift + P` -> ">Dev Containers: Rebuild and Reopen in Container"
+
+Esto levantará una instancia de VSCode remota dentro del propio container de desarrollo que permite debuguear usando checkpoints con mayor facilidad.
 
 ## REST-API
 
 ### Ejecutar tests
 ```
-python manage.py test
+docker compose run --rm ameba-backend python manage.py test
 ```
 
-### Ejecutar RestApi
-Para poner en marcha la API, ejecutar al menos una vez:
+### Migraciones
+- Aplicar migraciones
 ```
-python manage.py migrate
-python manage.py compilemessages
-python manage.py collectstatic
-python manage.py runserver
+docker compose run --rm ameba-backend python manage.py migrate
+```
+
+- Generar nuevas migraciones en modelos
+```
+docker compose run --rm ameba-backend python manage.py makemigrations
+```
+
+### Compilar copies
+```
+docker compose run --rm ameba-backend python manage.py compilemessages
+```
+
+### Generar static assets del admin
+```
+docker compose run --rm ameba-backend python manage.py collectstatic
+```
+
+### Levantar backend
+```
+docker compose up
 ```
 
 ### Demo data
 #### Load dataset
 Dataset inicial con datos reales:
 ```
-python manage.py loadlocal
+docker compose run --rm ameba-backend python manage.py loadlocal
 ```
 #### Crear dataset a partir de datos actuales
 ```python
-python manage.py dumpdata --indent 2 > demo.json
+docker compose run --rm ameba-backend python manage.py dumpdata --indent 2 > demo.json
 ```
 
 #### Cargar dataset creado
 ```python
-python manage.py loaddata demo.json
+docker compose run --rm ameba-backend python manage.py loaddata demo.json
 ```
 
 ### Localización
@@ -66,7 +77,7 @@ GET /api/users/current/
 ### Documentación
 Documentación SWAGGER de la API:
 ```
-localshot:8000/api/docs
+localhost:8000/api/docs
 ```
 
 ### Admin panel
@@ -76,11 +87,7 @@ localhost:8000/admin
 Para acceder al admin panel hay que tener un usuario admin. Para ello, desde
  django:
 ```
-python manage.py createsuperuser
-```
-o desde docker:
-```
-docker-compose run --rm backend python manage.py createsuperuser
+docker compose run --rm ameba-backend python manage.py createsuperuser
 ```
 
 ### Authentication

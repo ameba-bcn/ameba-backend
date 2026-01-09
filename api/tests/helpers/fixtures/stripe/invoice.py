@@ -18,7 +18,9 @@ def get_invoice_lines(user, item_variants):
         'url': '/v1/invoices/in_1KIX9XHRg08Ncmk70SISI4wQ/lines'
     }
     for item_variant in item_variants:
-        customer = stripe_mock.Customer.create(id=user.id, name=user.username)
+        customer = stripe_mock.Customer.create(
+            id=user.id, name=user.username, email=user.email
+        )
         product = stripe_mock.Product.create(
             id=item_variant.id, name=item_variant.name
         )
@@ -88,7 +90,9 @@ def get_invoice(user, item_variants, status='paid'):
     else:
         payment_intent_id = None
 
-    customer = stripe_mock.Customer(id=str(user.id), name=user.username)
+    customer = stripe_mock.Customer(
+        id=str(user.id), name=user.username, email=user.email
+        )
 
     invoice = {
       "object": "invoice",

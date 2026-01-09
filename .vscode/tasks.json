@@ -1,0 +1,56 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "docker-compose-up",
+        "type": "shell",
+        "command": "docker compose up -d",
+        "problemMatcher": [],
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
+        "presentation": {
+          "reveal": "always",
+          "panel": "new"
+        },
+        "options": {
+          "cwd": "${workspaceFolder}"
+        }
+      },
+      {
+        "label": "docker-compose-down",
+        "type": "shell",
+        "command": "docker compose down",
+        "problemMatcher": [],
+        "presentation": {
+          "reveal": "always",
+          "panel": "new"
+        },
+        "options": {
+          "cwd": "${workspaceFolder}"
+        }
+      },
+      {
+        "label": "docker-compose-debug-pytest",
+        "type": "shell",
+        "command": "docker compose run --rm --service-ports ameba-backend python -m debugpy --listen 0.0.0.0:5678 --wait-for-client -m pytest ${input:pytestArgs}",
+        "problemMatcher": [],
+        "options": {
+            "cwd": "${workspaceFolder}"
+        },
+        "presentation": {
+            "reveal": "always",
+            "panel": "new"
+        }
+    }
+    ],
+    "inputs": [
+      {
+          "id": "pytestArgs",
+          "type": "promptString",
+          "description": "Enter pytest arguments (e.g., 'api/tests' or 'api/tests/user.py::UserTest::test_create_user')",
+          "default": "api/tests"
+      }
+    ]
+  }

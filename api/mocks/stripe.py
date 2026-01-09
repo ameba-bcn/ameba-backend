@@ -149,8 +149,8 @@ class Coupon(BaseMock):
 class Customer(BaseMock):
     objects = {}
 
-    def __init__(self, id, name):
-        super().__init__(id=id, name=name)
+    def __init__(self, id, name, email):
+        super().__init__(id=id, name=name, email=email)
 
     @classmethod
     def list_payment_methods(cls, id, type, **kargs):

@@ -1,0 +1,36 @@
+{
+	"name": "Django DRF Dev",
+	"dockerComposeFile": [
+		"../docker-compose.yml"
+	],
+	"service": "ameba-backend",
+	"workspaceFolder": "/home/ameba/dev_app",
+	"runServices": [
+		"ameba-backend",
+		"ameba-db",
+		"ameba-redis"
+	],
+	
+	// Configuraciones de VSCode dentro del contenedor
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-python.python",
+				"ms-python.vscode-pylance",
+				"batisteo.vscode-django"
+			],
+			"settings": {
+				"python.defaultInterpreterPath": "/usr/local/bin/python",
+				"python.linting.enabled": true,
+				"python.linting.pylintEnabled": true
+			}
+		}
+	},
+
+	// Comandos post-creación (opcional, útil para instalar dependencias si no están en la imagen)
+	// "postCreateCommand": "pip install -r requirements.txt",
+
+	// Usuario remoto (usualmente 'root' o 'vscode' dependiendo de tu Dockerfile)
+	"remoteUser": "root",
+    "overrideCommand": true
+}
