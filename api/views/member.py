@@ -1,11 +1,13 @@
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework import status
 from api.serializers import MemberDetailSerializer, MemberImageSerializer
 from api.views.base import BaseUserEditableViewSet, BaseCrudViewSet
 from api.docs.members import MembersDocs
 from api.permissions import MemberPermission
 from api import models
+import api.images as img_utils
 
 
 class MemberViewSet(BaseUserEditableViewSet):
@@ -51,5 +53,19 @@ class MemberProfileImageViewSet(BaseCrudViewSet):
 
     def create(self, request, *args, **kwargs):
         member = request.user.member
-        request.data['member'] = member.pk
-        return super().create(request, *args, **kwargs)
+        image_data = request.data.get('image')
+
+        if not image_data:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            image, ext = img_utils.decode_base64_image(image_data)
+        except ValueError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        instance = models.MemberProfileImage.objects.create(member=member)
+        image_name = f'{member.number}_{instance.pk}.{ext}'
+        instance.image.save(image_name, image)
+
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
