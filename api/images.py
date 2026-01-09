@@ -125,3 +125,10 @@ def get_base64_image(image_field):
 
     # Return the base64 string with prefix
     return image_base64_str
+
+
+def get_base64_from_file(path):
+    with open(path, "rb") as image_file:
+        encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
+        # Es crucial agregar el prefijo porque tu regex lo espera: 'data:image/...'
+        return f"data:image/jpeg;base64,{encoded_string}"
