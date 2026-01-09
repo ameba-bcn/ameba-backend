@@ -1,42 +1,58 @@
-name: Build, Test and Push Docker image
+name: CI/CD Pipeline
 
 on:
   push:
-    branches: ["main"]
+    branches:
+      - main
+      - dev
+
+env:
+  REGISTRY: ghcr.io
 
 jobs:
-  build:
+  build-test-push:
     runs-on: ubuntu-latest
-
     permissions:
       contents: read
       packages: write
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Log in to GitHub Container Registry
+      - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
-          registry: ghcr.io
+          registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build backend image with docker-compose
-        run: docker compose build ameba-backend
+      - name: Build
+        run: docker compose build
 
-      - name: Run tests
+      - name: Run Tests
         run: docker compose run --rm ameba-backend python manage.py test
 
-
-      - name: Tag and push image
+      - name: Tag and Push Image
         if: success()
         run: |
-          IMAGE_LOCAL=$(docker images --format "{{.Repository}}:{{.Tag}}" | grep ameba-backend | head -n 1)
+          LOWERCASE_REPO=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          
+          # Lógica de etiquetado: main -> latest, dev -> dev
+          if [ "${{ github.ref_name }}" = "main" ]; then
+            IMAGE_TAG="latest"
+          else
+            IMAGE_TAG="${{ github.ref_name }}"
+          fi
+          
+          TARGET_IMAGE="${{ env.REGISTRY }}/${LOWERCASE_REPO}:${IMAGE_TAG}"
+          SOURCE_IMAGE_ID=$(docker compose images -q ameba-backend)
+          
+          if [ -z "$SOURCE_IMAGE_ID" ]; then
+            echo "Error: No se encontró imagen para el servicio ameba-backend."
+            exit 1
+          fi
 
-          # Etiqueta para GHCR
-          docker tag "$IMAGE_LOCAL" ghcr.io/${{ github.repository }}:latest
-
-          # Push
-          docker push ghcr.io/${{ github.repository }}:latest
+          echo "Tagging image $SOURCE_IMAGE_ID as $TARGET_IMAGE"
+          docker tag "$SOURCE_IMAGE_ID" "$TARGET_IMAGE"
+          docker push "$TARGET_IMAGE"
