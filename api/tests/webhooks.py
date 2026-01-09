@@ -79,7 +79,7 @@ class TestStripeWebhooks(helpers.BaseTest):
 
         # Create invoice and other stripe items
         customer = stripe_mock.Customer.create(
-            id=str(member.user.id), name=member.user.username
+            id=str(member.user.id), name=member.user.username, email=member.user.email
         )
         price = stripe_mock.Price.create(
             currency='eur',
