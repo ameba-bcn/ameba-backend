@@ -63,9 +63,8 @@ class Member(models.Model):
         verbose_name = _('Member')
         verbose_name_plural = _('Members')
 
-    number = models.IntegerField(
-        primary_key=True, editable=True, default=get_default_number,
-        verbose_name=_('number')
+    number = models.AutoField(
+        primary_key=True, editable=True, verbose_name=_('number')
     )
     user = models.OneToOneField(
         to='User', on_delete=models.CASCADE, verbose_name=_('user'),
@@ -152,13 +151,17 @@ class Member(models.Model):
     def qr_hash(self):
         return signing.dumps(self.number, salt=settings.QR_MEMBER_SALT)
 
-    def regenerate_qr(self):
+    def add_qr(self):
+
         if self.qr:
             self.qr.delete(save=False)
         qr_img = qr_generator.generate_member_card_qr(
             token=self.get_member_card_token()
         )
         self.qr.save(f'{self.qr_hash}.png', qr_img, save=False)
+    
+    def regenerate_qr(self):
+        self.add_qr()
         self.save()
 
     @property
@@ -170,8 +173,8 @@ class Member(models.Model):
 
     @cache_utils.invalidate_models_cache
     def save(self, *args, **kwargs):
-        if not self.number or not self.qr:
-            self.regenerate_qr()
+        if not self.qr:
+            self.add_qr()
         super().save(*args, **kwargs)
 
 
