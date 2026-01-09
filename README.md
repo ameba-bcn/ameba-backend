@@ -3,7 +3,7 @@
 ## Requisitos
 - Docker
 
-## Desarrollo Dockerizado en Visual Studio Code
+## Desarrollo Dockerizado en VSCode
 - Mac: `cmd + shift + P` -> ">Dev Containers: Rebuild and Reopen in Container"
 - Windows: `ctrl + shift + P` -> ">Dev Containers: Rebuild and Reopen in Container"
 
