@@ -8,6 +8,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository_owner }}/ameba-backend
 
 jobs:
   build-test-push:
@@ -60,3 +61,59 @@ jobs:
           echo "Tagging image $SOURCE_IMAGE_ID as $TARGET_IMAGE"
           docker tag "$SOURCE_IMAGE_ID" "$TARGET_IMAGE"
           docker push "$TARGET_IMAGE"
+
+  deploy-dev:
+    name: Deploy to dev
+    needs: build-test-push
+    if: github.ref_name == 'dev'
+    runs-on: ubuntu-latest
+    environment: dev
+
+    steps:
+      - name: Deploy to Dev Server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DEV_SSH_HOST }}
+          username: ${{ secrets.DEV_SSH_USER }}
+          key: ${{ secrets.DEV_SSH_PRIVATE_KEY }}
+          script: |
+            cd ~/ameba-devops
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:dev
+            docker compose up -d --force-recreate ameba-backend
+            docker image prune -f
+
+      - name: Deployment summary
+        run: |
+          echo "### 🚀 Deployed to dev" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment**: dev" >> $GITHUB_STEP_SUMMARY
+          echo "**Image**: \`${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:dev\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit**: \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+
+  deploy-prod:
+    name: Deploy to prod
+    needs: build-test-push
+    if: github.ref_name == 'main'
+    runs-on: ubuntu-latest
+    environment: prod
+
+    steps:
+      - name: Deploy to prod Server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.PROD_SSH_HOST }}
+          username: ${{ secrets.PROD_SSH_USER }}
+          key: ${{ secrets.PROD_SSH_PRIVATE_KEY }}
+          script: |
+            cd ~/ameba-devops
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+            docker compose up -d --force-recreate ameba-backend
+            docker image prune -f
+
+      - name: Deployment summary
+        run: |
+          echo "### 🚀 Deployed to prod" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment**: prod" >> $GITHUB_STEP_SUMMARY
+          echo "**Image**: \`${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit**: \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
