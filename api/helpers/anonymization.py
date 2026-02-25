@@ -9,8 +9,18 @@ logger = logging.getLogger(__name__)
 
 f = faker.Faker('es_ES')
 
+
+def unique_email():
+    """Genera un email único añadiendo timestamp (minutos, segundos, milisegundos) antes del @"""
+    email = f.email()
+    now = timezone.now()
+    timestamp = now.strftime('%M%S') + f'{now.microsecond // 1000:03d}'
+    local, domain = email.split('@')
+    return f'{local}{timestamp}@{domain}'
+
+
 def anonymize_user(user):
-    user.email = f.email()
+    user.email = unique_email()
     user.username = f.user_name()
     if user.has_member_profile():
         anonymize_member(user.member)
@@ -30,14 +40,11 @@ def anonymize_member(member):
     member.phone_number = f.phone_number()[:10]
     member.project_name = f.company()
     member.description = f.text()
-    created = f.date_time()
-    created = timezone.get_current_timezone().localize(created)
-    member.created = created
     member.save()
 
 
 def anonymize_subscriber(subscriber):
-    subscriber.email = f.email()
+    subscriber.email = unique_email()
     subscriber.save()
 
 
