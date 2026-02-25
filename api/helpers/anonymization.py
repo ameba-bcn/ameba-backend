@@ -53,7 +53,6 @@ def anonymize_payment(payment):
 
 def anonymize_database():
     now = timezone.now().strftime('%Y%m%d%H%M')
-    devs = os.getenv('DEVELOPERS', '').split(',')
     if now != os.getenv('ANONYMIZATION_DATE'):
         raise Exception('Anonymization date is not set')
     qs = models.User.objects.all()
@@ -62,7 +61,7 @@ def anonymize_database():
     for user in qs:
         logger.info(f'Anonymizing user {i} of {total} ({int(100 * i / total)}%)')
         i += 1
-        if user.email in devs:
+        if user.is_staff:
             continue
         anonymize_user(user)
     for subscriber in models.Subscriber.objects.all():
