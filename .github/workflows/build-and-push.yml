@@ -77,10 +77,9 @@ jobs:
           username: ${{ secrets.DEV_SSH_USER }}
           key: ${{ secrets.DEV_SSH_PRIVATE_KEY }}
           script: |
-            cd ~/ameba-devops
-            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:dev
-            docker compose up -d --force-recreate ameba-backend
-            docker image prune -f
+            cd /home/ameba/ameba-devops
+            ENVIRONMENT=dev docker compose --profile dev down
+            ENVIRONMENT=dev ./.environments/dev/deploy.sh
 
       - name: Deployment summary
         run: |
@@ -105,10 +104,9 @@ jobs:
           username: ${{ secrets.PROD_SSH_USER }}
           key: ${{ secrets.PROD_SSH_PRIVATE_KEY }}
           script: |
-            cd ~/ameba-devops
-            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-            docker compose up -d --force-recreate ameba-backend
-            docker image prune -f
+            cd /home/ameba/ameba-devops
+            ENVIRONMENT=prod docker compose --profile prod down
+            ENVIRONMENT=prod ./environments/prod/deploy.sh
 
       - name: Deployment summary
         run: |

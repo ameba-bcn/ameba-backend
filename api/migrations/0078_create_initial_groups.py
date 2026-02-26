@@ -103,15 +103,18 @@ def create_groups_and_permissions(apps, schema_editor):
     
     # Iteramos sobre la configuración para crear grupos y asignar permisos
     for group_name, config in GROUPS_CONFIG.items():
-        # 1. Crear Grupo (Idempotente)
-        group, created = Group.objects.get_or_create(
-            pk=config['pk'], 
-            defaults={'name': group_name}
-        )
-        # Aseguramos que el nombre sea correcto si ya existía con otro nombre (opcional)
-        if not created and group.name != group_name:
-            group.name = group_name
-            group.save()
+        # 1. Crear Grupo (Idempotente) - Buscar por nombre primero
+        try:
+            group = Group.objects.get(name=group_name)
+        except Group.DoesNotExist:
+            try:
+                group = Group.objects.create(
+                    pk=config['pk'],
+                    name=group_name
+                )
+            except Exception:
+                # Si el pk ya está ocupado por otro grupo, crear sin pk fijo
+                group = Group.objects.create(name=group_name)
 
         # 2. Calcular permisos (incluyendo herencia)
         perms_to_add = _get_group_permissions_recursive(group_name)
