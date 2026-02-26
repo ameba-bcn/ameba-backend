@@ -139,9 +139,9 @@ def is_subscribed_to_mailing_list(email, list_address):
 def send_unsubscribe_mail_to_mailing_list(list_address):
     endpoint = '{}/messages'.format(AMEBA_DOMAIN)
     data = {
-        "from": "Jacoti <test.earcloud@{}>".format(AMEBA_DOMAIN),
+        "from": "Ameba <test.ameba@{}>".format(AMEBA_DOMAIN),
         "to": "{}".format(list_address),
-        "subject": "Test earCloud unsubscribe link",
+        "subject": "Test Ameba unsubscribe link",
         "template": "{}".format(TEST_TEMPLATE)
     }
     single_async_request('post', endpoint=endpoint, attributes=data)

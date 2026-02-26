@@ -64,7 +64,7 @@ class Member(models.Model):
         verbose_name_plural = _('Members')
 
     number = models.AutoField(
-        primary_key=True, editable=True, verbose_name=_('number')
+        primary_key=True, editable=False, verbose_name=_('number')
     )
     user = models.OneToOneField(
         to='User', on_delete=models.CASCADE, verbose_name=_('user'),
