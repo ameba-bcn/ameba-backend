@@ -1,4 +1,4 @@
-from django.db import migrations, transaction
+from django.db import migrations
 from django.contrib.auth.management import create_permissions
 
 # 1. DEFINIMOS CONSTANTES (Para no importar de api.permissions)
@@ -103,21 +103,11 @@ def create_groups_and_permissions(apps, schema_editor):
     
     # Iteramos sobre la configuración para crear grupos y asignar permisos
     for group_name, config in GROUPS_CONFIG.items():
-        # 1. Crear Grupo (Idempotente) - Buscar por nombre primero
-        try:
-            group = Group.objects.get(name=group_name)
-        except Group.DoesNotExist:
-            try:
-                sid = transaction.savepoint()
-                group = Group.objects.create(
-                    pk=config['pk'],
-                    name=group_name
-                )
-                transaction.savepoint_commit(sid)
-            except Exception:
-                transaction.savepoint_rollback(sid)
-                # Si el pk ya está ocupado por otro grupo, crear sin pk fijo
-                group = Group.objects.create(name=group_name)
+        # 1. Crear Grupo solo si no existe
+        group, _ = Group.objects.get_or_create(
+            pk=config['pk'],
+            defaults={'name': group_name}
+        )
 
         # 2. Calcular permisos (incluyendo herencia)
         perms_to_add = _get_group_permissions_recursive(group_name)
