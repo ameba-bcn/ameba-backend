@@ -1,4 +1,4 @@
-from django.db import migrations
+from django.db import migrations, transaction
 from django.contrib.auth.management import create_permissions
 
 # 1. DEFINIMOS CONSTANTES (Para no importar de api.permissions)
@@ -108,11 +108,14 @@ def create_groups_and_permissions(apps, schema_editor):
             group = Group.objects.get(name=group_name)
         except Group.DoesNotExist:
             try:
+                sid = transaction.savepoint()
                 group = Group.objects.create(
                     pk=config['pk'],
                     name=group_name
                 )
+                transaction.savepoint_commit(sid)
             except Exception:
+                transaction.savepoint_rollback(sid)
                 # Si el pk ya está ocupado por otro grupo, crear sin pk fijo
                 group = Group.objects.create(name=group_name)
 
