@@ -106,7 +106,7 @@ jobs:
           script: |
             cd /home/ameba/ameba-devops
             ENVIRONMENT=prod docker compose --profile prod down
-            ENVIRONMENT=prod ./environments/prod/deploy.sh
+            ENVIRONMENT=prod ./.environments/prod/deploy.sh
 
       - name: Deployment summary
         run: |
