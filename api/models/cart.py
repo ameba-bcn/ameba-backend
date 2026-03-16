@@ -184,7 +184,7 @@ class Cart(Model):
         for event in self.events:
             if event.id in current_events:
                 return True
-            if self.user and event.acquired_by.filter(pk=self.user.pk):
+            if self.user and event.acquired_by.filter(user=self.user):
                 return True
             current_events.append(event.id)
         return False
