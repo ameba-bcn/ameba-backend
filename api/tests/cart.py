@@ -8,8 +8,15 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from api.models.cart import Cart
 from api.models.user import User
 from api.models import (
-    Item, ItemVariant, ItemAttribute, ItemAttributeType, Subscription, Member
+    Item,
+    ItemVariant,
+    ItemAttribute,
+    ItemAttributeType,
+    Subscription,
+    Member,
+    Event,
 )
+import api.tests.helpers.items as items_helpers
 
 
 class BaseCartTest(BaseTest):
@@ -636,6 +643,26 @@ class TestCartCheckout(BaseCartTest):
         )
         response = self._get(pk=cart.id, token=token)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_checkout_event_not_acquired_by_user_returns_200(self):
+        user = self.get_user(1)
+        token = self.get_token(user).access_token
+        other_user = self.get_user(2)
+
+        item_variant = next(items_helpers.create_items_variants(
+            [10], item_class=Event
+        ))
+
+        ThroughModel = ItemVariant.acquired_by.through
+        ThroughModel.objects.create(
+            id=user.pk, itemvariant=item_variant, user=other_user
+        )
+
+        cart = Cart.objects.create(user=user)
+        cart.item_variants.add(item_variant)
+
+        response = self._get(pk=cart.id, token=token)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
 class TestCartStateFlow(BaseCartTest):
