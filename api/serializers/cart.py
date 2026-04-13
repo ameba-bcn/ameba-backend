@@ -1,7 +1,68 @@
 import rest_framework.serializers as serializers
 import django.conf as conf
+from django.utils.translation import gettext_lazy as _
 
 import api.models as api_models
+from api.helpers.delivery_fee import ensure_delivery_fee, remove_delivery_fee
+
+
+class DeliverySerializer(serializers.Serializer):
+    direccion = serializers.CharField(label=_('address'))
+    ciudad = serializers.CharField(label=_('city'))
+    telefono = serializers.CharField(label=_('phone'))
+    dni = serializers.CharField(label=_('DNI'))
+
+    def validate_direccion(self, value):
+        value = value.strip()
+        if not value:
+            raise serializers.ValidationError(_('address cannot be empty'))
+        return value
+
+    def validate_ciudad(self, value):
+        value = value.strip()
+        if not value:
+            raise serializers.ValidationError(_('city cannot be empty'))
+        return value
+
+    def validate_telefono(self, value):
+        value = value.strip()
+        if not value:
+            raise serializers.ValidationError(_('phone cannot be empty'))
+        return value
+
+    def validate_dni(self, value):
+        value = value.strip()
+        if not value:
+            raise serializers.ValidationError(_('DNI cannot be empty'))
+        return value
+
+
+class ShopPickupSerializer(serializers.Serializer):
+    shop = serializers.CharField(label=_('shop'))
+
+    def validate_shop(self, value):
+        value = value.strip()
+        if not value:
+            raise serializers.ValidationError(_('shop cannot be empty'))
+        return value
+
+
+class ShippingSerializer(serializers.Serializer):
+    delivery = DeliverySerializer(required=False, allow_null=True)
+    shop_pickup = ShopPickupSerializer(required=False, allow_null=True)
+
+    def validate(self, data):
+        delivery = data.get('delivery')
+        shop_pickup = data.get('shop_pickup')
+        if delivery is not None and shop_pickup is not None:
+            raise serializers.ValidationError(
+                _('Only one of delivery or shop_pickup may be set at a time.')
+            )
+        if delivery is None and shop_pickup is None:
+            raise serializers.ValidationError(
+                _('At least one of delivery or shop_pickup must be provided.')
+            )
+        return data
 
 
 class CartItemSerializer(serializers.Serializer):
@@ -86,12 +147,13 @@ class CartSerializer(serializers.ModelSerializer):
         many=True, queryset=api_models.ItemVariant.objects.all(),
         slug_field='id', required=False, source='item_variants'
     )
+    shipping = ShippingSerializer(required=False, allow_null=True)
 
     class Meta:
         model = api_models.Cart
         fields = (
             'id', 'user', 'total', 'count', 'item_variant_ids', 'item_variants',
-            'discount_code', 'state'
+            'discount_code', 'state', 'shipping'
         )
         read_only_fields = (
             'user', 'id', 'total', 'count', 'item_variants', 'state'
@@ -117,6 +179,12 @@ class CartSerializer(serializers.ModelSerializer):
             self._add_cart_items(instance, validated_data['item_variants'])
         if 'discount_code' in validated_data:
             instance.discount_code = validated_data.get('discount_code')
+        if 'shipping' in validated_data:
+            instance.shipping = validated_data['shipping']
+            if validated_data['shipping'] is not None and validated_data['shipping'].get('delivery') is not None:
+                ensure_delivery_fee(instance)
+            else:
+                remove_delivery_fee(instance)
         instance.save()
         return instance
 
@@ -160,7 +228,7 @@ class CartCheckoutSerializer(CartSerializer):
     class Meta:
         model = api_models.Cart
         fields = ('user', 'email', 'total', 'amount', 'item_variants',
-                  'checkout')
+                  'checkout', 'shipping')
 
     @property
     def username(self):
