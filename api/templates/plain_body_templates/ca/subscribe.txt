@@ -5,7 +5,7 @@ JA ETS A LA LLISTA.
 T'has subscrit al butlletí d'Ameba. Rebràs els concerts, tallers i convocatòries que obrim.
 Un correu, no cinc.
 
-VEURE L'AGENDA: {{ protocol }}://{{ site_name }}/agenda
+VEURE L'AGENDA: {{ protocol }}://{{ site_name }}/festivals
 
 —
 Ameba · {{ site_name }}

@@ -8,7 +8,7 @@ QUÉ: {{ event.name }}
 CUÁNDO: {{ event.datetime }}
 DÓNDE: {{ event.address }}
 
-VER EL EVENTO: {{ protocol }}://{{ site_name }}/agenda
+VER EL EVENTO: {{ protocol }}://{{ site_name }}/festivals
 
 Adjuntamos tu entrada en PDF con el código QR. Llévala en el móvil o impresa: es lo que te dará acceso.
 

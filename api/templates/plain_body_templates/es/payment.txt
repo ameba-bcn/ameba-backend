@@ -8,8 +8,6 @@ Hemos recibido tu pago. Aquí tienes el detalle de la compra.
 {% endfor %}
 TOTAL: {{ total }}
 
-VER MIS COMPRAS: {{ protocol }}://{{ site_name }}/account/orders
-
 —
 Ameba · {{ site_name }}
 Darme de baja: escríbenos a info@ameba.cat

@@ -5,7 +5,7 @@ YA ESTÁS EN LA LISTA.
 Te has suscrito al boletín de Ameba. Recibirás los conciertos, talleres y convocatorias que abrimos.
 Un correo, no cinco.
 
-VER LA AGENDA: {{ protocol }}://{{ site_name }}/agenda
+VER LA AGENDA: {{ protocol }}://{{ site_name }}/festivals
 
 —
 Ameba · {{ site_name }}

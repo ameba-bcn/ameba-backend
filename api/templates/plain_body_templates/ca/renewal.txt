@@ -6,7 +6,7 @@ La teva membresia s'ha renovat correctament. No has de fer res més.
 
 MODALITAT: {{ subscription.name }}
 
-VEURE L'AGENDA: {{ protocol }}://{{ site_name }}/agenda
+VEURE L'AGENDA: {{ protocol }}://{{ site_name }}/festivals
 
 —
 Ameba · {{ site_name }}

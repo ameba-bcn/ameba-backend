@@ -8,8 +8,6 @@ Hem rebut el teu pagament. Aquí tens el detall de la compra.
 {% endfor %}
 TOTAL: {{ total }}
 
-VEURE LES MEVES COMPRES: {{ protocol }}://{{ site_name }}/account/orders
-
 —
 Ameba · {{ site_name }}
 Donar-me de baixa: escriu-nos a info@ameba.cat

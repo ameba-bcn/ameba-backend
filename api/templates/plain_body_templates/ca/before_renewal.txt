@@ -8,7 +8,7 @@ Si vols canviar de modalitat o donar-la de baixa, fes-ho abans d'aquesta data.
 MODALITAT: {{ subscription.name }}
 RENOVACIÓ: {{ membership.expires }}
 
-GESTIONAR LA MEMBRESIA: {{ protocol }}://{{ site_name }}/account
+GESTIONAR LA MEMBRESIA: {{ protocol }}://{{ site_name }}/compte
 
 —
 Ameba · {{ site_name }}

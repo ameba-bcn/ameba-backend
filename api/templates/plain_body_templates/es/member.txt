@@ -7,7 +7,7 @@ Gracias por sostener la asociación: esto es lo que hace posible la programació
 
 MODALIDAD: {{ subscription.name }}
 
-VER LA AGENDA: {{ protocol }}://{{ site_name }}/agenda
+VER LA AGENDA: {{ protocol }}://{{ site_name }}/festivals
 
 —
 Ameba · {{ site_name }}

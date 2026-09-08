@@ -9,7 +9,7 @@ DIRECCIÓN: {{ address }}
 {% for item in item_variants %}- {{ item }}
 {% endfor %}
 
-VER LA TIENDA: {{ protocol }}://{{ site_name }}/tienda
+VER LA TIENDA: {{ protocol }}://{{ site_name }}/botiga
 
 Trae este correo o tu nombre. Si no puedes venir estos días, escríbenos.
 
