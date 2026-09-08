@@ -1,4 +1,5 @@
 from rest_framework import status
+from django.test import TestCase, Client, override_settings
 
 from api.tests.helpers import user as user_helpers
 from api.tests._helpers import BaseTest
@@ -292,3 +293,74 @@ class TestMemberProfileDetails(BaseTest):
         response = self.request(project_url, 'GET')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 0)
+
+
+@override_settings(ALLOWED_HOSTS=['testserver', 'localhost'])
+class TestMemberAdminChangeView(TestCase):
+    """
+    Regression tests for a production bug: the Django admin "change" page
+    for a Member (e.g. /es/admin/api/member/372/change/) returned a 500,
+    while the changelist (/es/admin/api/member/) worked fine.
+
+    Two stacked bugs were involved:
+
+    1. (primary cause, hits every member) `Member.number` was changed to
+       `editable=False` (commit "Updated member autofield") but
+       `MemberAdmin.fields` still listed `number` without also listing it
+       in `readonly_fields`. Django's admin raises FieldError building the
+       form for any non-editable field that isn't marked read-only -
+       `test_change_view_renders_for_member_with_normal_name` reproduces
+       this even for an otherwise unremarkable member.
+    2. (secondary, only hits some members) Member.__str__ used to do
+       `self.first_name[0]`, which raises IndexError on members with a
+       blank first_name or last_name (e.g. a legacy/imported record). The
+       admin change view renders str(obj) for the page subtitle; the
+       changelist never hits this because it renders explicit
+       list_display columns instead of calling __str__.
+    """
+
+    def setUp(self):
+        # New User rows are auto-added to the 'web_user' group by a
+        # post_save signal (api/signals/__init__.py::add_user_groups),
+        # which expects the group to already exist. Seed it here so this
+        # test is self-contained on a fresh/empty database.
+        from django.contrib.auth.models import Group
+        from api.groups import DEFAULT_GROUP
+        Group.objects.get_or_create(name=DEFAULT_GROUP)
+
+        self.admin_user = models.User.objects.create_superuser(
+            username='admin', email='admin@example.com',
+            password='admin-password-123'
+        )
+        self.client = Client()
+        self.client.force_login(self.admin_user)
+
+    @staticmethod
+    def _change_url(member):
+        return f'/es/admin/api/member/{member.pk}/change/'
+
+    def test_change_view_renders_for_member_with_normal_name(self):
+        member = user_helpers.get_member(
+            first_name='Normal', last_name='Person'
+        )
+        response = self.client.get(self._change_url(member))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_change_view_does_not_500_for_member_with_blank_first_name(self):
+        member = user_helpers.get_member(first_name='', last_name='Surname')
+        response = self.client.get(self._change_url(member))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_change_view_does_not_500_for_member_with_blank_last_name(self):
+        member = user_helpers.get_member(first_name='Name', last_name='')
+        response = self.client.get(self._change_url(member))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_changelist_still_works_for_member_with_blank_names(self):
+        user_helpers.get_member(first_name='', last_name='')
+        response = self.client.get('/es/admin/api/member/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_str_falls_back_to_placeholder_for_blank_names(self):
+        member = user_helpers.get_member(first_name='', last_name='')
+        self.assertEqual(str(member), f'{member.user.username} (?. ?.)')
