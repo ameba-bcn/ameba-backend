@@ -1,0 +1,15 @@
+HOLA {{ user.username }},
+
+ACTIVA EL TEU COMPTE.
+
+Gràcies per registrar-te a Ameba. Falta una cosa: confirmar que aquest correu és teu.
+Fes clic al botó i el compte queda actiu.
+
+ACTIVAR EL COMPTE: {{ protocol }}://{{ site_name }}/activate/?token={{ activation_token }}
+
+L'enllaç caduca. Si ja no funciona, torna a registrar-te o escriu-nos.
+
+—
+Ameba · {{ site_name }}
+Donar-me de baixa: escriu-nos a info@ameba.cat
+Ameba · Barcelona · [AFEGIR ADREÇA POSTAL]

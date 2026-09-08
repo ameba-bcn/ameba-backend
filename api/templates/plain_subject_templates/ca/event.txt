@@ -1,0 +1,1 @@
+Ameba — inscripció confirmada a {{ event.name }}

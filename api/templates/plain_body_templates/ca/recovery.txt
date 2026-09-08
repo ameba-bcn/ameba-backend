@@ -1,0 +1,14 @@
+HOLA {{ user.username }},
+
+NOVA CONTRASENYA.
+
+Has demanat recuperar l'accés al teu compte. Fes clic al botó per triar-ne una de nova.
+
+CREAR CONTRASENYA: {{ protocol }}://{{ site_name }}/recovery/?token={{ recovery_token }}
+
+Si no has demanat res, ignora aquest correu: la contrasenya actual segueix sent vàlida.
+
+—
+Ameba · {{ site_name }}
+Donar-me de baixa: escriu-nos a info@ameba.cat
+Ameba · Barcelona · [AFEGIR ADREÇA POSTAL]

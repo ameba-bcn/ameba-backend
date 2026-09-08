@@ -101,6 +101,21 @@ def on_failed_renewal(sender, user, subscription, **kwargs):
     )
 
 
+def _email_item_variants(payment):
+    if payment.cart_record:
+        return payment.cart_record['item_variants']
+    return [
+        {
+            'name': item_variant.name,
+            'discount_name': '',
+            'discount_value': '',
+            'price': f'{item_variant.price}€',
+            'subtotal': f'{item_variant.price}€',
+        }
+        for item_variant in payment.item_variants.all()
+    ]
+
+
 @receiver(payment_closed)
 def send_payment_successful_notification(sender, payment, **kwargs):
     user = payment.user
@@ -114,7 +129,7 @@ def send_payment_successful_notification(sender, payment, **kwargs):
         protocol=settings.DEBUG and 'http' or 'https',
         total=payment.total,
         has_articles=has_articles,
-        item_variants=payment.item_variants.all()
+        item_variants=_email_item_variants(payment)
     )
 
 

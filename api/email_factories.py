@@ -7,6 +7,9 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 site_name = getattr(conf.settings, 'HOST_NAME', '')
 
+BILINGUAL_LANGUAGES = ('ca', 'es')
+DEFAULT_BILINGUAL_LANGUAGE = 'es'
+
 
 def user_token_generator(user):
     refresh = RefreshToken.for_user(user)
@@ -15,6 +18,14 @@ def user_token_generator(user):
 
 def encode_uid(pk):
     return http.urlsafe_base64_encode(encoding.force_bytes(pk))
+
+
+def resolve_language(context):
+    user = context.get('user')
+    language = getattr(user, 'language', '')
+    if language not in BILINGUAL_LANGUAGES:
+        language = DEFAULT_BILINGUAL_LANGUAGE
+    return language
 
 
 class UserEmailFactoryBase(object):
@@ -26,11 +37,13 @@ class UserEmailFactoryBase(object):
         self.mail_to = mail_to
         self.from_email = conf.settings.DEFAULT_FROM_EMAIL
         self.context = context
+        self.context.setdefault('email', mail_to)
         self.attachment = attachment
+        language = resolve_language(context)
         self.email_message = self.create(
-            self.plain_body_template,
-            self.html_body_template,
-            self.subject_template,
+            self.plain_body_template.format(lang=language),
+            self.html_body_template.format(lang=language),
+            self.subject_template.format(lang=language),
             self.context,
             self.mail_to,
             self.from_email,
@@ -63,85 +76,85 @@ class UserEmailFactoryBase(object):
 
 
 class ActivatedAccountEmail(UserEmailFactoryBase):
-    subject_template = 'plain_subject_templates/activated.txt'
-    plain_body_template = 'plain_body_templates/activated.txt'
-    html_body_template = 'html_body_templates/activated.html'
+    subject_template = 'plain_subject_templates/{lang}/activated.txt'
+    plain_body_template = 'plain_body_templates/{lang}/activated.txt'
+    html_body_template = 'html_body_templates/{lang}/activated.html'
 
 
 class NewMembershipEmail(UserEmailFactoryBase):
-    subject_template = 'plain_subject_templates/member.txt'
-    plain_body_template = 'plain_body_templates/member.txt'
-    html_body_template = 'html_body_templates/member.html'
+    subject_template = 'plain_subject_templates/{lang}/member.txt'
+    plain_body_template = 'plain_body_templates/{lang}/member.txt'
+    html_body_template = 'html_body_templates/{lang}/member.html'
 
 
 class PasswordChangedEmail(UserEmailFactoryBase):
-    subject_template = 'plain_subject_templates/password_changed.txt'
-    plain_body_template = 'plain_body_templates/password_changed.txt'
-    html_body_template = 'html_body_templates/password_changed.html'
+    subject_template = 'plain_subject_templates/{lang}/password_changed.txt'
+    plain_body_template = 'plain_body_templates/{lang}/password_changed.txt'
+    html_body_template = 'html_body_templates/{lang}/password_changed.html'
 
 
 class RecoveryRequestEmail(UserEmailFactoryBase):
-    subject_template = 'plain_subject_templates/recovery.txt'
-    plain_body_template = 'plain_body_templates/recovery.txt'
-    html_body_template = 'html_body_templates/recovery.html'
+    subject_template = 'plain_subject_templates/{lang}/recovery.txt'
+    plain_body_template = 'plain_body_templates/{lang}/recovery.txt'
+    html_body_template = 'html_body_templates/{lang}/recovery.html'
 
 
 class PaymentSuccessfulEmail(UserEmailFactoryBase):
-    subject_template = 'plain_subject_templates/payment.txt'
-    plain_body_template = 'plain_body_templates/payment.txt'
-    html_body_template = 'html_body_templates/payment.html'
+    subject_template = 'plain_subject_templates/{lang}/payment.txt'
+    plain_body_template = 'plain_body_templates/{lang}/payment.txt'
+    html_body_template = 'html_body_templates/{lang}/payment.html'
 
 
 class UserRegisteredEmail(UserEmailFactoryBase):
-    subject_template = 'plain_subject_templates/registered.txt'
-    plain_body_template = 'plain_body_templates/registered.txt'
-    html_body_template = 'html_body_templates/registered.html'
+    subject_template = 'plain_subject_templates/{lang}/registered.txt'
+    plain_body_template = 'plain_body_templates/{lang}/registered.txt'
+    html_body_template = 'html_body_templates/{lang}/registered.html'
 
 
 class EventConfirmationEmail(UserEmailFactoryBase):
-    subject_template = 'plain_subject_templates/event.txt'
-    plain_body_template = 'plain_body_templates/event.txt'
-    html_body_template = 'html_body_templates/event.html'
+    subject_template = 'plain_subject_templates/{lang}/event.txt'
+    plain_body_template = 'plain_body_templates/{lang}/event.txt'
+    html_body_template = 'html_body_templates/{lang}/event.html'
 
 
 class BeforeRenewalNotification(UserEmailFactoryBase):
-    subject_template = 'plain_subject_templates/before_renewal.txt'
-    plain_body_template = 'plain_body_templates/before_renewal.txt'
-    html_body_template = 'html_body_templates/before_renewal.html'
+    subject_template = 'plain_subject_templates/{lang}/before_renewal.txt'
+    plain_body_template = 'plain_body_templates/{lang}/before_renewal.txt'
+    html_body_template = 'html_body_templates/{lang}/before_renewal.html'
 
 
 class RenewalConfirmation(UserEmailFactoryBase):
-    subject_template = 'plain_subject_templates/renewal.txt'
-    plain_body_template = 'plain_body_templates/renewal.txt'
-    html_body_template = 'html_body_templates/renewal.html'
+    subject_template = 'plain_subject_templates/{lang}/renewal.txt'
+    plain_body_template = 'plain_body_templates/{lang}/renewal.txt'
+    html_body_template = 'html_body_templates/{lang}/renewal.html'
 
 
 class RenewalFailedNotification(UserEmailFactoryBase):
-    subject_template = 'plain_subject_templates/renewal_failed.txt'
-    plain_body_template = 'plain_body_templates/renewal_failed.txt'
-    html_body_template = 'html_body_templates/renewal_failed.html'
+    subject_template = 'plain_subject_templates/{lang}/renewal_failed.txt'
+    plain_body_template = 'plain_body_templates/{lang}/renewal_failed.txt'
+    html_body_template = 'html_body_templates/{lang}/renewal_failed.html'
 
 
 class NewsletterSubscribeNotification(UserEmailFactoryBase):
-    subject_template = 'plain_subject_templates/subscribe.txt'
-    plain_body_template = 'plain_body_templates/subscribe.txt'
-    html_body_template = 'html_body_templates/subscribe.html'
+    subject_template = 'plain_subject_templates/{lang}/subscribe.txt'
+    plain_body_template = 'plain_body_templates/{lang}/subscribe.txt'
+    html_body_template = 'html_body_templates/{lang}/subscribe.html'
 
 
 class NewsletterUnsubscribeNotification(UserEmailFactoryBase):
-    subject_template = 'plain_subject_templates/unsubscribe.txt'
-    plain_body_template = 'plain_body_templates/unsubscribe.txt'
-    html_body_template = 'html_body_templates/unsubscribe.html'
+    subject_template = 'plain_subject_templates/{lang}/unsubscribe.txt'
+    plain_body_template = 'plain_body_templates/{lang}/unsubscribe.txt'
+    html_body_template = 'html_body_templates/{lang}/unsubscribe.html'
 
 
 class NewOrderInternalNotification(UserEmailFactoryBase):
-    subject_template = 'plain_subject_templates/new_order_internal.txt'
-    plain_body_template = 'plain_body_templates/new_order_internal.txt'
-    html_body_template = 'html_body_templates/new_order_internal.html'
+    subject_template = 'plain_subject_templates/{lang}/new_order_internal.txt'
+    plain_body_template = 'plain_body_templates/{lang}/new_order_internal.txt'
+    html_body_template = 'html_body_templates/{lang}/new_order_internal.html'
 
 
 class OrderReadyNotification(UserEmailFactoryBase):
-    subject_template = 'plain_subject_templates/order_ready.txt'
-    plain_body_template = 'plain_body_templates/order_ready.txt'
-    html_body_template = 'html_body_templates/order_ready.html'
+    subject_template = 'plain_subject_templates/{lang}/order_ready.txt'
+    plain_body_template = 'plain_body_templates/{lang}/order_ready.txt'
+    html_body_template = 'html_body_templates/{lang}/order_ready.html'
 

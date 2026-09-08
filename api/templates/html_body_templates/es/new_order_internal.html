@@ -1,0 +1,14 @@
+{% extends "template_blocks/es/base_internal.html" %}
+{% block preheader %}Nuevo pedido pendiente de preparar.{% endblock %}
+{% block content %}
+<tr><td bgcolor="#1d1d1b" width="600" style="padding:12px 24px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:16px;mso-line-height-rule:exactly;letter-spacing:.14em;text-transform:uppercase;color:#f2e3c9;font-weight:bold;">AMEBA · AVISO INTERNO</td></tr>
+<tr><td bgcolor="#ffffff" width="600" style="padding:28px 24px 30px 24px;">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="552" style="width:552px;">
+<tr><td width="552" style="padding:0 0 16px 0;font-family:Arial,Helvetica,sans-serif;font-size:20px;line-height:26px;mso-line-height-rule:exactly;color:#1d1d1b;font-weight:bold;">Nuevo pedido en la tienda</td></tr>
+<tr><td width="552" style="padding:0 0 20px 0;"><table role="presentation" cellpadding="0" cellspacing="0" border="0" width="536" style="width:536px;border-top:1px solid #dcdcd8;"><tr><td width="150" valign="top" style="width:150px;padding:9px 12px 9px 0;border-bottom:1px solid #dcdcd8;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:18px;mso-line-height-rule:exactly;color:#6f6c62;">Cliente</td>
+<td width="386" valign="top" style="width:386px;padding:9px 0;border-bottom:1px solid #dcdcd8;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:20px;mso-line-height-rule:exactly;color:#1d1d1b;font-weight:bold;">{{ user_name }}</td></tr></table></td></tr>
+<tr><td width="552" style="padding:0 0 6px 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:18px;mso-line-height-rule:exactly;color:#6f6c62;">Productos del pedido:</td></tr>
+<tr><td width="552"><table role="presentation" cellpadding="0" cellspacing="0" border="0" width="536" style="width:536px;border-top:1px solid #dcdcd8;">{% for item in item_variants %}<tr><td style="padding:7px 0;border-bottom:1px solid #dcdcd8;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:20px;mso-line-height-rule:exactly;color:#1d1d1b;">{{ item }}</td></tr>{% endfor %}</table></td></tr>
+<tr><td width="552" style="padding:22px 0 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:18px;mso-line-height-rule:exactly;color:#8b877c;">Correo automático generado por {{ site_name }}. No hace falta responder.</td></tr>
+</table></td></tr>
+{% endblock %}

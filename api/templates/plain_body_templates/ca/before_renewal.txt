@@ -1,0 +1,16 @@
+HOLA {{ user.username }},
+
+ES RENOVA AVIAT.
+
+La teva membresia es renovarà automàticament i cobrarem l'import a la targeta que tens guardada.
+Si vols canviar de modalitat o donar-la de baixa, fes-ho abans d'aquesta data.
+
+MODALITAT: {{ subscription.name }}
+RENOVACIÓ: {{ membership.expires }}
+
+GESTIONAR LA MEMBRESIA: {{ protocol }}://{{ site_name }}/account
+
+—
+Ameba · {{ site_name }}
+Donar-me de baixa: escriu-nos a info@ameba.cat
+Ameba · Barcelona · [AFEGIR ADREÇA POSTAL]

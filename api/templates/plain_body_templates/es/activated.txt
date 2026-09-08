@@ -1,0 +1,15 @@
+HOLA {{ user.username }},
+
+YA ESTÁS DENTRO.
+
+Tu cuenta está activa. Ya puedes comprar entradas, apuntarte a talleres y seguir las convocatorias.
+Si quieres entrar de lleno: hazte socia y tienes precios reducidos en todo lo que hacemos.
+
+HAZTE SOCIA: {{ protocol }}://{{ site_name }}/{{ new_member_page }}
+
+Este correo es automático. Si no has activado ninguna cuenta, ignóralo.
+
+—
+Ameba · {{ site_name }}
+Darme de baja: escríbenos a info@ameba.cat
+Ameba · Barcelona · [AÑADIR DIRECCIÓN POSTAL]

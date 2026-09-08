@@ -1,0 +1,13 @@
+
+
+Nova comanda a la botiga
+
+
+Client: {{ user_name }}
+
+{% for item in item_variants %}- {{ item }}
+{% endfor %}
+
+—
+Ameba · {{ site_name }}
+Correu automàtic generat per {{ site_name }}. No cal respondre.

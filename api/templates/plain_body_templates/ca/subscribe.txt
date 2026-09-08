@@ -1,0 +1,13 @@
+HOLA,
+
+JA ETS A LA LLISTA.
+
+T'has subscrit al butlletí d'Ameba. Rebràs els concerts, tallers i convocatòries que obrim.
+Un correu, no cinc.
+
+VEURE L'AGENDA: {{ protocol }}://{{ site_name }}/agenda
+
+—
+Ameba · {{ site_name }}
+Donar-me de baixa: escriu-nos a info@ameba.cat
+Ameba · Barcelona · [AFEGIR ADREÇA POSTAL]
