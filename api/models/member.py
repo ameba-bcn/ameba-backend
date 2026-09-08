@@ -169,7 +169,13 @@ class Member(models.Model):
         return self.number
 
     def __str__(self):
-        return f'{self.user.username} ({self.first_name[0]}. {self.last_name[0]}.)'
+        # first_name/last_name can be blank on some legacy/imported records;
+        # slicing (instead of indexing with [0]) avoids an IndexError on
+        # empty strings, which used to crash the admin change view (it
+        # renders str(obj) for the page subtitle).
+        first_initial = self.first_name[:1] or '?'
+        last_initial = self.last_name[:1] or '?'
+        return f'{self.user.username} ({first_initial}. {last_initial}.)'
 
     @cache_utils.invalidate_models_cache
     def save(self, *args, **kwargs):
