@@ -314,7 +314,7 @@ FE_MEMBERSHIP_CARD_PATH = env(
 )
 FE_EVENT_TICKET_PATH = env(
     'FE_EVENT_TICKET_PATH',
-    'pub/mtsa/?token={token}',
+    'event-ticket/?token={token}',
     var_type='string'
 )
 
