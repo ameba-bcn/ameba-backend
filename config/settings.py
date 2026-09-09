@@ -331,7 +331,7 @@ STAFF_DOMAINS = ['jaguarintheloop.live', 'ameba.cat']
 TEST_MAILING_LIST_PREFIXES = ['test', 'dev', 'stag', 'sand', 'debug', 'local']
 TEST_TEMPLATE = 'unsubscribe.test'
 
-EMAIL_FILE_PATH = "/home/ameba/app/emails"
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'emails')
 
 DISABLE_DARK_MODE = True
 
