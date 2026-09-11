@@ -11,4 +11,4 @@ Si no has demanat res, ignora aquest correu: la contrasenya actual segueix sent 
 —
 Ameba · {{ site_name }}
 Donar-me de baixa: escriu-nos a info@ameba.cat
-Ameba · Barcelona · [AFEGIR ADREÇA POSTAL]
+Ameba · Barcelona

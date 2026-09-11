@@ -11,4 +11,4 @@ TOTAL: {{ total }}
 —
 Ameba · {{ site_name }}
 Darme de baja: escríbenos a info@ameba.cat
-Ameba · Barcelona · [AÑADIR DIRECCIÓN POSTAL]
+Ameba · Barcelona

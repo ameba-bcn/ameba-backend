@@ -16,4 +16,4 @@ Porta aquest correu o el teu nom. Si no pots venir aquests dies, escriu-nos.
 —
 Ameba · {{ site_name }}
 Donar-me de baixa: escriu-nos a info@ameba.cat
-Ameba · Barcelona · [AFEGIR ADREÇA POSTAL]
+Ameba · Barcelona

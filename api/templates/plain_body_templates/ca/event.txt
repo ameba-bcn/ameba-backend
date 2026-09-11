@@ -15,4 +15,4 @@ Adjuntem el tiquet en PDF amb el codi QR. Porta'l al mòbil o imprès: és el qu
 —
 Ameba · {{ site_name }}
 Donar-me de baixa: escriu-nos a info@ameba.cat
-Ameba · Barcelona · [AFEGIR ADREÇA POSTAL]
+Ameba · Barcelona

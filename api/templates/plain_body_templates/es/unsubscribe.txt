@@ -2,7 +2,7 @@ HOLA,
 
 HASTA PRONTO.
 
-Te hemos dado de baja del boletín. No recibirás más correos de novedades.
+Te hemos dado de baja del Newsletter. No recibirás más correos de novedades.
 Los correos de compras y membresía los seguirás recibiendo: son los necesarios.
 
 VOLVER A LA WEB: {{ protocol }}://{{ site_name }}
@@ -10,4 +10,4 @@ VOLVER A LA WEB: {{ protocol }}://{{ site_name }}
 —
 Ameba · {{ site_name }}
 Darme de baja: escríbenos a info@ameba.cat
-Ameba · Barcelona · [AÑADIR DIRECCIÓN POSTAL]
+Ameba · Barcelona

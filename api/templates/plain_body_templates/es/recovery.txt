@@ -11,4 +11,4 @@ Si no has pedido nada, ignora este correo: la contraseña actual sigue siendo v�
 —
 Ameba · {{ site_name }}
 Darme de baja: escríbenos a info@ameba.cat
-Ameba · Barcelona · [AÑADIR DIRECCIÓN POSTAL]
+Ameba · Barcelona

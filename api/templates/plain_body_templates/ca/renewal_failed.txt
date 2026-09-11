@@ -1,6 +1,6 @@
 HOLA {{ user.username }},
 
-NO HEM POGUT COBRAR.
+NO HEM POGUT REALITZAR EL COBRAMENT.
 
 El pagament de la teva membresia ha estat rebutjat i la renovació no s'ha completat.
 Revisa les dades de pagament i torna-ho a provar per no perdre els avantatges de sòcia.
@@ -14,4 +14,4 @@ Si creus que és un error del banc, escriu-nos i ho revisem amb tu.
 —
 Ameba · {{ site_name }}
 Donar-me de baixa: escriu-nos a info@ameba.cat
-Ameba · Barcelona · [AFEGIR ADREÇA POSTAL]
+Ameba · Barcelona

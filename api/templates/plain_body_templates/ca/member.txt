@@ -1,6 +1,6 @@
 HOLA {{ user.username }},
 
-BENVINGUDA A DINS.
+BENVINGUDA.
 
 Ja ets sòcia d'Ameba. A partir d'ara tens preus reduïts a concerts i tallers, i prioritat a les convocatòries que obrim.
 Gràcies per sostenir l'associació: això és el que fa possible la programació.
@@ -12,4 +12,4 @@ VEURE L'AGENDA: {{ protocol }}://{{ site_name }}/festivals
 —
 Ameba · {{ site_name }}
 Donar-me de baixa: escriu-nos a info@ameba.cat
-Ameba · Barcelona · [AFEGIR ADREÇA POSTAL]
+Ameba · Barcelona
