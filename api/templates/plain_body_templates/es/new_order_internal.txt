@@ -1,0 +1,13 @@
+
+
+Nuevo pedido en la tienda
+
+
+Cliente: {{ user_name }}
+
+{% for item in item_variants %}- {{ item }}
+{% endfor %}
+
+—
+Ameba · {{ site_name }}
+Correo automático generado por {{ site_name }}. No hace falta responder.

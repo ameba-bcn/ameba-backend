@@ -1,0 +1,18 @@
+HOLA {{ user.username }},
+
+TENS PLAÇA.
+
+La teva inscripció està confirmada. Aquí tens les dades.
+
+QUÈ: {{ event.name }}
+QUAN: {{ event.datetime }}
+ON: {{ event.address }}
+
+VEURE L'EVENT: {{ protocol }}://{{ site_name }}/festivals
+
+Adjuntem el tiquet en PDF amb el codi QR. Porta'l al mòbil o imprès: és el que et donarà accés.
+
+—
+Ameba · {{ site_name }}
+Donar-me de baixa: escriu-nos a info@ameba.cat
+Ameba · Barcelona

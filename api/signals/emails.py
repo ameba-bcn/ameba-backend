@@ -5,7 +5,6 @@ import django.contrib.sites.shortcuts as shortcuts
 
 from api import email_factories
 from api.tasks import memberships as membership_tasks
-import api.models as api_models
 
 
 user_registered = django.dispatch.Signal(providing_args=['user', 'request'])
@@ -37,14 +36,12 @@ def on_user_registered(sender, user, request, **kwargs):
 
 @receiver(account_activated)
 def on_account_activated(sender, user, request, **kwargs):
-    subscription = api_models.Subscription.objects.all().first()
-    identifier = subscription and subscription.pk or ''
     email_factories.ActivatedAccountEmail.send_to(
         mail_to=user.email,
         user=user,
         site_name=shortcuts.get_current_site(request),
         protocol=request.is_secure() and 'https' or 'http',
-        new_member_page=settings.NEW_MEMBER_PAGE.format(id=identifier)
+        new_member_page=settings.NEW_MEMBER_PAGE
     )
 
 
@@ -89,16 +86,29 @@ def on_event_confirmation(sender, item_variant, user, **kwargs):
 
 @receiver(failed_renewal)
 def on_failed_renewal(sender, user, subscription, **kwargs):
-    subscription = api_models.Subscription.objects.all().first()
-    identifier = subscription and subscription.pk or ''
     email_factories.RenewalFailedNotification.send_to(
         mail_to=user.email,
         user=user,
         subscription=subscription,
         site_name=settings.HOST_NAME,
         protocol=settings.DEBUG and 'http' or 'https',
-        new_member_page=settings.NEW_MEMBER_PAGE.format(id=identifier)
+        new_member_page=settings.NEW_MEMBER_PAGE
     )
+
+
+def _email_item_variants(payment):
+    if payment.cart_record:
+        return payment.cart_record['item_variants']
+    return [
+        {
+            'name': item_variant.name,
+            'discount_name': '',
+            'discount_value': '',
+            'price': f'{item_variant.price}€',
+            'subtotal': f'{item_variant.price}€',
+        }
+        for item_variant in payment.item_variants.all()
+    ]
 
 
 @receiver(payment_closed)
@@ -114,7 +124,7 @@ def send_payment_successful_notification(sender, payment, **kwargs):
         protocol=settings.DEBUG and 'http' or 'https',
         total=payment.total,
         has_articles=has_articles,
-        item_variants=payment.item_variants.all()
+        item_variants=_email_item_variants(payment)
     )
 
 

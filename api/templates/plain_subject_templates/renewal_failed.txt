@@ -1,5 +1,0 @@
-{% load i18n %}{% autoescape off %}
-{% blocktrans with subscription=subscription.name|upper %}
-    No hemos podido renovar tu subscripción como SOCIO/A de AMEBA
-{% endblocktrans %}
-{% endautoescape %}

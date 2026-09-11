@@ -1,0 +1,19 @@
+HOLA {{ user_name }},
+
+YA PUEDES RECOGERLO.
+
+Tu pedido está preparado. Pasa a buscarlo cuando te vaya bien.
+
+DIRECCIÓN: {{ address }}
+
+{% for item in item_variants %}- {{ item }}
+{% endfor %}
+
+VER LA TIENDA: {{ protocol }}://{{ site_name }}/botiga
+
+Trae este correo o tu nombre. Si no puedes venir estos días, escríbenos.
+
+—
+Ameba · {{ site_name }}
+Darme de baja: escríbenos a info@ameba.cat
+Ameba · Barcelona

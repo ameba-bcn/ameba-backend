@@ -1,0 +1,13 @@
+HOLA,
+
+FINS AVIAT.
+
+T'hem donat de baixa del Newsletter. No rebràs més correus de novetats.
+Els correus de compres i membresia els seguiràs rebent: són els necessaris.
+
+TORNAR A LA WEB: {{ protocol }}://{{ site_name }}
+
+—
+Ameba · {{ site_name }}
+Donar-me de baixa: escriu-nos a info@ameba.cat
+Ameba · Barcelona

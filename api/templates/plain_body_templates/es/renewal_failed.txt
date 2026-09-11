@@ -1,0 +1,17 @@
+HOLA {{ user.username }},
+
+NO HEMOS PODIDO REALIZAR EL COBRO.
+
+El pago de tu membresía ha sido rechazado y la renovación no se ha completado.
+Revisa los datos de pago y vuelve a intentarlo para no perder las ventajas de socia.
+
+MODALIDAD: {{ subscription.name }}
+
+VOLVER A INTENTARLO: {{ protocol }}://{{ site_name }}/{{ new_member_page }}
+
+Si crees que es un error del banco, escríbenos y lo revisamos contigo.
+
+—
+Ameba · {{ site_name }}
+Darme de baja: escríbenos a info@ameba.cat
+Ameba · Barcelona

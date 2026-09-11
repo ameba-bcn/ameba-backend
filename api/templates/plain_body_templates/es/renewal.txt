@@ -1,0 +1,14 @@
+HOLA {{ user.username }},
+
+UN AÑO MÁS.
+
+Tu membresía se ha renovado correctamente. No tienes que hacer nada más.
+
+MODALIDAD: {{ subscription.name }}
+
+VER LA AGENDA: {{ protocol }}://{{ site_name }}/festivals
+
+—
+Ameba · {{ site_name }}
+Darme de baja: escríbenos a info@ameba.cat
+Ameba · Barcelona

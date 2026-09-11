@@ -1,0 +1,16 @@
+HOLA {{ user.username }},
+
+SE RENUEVA PRONTO.
+
+Tu membresía se renovará automáticamente y cobraremos el importe en la tarjeta que tienes guardada.
+Si quieres cambiar de modalidad o darla de baja, hazlo antes de esa fecha.
+
+MODALIDAD: {{ subscription.name }}
+RENOVACIÓN: {{ membership.expires }}
+
+GESTIONAR LA MEMBRESÍA: mailto:info@ameba.cat?subject=BAJA%20MEMBRESIA
+
+—
+Ameba · {{ site_name }}
+Darme de baja: escríbenos a info@ameba.cat
+Ameba · Barcelona

@@ -1,0 +1,15 @@
+HOLA {{ user.username }},
+
+BIENVENIDA.
+
+Ya eres socia de Ameba. A partir de ahora tienes precios reducidos en conciertos y talleres, y prioridad en las convocatorias que abrimos.
+Gracias por sostener la asociación: esto es lo que hace posible la programación.
+
+MODALIDAD: {{ subscription.name }}
+
+VER LA AGENDA: {{ protocol }}://{{ site_name }}/festivals
+
+—
+Ameba · {{ site_name }}
+Darme de baja: escríbenos a info@ameba.cat
+Ameba · Barcelona

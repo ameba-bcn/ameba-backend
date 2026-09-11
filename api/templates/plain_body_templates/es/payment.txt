@@ -1,0 +1,14 @@
+HOLA {{ user.username }},
+
+GRACIAS.
+
+Hemos recibido tu pago. Aquí tienes el detalle de la compra.
+
+{% for iv in item_variants %}- {{ iv.name }} · {{ iv.subtotal }}{% if iv.discount_name %} ({{ iv.discount_name }} −{{ iv.discount_value }}){% endif %}
+{% endfor %}
+TOTAL: {{ total }}
+
+—
+Ameba · {{ site_name }}
+Darme de baja: escríbenos a info@ameba.cat
+Ameba · Barcelona
