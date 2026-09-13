@@ -1,3 +1,5 @@
+import json
+
 from rest_framework import status
 from django.test import TestCase, Client, override_settings
 
@@ -47,6 +49,43 @@ class TestMemberProfileDetails(BaseTest):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['project_name'], 'new name')
         self.assertEqual(response.data['description'], 'new description')
+
+    def test_member_can_set_tags_by_name(self):
+        models.ArtistTag.objects.get_or_create(
+            name='DJ', defaults={'name_es': 'DJ', 'name_ca': 'DJ'}
+        )
+        models.ArtistTag.objects.get_or_create(
+            name='Live', defaults={'name_es': 'Live', 'name_ca': 'Live'}
+        )
+        member = user_helpers.get_member()
+        token = user_helpers.get_user_token(member.user)
+        response = self._partial_update('current', token, {
+            'tags': ['DJ', 'Live']
+        })
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(sorted(response.data['tags']), ['DJ', 'Live'])
+
+    def test_member_can_set_tags_regardless_of_request_language(self):
+        # ArtistTag.name is translatable (django-modeltranslation), which
+        # rewrites `name=` lookups to the currently active language's
+        # column (name_es / name_ca). The curated tag labels are the same
+        # literal string in both languages, so this must work identically
+        # whichever Accept-Language header the frontend sends.
+        models.ArtistTag.objects.get_or_create(
+            name='VJ', defaults={'name_es': 'VJ', 'name_ca': 'VJ'}
+        )
+        member = user_helpers.get_member()
+        token = user_helpers.get_user_token(member.user)
+        self._authenticate(token)
+        response = self.client.patch(
+            self.DETAIL_ENDPOINT.format(pk='current'),
+            data=json.dumps({'tags': ['VJ']}),
+            content_type='application/json',
+            follow=True,
+            HTTP_ACCEPT_LANGUAGE='ca',
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['tags'], ['VJ'])
 
     def test_member_can_edit_his_hidden_project(self):
         member = user_helpers.get_member(public=False)
