@@ -152,14 +152,15 @@ class Member(models.Model):
     def qr_hash(self):
         return signing.dumps(self.number, salt=settings.QR_MEMBER_SALT)
 
-    def regenerate_qr(self):
+    def regenerate_qr(self, save=True):
         if self.qr:
             self.qr.delete(save=False)
         qr_img = qr_generator.generate_member_card_qr(
             token=self.get_member_card_token()
         )
         self.qr.save(f'{self.qr_hash}.png', qr_img, save=False)
-        self.save()
+        if save:
+            self.save()
 
     @property
     def id(self):
@@ -171,7 +172,15 @@ class Member(models.Model):
     @cache_utils.invalidate_models_cache
     def save(self, *args, **kwargs):
         if not self.number or not self.qr:
-            self.regenerate_qr()
+            # save=False: we're already inside save() and about to call
+            # super().save() below, so regenerate_qr() must not trigger a
+            # second, nested self.save(). When that nested save ran, it
+            # produced two INSERT attempts for a brand new member (the one
+            # created here, plus this method's own super().save() call),
+            # and the second INSERT always failed with a duplicate primary
+            # key error whenever a caller used force_insert (e.g. Django's
+            # Member.objects.create(), which is what member signup uses).
+            self.regenerate_qr(save=False)
         super().save(*args, **kwargs)
 
 
