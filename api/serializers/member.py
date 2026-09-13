@@ -6,7 +6,7 @@ from django.core.files.base import ContentFile
 from django.conf import settings
 
 from api.models import Member, User, Cart, Membership, MemberProfileImage, \
-    MusicGenres, MemberMediaUrl
+    MusicGenres, MemberMediaUrl, ArtistTag
 from api.exceptions import (
     EmailAlreadyExists, WrongCartId, CartNeedOneSubscription,
     IdentityCardIsTooShort, WrongIdentityCardFormat
@@ -127,6 +127,9 @@ class MemberDetailSerializer(MemberSerializer):
     )
     username = serializers.SlugRelatedField(
         slug_field='username', source='user', read_only=True, many=False
+    )
+    tags = serializers.SlugRelatedField(
+        many=True, slug_field='name', queryset=ArtistTag.objects.all()
     )
 
     class Meta:
