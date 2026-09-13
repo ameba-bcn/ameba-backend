@@ -12,15 +12,6 @@ EMAILS = {
         'factory': ef.ActivatedAccountEmail,
         'context': {}
     },
-    'NewSupporterMembershipEmail': {
-        'factory': ef.NewMembershipEmail,
-        'context': {
-            'subscription': {
-                'name': 'Socio Supporter',
-                'description': 'Como Socio Supporter de AMEBA ...'
-            }
-        }
-    },
     'NewProMembershipEmail': {
         'factory': ef.NewMembershipEmail,
         'context': {
