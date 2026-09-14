@@ -23,6 +23,20 @@ from api.tests.integrations import TestStripeSynchronization
 from api.tests.payments import PaymentFlowTest
 from api.tests.flows.events import TestSavedUserEvents
 from api.tests.webhooks import TestStripeWebhooks
+from api.tests.member_monthly_report import (
+    MemberMonthlyReportAdminAccessTests,
+    MemberMonthlyReportAdminSidebarLinkTests,
+    MemberMonthlyReportMonthSelectorTests,
+    MemberMonthlySummaryTests,
+    MemberMonthlyReportTableTests,
+    MemberMonthlyReportCsvExportTests,
+    MemberMonthlyReportAllTimeSummaryTests,
+    MemberMonthlyReportAllTimeTableTests,
+    MemberMonthlyReportAllTimeViewAndCsvTests,
+    MemberMonthlyReportStatusAndRenewalColumnTests,
+    MemberMonthlyReportSortingTests,
+    MemberMonthlyReportCsvSortTests,
+)
 from unittest import mock
 
 from api import mailgun
