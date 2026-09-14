@@ -189,6 +189,34 @@ class UserTest(BaseUserTest):
         self.assertTrue(user.member)
         self.assertTrue(Member.objects.filter(user=user))
 
+    def test_post_user_member_profile_does_not_require_tags(self):
+        """Regression test: MemberDetailSerializer.tags (added to let
+        members PATCH their artist tags by name) must stay optional on
+        creation - a brand new member hasn't picked any tags yet, and
+        Member.tags is `blank=True` at the model level, so a POST with no
+        `tags` key must still succeed instead of failing "this field is
+        required"."""
+        user_props = {
+            'username': 'User',
+            'password': 'ameba12345',
+            'email': 'no-tags-user@ameba.cat',
+        }
+        user, token = self._insert_user(user_props)
+        user.is_active = True
+        user.save()
+
+        profile_props = {
+            'identity_card': '87654321B',
+            'first_name': 'No',
+            'last_name': 'Tags',
+            'phone_number': '661839817'
+        }
+        response = self.post_profile(pk='current', token=token,
+                                 props=profile_props)
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['tags'], [])
+
     def test_get_member_from_current_user(self):
         user_props = {
             'username': 'User',

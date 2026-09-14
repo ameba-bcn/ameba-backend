@@ -129,7 +129,8 @@ class MemberDetailSerializer(MemberSerializer):
         slug_field='username', source='user', read_only=True, many=False
     )
     tags = serializers.SlugRelatedField(
-        many=True, slug_field='name', queryset=ArtistTag.objects.all()
+        many=True, slug_field='name', queryset=ArtistTag.objects.all(),
+        required=False
     )
 
     class Meta:
