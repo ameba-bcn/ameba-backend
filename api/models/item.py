@@ -3,7 +3,7 @@ from django.utils import timezone
 from django.conf import settings
 from django.db.models import Sum
 from django.db import models
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy as _
 import api.cache_utils as cache_utils
 
 EXPIRE_HOURS_BEFORE_EVENT = 1
@@ -204,6 +204,7 @@ class ItemVariant(models.Model):
     )
     recurrence = models.CharField(max_length=10, choices=INTERVALS,
                                   blank=True, null=True, default=None)
+    is_delivery_fee = models.BooleanField(default=False, verbose_name=_('is delivery fee'))
 
     def get_valid_discounts(self, user, code=None):
         return self.item.get_valid_discounts(user, code)

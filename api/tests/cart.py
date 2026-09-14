@@ -123,17 +123,20 @@ class TestGetCart(BaseCartTest):
             "user": None,
             "total": "0.00 €",
             "count": 0,
-            "item_variants": [],
             "item_variant_ids": [],
+            "item_variants": [],
             "discount_code": None,
+            "shipping": None,
             "state": {
                 "has_user": False,
                 "has_member_profile": False,
                 "has_memberships": False,
-                "has_articles": False,
-                "has_events": False,
-                "has_subscriptions": False,
-                "needs_checkout": True
+                "has_articles": 0,
+                "has_events": 0,
+                "has_subscriptions": 0,
+                "needs_checkout": True,
+                "needs_shipping_selection": True,
+                "can_confirm_or_change_shipping": False,
             }
         }
 
@@ -683,6 +686,28 @@ class TestCartStateFlow(BaseCartTest):
         self.assertFalse(cart_state['has_events'])
         self.assertFalse(cart_state['has_subscriptions'])
         self.assertTrue(cart_state['needs_checkout'])
+
+    def test_cart_state_without_shipping_needs_shipping_selection(self):
+        user = self.get_user(1)
+        token = self.get_token(user).access_token
+        cart = self.get_cart(user=user, item_variants=[1, 2])
+        cart.shipping = None
+        cart.save()
+        response = self._get(pk=cart.id, token=token)
+        cart_state = response.data.get('state')
+        self.assertTrue(cart_state['needs_shipping_selection'])
+        self.assertFalse(cart_state['can_confirm_or_change_shipping'])
+
+    def test_cart_state_with_shipping_set_can_confirm_or_change(self):
+        user = self.get_user(1)
+        token = self.get_token(user).access_token
+        cart = self.get_cart(user=user, item_variants=[1, 2])
+        cart.shipping = {'shop_pickup': {'shop': 'Main Store'}}
+        cart.save()
+        response = self._get(pk=cart.id, token=token)
+        cart_state = response.data.get('state')
+        self.assertFalse(cart_state['needs_shipping_selection'])
+        self.assertTrue(cart_state['can_confirm_or_change_shipping'])
 
 
 class TestRegisterWithCart(BaseCartTest):

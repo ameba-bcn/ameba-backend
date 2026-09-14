@@ -56,6 +56,7 @@ class Cart(Model):
     checkout_hash = CharField(
         blank=True, max_length=128, verbose_name=_('checkout hash')
     )
+    shipping = JSONField(blank=True, null=True, verbose_name=_('shipping'))
 
     def delete(self, using=None, keep_parents=False):
         self.item_variants.clear()
@@ -97,6 +98,13 @@ class Cart(Model):
         discounts = []
         cart_items_by_price = self.cart_items_by_price_desc()
         for cart_item in cart_items_by_price:
+            if cart_item.item_variant.is_delivery_fee:
+                discounts.append({
+                    'item_variant': cart_item.item_variant,
+                    'discount': None,
+                    'cart_item': cart_item
+                })
+                continue
             discounts_by_value = self.discounts_by_value_desc(cart_item.item_variant)
             for discount in discounts_by_value:
                 if self.is_applicable(cart_discounts, discount):
@@ -120,6 +128,8 @@ class Cart(Model):
         return discount.remaining_usages(user) > cur_discounts.count(discount)
 
     def discounts_by_value_desc(self, item_variant):
+        if item_variant.is_delivery_fee:
+            return []
         if self.user:
             valid_dis = item_variant.item.get_valid_discounts(
                 self.user, self.discount_code
@@ -241,7 +251,9 @@ class Cart(Model):
             has_articles=len(self.articles),
             has_events=len(self.events),
             has_subscriptions=len(self.subscriptions),
-            needs_checkout=self.has_changed()
+            needs_checkout=self.has_changed(),
+            needs_shipping_selection=self.shipping is None,
+            can_confirm_or_change_shipping=self.shipping is not None,
         )
 
     def is_payment_succeeded(self):
