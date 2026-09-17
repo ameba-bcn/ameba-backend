@@ -2,12 +2,28 @@ HOLA {{ user.username }},
 
 BIENVENIDA.
 
-Ya eres socia de Ameba. A partir de ahora tienes precios reducidos en conciertos y talleres, y prioridad en las convocatorias que abrimos.
-Gracias por sostener la asociación: esto es lo que hace posible la programación.
+¡Qué alegría tenerte en AMEBA!
 
-MODALIDAD: {{ subscription.name }}
+Nos alegra mucho contar contigo y que formes parte de AMEBA.
 
-VER LA AGENDA: {{ protocol }}://{{ site_name }}/festivals
+Desde 2014 trabajamos para impulsar y fortalecer la cultura de la música electrónica, apoyando especialmente a artistas y proyectos locales y creando espacios de encuentro, formación, difusión y colaboración.
+
+A partir de ahora formas parte de una comunidad que crece gracias a la participación, la colaboración y las ganas de compartir.
+
+Te adjuntamos la Guía para Socios/as, donde encontrarás toda la información necesaria para conocer mejor AMEBA.
+
+Guía en castellano: https://drive.google.com/file/d/1k3u1Tt4S4btwRvvx3rvlBIGZyxKYaeCU/view?usp=share_link
+Guía en catalán: https://drive.google.com/file/d/1W3HKgu1sIrN8XrQ8GuRv4rANUg6KPoAg/view?usp=share_link
+
+La guía incluye también nuestro Código de Buena Conducta, que recoge los principios y normas básicas que queremos compartir entre todas las personas que formamos parte de AMEBA, fomentando un espacio basado en el respeto, la convivencia, la diversidad y la colaboración.
+
+Encuesta: https://forms.gle/XGL3nPLk2oynnnv87
+
+Gracias por formar parte de AMEBA y por apoyar la cultura electrónica local.
+
+¡Nos vemos en las actividades, talleres, eventos y, por supuesto, en la pista!
+
+¡Te damos la bienvenida a la comunidad AMEBA!
 
 —
 Ameba · {{ site_name }}
