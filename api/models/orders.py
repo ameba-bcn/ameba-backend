@@ -1,5 +1,6 @@
 from django.utils.translation import gettext as _
 from django.db import models
+from django.conf import settings
 
 from api.models.cart import DELIVERY_METHOD_CHOICES, PICKUP_LOCATIONS
 from api.signals.emails import new_order, order_ready
@@ -16,6 +17,15 @@ class Order(models.Model):
         null=True, related_name='orders'
     )
     item_variants = models.ManyToManyField(to='ItemVariant', blank=False)
+    # Deprecated: superseded by delivery_method/pickup_location/shipping_*
+    # below. Kept (rather than dropped) so existing rows and any code we
+    # haven't found yet that reads it aren't destructively affected —
+    # no longer written to by the app.
+    address = models.CharField(
+        max_length=1000,
+        default=settings.ORDERS_ADDRESS,
+        verbose_name=_('address (deprecated)')
+    )
     delivery_method = models.CharField(
         blank=True, max_length=16, choices=DELIVERY_METHOD_CHOICES,
         verbose_name=_('delivery method')

@@ -343,4 +343,13 @@ INTERNAL_ORDERS_EMAIL = env(
     'INTERNAL_ORDERS_EMAIL', 'jonrivala@gmail.com', 'string'
 )
 
+# Deprecated: default for Order.address, which is itself deprecated in
+# favor of delivery_method/pickup_location/shipping_* — kept only because
+# that field (and its default) still exists on existing rows.
+ORDERS_ADDRESS = env(
+    'ORDERS_ADDRESS',
+    'Ronda de Sant Pau, 17, 08015 Barcelona',
+    'string'
+)
+
 SUBSCRIPTION_RECURRENCES = env('SUBSCRIPTION_RECURRENCES', 'year', 'string')
