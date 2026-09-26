@@ -54,6 +54,31 @@ automágicamente.
 
 Si la lista items está vacía se vacía el carro. Si no se pasa la key
 "item_variant_ids" no hace nada.
+
+### Método de entrega (sólo para carros con artículos de la tienda)
+
+Cuando el carro contiene artículos ("article"), antes de poder hacer
+checkout hay que indicar el método de entrega mediante estos campos:
+
+```
+{
+    "delivery_method": "pickup" | "shipping",
+
+    # Sólo si delivery_method == "pickup":
+    "pickup_location": "trama" | "merla",
+
+    # Sólo si delivery_method == "shipping" (con recargo de 7,00€,
+    # sólo España peninsular, se valida el código postal):
+    "shipping_name": "Nombre y apellidos",
+    "shipping_address": "Calle y número",
+    "shipping_postal_code": "08026",
+    "shipping_city": "Barcelona"
+}
+```
+
+Si se envía un código postal fuera de España peninsular (Baleares, Canarias,
+Ceuta o Melilla) la petición devuelve un 400 con el código de error
+`invalid_shipping_address`.
 """
 
     checkout = """

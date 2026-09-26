@@ -8,10 +8,17 @@
 {% block content %}
 <td>
     <p>
-        {% blocktrans %}
-Se ha registrado un nuevo pedido de {{ user_name }}.<br>
-Detalles del pedido:
-        {% endblocktrans %}
+        {% blocktrans %}Se ha registrado un nuevo pedido de {{ user_name }}.{% endblocktrans %}
+    </p>
+    <p>
+        {% if delivery_method == "shipping" %}
+        {% blocktrans %}Enviar a:{% endblocktrans %} {{ shipping_address }}
+        {% else %}
+        {% blocktrans %}Recogida en:{% endblocktrans %} {{ pickup_location }}
+        {% endif %}
+    </p>
+    <p>
+        {% blocktrans %}Detalles del pedido:{% endblocktrans %}
     </p>
 
     {% for item_variant in item_variants %}

@@ -2,8 +2,15 @@
 
 {% blocktrans %}
 Se ha recibido un nuevo pedido de {{ user_name }}.
-Detalles del pedido:
 {% endblocktrans %}
+
+{% if delivery_method == "shipping" %}
+{% blocktrans %}Enviar a:{% endblocktrans %} {{ shipping_address }}
+{% else %}
+{% blocktrans %}Recogida en:{% endblocktrans %} {{ pickup_location }}
+{% endif %}
+
+{% blocktrans %}Detalles del pedido:{% endblocktrans %}
 
 {% for item_variant in item_variants %}
 <p>

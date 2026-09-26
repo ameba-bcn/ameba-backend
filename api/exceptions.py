@@ -180,3 +180,15 @@ class WrongIdentityCardFormat(APIException):
 class ProductPriceNotImplemented(APIException):
     status_code = HTTP_501_NOT_IMPLEMENTED
     default_detail = 'Product is not fully configured.'
+
+
+class CartDeliveryMethodRequired(APIException):
+    status_code = HTTP_400_BAD_REQUEST
+    default_detail = 'Delivery method is required.'
+    default_code = 'delivery_method_required'
+
+
+class InvalidShippingAddress(APIException):
+    status_code = HTTP_400_BAD_REQUEST
+    default_detail = 'Shipping address is outside the covered area.'
+    default_code = 'invalid_shipping_address'
