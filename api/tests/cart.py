@@ -5,7 +5,7 @@ from api.tests._helpers import BaseTest, check_structure
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from api.models.cart import Cart
+from api.models.cart import Cart, SHIPPING_SURCHARGE_CENTS
 from api.models.user import User
 from api.models import (
     Item,
@@ -15,7 +15,9 @@ from api.models import (
     Subscription,
     Member,
     Event,
+    Article,
 )
+import api.exceptions as api_exceptions
 import api.tests.helpers.items as items_helpers
 
 
@@ -126,6 +128,12 @@ class TestGetCart(BaseCartTest):
             "item_variants": [],
             "item_variant_ids": [],
             "discount_code": None,
+            "delivery_method": "",
+            "pickup_location": "",
+            "shipping_name": "",
+            "shipping_address": "",
+            "shipping_postal_code": "",
+            "shipping_city": "",
             "state": {
                 "has_user": False,
                 "has_member_profile": False,
@@ -741,3 +749,85 @@ class TestCartPayment(BaseCartTest):
         response = self._get(pk='current', token=token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(response.data.get('state')['needs_checkout'])
+
+
+class TestCartDeliveryMethod(BaseCartTest):
+    """ Shop (article) purchases need a delivery method: pickup at a fixed
+    address (free) or shipping to mainland Spain (+7,00€ surcharge). """
+
+    def test_amount_excludes_surcharge_when_no_delivery_method(self):
+        cart = self.get_cart(item_variants=[1, 2], item_class=Article)
+        self.assertEqual(cart.amount, cart.base_amount)
+
+    def test_amount_excludes_surcharge_when_pickup(self):
+        cart = self.get_cart(item_variants=[1, 2], item_class=Article)
+        cart.delivery_method = 'pickup'
+        cart.pickup_location = 'trama'
+        cart.save()
+        self.assertEqual(cart.amount, cart.base_amount)
+
+    def test_amount_includes_surcharge_when_shipping(self):
+        cart = self.get_cart(item_variants=[1, 2], item_class=Article)
+        cart.delivery_method = 'shipping'
+        cart.save()
+        self.assertEqual(cart.amount, cart.base_amount + SHIPPING_SURCHARGE_CENTS)
+
+    def test_surcharge_never_added_to_base_amount(self):
+        cart = self.get_cart(item_variants=[1, 2], item_class=Article)
+        base_amount = cart.base_amount
+        cart.delivery_method = 'shipping'
+        cart.save()
+        self.assertEqual(cart.base_amount, base_amount)
+
+    def test_checkout_without_articles_does_not_require_delivery_method(self):
+        user = self.get_user()
+        cart = self.get_cart(user=user, item_variants=[1, 2], item_class=Item)
+        # Should not raise despite delivery_method being blank.
+        cart.is_checkout_able()
+
+    def test_checkout_with_articles_and_no_delivery_method_raises(self):
+        user = self.get_user()
+        cart = self.get_cart(user=user, item_variants=[1, 2], item_class=Article)
+        with self.assertRaises(api_exceptions.CartDeliveryMethodRequired):
+            cart.is_checkout_able()
+
+    def test_checkout_with_articles_and_pickup_passes(self):
+        user = self.get_user()
+        cart = self.get_cart(user=user, item_variants=[1, 2], item_class=Article)
+        cart.delivery_method = 'pickup'
+        cart.pickup_location = 'trama'
+        cart.save()
+        cart.is_checkout_able()
+
+    def test_checkout_with_articles_and_incomplete_shipping_raises(self):
+        user = self.get_user()
+        cart = self.get_cart(user=user, item_variants=[1, 2], item_class=Article)
+        cart.delivery_method = 'shipping'
+        cart.shipping_name = 'Someone'
+        # missing address / postal code / city
+        cart.save()
+        with self.assertRaises(api_exceptions.InvalidShippingAddress):
+            cart.is_checkout_able()
+
+    def test_checkout_with_articles_and_invalid_postal_code_raises(self):
+        user = self.get_user()
+        cart = self.get_cart(user=user, item_variants=[1, 2], item_class=Article)
+        cart.delivery_method = 'shipping'
+        cart.shipping_name = 'Someone'
+        cart.shipping_address = 'Carrer Fake, 1'
+        cart.shipping_postal_code = '07001'  # Balearic Islands
+        cart.shipping_city = 'Palma'
+        cart.save()
+        with self.assertRaises(api_exceptions.InvalidShippingAddress):
+            cart.is_checkout_able()
+
+    def test_checkout_with_articles_and_valid_mainland_shipping_passes(self):
+        user = self.get_user()
+        cart = self.get_cart(user=user, item_variants=[1, 2], item_class=Article)
+        cart.delivery_method = 'shipping'
+        cart.shipping_name = 'Someone'
+        cart.shipping_address = 'Carrer Fake, 1'
+        cart.shipping_postal_code = '08026'
+        cart.shipping_city = 'Barcelona'
+        cart.save()
+        cart.is_checkout_able()

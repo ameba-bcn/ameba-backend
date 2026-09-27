@@ -100,6 +100,62 @@ class TestStripeSynchronization(APITestCase):
         invoice = stripe.create_invoice_from_cart(cart=cart)
         self.assertEqual(cart.amount, invoice.amount_due)
 
+    def test_stripe_invoice_includes_shipping_surcharge_when_shipping(self):
+        user = user_helpers.get_user(
+            username='mingonilo', email='mingonilo@mimail.si',
+            password='ameba12345'
+        )
+        cart = cart_helpers.get_cart(
+            user=user,
+            item_variants=[1, 2, 3],
+            item_class=api_models.Article
+        )
+        cart.delivery_method = 'shipping'
+        cart.shipping_name = 'Someone'
+        cart.shipping_address = 'Carrer Fake, 1'
+        cart.shipping_postal_code = '08026'
+        cart.shipping_city = 'Barcelona'
+        cart.save()
+
+        invoice = stripe.create_invoice_from_cart(cart=cart)
+
+        # Amount charged matches cart.amount, which already includes the
+        # shipping surcharge — total must never diverge from what's shown.
+        self.assertEqual(cart.amount, invoice.amount_due)
+
+        shipping_lines = [
+            line for line in invoice.lines['data']
+            if line['price']['product'] == stripe.SHIPPING_PRODUCT_ID
+        ]
+        self.assertEqual(len(shipping_lines), 1)
+        self.assertEqual(
+            shipping_lines[0]['price']['unit_amount'],
+            stripe.SHIPPING_SURCHARGE_CENTS
+        )
+
+    def test_stripe_invoice_excludes_shipping_surcharge_when_pickup(self):
+        user = user_helpers.get_user(
+            username='mingonilo', email='mingonilo@mimail.si',
+            password='ameba12345'
+        )
+        cart = cart_helpers.get_cart(
+            user=user,
+            item_variants=[1, 2, 3],
+            item_class=api_models.Article
+        )
+        cart.delivery_method = 'pickup'
+        cart.pickup_location = 'trama'
+        cart.save()
+
+        invoice = stripe.create_invoice_from_cart(cart=cart)
+
+        self.assertEqual(cart.amount, invoice.amount_due)
+        shipping_lines = [
+            line for line in invoice.lines['data']
+            if line['price']['product'] == stripe.SHIPPING_PRODUCT_ID
+        ]
+        self.assertEqual(len(shipping_lines), 0)
+
     def test_stripe_subscription_and_articles_invoice_generation_from_cart(self):
         user = user_helpers.get_user(
             username='mingonilo',

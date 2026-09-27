@@ -49,7 +49,11 @@ def anonymize_subscriber(subscriber):
 
 
 def anonymize_order(order):
-    order.address = f.address()
+    if order.delivery_method == 'shipping':
+        order.shipping_name = f.name()
+        order.shipping_address = f.address()
+        order.shipping_postal_code = f.postcode()
+        order.shipping_city = f.city()
     order.save()
 
 

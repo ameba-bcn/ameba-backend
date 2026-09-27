@@ -8,12 +8,18 @@
 
 {% blocktrans %}
 Con este gesto estás apoyando directamente a AMEBA y ayudando a fortalecer la cultura electrónica local.
-Para recoger tu compra, te enviaremos un mensaje indicándote cuándo y dónde hacerlo.
-Si tienes cualquier duda, puedes contactarnos en info@ameba.cat 💚
 {% endblocktrans %}
 
-{% blocktrans %}
-{% endblocktrans %}
+{% if delivery_method == "shipping" %}
+{% blocktrans %}Tu pedido se enviará a la siguiente dirección:{% endblocktrans %}
+{{ shipping_address }}
+{% else %}
+{% blocktrans %}Te avisaremos por email cuándo puedas recogerlo en:{% endblocktrans %}
+{{ pickup_location }}
+{% endif %}
+
+{% blocktrans %}Si tienes cualquier duda, puedes contactarnos en info@ameba.cat 💚{% endblocktrans %}
+
 {% endif %}
 
 {% blocktrans %}

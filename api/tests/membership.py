@@ -60,6 +60,9 @@ class TestSubscriptionPurchase(BaseCartTest):
             item=article, price=0, stock=10
         )
         cart.item_variants.set([article_variant.id])
+        cart.delivery_method = 'pickup'
+        cart.pickup_location = 'trama'
+        cart.save()
 
         subscription = Subscription.objects.create(
             name='Subscription 1', description='None', is_active=True,

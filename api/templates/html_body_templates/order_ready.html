@@ -13,14 +13,25 @@
         {% endblocktrans %}
     </h1>
 
+    {% if delivery_method == "shipping" %}
+    <p>
+        {% blocktrans %}
+Tu pedido ha sido enviado a la siguiente dirección:
+        {% endblocktrans %}
+    </p>
+    <p>
+{{ shipping_address }}
+    </p>
+    {% else %}
     <p>
         {% blocktrans %}
 Ya puedes recoger tu pedido en la siguiente dirección:
         {% endblocktrans %}
     </p>
     <p>
-{{ address }}
+{{ pickup_location }}
     </p>
+    {% endif %}
     <p>
 Detalles del pedido:<br>
 {% for item_variant in item_variants %}

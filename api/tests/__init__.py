@@ -6,7 +6,7 @@ from api.tests.event import TestEvents, TestSavedUserEvents
 from api.tests.qr_generator import TestGenerateEventTicketQr
 from api.tests.cart import (
     TestGetCart, TestPatchCart, TestPostCarts, TestCartCheckout,
-    TestCartStateFlow, TestRegisterWithCart
+    TestCartStateFlow, TestRegisterWithCart, TestCartDeliveryMethod
 )
 from api.tests.activate import TestActivation
 from api.tests.recovery import TestRecoveryFlow
