@@ -24,6 +24,7 @@ from api.tests.integrations import TestStripeSynchronization
 from api.tests.payments import PaymentFlowTest
 from api.tests.flows.events import TestSavedUserEvents
 from api.tests.webhooks import TestStripeWebhooks
+from api.tests.cache import TestResponseCacheIsolation
 from api.tests.member_monthly_report import (
     MemberMonthlyReportAdminAccessTests,
     MemberMonthlyReportAdminSidebarLinkTests,
@@ -44,4 +45,3 @@ from api import mailgun
 
 # Prevent external requests on tests
 mailgun.perform_request = mock.MagicMock()
-
