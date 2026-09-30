@@ -4,6 +4,7 @@ Nova comanda a la botiga
 
 
 Client: {{ user_name }}
+{% if delivery_method == "shipping" %}Enviar a: {{ shipping_address }}{% else %}Recollida a: {{ pickup_location }}{% endif %}
 
 {% for item in item_variants %}- {{ item }}
 {% endfor %}

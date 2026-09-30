@@ -14,12 +14,6 @@ EMAILS = {
             'new_member_page': 'associacio/nou-soci'
         }
     },
-    'NewSupporterMembershipEmail': {
-        'factory': ef.NewMembershipEmail,
-        'context': {
-            'subscription': {'name': 'Socio Supporter'}
-        }
-    },
     'NewProMembershipEmail': {
         'factory': ef.NewMembershipEmail,
         'context': {
@@ -41,6 +35,9 @@ EMAILS = {
         'context': {
             'total': '28.50€',
             'has_articles': True,
+            'delivery_method': 'pickup',
+            'pickup_location': 'Trama Serigrafia — Carrer de Conca, 13-15, Sant Marti, 08026 Barcelona',
+            'shipping_address': '',
             'item_variants': [
                 {
                     'name': 'Camiseta AMEBA 2019',
@@ -107,6 +104,9 @@ EMAILS = {
         'factory': ef.NewOrderInternalNotification,
         'context': {
             'user_name': 'Nora',
+            'delivery_method': 'shipping',
+            'pickup_location': '',
+            'shipping_address': 'Nora Vidal, Carrer Fals, 123, 08015, Barcelona',
             'item_variants': ['Camiseta AMEBA 2019', 'Camiseta AMEBA Modular']
         }
     },
@@ -114,7 +114,9 @@ EMAILS = {
         'factory': ef.OrderReadyNotification,
         'context': {
             'user_name': 'Nora',
-            'address': 'Carrer Fals, 123, Barcelona',
+            'delivery_method': 'shipping',
+            'pickup_location': '',
+            'shipping_address': 'Nora Vidal, Carrer Fals, 123, 08015, Barcelona',
             'item_variants': ['Camiseta AMEBA 2019', 'Camiseta AMEBA Modular']
         }
     },

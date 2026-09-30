@@ -2,6 +2,10 @@ import rest_framework.serializers as serializers
 import django.conf as conf
 
 import api.models as api_models
+import api.exceptions as api_exceptions
+from api.models.cart import (
+    DELIVERY_METHOD_SHIPPING, is_spain_mainland_postal_code
+)
 
 
 class CartItemSerializer(serializers.Serializer):
@@ -91,7 +95,9 @@ class CartSerializer(serializers.ModelSerializer):
         model = api_models.Cart
         fields = (
             'id', 'user', 'total', 'count', 'item_variant_ids', 'item_variants',
-            'discount_code', 'state'
+            'discount_code', 'state', 'delivery_method', 'pickup_location',
+            'shipping_name', 'shipping_address', 'shipping_postal_code',
+            'shipping_city'
         )
         read_only_fields = (
             'user', 'id', 'total', 'count', 'item_variants', 'state'
@@ -117,8 +123,35 @@ class CartSerializer(serializers.ModelSerializer):
             self._add_cart_items(instance, validated_data['item_variants'])
         if 'discount_code' in validated_data:
             instance.discount_code = validated_data.get('discount_code')
+        self._update_delivery_fields(instance, validated_data)
         instance.save()
         return instance
+
+    @staticmethod
+    def _update_delivery_fields(instance, validated_data):
+        delivery_fields = (
+            'delivery_method', 'pickup_location', 'shipping_name',
+            'shipping_address', 'shipping_postal_code', 'shipping_city'
+        )
+        for field in delivery_fields:
+            if field in validated_data:
+                setattr(instance, field, validated_data[field])
+
+        postal_code = (
+            validated_data.get('shipping_postal_code')
+            if 'shipping_postal_code' in validated_data
+            else instance.shipping_postal_code
+        )
+        delivery_method = (
+            validated_data.get('delivery_method')
+            if 'delivery_method' in validated_data
+            else instance.delivery_method
+        )
+        if (
+            delivery_method == DELIVERY_METHOD_SHIPPING and postal_code
+            and not is_spain_mainland_postal_code(postal_code)
+        ):
+            raise api_exceptions.InvalidShippingAddress
 
     def _resolve_user(self, instance):
         """ Checks whether the user request is authenticated and whether the

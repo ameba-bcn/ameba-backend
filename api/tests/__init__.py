@@ -3,9 +3,10 @@ from api.tests.current_user import CurrentUserTest
 from api.tests.token import TestSessions
 from api.tests.user import UserTest
 from api.tests.event import TestEvents, TestSavedUserEvents
+from api.tests.qr_generator import TestGenerateEventTicketQr
 from api.tests.cart import (
     TestGetCart, TestPatchCart, TestPostCarts, TestCartCheckout,
-    TestCartStateFlow, TestRegisterWithCart
+    TestCartStateFlow, TestRegisterWithCart, TestCartDeliveryMethod
 )
 from api.tests.activate import TestActivation
 from api.tests.recovery import TestRecoveryFlow
@@ -23,6 +24,20 @@ from api.tests.integrations import TestStripeSynchronization
 from api.tests.payments import PaymentFlowTest
 from api.tests.flows.events import TestSavedUserEvents
 from api.tests.webhooks import TestStripeWebhooks
+from api.tests.member_monthly_report import (
+    MemberMonthlyReportAdminAccessTests,
+    MemberMonthlyReportAdminSidebarLinkTests,
+    MemberMonthlyReportMonthSelectorTests,
+    MemberMonthlySummaryTests,
+    MemberMonthlyReportTableTests,
+    MemberMonthlyReportCsvExportTests,
+    MemberMonthlyReportAllTimeSummaryTests,
+    MemberMonthlyReportAllTimeTableTests,
+    MemberMonthlyReportAllTimeViewAndCsvTests,
+    MemberMonthlyReportStatusAndRenewalColumnTests,
+    MemberMonthlyReportSortingTests,
+    MemberMonthlyReportCsvSortTests,
+)
 from unittest import mock
 
 from api import mailgun

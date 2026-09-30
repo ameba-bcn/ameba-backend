@@ -1,1 +1,1 @@
-Ameba — tu pedido ya está listo
+Ameba — {% if delivery_method == "shipping" %}tu pedido ya está en camino{% else %}tu pedido ya está listo{% endif %}

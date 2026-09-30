@@ -183,12 +183,14 @@ class Payment(models.Model):
             self.detach_cart()
 
         if self.status == 'paid' and not self.processed:
+            delivery_kwargs = self._get_delivery_kwargs()
             for item_variant in self.item_variants.all():
                 item_variant.acquired_by.add(self.user)
                 item_acquired.send(
                     sender=self.__class__,
                     user=self.user,
-                    item_variant=item_variant
+                    item_variant=item_variant,
+                    **delivery_kwargs
                 )
 
             if self.amount > 0:
@@ -199,6 +201,20 @@ class Payment(models.Model):
             self.save()
             return True
         return False
+
+    def _get_delivery_kwargs(self):
+        """ Cart is already deleted (see detach_cart, called before this)
+        by the time item_variants are being handed out, so delivery info is
+        read from cart_record, the JSON snapshot of the cart taken at
+        payment creation time (see PaymentManager.create_payment).
+        :return: dict of delivery-related fields to attach to Orders.
+        """
+        fields = [
+            'delivery_method', 'pickup_location', 'shipping_name',
+            'shipping_address', 'shipping_postal_code', 'shipping_city'
+        ]
+        record = self.cart_record or {}
+        return {field: record.get(field, '') for field in fields}
 
     def detach_cart(self):
         """ Cart is detached from payment and deleted.

@@ -4,6 +4,7 @@ Nuevo pedido en la tienda
 
 
 Cliente: {{ user_name }}
+{% if delivery_method == "shipping" %}Enviar a: {{ shipping_address }}{% else %}Recogida en: {{ pickup_location }}{% endif %}
 
 {% for item in item_variants %}- {{ item }}
 {% endfor %}

@@ -39,5 +39,9 @@ def generate_event_ticket_qr(item_variant, user, protocol, site_name):
     token = user.get_event_token(item_variant_id=item_variant.pk)
     url_path = settings.FE_EVENT_TICKET_PATH.format(token=token)
     url = urllib.parse.urljoin(f'{protocol}://{site_name}', url_path)
-    qr_code_path = create_qr_code(url)
-    return qr_code_path
+    qr_img = create_qr_code(url)
+    os.makedirs(settings.QR_TMP_DIR, exist_ok=True)
+    qr_id = f'e{item_variant.pk}u{user.pk}'
+    qr_path = os.path.join(settings.QR_TMP_DIR, f'{qr_id}.png')
+    qr_img.save(qr_path)
+    return os.path.relpath(qr_path, settings.HTML_TMP_DIR)

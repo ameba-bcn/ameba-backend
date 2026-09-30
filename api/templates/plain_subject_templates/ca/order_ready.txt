@@ -1,1 +1,1 @@
-Ameba — la teva comanda ja està llesta
+Ameba — {% if delivery_method == "shipping" %}la teva comanda ja és en camí{% else %}la teva comanda ja està llesta{% endif %}

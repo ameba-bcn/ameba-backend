@@ -8,7 +8,11 @@ import api.models as api_models
 import api.stripe as stripe
 
 
-item_acquired = django.dispatch.Signal(providing_args=['user', 'item_variant'])
+item_acquired = django.dispatch.Signal(providing_args=[
+    'user', 'item_variant', 'delivery_method', 'pickup_location',
+    'shipping_name', 'shipping_address', 'shipping_postal_code',
+    'shipping_city'
+])
 
 
 @receiver(item_acquired)
@@ -27,7 +31,17 @@ def acquired_item(sender, user, item_variant, **kwargs):
         )
     elif item_variant.item.is_article():
         if not order:
-            order = api_models.Order.objects.create(user=user)
+            delivery_fields = [
+                'delivery_method', 'pickup_location', 'shipping_name',
+                'shipping_address', 'shipping_postal_code', 'shipping_city'
+            ]
+            order_delivery_kwargs = {
+                field: kwargs[field] for field in delivery_fields
+                if field in kwargs
+            }
+            order = api_models.Order.objects.create(
+                user=user, **order_delivery_kwargs
+            )
         order.item_variants.add(item_variant)
 
     if order:

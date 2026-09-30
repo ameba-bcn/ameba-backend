@@ -1,0 +1,84 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block content %}
+
+<form method="get" style="margin-bottom: 20px;">
+    <label for="id_month">Mes:</label>
+    <select name="month" id="id_month" onchange="this.form.submit()" {% if all_time %}disabled{% endif %}>
+        {% for value, label in months %}
+            <option value="{{ value }}" {% if value == selected_month %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+    </select>
+    <label for="id_year">Año:</label>
+    <select name="year" id="id_year" onchange="this.form.submit()" {% if all_time %}disabled{% endif %}>
+        {% for y in years %}
+            <option value="{{ y }}" {% if y == selected_year %}selected{% endif %}>{{ y }}</option>
+        {% endfor %}
+    </select>
+    <label for="id_all" style="margin-left: 20px;">
+        <input type="checkbox" name="all" id="id_all" value="1" {% if all_time %}checked{% endif %} onchange="this.form.submit()">
+        Todos (histórico, ignora mes/año)
+    </label>
+    <noscript><button type="submit">Ver</button></noscript>
+</form>
+
+{% if all_time %}
+    <p><em>Vista histórica: todos los socios registrados alguna vez, y totales acumulados de altas / renovaciones / bajas / pendientes de renovar.</em></p>
+{% elif is_current_month %}
+    <p><em>Mes en curso: los números reflejan el estado a fecha de hoy.</em></p>
+{% endif %}
+
+<div style="display:flex; gap: 20px; flex-wrap: wrap; margin-bottom: 30px;">
+    <div class="module" style="padding: 15px; min-width: 160px;">
+        <h2>Socios activos</h2>
+        <p style="font-size: 2em; margin: 0;">{{ summary.total_activos }}</p>
+    </div>
+    <div class="module" style="padding: 15px; min-width: 160px;">
+        <h2>Altas</h2>
+        <p style="font-size: 2em; margin: 0;">{{ summary.altas }}</p>
+    </div>
+    <div class="module" style="padding: 15px; min-width: 160px;">
+        <h2>Renovaciones</h2>
+        <p style="font-size: 2em; margin: 0;">{{ summary.renovaciones }}</p>
+    </div>
+    <div class="module" style="padding: 15px; min-width: 160px;">
+        <h2>Pendientes de renovar</h2>
+        <p style="font-size: 2em; margin: 0;">{{ summary.pendientes_renovar }}</p>
+    </div>
+    <div class="module" style="padding: 15px; min-width: 160px;">
+        <h2>{% if all_time %}Bajas (histórico){% else %}Bajas (mes anterior &rarr; este mes){% endif %}</h2>
+        <p style="font-size: 2em; margin: 0;">{{ summary.bajas }}</p>
+    </div>
+</div>
+
+<p>
+    <a href="{{ export_url }}" class="button">Exportar a CSV</a>
+</p>
+
+<table id="result_list">
+    <thead>
+        <tr>
+            {% for col in columns %}
+            <th><a href="{{ col.url }}">{{ col.label }}{{ col.arrow }}</a></th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for member in members %}
+        <tr>
+            <td>{{ member.number }}</td>
+            <td>{{ member.first_name }}</td>
+            <td>{{ member.last_name }}</td>
+            <td>{{ member.status|default:"-" }}</td>
+            <td>{{ member.renewal_date_display|default:"-" }}</td>
+            <td>{% if member.usa_talleres %}Sí{% else %}No{% endif %}</td>
+            <td>{% if member.usa_shop %}Sí{% else %}No{% endif %}</td>
+            <td>{% if member.tiene_perfil_web %}Sí{% else %}No{% endif %}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="8">{% if all_time %}No hay socios registrados.{% else %}No hay socios activos en el mes seleccionado.{% endif %}</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

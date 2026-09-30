@@ -1,17 +1,17 @@
 HOLA {{ user_name }},
 
-YA PUEDES RECOGERLO.
+{% if delivery_method == "shipping" %}YA ESTÁ EN CAMINO.{% else %}YA PUEDES RECOGERLO.{% endif %}
 
-Tu pedido está preparado. Pasa a buscarlo cuando te vaya bien.
+{% if delivery_method == "shipping" %}Tu pedido ya está enviado. Pronto lo recibirás en la dirección indicada.{% else %}Tu pedido está preparado. Pasa a buscarlo cuando te vaya bien.{% endif %}
 
-DIRECCIÓN: {{ address }}
+{% if delivery_method == "shipping" %}ENVIADO A: {{ shipping_address }}{% else %}DIRECCIÓN: {{ pickup_location }}{% endif %}
 
 {% for item in item_variants %}- {{ item }}
 {% endfor %}
 
 VER LA TIENDA: {{ protocol }}://{{ site_name }}/botiga
 
-Trae este correo o tu nombre. Si no puedes venir estos días, escríbenos.
+{% if delivery_method == "shipping" %}Si hay cualquier problema con el envío, escríbenos.{% else %}Trae este correo o tu nombre. Si no puedes venir estos días, escríbenos.{% endif %}
 
 —
 Ameba · {{ site_name }}

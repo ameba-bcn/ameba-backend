@@ -3,7 +3,7 @@ from api.serializers.item import ItemDetailSerializer, ItemListSerializer
 from api.models import Subscription
 
 
-class SubscriptionListSerializer(ItemListSerializer):
+class SubscriptionListSerializer(ItemDetailSerializer):
 
     class Meta(ItemDetailSerializer.Meta):
         model = Subscription

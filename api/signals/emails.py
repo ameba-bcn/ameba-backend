@@ -111,6 +111,33 @@ def _email_item_variants(payment):
     ]
 
 
+def _delivery_context(record):
+    """ Builds the delivery-related email context from a cart_record-like
+    dict (payment.cart_record) or from an Order instance — both expose the
+    same delivery_method/pickup_location/shipping_* fields.
+    :param record: dict or Order
+    :return: dict with delivery_method, pickup_location and shipping_address
+    """
+    from api.models.cart import PICKUP_LOCATIONS
+
+    get = record.get if isinstance(record, dict) else (
+        lambda key, default=None: getattr(record, key, default)
+    )
+    pickup_location = get('pickup_location') or ''
+    return {
+        'delivery_method': get('delivery_method') or '',
+        'pickup_location': PICKUP_LOCATIONS.get(
+            pickup_location, pickup_location
+        ),
+        'shipping_address': ', '.join(filter(None, [
+            get('shipping_name'),
+            get('shipping_address'),
+            get('shipping_postal_code'),
+            get('shipping_city'),
+        ])),
+    }
+
+
 @receiver(payment_closed)
 def send_payment_successful_notification(sender, payment, **kwargs):
     user = payment.user
@@ -124,7 +151,8 @@ def send_payment_successful_notification(sender, payment, **kwargs):
         protocol=settings.DEBUG and 'http' or 'https',
         total=payment.total,
         has_articles=has_articles,
-        item_variants=_email_item_variants(payment)
+        item_variants=_email_item_variants(payment),
+        **_delivery_context(payment.cart_record or {})
     )
 
 
@@ -137,7 +165,8 @@ def send_new_order_internal_notification(sender, order, **kwargs):
         user_name=user.username,
         site_name=settings.HOST_NAME,
         protocol=settings.DEBUG and 'http' or 'https',
-        item_variants=item_variants
+        item_variants=item_variants,
+        **_delivery_context(order)
     )
 
 
@@ -145,20 +174,21 @@ def send_new_order_internal_notification(sender, order, **kwargs):
 def send_order_ready_notification(sender, order, **kwargs):
     user = order.user
     item_variants = [iv.name for iv in order.item_variants.all()]
+    delivery_context = _delivery_context(order)
     email_factories.OrderReadyNotification.send_to(
         mail_to=user.email,
         user_name=user.username,
         site_name=settings.HOST_NAME,
-        address=order.address,
         protocol=settings.DEBUG and 'http' or 'https',
-        item_variants=item_variants
+        item_variants=item_variants,
+        **delivery_context
     )
     email_factories.OrderReadyNotification.send_to(
         mail_to=settings.INTERNAL_ORDERS_EMAIL,
         user_name=user.username,
         site_name=settings.HOST_NAME,
-        address=order.address,
         protocol=settings.DEBUG and 'http' or 'https',
-        item_variants=item_variants
+        item_variants=item_variants,
+        **delivery_context
     )
 
