@@ -10,6 +10,12 @@ class MemberProjectSerializer(serializers.ModelSerializer):
     images = serializers.SlugRelatedField(
         many=True, slug_field='url', read_only=True
     )
+    tags = serializers.SlugRelatedField(
+        many=True, slug_field='name', read_only=True
+    )
+    genres = serializers.SlugRelatedField(
+        many=True, slug_field='name', read_only=True
+    )
 
     class Meta:
         model = Member
