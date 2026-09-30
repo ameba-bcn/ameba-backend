@@ -1,4 +1,6 @@
 import time
+from types import SimpleNamespace
+from unittest import mock
 from django.contrib.auth.models import Group
 from django.test import tag
 from api.tests._helpers import BaseTest, check_structure
@@ -749,6 +751,37 @@ class TestCartPayment(BaseCartTest):
         response = self._get(pk='current', token=token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(response.data.get('state')['needs_checkout'])
+
+
+class TestCartAmountRounding(BaseCartTest):
+    """ Cart.amount works in cents, but the discount fraction is a binary
+    float, so the running total can land a hair below the true value. """
+
+    @staticmethod
+    def _cart_item(amount, discount_value):
+        return {
+            'item_variant': SimpleNamespace(amount=amount),
+            'discount': SimpleNamespace(value=discount_value),
+        }
+
+    def test_amount_rounds_instead_of_truncating(self):
+        # 20,00€ menos un 90% son 2,00€, pero 1. - 90/100. es
+        # 0.09999999999999998 y el producto queda en 199.99999999999994:
+        # truncar daba 1,99€, un céntimo de menos en la factura de Stripe.
+        cart = self.get_cart(item_variants=[1], item_class=Article)
+        with mock.patch.object(
+            Cart, 'get_cart_items_with_discounts',
+            return_value=[self._cart_item(2000, 90)]
+        ):
+            self.assertEqual(cart.amount, 200)
+
+    def test_amount_rounds_with_several_discounted_items(self):
+        cart = self.get_cart(item_variants=[1], item_class=Article)
+        items = [self._cart_item(2000, 90), self._cart_item(1500, 90)]
+        with mock.patch.object(
+            Cart, 'get_cart_items_with_discounts', return_value=items
+        ):
+            self.assertEqual(cart.amount, 350)
 
 
 class TestCartDeliveryMethod(BaseCartTest):
