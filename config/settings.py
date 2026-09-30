@@ -314,7 +314,7 @@ FE_MEMBERSHIP_CARD_PATH = env(
 )
 FE_EVENT_TICKET_PATH = env(
     'FE_EVENT_TICKET_PATH',
-    'pub/mtsa/?token={token}',
+    'event-ticket/?token={token}',
     var_type='string'
 )
 
@@ -331,12 +331,12 @@ STAFF_DOMAINS = ['jaguarintheloop.live', 'ameba.cat']
 TEST_MAILING_LIST_PREFIXES = ['test', 'dev', 'stag', 'sand', 'debug', 'local']
 TEST_TEMPLATE = 'unsubscribe.test'
 
-EMAIL_FILE_PATH = "/home/ameba/app/emails"
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'emails')
 
 DISABLE_DARK_MODE = True
 
 
-NEW_MEMBER_PAGE = env('NEW_MEMBER_PAGE', 'memberships/?id={id}', 'string')
+NEW_MEMBER_PAGE = env('NEW_MEMBER_PAGE', 'associacio/nou-soci', 'string')
 
 # AMEBA INTERNAL ORDERS EMAIL
 INTERNAL_ORDERS_EMAIL = env(
