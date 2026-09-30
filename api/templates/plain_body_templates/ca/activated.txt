@@ -1,0 +1,15 @@
+HOLA {{ user.username }},
+
+El teu compte està actiu.
+
+El teu compte està actiu. Ja pots comprar entrades, apuntar-te a tallers i seguir les convocatòries.
+Si vols entrar-hi de ple: fes-te sòcia i tens preus reduïts a tot el que fem.
+
+FES-TE SÒCIA: {{ protocol }}://{{ site_name }}/{{ new_member_page }}
+
+Aquest correu és automàtic. Si no has activat cap compte, ignora'l.
+
+—
+Ameba · {{ site_name }}
+Donar-me de baixa: escriu-nos a info@ameba.cat
+Ameba · Barcelona

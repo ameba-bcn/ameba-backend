@@ -30,7 +30,11 @@ class OrderToItemVariantInLine(admin.TabularInline):
 
 
 class OrderAdmin(admin.ModelAdmin):
-    fields = ['user', 'address', 'ready', 'delivered', 'created', 'updated']
+    fields = [
+        'user', 'delivery_method', 'pickup_location', 'shipping_name',
+        'shipping_address', 'shipping_postal_code', 'shipping_city',
+        'ready', 'delivered', 'created', 'updated'
+    ]
     list_display = ['user', 'ready', 'delivered', 'updated', 'items']
     list_filter = ['user', 'delivered', 'ready']
     readonly_fields = ['items', 'created', 'updated']

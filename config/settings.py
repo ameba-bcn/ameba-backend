@@ -314,7 +314,7 @@ FE_MEMBERSHIP_CARD_PATH = env(
 )
 FE_EVENT_TICKET_PATH = env(
     'FE_EVENT_TICKET_PATH',
-    'pub/mtsa/?token={token}',
+    'event-ticket/?token={token}',
     var_type='string'
 )
 
@@ -331,18 +331,21 @@ STAFF_DOMAINS = ['jaguarintheloop.live', 'ameba.cat']
 TEST_MAILING_LIST_PREFIXES = ['test', 'dev', 'stag', 'sand', 'debug', 'local']
 TEST_TEMPLATE = 'unsubscribe.test'
 
-EMAIL_FILE_PATH = "/home/ameba/app/emails"
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'emails')
 
 DISABLE_DARK_MODE = True
 
 
-NEW_MEMBER_PAGE = env('NEW_MEMBER_PAGE', 'memberships/?id={id}', 'string')
+NEW_MEMBER_PAGE = env('NEW_MEMBER_PAGE', 'associacio/nou-soci', 'string')
 
 # AMEBA INTERNAL ORDERS EMAIL
 INTERNAL_ORDERS_EMAIL = env(
     'INTERNAL_ORDERS_EMAIL', 'jonrivala@gmail.com', 'string'
 )
 
+# Deprecated: default for Order.address, which is itself deprecated in
+# favor of delivery_method/pickup_location/shipping_* — kept only because
+# that field (and its default) still exists on existing rows.
 ORDERS_ADDRESS = env(
     'ORDERS_ADDRESS',
     'Ronda de Sant Pau, 17, 08015 Barcelona',

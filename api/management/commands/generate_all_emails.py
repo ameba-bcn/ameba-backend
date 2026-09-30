@@ -10,15 +10,14 @@ settings.EMAIL_BACKEND = 'naomi.mail.backends.naomi.NaomiBackend'
 EMAILS = {
     'ActivatedAccountEmail': {
         'factory': ef.ActivatedAccountEmail,
-        'context': {}
+        'context': {
+            'new_member_page': 'associacio/nou-soci'
+        }
     },
     'NewProMembershipEmail': {
         'factory': ef.NewMembershipEmail,
         'context': {
-            'subscription': {
-                'name': 'Socio Pro',
-                'description': 'Como socio pro de AMEBA ... '
-            }
+            'subscription': {'name': 'Socio Pro'}
         }
     },
     'PasswordChangedEmail': {
@@ -27,35 +26,41 @@ EMAILS = {
     },
     'RecoveryRequestEmail': {
         'factory': ef.RecoveryRequestEmail,
-        'context': {}
+        'context': {
+            'recovery_token': 'preview-token'
+        }
     },
     'PaymentSuccessfulEmail': {
         'factory': ef.PaymentSuccessfulEmail,
         'context': {
-            'cart_record': {
-                'item_variants': [
-                    {
-                        'name': 'Camiseta AMEBA 2019',
-                        'discount_name': 'Socios',
-                        'discount_value': 10,
-                        'price': '15€',
-                        'subtotal': '13.5€'
-                    },
-                    {
-                        'name': 'Camiseta AMEBA Modular',
-                        'discount_name': None,
-                        'discount_value': 0,
-                        'price': '15€',
-                        'subtotal': '15€'
-                    }
-                ],
-                'total': '28.5€'
-            }
+            'total': '28.50€',
+            'has_articles': True,
+            'delivery_method': 'pickup',
+            'pickup_location': 'Trama Serigrafia — Carrer de Conca, 13-15, Sant Marti, 08026 Barcelona',
+            'shipping_address': '',
+            'item_variants': [
+                {
+                    'name': 'Camiseta AMEBA 2019',
+                    'discount_name': 'Socios',
+                    'discount_value': '10',
+                    'price': '15.00€',
+                    'subtotal': '13.50€'
+                },
+                {
+                    'name': 'Camiseta AMEBA Modular',
+                    'discount_name': '',
+                    'discount_value': '',
+                    'price': '15.00€',
+                    'subtotal': '15.00€'
+                }
+            ]
         }
     },
     'UserRegisteredEmail': {
         'factory': ef.UserRegisteredEmail,
-        'context': {}
+        'context': {
+            'activation_token': 'preview-token'
+        }
     },
     'EventConfirmationEmail': {
         'factory': ef.EventConfirmationEmail,
@@ -70,28 +75,21 @@ EMAILS = {
     'BeforeRenewalNotification': {
         'factory': ef.BeforeRenewalNotification,
         'context': {
-            'subscription': {
-                'name': 'Socio Pro'
-            },
-            'membership': {
-                'expires': '20 de Noviembre de 2021'
-            }
+            'subscription': {'name': 'Socio Pro'},
+            'membership': {'expires': '20 de Noviembre de 2026'}
         }
     },
     'RenewalConfirmation': {
         'factory': ef.RenewalConfirmation,
         'context': {
-            'subscription': {
-                'name': 'Socio Pro'
-            }
+            'subscription': {'name': 'Socio Pro'}
         }
     },
     'RenewalFailedNotification': {
         'factory': ef.RenewalFailedNotification,
         'context': {
-            'subscription': {
-                'name': 'Socio Pro'
-            }
+            'subscription': {'name': 'Socio Pro'},
+            'new_member_page': 'associacio/nou-soci'
         }
     },
     'NewslettersSubscription': {
@@ -101,7 +99,27 @@ EMAILS = {
     'NewslettersUnsubscription': {
         'factory': ef.NewsletterUnsubscribeNotification,
         'context': {}
-    }
+    },
+    'NewOrderInternalNotification': {
+        'factory': ef.NewOrderInternalNotification,
+        'context': {
+            'user_name': 'Nora',
+            'delivery_method': 'shipping',
+            'pickup_location': '',
+            'shipping_address': 'Nora Vidal, Carrer Fals, 123, 08015, Barcelona',
+            'item_variants': ['Camiseta AMEBA 2019', 'Camiseta AMEBA Modular']
+        }
+    },
+    'OrderReadyNotification': {
+        'factory': ef.OrderReadyNotification,
+        'context': {
+            'user_name': 'Nora',
+            'delivery_method': 'shipping',
+            'pickup_location': '',
+            'shipping_address': 'Nora Vidal, Carrer Fals, 123, 08015, Barcelona',
+            'item_variants': ['Camiseta AMEBA 2019', 'Camiseta AMEBA Modular']
+        }
+    },
 }
 
 
@@ -109,17 +127,22 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('--mail_to', dest='mail_to',
                             default='jonrivala@gmail.com')
+        parser.add_argument('--languages', dest='languages', default='ca,es')
 
     def handle(self, *args, **options):
+        mail_to = options.get('mail_to')
+        languages = options.get('languages').split(',')
+        user = User.objects.get(email=mail_to)
 
         for email_name, email_data in EMAILS.items():
-            mail_to = options.get('mail_to')
-            user = User.objects.get(email=mail_to)
             mail_class = email_data['factory']
-            context = email_data['context']
-            self.update_context(context, user=user)
-            mail_class.send_to(mail_to=user.email, **context)
-            time.sleep(1)
+            for language in languages:
+                context = dict(email_data['context'])
+                user.language = language
+                self.update_context(context, user=user)
+                mail_class.send_to(mail_to=user.email, **context)
+                self.stdout.write(f'Sent {email_name} ({language})')
+                time.sleep(1)
 
     @staticmethod
     def update_context(context, **plus):

@@ -1,3 +1,0 @@
-{% load i18n %}{% autoescape off %}
-{% blocktrans %}¡Ya puedes recoger tu pedido!{% endblocktrans %}
-{% endautoescape %}

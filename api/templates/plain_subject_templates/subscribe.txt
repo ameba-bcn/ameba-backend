@@ -1,5 +1,0 @@
-{% load i18n %}{% autoescape off %}
-{% blocktrans with subscription=subscription.name|upper %}
-    ¡Hola! Te has suscrito a la newsletter de AMEBA
-{% endblocktrans %}
-{% endautoescape %}

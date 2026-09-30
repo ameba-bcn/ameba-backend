@@ -37,7 +37,11 @@ class CartAdmin(admin.ModelAdmin):
     list_display_links = ('user',)
     list_display = ('user', 'id', 'created')#, 'uptaded')
     fieldsets = [
-        (None, {'fields': ['id', 'user', 'total', 'discount_code']})
+        (None, {'fields': ['id', 'user', 'total', 'discount_code']}),
+        ('Delivery', {'fields': [
+            'delivery_method', 'pickup_location', 'shipping_name',
+            'shipping_address', 'shipping_postal_code', 'shipping_city'
+        ]}),
     ]
     inlines = (CartItemTabular, )
     readonly_fields = ['id', 'total', 'computed_item_variants']

@@ -91,6 +91,19 @@ def _get_update_or_create_price(product_id, amount, period):
     return price
 
 
+SHIPPING_PRODUCT_ID = 'shipping-surcharge'
+# Keep this in sync with api.models.cart.SHIPPING_SURCHARGE_CENTS — the cart's
+# displayed total and this Stripe-charged amount must never diverge.
+SHIPPING_SURCHARGE_CENTS = 700
+
+
+def _get_or_create_shipping_price():
+    _get_or_create_product(SHIPPING_PRODUCT_ID, 'Envío')
+    return _get_update_or_create_price(
+        SHIPPING_PRODUCT_ID, SHIPPING_SURCHARGE_CENTS, None
+    )
+
+
 def create_or_update_product_and_price(item_variant):
     product_id = str(item_variant.id)
     period = item_variant.get_recurrence()
@@ -202,6 +215,10 @@ def create_invoice_from_cart(cart):
     for cart_item in regular_items:
         price = products[str(cart_item.item_variant.id)]['price']
         _create_invoice_item(customer_id=customer.id, price_id=price.id)
+
+    if cart.delivery_method == 'shipping':
+        shipping_price = _get_or_create_shipping_price()
+        _create_invoice_item(customer_id=customer.id, price_id=shipping_price.id)
 
     for cart_item in subscriptions:
         product_id = str(cart_item.item_variant.id)

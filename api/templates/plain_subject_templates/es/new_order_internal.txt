@@ -1,0 +1,1 @@
+[INTERNO] Nuevo pedido de {{ user_name }}

@@ -1,0 +1,21 @@
+HOLA {{ user.username }},
+
+GRÀCIES.
+
+Hem rebut el teu pagament. Aquí tens el detall de la compra.
+{% if has_articles %}
+{% if delivery_method == "shipping" %}La teva comanda s'enviarà a aquesta adreça:
+{{ shipping_address }}
+{% else %}T'avisarem per correu quan la puguis recollir a:
+{{ pickup_location }}
+{% endif %}
+Si tens qualsevol dubte, escriu-nos a info@ameba.cat
+{% endif %}
+{% for iv in item_variants %}- {{ iv.name }} · {{ iv.subtotal }}{% if iv.discount_name %} ({{ iv.discount_name }} −{{ iv.discount_value }}){% endif %}
+{% endfor %}
+TOTAL: {{ total }}
+
+—
+Ameba · {{ site_name }}
+Donar-me de baixa: escriu-nos a info@ameba.cat
+Ameba · Barcelona

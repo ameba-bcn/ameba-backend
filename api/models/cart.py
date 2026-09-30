@@ -14,6 +14,41 @@ import api.stripe as stripe
 
 SUCCEEDED_PAYMENTS = [IntentStatus.SUCCESS, IntentStatus.NOT_NEEDED]
 
+# Fixed pickup addresses for article (shop) orders picked up in person.
+PICKUP_LOCATIONS = {
+    'trama': 'Trama Serigrafia — Carrer de Conca, 13-15, Sant Martí, 08026 Barcelona',
+    'merla': 'La Merla (botiga) — Carrer de Sants, 1, Sants-Montjuïc, 08014 Barcelona',
+}
+
+DELIVERY_METHOD_PICKUP = 'pickup'
+DELIVERY_METHOD_SHIPPING = 'shipping'
+DELIVERY_METHOD_CHOICES = (
+    (DELIVERY_METHOD_PICKUP, 'Pickup'),
+    (DELIVERY_METHOD_SHIPPING, 'Shipping'),
+)
+
+# Flat surcharge (in cents) for shipping an order instead of picking it up.
+SHIPPING_SURCHARGE_CENTS = 700
+
+# Postal code prefixes (first two digits) that fall within mainland Spain.
+# Excludes 07 (Balearic Islands), 35/38 (Canary Islands), 51 (Ceuta) and
+# 52 (Melilla) — shipping is only offered within mainland Spain.
+# NOTE: this same rule is duplicated on the frontend (ameba-site repo) —
+# keep both in sync if it ever changes.
+_EXCLUDED_MAINLAND_PREFIXES = {'07', '35', '38', '51', '52'}
+
+
+def is_spain_mainland_postal_code(postal_code):
+    """ Returns True if postal_code belongs to mainland Spain (i.e. not the
+    Balearic Islands, Canary Islands, Ceuta or Melilla).
+    """
+    if not postal_code or not postal_code.isdigit() or len(postal_code) != 5:
+        return False
+    prefix = postal_code[:2]
+    if prefix in _EXCLUDED_MAINLAND_PREFIXES:
+        return False
+    return '01' <= prefix <= '52'
+
 
 class CartItems(Model):
     class Meta:
@@ -56,6 +91,27 @@ class Cart(Model):
     checkout_hash = CharField(
         blank=True, max_length=128, verbose_name=_('checkout hash')
     )
+    delivery_method = CharField(
+        blank=True, max_length=16, choices=DELIVERY_METHOD_CHOICES,
+        verbose_name=_('delivery method')
+    )
+    pickup_location = CharField(
+        blank=True, max_length=16,
+        choices=[(k, v) for k, v in PICKUP_LOCATIONS.items()],
+        verbose_name=_('pickup location')
+    )
+    shipping_name = CharField(
+        blank=True, max_length=255, verbose_name=_('shipping name')
+    )
+    shipping_address = CharField(
+        blank=True, max_length=255, verbose_name=_('shipping address')
+    )
+    shipping_postal_code = CharField(
+        blank=True, max_length=16, verbose_name=_('shipping postal code')
+    )
+    shipping_city = CharField(
+        blank=True, max_length=255, verbose_name=_('shipping city')
+    )
 
     def delete(self, using=None, keep_parents=False):
         self.item_variants.clear()
@@ -86,6 +142,8 @@ class Cart(Model):
             else:
                 fraction = 1.
             amount += cart_item['item_variant'].amount * fraction
+        if self.delivery_method == DELIVERY_METHOD_SHIPPING:
+            amount += SHIPPING_SURCHARGE_CENTS
         return int(amount)
 
     @property
@@ -165,7 +223,7 @@ class Cart(Model):
     @property
     def articles(self):
         return [
-            x.item.subscription for x in self.item_variants.all() if
+            x.item.article for x in self.item_variants.all() if
             x.item.is_article()
         ]
 
@@ -208,6 +266,20 @@ class Cart(Model):
             raise api_exceptions.CartHasAlreadyActiveSubscription
         if self.has_identical_events():
             raise api_exceptions.UserCanNotAcquireTwoIdenticalEvents
+        if self.articles:
+            self._check_delivery_method()
+
+    def _check_delivery_method(self):
+        if not self.delivery_method:
+            raise api_exceptions.CartDeliveryMethodRequired
+        if self.delivery_method == DELIVERY_METHOD_SHIPPING:
+            if not (
+                self.shipping_name and self.shipping_address
+                and self.shipping_postal_code and self.shipping_city
+            ):
+                raise api_exceptions.InvalidShippingAddress
+            if not is_spain_mainland_postal_code(self.shipping_postal_code):
+                raise api_exceptions.InvalidShippingAddress
 
     def checkout(self):
         self.is_checkout_able()
