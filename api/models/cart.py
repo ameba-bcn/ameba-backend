@@ -144,7 +144,11 @@ class Cart(Model):
             amount += cart_item['item_variant'].amount * fraction
         if self.delivery_method == DELIVERY_METHOD_SHIPPING:
             amount += SHIPPING_SURCHARGE_CENTS
-        return int(amount)
+        # round(), no int(): la fracción del descuento es un float binario
+        # inexacto, así que un 90% sobre 20,00 € da 199.99999999999994 y
+        # int() lo trunca a 1,99 € en vez de 2,00 €. El error es de un
+        # céntimo, pero es dinero y aparece en la factura de Stripe.
+        return round(amount)
 
     @property
     def computed_item_variants(self):
