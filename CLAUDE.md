@@ -93,7 +93,7 @@ Per-environment config for dev/local/prod lives one level up in `devops/.environ
 - Remotes: `origin` = personal fork, `upstream` = `ameba-bcn/ameba-backend` (the real org repo).
 - Integration branch is `dev`; `main` tracks releases. Release branches are tagged `release/X.Y`.
 - Branch naming mirrors Jira-style tickets: `feature/AW-<n>-<slug>`, `bugfix/AW-<n>-<slug>`, `hotfix/<slug>`.
-- CI (`.drone.yml`) just builds and pushes Docker images — there's no automated test gate, so running `python manage.py test` locally before pushing matters more than usual.
+- CI (GitHub Actions, `.github/workflows/build-and-push.yml`) just builds and pushes Docker images — there's no automated test gate (`manage.py test` is never run in CI), so running `python manage.py test` locally before pushing matters more than usual.
 
 ## Working Agreement
 
