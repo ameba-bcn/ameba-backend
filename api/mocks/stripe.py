@@ -10,8 +10,21 @@ class error:
     SignatureVerificationError = Exception
 
 
+# Module level config set by api.stripe (ignored by the mock)
+api_key = None
+api_version = None
+max_network_retries = 0
+
+# Every Stripe call made through the mock, as (ClassName.method, kwargs).
+# Tests can inspect it; reset it with `calls.clear()`.
+calls = []
+
+
 class BaseMock:
     objects = {}
+    # idempotency_key -> object id: replaying a key returns the original
+    # object, like Stripe does.
+    idempotency = {}
 
     def __init__(self, id, **kwargs):
         self.id = str(id)
@@ -63,9 +76,16 @@ class BaseMock:
 
     @classmethod
     def list(cls, **kwargs):
+        kwargs.pop('limit', None)
         result = {'data': []}
         for element in cls.objects.values():
             for key, value in kwargs.items():
+                if isinstance(value, dict):
+                    # range filters, e.g. created={'lt': ts}
+                    current = getattr(element, key, None)
+                    if 'lt' in value and not current < value['lt']:
+                        break
+                    continue
                 if not hasattr(element, key) or getattr(element, key) != value:
                     break
             else:
@@ -73,7 +93,12 @@ class BaseMock:
         return result
 
     @classmethod
-    def create(cls, id=None, **kwargs):
+    def create(cls, id=None, idempotency_key=None, **kwargs):
+        calls.append((f'{cls.__name__}.create', kwargs))
+        if idempotency_key and idempotency_key in cls.idempotency:
+            # Stripe replays the original response for a reused key
+            return cls.objects.get(cls.idempotency[idempotency_key]) \
+                or cls(id=cls.idempotency[idempotency_key], **kwargs)
         if not id:
             if not cls.objects:
                 id = '0'
@@ -82,10 +107,13 @@ class BaseMock:
                 id = max(map(lambda x: int(x), numeric_ids)) + 1
                 id = str(id)
         cls.objects[id] = cls(id=id, **kwargs)
+        if idempotency_key:
+            cls.idempotency[idempotency_key] = id
         return cls.retrieve(id=id)
 
     @classmethod
     def delete(cls, id):
+        calls.append((f'{cls.__name__}.delete', {'id': id}))
         return bool(cls.objects.pop(id, None))
 
     def update(self, **kwargs):
@@ -94,6 +122,7 @@ class BaseMock:
 
     @classmethod
     def modify(cls, id, **kwargs):
+        calls.append((f'{cls.__name__}.modify', dict(kwargs, id=id)))
         for key, value in kwargs.items():
             cls.objects[id][key] = value
 
@@ -168,67 +197,144 @@ class Customer(BaseMock):
         )
 
 
+def _price_id(price):
+    return price if isinstance(price, str) else price['id']
+
+
 class Subscription(BaseMock):
     objects = {}
+    idempotency = {}
 
-    def __init__(self, id, customer, items, payment_behavior, coupon=None):
+    def __init__(self, id, customer, items, payment_behavior, coupon=None,
+                 add_invoice_items=None, metadata=None):
         self.customer = customer
-        self.status = 'active'
-        self.latest_invoice = self.create_invoice(customer, items)
-        items = [{'price': item['price'], 'subscription':id} for item in items]
+        # payment_behavior='default_incomplete': incomplete until the first
+        # invoice is paid (see mock_stripe_succeeded_payment)
+        self.status = 'incomplete'
+        self.latest_invoice = self.create_invoice(
+            id, customer, items, add_invoice_items or []
+        )
+        items = [
+            {'price': Price.retrieve(_price_id(item['price'])),
+             'subscription': id}
+            for item in items
+        ]
         items = {'data': items}
         super().__init__(
             id=id, items=items, payment_behavior=payment_behavior,
-            coupon=coupon
+            coupon=coupon, metadata=metadata
         )
 
     @staticmethod
-    def create_invoice(customer, items):
-        for item in items:
-            InvoiceItem.create(customer=customer, price=item['price']['id'])
-        return Invoice.create(customer=customer)['id']
+    def create_invoice(subscription_id, customer, items, add_invoice_items):
+        invoice = Invoice.create(
+            customer=customer, subscription=subscription_id,
+            billing_reason='subscription_create',
+            pending_invoice_items_behavior='exclude'
+        )
+        for item in list(items) + list(add_invoice_items):
+            InvoiceItem.create(
+                customer=customer, price=_price_id(item['price']),
+                invoice=invoice.id
+            )
+        return invoice['id']
+
+    @classmethod
+    def delete(cls, id):
+        """ Canceling an incomplete subscription voids its open invoice """
+        calls.append(('Subscription.delete', {'id': id}))
+        subscription = cls.objects.get(id)
+        if subscription is None:
+            return False
+        invoice = Invoice.objects.get(subscription.latest_invoice)
+        if invoice is not None and invoice.status in ('draft', 'open'):
+            invoice.status = 'void'
+        subscription.status = 'canceled'
+        cls.objects.pop(id)
+        return True
 
 
 class InvoiceItem(BaseMock):
     objects = {}
+    idempotency = {}
 
-    def __init__(self, id, customer, price):
+    def __init__(self, id, customer, price, invoice=None):
         self.price_id = price
         super().__init__(id=id, customer=customer)
+        self.invoice = invoice
+        if invoice is not None:
+            # Attached straight to its invoice (never left pending)
+            target = Invoice.retrieve(invoice)
+            if target.status != 'draft':
+                raise error.InvalidRequestError(
+                    f'Invoice {invoice} is not a draft.'
+                )
+            target.lines['data'].append(self)
+            target.amount_due += self.price.unit_amount
 
 
 class PaymentIntent(BaseMock):
     objects = {}
+    idempotency = {}
 
     def __init__(self, id, customer=None):
-        self.client_secret = 'adcf44bg5bfcadcgb5fgb2c44c3gbafd'
+        # Unique per PaymentIntent, so tests can tell a reused payment from a
+        # new one.
+        self.client_secret = f'pi_{id}_secret_mock'
         self.payment_method = 'asdoasdoijasdoisajdasdoijsa'
         self.customer = customer
+        self.status = 'requires_payment_method'
+        self.setup_future_usage = None
         super().__init__(id=id)
 
 
 class Invoice(BaseMock):
     objects = {}
+    idempotency = {}
 
     def __init__(
-        self, id, customer, collection_method='charge_automatically', **kwargs
+        self, id, customer, collection_method='charge_automatically',
+        pending_invoice_items_behavior='include', **kwargs
     ):
         self.customer = customer
         self.amount_due = 0
         self.status = 'draft'
+        self.subscription = None
+        self.billing_reason = 'manual'
         self.lines = {'data': []}
         self.payment_intent = PaymentIntent.create(customer=customer)['id']
-        self.get_lines_and_amount()
-        super().__init__(id=id, collection_method=collection_method, **kwargs)
+        if pending_invoice_items_behavior != 'exclude':
+            self.get_lines_and_amount()
+        super().__init__(
+            id=id, collection_method=collection_method,
+            pending_invoice_items_behavior=pending_invoice_items_behavior,
+            **kwargs
+        )
 
     def finalize_invoice(self):
-        self.status = 'open'
+        calls.append(('Invoice.finalize_invoice', {'id': self.id}))
+        if self.status == 'draft':
+            self.status = 'open'
         return self
+
+    @classmethod
+    def void_invoice(cls, id):
+        calls.append(('Invoice.void_invoice', {'id': id}))
+        invoice = cls.retrieve(id)
+        if invoice.status != 'open':
+            raise error.InvalidRequestError(
+                f'Invoice {id} is {invoice.status}, can not be voided.'
+            )
+        invoice.status = 'void'
+        intent = PaymentIntent.objects.get(invoice.payment_intent)
+        if intent is not None:
+            intent.status = 'canceled'
+        return invoice
 
     def get_lines_and_amount(self):
         for id in list(InvoiceItem.objects.keys()):
             obj = InvoiceItem.objects[id]
-            if obj.customer == self.customer:
+            if obj.customer == self.customer and obj.invoice is None:
                 self.lines['data'].append(obj)
                 self.amount_due += obj.price.unit_amount
                 InvoiceItem.objects.pop(id)
@@ -241,9 +347,23 @@ class Webhook:
         return json.loads(payload)
 
 
+def mark_invoice_paid(invoice_id):
+    """ What Stripe does when the customer pays an invoice's PaymentIntent """
+    invoice = Invoice.retrieve(invoice_id)
+    invoice.status = 'paid'
+    intent = PaymentIntent.objects.get(invoice.payment_intent)
+    if intent is not None:
+        intent.status = 'succeeded'
+    if invoice.subscription and invoice.subscription in Subscription.objects:
+        Subscription.objects[invoice.subscription].status = 'active'
+    return invoice
+
+
 def mock_stripe_succeeded_payment(client, url, invoice):
     headers = {'HTTP_STRIPE_SIGNATURE': 'stripe-signature'}
     invoice['status'] = 'paid'
+    if not isinstance(invoice, dict) and invoice.id in Invoice.objects:
+        mark_invoice_paid(invoice.id)
     data = {
         'type': 'invoice.payment_succeeded',
         'data': {

@@ -1,3 +1,5 @@
+import hashlib
+import json
 import uuid
 import django.utils.timezone as timezone
 from django.utils.translation import gettext_lazy as _
@@ -114,8 +116,61 @@ class Cart(Model):
     )
 
     def delete(self, using=None, keep_parents=False):
+        self._discard_pending_payment()
         self.item_variants.clear()
         return super().delete(using, keep_parents)
+
+    def _discard_pending_payment(self):
+        """ The cart now lives until its payment succeeds. If it is deleted
+        before that (e.g. replaced by another cart on login), void its unpaid
+        invoice so Stripe can never charge it. A paid invoice is left alone:
+        the webhook fulfils it from the payment's cart_record snapshot.
+        """
+        payment = self._get_pending_payment()
+        if payment is None or not payment.invoice_id:
+            return
+        try:
+            invoice = stripe.find_invoice(payment.invoice_id)
+            if invoice is not None:
+                stripe.discard_invoice(invoice)
+        except Exception:
+            stripe.logger.exception(
+                'Could not discard invoice %s of deleted cart %s',
+                payment.invoice_id, self.id
+            )
+
+    def _get_pending_payment(self):
+        if self.pk is None:
+            return None
+        from api.models import Payment
+        return Payment.objects.filter(cart=self, processed=False).first()
+
+    def get_payment_fingerprint(self):
+        """ Hash of everything that changes what the customer is charged
+        (items and quantities, prices, discounts, delivery method, total).
+        Two equal fingerprints mean the existing Stripe invoice can be reused.
+        """
+        lines = sorted(
+            (
+                str(entry['item_variant'].id),
+                str(entry['item_variant'].price),
+                entry['item_variant'].get_recurrence() or '',
+                str(entry['discount'].id) if entry['discount'] else '',
+                str(entry['discount'].value) if entry['discount'] else '',
+            )
+            for entry in self.get_cart_items_with_discounts()
+        )
+        data = {
+            'user': self.user_id,
+            'lines': lines,
+            'discount_code': self.discount_code_id,
+            'delivery_method': self.delivery_method or '',
+            'base_amount': self.base_amount,
+            'amount': self.amount,
+        }
+        return hashlib.sha256(
+            json.dumps(data, sort_keys=True).encode()
+        ).hexdigest()
 
     @property
     def total(self):

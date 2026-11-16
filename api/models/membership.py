@@ -17,13 +17,19 @@ class MembershipStates:
 class MembershipManager(models.Manager):
 
     @staticmethod
-    def create_membership(member, subscription_variant):
+    def create_membership(member, subscription_variant, starts=None):
+        """ :param starts: start of the period paid for. Only given for
+        renewals paid late (a Stripe retry days after the period started),
+        so the new membership covers the period Stripe charged for instead
+        of being pushed forward. Defaults to now. """
         attrs = dict(
             member=member,
             subscription=subscription_variant.item.subscription
         )
         if period := subscription_variant.period:
             attrs['duration'] = period
+        if starts is not None:
+            attrs['starts'] = starts
         return Membership.objects.create(**attrs)
 
 

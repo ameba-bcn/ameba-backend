@@ -1,11 +1,47 @@
+import contextlib
+import logging
+import threading
+
 import django.utils.encoding as encoding
 import django.core.mail as mail
+import django.db.transaction as transaction
 import django.conf as conf
 import django.utils.http as http
 import django.template.loader as loader
 from rest_framework_simplejwt.tokens import RefreshToken
 
 site_name = getattr(conf.settings, 'HOST_NAME', '')
+
+logger = logging.getLogger(__name__)
+
+_deferred = threading.local()
+
+
+@contextlib.contextmanager
+def send_after_commit():
+    """ Inside this block, emails sent with `send_to` are queued until the
+    current database transaction commits (immediately if there is none), and
+    a failure while building or sending one is logged instead of raised.
+
+    Used by payment fulfilment: a Mailgun outage must not fail (and roll
+    back) handing over what the customer has paid for, and no email must go
+    out for a fulfilment that ends up rolled back.
+    """
+    previous = getattr(_deferred, 'active', False)
+    _deferred.active = True
+    try:
+        yield
+    finally:
+        _deferred.active = previous
+
+
+def _send_logging_errors(email_object, name, mail_to):
+    try:
+        return email_object.send()
+    except Exception:
+        logger.exception('Could not send %s email', name)
+        return 0
+
 
 BILINGUAL_LANGUAGES = ('ca', 'es')
 DEFAULT_BILINGUAL_LANGUAGE = 'es'
@@ -55,6 +91,18 @@ class UserEmailFactoryBase(object):
 
     @classmethod
     def send_to(cls, mail_to, attachment=None, **context):
+        if getattr(_deferred, 'active', False):
+            try:
+                email_object = cls(
+                    mail_to=mail_to, attachment=attachment, **context
+                )
+            except Exception:
+                logger.exception('Could not build %s email', cls.__name__)
+                return 0
+            transaction.on_commit(lambda: _send_logging_errors(
+                email_object, cls.__name__, mail_to
+            ))
+            return None
         email_object = cls(mail_to=mail_to, attachment=attachment, **context)
         return email_object.send()
 

@@ -1,4 +1,0 @@
----
-
-kind: template
-load: build-docker-images.yaml
