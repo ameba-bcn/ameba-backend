@@ -18,9 +18,11 @@ subscription_purchased = dispatch.Signal(
 
 
 @dispatch.receiver(subscription_purchased)
-def create_membership(sender, member, subscription_variant, **kwargs):
+def create_membership(sender, member, subscription_variant,
+                      membership_starts=None, **kwargs):
     api_models.Membership.objects.create_membership(
-        member=member, subscription_variant=subscription_variant
+        member=member, subscription_variant=subscription_variant,
+        starts=membership_starts
     )
 
 

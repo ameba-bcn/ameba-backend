@@ -15,7 +15,11 @@ logger = logging.getLogger(__name__)
 endpoint_secret = conf.settings.STRIPE_WH_SECRET
 api_key = conf.settings.STRIPE_SECRET
 
-HANDLED_EVENTS = ('invoice.payment_failed', 'invoice.payment_succeeded')
+INVOICE_EVENTS = ('invoice.payment_failed', 'invoice.payment_succeeded')
+# Optional: only used to tell the member their renewal could not be charged
+# once Stripe cancels the subscription after all retries. Must be enabled on
+# the webhook endpoint in the Stripe Dashboard to be received.
+SUBSCRIPTION_DELETED_EVENT = 'customer.subscription.deleted'
 
 
 @decorators.api_view(['POST'])
@@ -54,17 +58,23 @@ def webhook(request):
             status=status.HTTP_400_BAD_REQUEST
         )
 
-    if event['type'] in HANDLED_EVENTS:
-        invoice = event['data']['object']
-        logger.info('Stripe event %s %s for invoice %s (payment_intent %s)',
-                    event.get('id'), event['type'], invoice.get('id'),
-                    invoice.get('payment_intent'))
-        try:
-            api_signals.invoice_payment.send(sender=None, invoice=invoice)
-        except Exception:
-            logger.exception('Stripe event %s %s for invoice %s failed',
-                             event.get('id'), event['type'],
-                             invoice.get('id'))
-            raise
+    obj = event['data']['object'] if event['type'] in INVOICE_EVENTS + (
+        SUBSCRIPTION_DELETED_EVENT,) else None
+    if obj is None:
+        return response.Response(status=200)
+
+    logger.info('Stripe event %s %s for %s', event.get('id'), event['type'],
+                obj.get('id'))
+    try:
+        if event['type'] in INVOICE_EVENTS:
+            api_signals.invoice_payment.send(sender=None, invoice=obj)
+        else:
+            api_signals.subscription_deleted.send(
+                sender=None, subscription=obj
+            )
+    except Exception:
+        logger.exception('Stripe event %s %s for %s failed',
+                         event.get('id'), event['type'], obj.get('id'))
+        raise
 
     return response.Response(status=200)
