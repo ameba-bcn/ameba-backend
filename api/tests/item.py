@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.utils import timezone
 from django.core.files.images import ImageFile
 from rest_framework import status
@@ -434,3 +435,23 @@ class TestItem(BaseTest):
         response = self._get(pk=article.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['has_stock'], bool(sum(stocks)))
+
+
+class TestItemVariantAmount(BaseTest):
+    """ Prices are stored in euros with 2 decimals; Stripe is charged in
+    cents. float(19.99) * 100 == 1998.9999999999998 used to be truncated to
+    1998 cents. """
+
+    def test_amount_in_cents_is_rounded_not_truncated(self):
+        cases = {
+            Decimal('19.99'): 1999,
+            Decimal('4.35'): 435,
+            Decimal('0.29'): 29,
+            Decimal('1.15'): 115,
+            Decimal('10.00'): 1000,
+            Decimal('0'): 0,
+            10: 1000,
+        }
+        for price, cents in cases.items():
+            self.assertEqual(ItemVariant(price=price).amount, cents, price)
+

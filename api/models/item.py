@@ -1,3 +1,4 @@
+from decimal import Decimal, ROUND_HALF_UP
 from datetime import timedelta
 from django.utils import timezone
 from django.conf import settings
@@ -216,7 +217,10 @@ class ItemVariant(models.Model):
         """ Returns price in lower EUR currency unit (cents)
         :return: Integer with price in EUR cents
         """
-        return int(float(self.price) * 100)
+        # Decimal, not float: float(19.99) * 100 == 1998.9999999999998, which
+        # int() truncated to 1998 cents (one cent less than the price).
+        cents = Decimal(str(self.price)) * 100
+        return int(cents.quantize(Decimal('1'), rounding=ROUND_HALF_UP))
 
     @property
     def name(self):
