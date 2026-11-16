@@ -14,6 +14,7 @@ from pathlib import Path
 from datetime import timedelta
 import envs
 import os
+import sys
 
 
 def env(name, default, var_type):
@@ -289,6 +290,52 @@ PROFILE_VERSION = 8
 STRIPE_SECRET = env("STRIPE_SECRET", '', var_type='string')
 STRIPE_PUBLIC = env("STRIPE_PUBLIC", '', var_type='string')
 STRIPE_WH_SECRET = env('STRIPE_WH_SECRET', '', var_type='string')
+
+# LOGGING
+# Our own code logs under the "api" logger (e.g. every Stripe call of the
+# checkout with its cart / invoice / PaymentIntent ids). Goes to the console,
+# i.e. the container logs. Kept quiet while running the test suite.
+TESTING = sys.argv[1:2] == ['test']
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'simple': {
+            'format': '%(asctime)s %(levelname)s %(name)s: %(message)s'
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+    },
+    'loggers': {
+        'api': {
+            'handlers': ['console'],
+            'level': 'CRITICAL' if TESTING else env(
+                'API_LOG_LEVEL', 'INFO', 'string'
+            ),
+            'propagate': False,
+        },
+    },
+}
+
+# SENTRY (error tracking). Disabled unless SENTRY_DSN is set. Unhandled
+# exceptions and every logger.error / logger.exception (e.g. a failed Stripe
+# call or email) are reported. No personal data is sent by default.
+SENTRY_DSN = env('SENTRY_DSN', '', 'string')
+if SENTRY_DSN and not TESTING:
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        integrations=[DjangoIntegration()],
+        environment=env('SENTRY_ENVIRONMENT', 'production', 'string'),
+        traces_sample_rate=env('SENTRY_TRACES_SAMPLE_RATE', 0., 'float'),
+        send_default_pii=False,
+    )
 
 # TOKENS EXPIRE TIMES
 ACTIVATION_EXPIRE_DAYS = 30
