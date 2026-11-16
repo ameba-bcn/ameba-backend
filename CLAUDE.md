@@ -84,7 +84,7 @@ JWT via `djangorestframework-simplejwt`. Obtain tokens at `POST /api/token/`, re
 
 ## Environment Variables
 
-Defined in `.env` (gitignored, loaded via `envs` package in `backend/settings.py`). Key ones: `DEBUG`, `DJANGO_SECRET`, `ALLOWED_HOSTS`, `CORS_ALLOWED_ORIGINS`, `POSTGRES_*`, `EMAIL_*` / `DEFAULT_FROM_EMAIL` (Mailgun via Anymail), `STRIPE_SECRET`/`STRIPE_PUBLIC`/`STRIPE_WH_SECRET`, `SENTRY_DSN` (optional — Sentry error tracking is off unless set; also `SENTRY_ENVIRONMENT`, `SENTRY_TRACES_SAMPLE_RATE`), `API_LOG_LEVEL` (level of the `api.*` console logs, default `INFO`), `REDIS_LOC`, `BGTASK_SLEEP_TIME`, `HOST_NAME`, `FE_MEMBERSHIP_CARD_PATH` (link back to the frontend), `SUBSCRIPTION_RECURRENCES`, `ACCESS_TOKEN_LIFETIME`, `DEVELOPERS`.
+Defined in `.env` (gitignored, loaded via `envs` package in `backend/settings.py`). Key ones: `DEBUG`, `DJANGO_SECRET`, `ALLOWED_HOSTS`, `CORS_ALLOWED_ORIGINS`, `POSTGRES_*`, `EMAIL_*` / `DEFAULT_FROM_EMAIL` (Mailgun via Anymail), `STRIPE_SECRET`/`STRIPE_PUBLIC`/`STRIPE_WH_SECRET`, `API_LOG_LEVEL` (level of the `api.*` console logs, default `INFO`), `REDIS_LOC`, `BGTASK_SLEEP_TIME`, `HOST_NAME`, `FE_MEMBERSHIP_CARD_PATH` (link back to the frontend), `SUBSCRIPTION_RECURRENCES`, `ACCESS_TOKEN_LIFETIME`, `DEVELOPERS`.
 
 Per-environment config for dev/local/prod lives one level up in `devops/.environments/`. Treat `devops/.environments/prod/` as read-only unless the user explicitly asks to change production config.
 

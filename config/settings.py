@@ -321,22 +321,6 @@ LOGGING = {
     },
 }
 
-# SENTRY (error tracking). Disabled unless SENTRY_DSN is set. Unhandled
-# exceptions and every logger.error / logger.exception (e.g. a failed Stripe
-# call or email) are reported. No personal data is sent by default.
-SENTRY_DSN = env('SENTRY_DSN', '', 'string')
-if SENTRY_DSN and not TESTING:
-    import sentry_sdk
-    from sentry_sdk.integrations.django import DjangoIntegration
-
-    sentry_sdk.init(
-        dsn=SENTRY_DSN,
-        integrations=[DjangoIntegration()],
-        environment=env('SENTRY_ENVIRONMENT', 'production', 'string'),
-        traces_sample_rate=env('SENTRY_TRACES_SAMPLE_RATE', 0., 'float'),
-        send_default_pii=False,
-    )
-
 # TOKENS EXPIRE TIMES
 ACTIVATION_EXPIRE_DAYS = 30
 ACTIVATION_SALT = 'activation_salt'
