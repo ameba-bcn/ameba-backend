@@ -15,7 +15,7 @@ from api.tests.mailgun_unsubscribe import ApiMailgunUnsubscriptionTest
 from api.tests.signals import SubscriberSignalsTest, MailgunSignalsTest
 from api.tests.mailgun import TestMailgunApi
 from api.tests.item import (
-    TestItem, TestItemVariantAmount
+    TestItem, TestItemVariantAmount, TestVoidStaleInvoicesCommand
 )
 from api.tests.subscriptions import TestSubscription
 from api.tests.member_register import FullRegistrationTest
