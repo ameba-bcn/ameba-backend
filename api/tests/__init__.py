@@ -14,14 +14,18 @@ from api.tests.subscribe import SubscribeTest
 from api.tests.mailgun_unsubscribe import ApiMailgunUnsubscriptionTest
 from api.tests.signals import SubscriberSignalsTest, MailgunSignalsTest
 from api.tests.mailgun import TestMailgunApi
-from api.tests.item import TestItem
+from api.tests.item import (
+    TestItem, TestItemVariantAmount, TestVoidStaleInvoicesCommand
+)
 from api.tests.subscriptions import TestSubscription
 from api.tests.member_register import FullRegistrationTest
 from api.tests.membership import TestSubscriptionPurchase
 from api.tests.member import TestMemberProfileDetails
 from api.tests.member_project import TestGetMemberProjects
 from api.tests.integrations import TestStripeSynchronization
-from api.tests.payments import PaymentFlowTest
+from api.tests.payments import (
+    PaymentFlowTest, CheckoutRobustnessTest, WebhookRequestValidationTest
+)
 from api.tests.flows.events import TestSavedUserEvents
 from api.tests.webhooks import TestStripeWebhooks
 from api.tests.cache import TestResponseCacheIsolation

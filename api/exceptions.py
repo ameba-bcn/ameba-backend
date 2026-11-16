@@ -4,6 +4,7 @@ from rest_framework.status import (
     HTTP_404_NOT_FOUND,
     HTTP_401_UNAUTHORIZED,
     HTTP_403_FORBIDDEN,
+    HTTP_409_CONFLICT,
     HTTP_424_FAILED_DEPENDENCY,
     HTTP_501_NOT_IMPLEMENTED
 )
@@ -154,6 +155,13 @@ class CheckoutNeeded(APIException):
     status_code = HTTP_400_BAD_REQUEST
     default_detail = 'Checkout needed before continue.'
     default_code = 'checkout_needed'
+
+
+class PaymentInProgress(APIException):
+    status_code = HTTP_409_CONFLICT
+    default_detail = 'A payment for this cart is already being processed. ' \
+                     'Wait for it to finish before changing the cart.'
+    default_code = 'payment_in_progress'
 
 
 class UserHasNotMemberProfile(APIException):

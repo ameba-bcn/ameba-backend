@@ -14,6 +14,7 @@ from pathlib import Path
 from datetime import timedelta
 import envs
 import os
+import sys
 
 
 def env(name, default, var_type):
@@ -289,6 +290,36 @@ PROFILE_VERSION = 8
 STRIPE_SECRET = env("STRIPE_SECRET", '', var_type='string')
 STRIPE_PUBLIC = env("STRIPE_PUBLIC", '', var_type='string')
 STRIPE_WH_SECRET = env('STRIPE_WH_SECRET', '', var_type='string')
+
+# LOGGING
+# Our own code logs under the "api" logger (e.g. every Stripe call of the
+# checkout with its cart / invoice / PaymentIntent ids). Goes to the console,
+# i.e. the container logs. Kept quiet while running the test suite.
+TESTING = sys.argv[1:2] == ['test']
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'simple': {
+            'format': '%(asctime)s %(levelname)s %(name)s: %(message)s'
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+    },
+    'loggers': {
+        'api': {
+            'handlers': ['console'],
+            'level': 'CRITICAL' if TESTING else env(
+                'API_LOG_LEVEL', 'INFO', 'string'
+            ),
+            'propagate': False,
+        },
+    },
+}
 
 # TOKENS EXPIRE TIMES
 ACTIVATION_EXPIRE_DAYS = 30

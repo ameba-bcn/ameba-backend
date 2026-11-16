@@ -42,12 +42,24 @@ class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
         return super().update(request, *args, **kwargs)
 
     def get_object(self):
-        if self._is_current_label_id(self.kwargs.get('pk')):
-            current = self._get_current_user_cart(self.request.user)
-            self.kwargs['pk'] = current.pk
-        cart = super().get_object()
+        cart = self._get_cart()
+        # A cart is kept until its payment succeeds. If it was paid but the
+        # Stripe webhook hasn't been processed yet, fulfil it now so the
+        # client sees the cart consumed right after paying (the payment
+        # action does this itself, under its lock).
+        if self.action != 'payment' and \
+                stripe.settle_cart_payment_if_paid(cart):
+            cart = self._get_cart()
         self.resolve_user(cart)
         return cart
+
+    def _get_cart(self):
+        if self._is_current_label_id(self.kwargs.get('pk')):
+            self._wants_current_cart = True
+        if getattr(self, '_wants_current_cart', False):
+            current = self._get_current_user_cart(self.request.user)
+            self.kwargs['pk'] = current.pk
+        return super().get_object()
 
     def resolve_user(self, cart):
         user = self.request.user
@@ -76,7 +88,7 @@ class CartViewSet(GenericViewSet, RetrieveModelMixin, UpdateModelMixin,
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        payment = stripe.create_payment_and_destroy_cart(cart)
+        payment = stripe.get_or_create_cart_payment(cart)
         serializer_class = self.get_serializer_class()
         payment_data = serializer_class(payment).data
         return response.Response(payment_data)
