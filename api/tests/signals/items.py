@@ -41,7 +41,7 @@ class ArticleDeliveryEmailContextTest(helpers.BaseTest):
         Payment.close() actually runs and item_acquired fires — payment
         stays 'open' until the invoice.payment_succeeded webhook lands,
         same as in api/tests/webhooks.py. """
-        payment = stripe.create_payment_and_destroy_cart(cart)
+        payment = stripe.get_or_create_cart_payment(cart)
         invoice = stripe.find_invoice(payment.invoice_id)
         invoice.status = 'paid'
         response = stripe_mock.mock_stripe_succeeded_payment(

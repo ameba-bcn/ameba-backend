@@ -1,8 +1,10 @@
+import logging
 import uuid
 
 from django.utils.translation import gettext as _
 from django.db import models
 from django.db.models import UUIDField
+import api.email_factories as email_factories
 import api.stripe as api_stripe
 
 from api.signals.emails import payment_closed
@@ -11,34 +13,43 @@ from api.signals.items import item_acquired
 FP_STATUS = 'paid'
 FP_AMOUNT = 0
 
+logger = logging.getLogger(__name__)
+
 
 class PaymentManager(models.Manager):
 
     @staticmethod
-    def create_payment(user=None, cart=None, invoice=None, item_variants=None):
+    def create_payment(user=None, cart=None, invoice=None, item_variants=None,
+                       fingerprint=None):
         from api.serializers.cart import CartSerializer
         user = cart.user if hasattr(cart, 'user') and cart.user else user
 
+        details = {}
         if invoice:
-            details = {
-                'invoice': dict(invoice),
-                'payment_intent': dict(
+            details['invoice'] = dict(invoice)
+            if invoice['payment_intent']:
+                details['payment_intent'] = dict(
                     api_stripe.get_payment_intent(invoice['payment_intent'])
                 )
-            }
             invoice_id = invoice['id']
         else:
-            details = None
             invoice_id = None
+        if fingerprint:
+            # Hash of what was in the cart when this invoice was created:
+            # lets the payment endpoint reuse it while the cart is unchanged
+            details['cart_fingerprint'] = fingerprint
 
         payment_attrs = dict(
             cart=cart,
             user=user,
             cart_record=CartSerializer(instance=cart).data if cart else None,
             invoice_id=invoice_id,
-            details=details
+            details=details or None
         )
-        if cart:
+        # Historically Payment.id == Cart.id. Keep it for the first payment
+        # of a cart; a cart whose previous invoice was discarded (contents
+        # changed) gets a fresh id for the new one.
+        if cart and not Payment.objects.filter(id=cart.id).exists():
             payment_attrs['id'] = cart.id
         payment = Payment.objects.create(**payment_attrs)
         if cart:
@@ -63,7 +74,10 @@ class Payment(models.Model):
         'User', on_delete=models.CASCADE, verbose_name=_('user'),
         null=True, related_name='payments'
     )
-    cart = models.OneToOneField('Cart', on_delete=models.PROTECT, null=True,
+    # SET_NULL: the cart now lives until the payment succeeds, so it can be
+    # deleted while a payment is pending (e.g. replaced on login, user
+    # deleted); the payment keeps its cart_record snapshot.
+    cart = models.OneToOneField('Cart', on_delete=models.SET_NULL, null=True,
                                 related_name='payment')
     cart_record = models.JSONField(verbose_name=_('cart record'), null=True)
     details = models.JSONField(verbose_name=_('invoice'), null=True)
@@ -173,16 +187,28 @@ class Payment(models.Model):
 
     def close(self):
         """ At this point, payment is expected to be done. Otherwise,
-        False is returned. In case payment is successful, items are attached
-        to the user and notifications sent.
+        False is returned and nothing changes (the cart is kept, so the
+        customer can retry the same PaymentIntent or change the cart). In case
+        payment is successful, the cart is consumed, items are attached to the
+        user and notifications sent.
+
+        Callers that can race (webhook, payment endpoint) must hold a
+        select_for_update lock on this payment (see
+        api.stripe.fulfil_invoice_payment) so it is processed only once.
         :return: True/False if the payment was successful or not.
         """
         self.update_details()
 
+        if self.status != 'paid' or self.processed:
+            return False
+
         if self.cart:
             self.detach_cart()
 
-        if self.status == 'paid' and not self.processed:
+        # Emails are sent only once the fulfilment is committed, and a mail
+        # provider failure is logged instead of failing (and rolling back)
+        # the fulfilment.
+        with email_factories.send_after_commit():
             delivery_kwargs = self._get_delivery_kwargs()
             for item_variant in self.item_variants.all():
                 item_variant.acquired_by.add(self.user)
@@ -194,13 +220,36 @@ class Payment(models.Model):
                 )
 
             if self.amount > 0:
-                api_stripe.set_payment_method_default(self.payment_intent)
+                self._set_payment_method_default()
                 payment_closed.send(sender=self.__class__, payment=self)
-            self.item_variants.clear()
-            self.processed = True
-            self.save()
-            return True
-        return False
+        self.item_variants.clear()
+        self.processed = True
+        self.save()
+        logger.info('Payment %s fulfilled (invoice %s, user %s)', self.id,
+                    self.invoice_id, self.user_id)
+        return True
+
+    def _set_payment_method_default(self):
+        """ Memberships only: the card used becomes the customer's default
+        for the renewals. One-off purchases don't save the card
+        (no setup_future_usage), so there's nothing to set as default.
+        """
+        invoice = self.invoice or {}
+        if not invoice.get('subscription'):
+            return
+        try:
+            api_stripe.set_payment_method_default(self.payment_intent)
+        except Exception:
+            logger.exception('Could not set default payment method for '
+                             'payment %s', self.id)
+
+    def refresh_cart_record(self):
+        """ Re-snapshot the cart (delivery details may have been edited
+        after the invoice was created) while it is still attached. """
+        from api.serializers.cart import CartSerializer
+        if self.cart:
+            self.cart_record = CartSerializer(instance=self.cart).data
+            self.save(update_fields=['cart_record'])
 
     def _get_delivery_kwargs(self):
         """ Cart is already deleted (see detach_cart, called before this)
@@ -216,11 +265,14 @@ class Payment(models.Model):
         record = self.cart_record or {}
         return {field: record.get(field, '') for field in fields}
 
-    def detach_cart(self):
-        """ Cart is detached from payment and deleted.
+    def detach_cart(self, delete=True):
+        """ Cart is detached from payment and (by default) deleted. Called
+        with delete=False when this payment is discarded but the cart lives on
+        (its contents changed and a new payment will be created for it).
         :return: None
         """
         cart = self.cart
         self.cart = None
         self.save()
-        cart.delete()
+        if delete and cart is not None:
+            cart.delete()

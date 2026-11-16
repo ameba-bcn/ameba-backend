@@ -23,7 +23,9 @@ from api.tests.membership import TestSubscriptionPurchase
 from api.tests.member import TestMemberProfileDetails
 from api.tests.member_project import TestGetMemberProjects
 from api.tests.integrations import TestStripeSynchronization
-from api.tests.payments import PaymentFlowTest
+from api.tests.payments import (
+    PaymentFlowTest, CheckoutRobustnessTest
+)
 from api.tests.flows.events import TestSavedUserEvents
 from api.tests.webhooks import TestStripeWebhooks
 from api.tests.cache import TestResponseCacheIsolation
