@@ -24,7 +24,7 @@ from api.tests.member import TestMemberProfileDetails
 from api.tests.member_project import TestGetMemberProjects
 from api.tests.integrations import TestStripeSynchronization
 from api.tests.payments import (
-    PaymentFlowTest, CheckoutRobustnessTest
+    PaymentFlowTest, CheckoutRobustnessTest, WebhookRequestValidationTest
 )
 from api.tests.flows.events import TestSavedUserEvents
 from api.tests.webhooks import TestStripeWebhooks

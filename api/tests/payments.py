@@ -515,3 +515,57 @@ class CheckoutRobustnessTest(BaseCartTest):
         self.assertEqual(payment.status, 'open')
         self.assertEqual(payment.amount, 3000)
 
+
+class WebhookRequestValidationTest(BaseCartTest):
+    WEBHOOK_ENDPOINT = '/api/stripe/'
+
+    def test_missing_signature_header_is_400(self):
+        response = self.client.post(
+            self.WEBHOOK_ENDPOINT, data={'type': 'x'}, format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_invalid_payload_is_400(self):
+        response = self.client.post(
+            self.WEBHOOK_ENDPOINT, data='not json', content_type='text/plain',
+            HTTP_STRIPE_SIGNATURE='sig'
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_invalid_signature_is_400(self):
+        with mock.patch.object(
+            stripe_mock.Webhook, 'construct_event',
+            side_effect=stripe_mock.error.SignatureVerificationError('bad')
+        ):
+            response = self.client.post(
+                self.WEBHOOK_ENDPOINT, data={'type': 'x'}, format='json',
+                HTTP_STRIPE_SIGNATURE='sig'
+            )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_unhandled_event_is_200(self):
+        response = self.client.post(
+            self.WEBHOOK_ENDPOINT, data={'type': 'customer.created'},
+            format='json', HTTP_STRIPE_SIGNATURE='sig'
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_mail_failure_does_not_fail_fulfilment(self):
+        user = self.get_user()
+        token = self.get_token(user).access_token
+        cart = self.get_cart(user=user, item_variants=[1, 2])
+        self.checkout(token=token)
+        self.payment(token=token)
+        payment = Payment.objects.get(user=user)
+        invoice = stripe_mock.Invoice.retrieve(payment.invoice_id)
+        with mock.patch(
+            'django.core.mail.EmailMultiAlternatives.send',
+            side_effect=RuntimeError('Mailgun down')
+        ), self.captureOnCommitCallbacks(execute=True):
+            response = stripe_mock.mock_stripe_succeeded_payment(
+                self.client, self.WEBHOOK_ENDPOINT, invoice
+            )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        payment.refresh_from_db()
+        self.assertTrue(payment.processed)
+        self.assertFalse(Cart.objects.filter(id=cart.id).exists())
